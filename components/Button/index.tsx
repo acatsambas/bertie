@@ -2,7 +2,7 @@ import { Button, useTheme } from "@rneui/themed";
 
 interface ButtonProps {
   text?: string;
-  onPress(): void;
+  onPress?(): void;
   kind?: "primary" | "secondary";
 }
 
@@ -16,13 +16,12 @@ const ButtonTest = ({ text, onPress, kind }: ButtonProps) => {
       buttonStyle={{
         borderRadius: 15,
         backgroundColor:
-          kind === "primary" ? theme.colors.primary : theme.colors.secondary,
+          kind === "primary" ? theme.colors.primary : theme.colors.white,
       }}
       titleStyle={{
         fontSize: 16,
         fontWeight: "400",
-        color:
-          kind === "secondary" ? theme.colors.primary : theme.colors.secondary,
+        color: kind === "secondary" ? theme.colors.primary : theme.colors.white,
       }}
       containerStyle={{ paddingVertical: 13 }}
     />

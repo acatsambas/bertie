@@ -1,30 +1,24 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
-import Button from "./components/Button/comp";
+import { StyleSheet } from "react-native";
 import { ThemeProvider, createTheme } from "@rneui/themed";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import Routes from "./navigation/Routes";
 
 const theme = createTheme({
   lightColors: {
     primary: "#565EAF",
     secondary: "white",
   },
-  darkColors: {
-    primary: "#565EAF",
-  },
+  mode: "light",
 });
 
 const App = () => {
   return (
     <ThemeProvider theme={theme}>
-      <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
-        <Button
-          text="Test Button"
-          onPress={() => console.log("test")}
-          kind="primary"
-        />
-        <StatusBar style="auto" />
-      </View>
+      <SafeAreaProvider style={styles.container}>
+        <Routes />
+        {/* <StatusBar style="auto" /> */}
+      </SafeAreaProvider>
     </ThemeProvider>
   );
 };
