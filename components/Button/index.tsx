@@ -6,7 +6,7 @@ interface ButtonProps {
   kind?: "primary" | "secondary";
 }
 
-const ButtonTest = ({ text, onPress, kind }: ButtonProps) => {
+const CustomButton = ({ text, onPress, kind }: ButtonProps) => {
   const { theme } = useTheme();
 
   return (
@@ -28,4 +28,4 @@ const ButtonTest = ({ text, onPress, kind }: ButtonProps) => {
   );
 };
 
-export default ButtonTest;
+export default CustomButton;
