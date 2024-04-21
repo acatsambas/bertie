@@ -17,6 +17,8 @@ const CustomButton = ({ text, onPress, kind }: ButtonProps) => {
         borderRadius: 15,
         backgroundColor:
           kind === "primary" ? theme.colors.primary : theme.colors.white,
+        paddingVertical: 15,
+        minWidth: "100%",
       }}
       titleStyle={{
         fontSize: 16,

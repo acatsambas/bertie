@@ -13,9 +13,12 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "bundleIdentifier": "com.misscoding.googleauthexporeactnative",
+      "supportsTablet": true,
+      "usesAppleSignIn": true
     },
     "android": {
+      "package": "com.misscoding.googleauthexporeactnative",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -24,6 +27,10 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": ["expo-font"]
+    "plugins": [
+      "expo-font",
+      "expo-apple-authentication",
+      "@react-native-google-signin/google-signin"
+    ]
   }
 }
