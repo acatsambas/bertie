@@ -70,6 +70,7 @@ const useStyles = makeStyles(() => ({
   },
   logo: {
     alignItems: "center",
+    paddingTop: 30,
   },
   container: {
     flex: 1,

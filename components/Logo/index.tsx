@@ -7,7 +7,6 @@ const Logo = () => {
       h1Style={{
         fontSize: 36,
         fontWeight: "400",
-        paddingTop: 30,
       }}
     >
       Bertie
