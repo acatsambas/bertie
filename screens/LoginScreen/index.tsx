@@ -69,7 +69,7 @@ const useStyles = makeStyles(() => ({
   },
   container: { paddingTop: 20, gap: 20 },
   forgot: { alignItems: "flex-end" },
-  bottomArea: { flex: 1, justifyContent: "flex-end" },
+  bottomArea: { flex: 1, justifyContent: "flex-end", marginBottom: 20 },
   signUp: { flexDirection: "row", justifyContent: "center" },
 }));
 

@@ -11,20 +11,17 @@ import Text from "../../components/Text";
 import Input from "../../components/Input";
 import { AuthNavigatorParamList } from "../../navigation/AuthStack/params";
 
-export interface RegisterPageProps
-  extends StackNavigationProp<AuthNavigatorParamList, "Register"> {}
+export interface SetProfilePageProps
+  extends StackNavigationProp<AuthNavigatorParamList, "SetProfile"> {}
 
-const RegisterScreen = () => {
+const SetProfileScreen = () => {
   const styles = useStyles();
-  const { navigate } = useNavigation<RegisterPageProps>();
-
-  const handleLogin = () => {
-    navigate("Login");
-  };
+  const { navigate } = useNavigation<SetProfilePageProps>();
 
   const handleRegister = () => {
-    navigate("SetProfile");
+    console.log("Registration part is over");
   };
+
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <View style={styles.logo}>
@@ -32,26 +29,15 @@ const RegisterScreen = () => {
       </View>
 
       <View style={styles.container}>
-        <Text kind="header" text="Sign Up" />
+        <Text kind="header" text="Profile" />
         <View>
-          <Input placeholder="What's your email?" kind="altceva" icon="email" />
-          <Input
-            placeholder="...and a password"
-            kind="password"
-            icon="password"
-          />
-          <View>
-            <Text kind="paragraph" text="By logging in, you agree to our" />
-            <Text kind="button" text="Terms of Service & Privacy Policy" />
-          </View>
+          <Input placeholder="What's your first name?" kind="altceva" />
+          <Input placeholder="...and your last name?" kind="altceva" />
         </View>
       </View>
+
       <View style={styles.bottomArea}>
-        <Button kind="primary" text="Sign Up" onPress={handleRegister} />
-        <View style={styles.logIn}>
-          <Text kind="paragraph" text="Already having an account? " />
-          <Text kind="button" text="Log in!" onPress={handleLogin} />
-        </View>
+        <Button kind="primary" text="Done" />
       </View>
     </SafeAreaView>
   );
@@ -69,7 +55,7 @@ const useStyles = makeStyles(() => ({
   },
   container: { paddingTop: 20, gap: 20 },
   bottomArea: { flex: 1, justifyContent: "flex-end", marginBottom: 20 },
-  logIn: { flexDirection: "row", justifyContent: "center" },
+  done: { flexDirection: "row", justifyContent: "center" },
 }));
 
-export default RegisterScreen;
+export default SetProfileScreen;

@@ -5,6 +5,7 @@ import WelcomeScreen from "../../screens/WelcomeScreen";
 import LoginScreen from "../../screens/LoginScreen";
 import RegisterScreen from "../../screens/RegisterScreen";
 import ForgotScreen from "../../screens/ForgotScreen";
+import SetProfileScreen from "../../screens/SetProfileScreen";
 
 export const Stack = createNativeStackNavigator<AuthNavigatorParamList>();
 
@@ -31,6 +32,11 @@ const AuthNavigator = () => {
         name="Register"
         component={RegisterScreen}
         options={{ title: "Register", headerShown: false }}
+      />
+      <Stack.Screen
+        name="SetProfile"
+        component={SetProfileScreen}
+        options={{ title: "SetProfile", headerShown: false }}
       />
       <Stack.Screen
         name="Forgot"
