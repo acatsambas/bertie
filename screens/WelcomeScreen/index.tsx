@@ -1,5 +1,7 @@
 import { SafeAreaView } from "react-native-safe-area-context";
 import { View } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 import { makeStyles } from "@rneui/themed";
 
@@ -9,13 +11,24 @@ import Text from "../../components/Text";
 import Button from "../../components/Button";
 import GoogleButton from "../../components/AuthButtons/GoogleButton";
 import AppleSigninButton from "../../components/AuthButtons/Apple";
+import { AuthNavigatorParamList } from "../../navigation/AuthStack/params";
+
+export interface WelcomePageProps
+  extends StackNavigationProp<AuthNavigatorParamList, "Welcome"> {}
 
 const WelcomeScreen = () => {
   const styles = useStyles();
+  const { navigate } = useNavigation<WelcomePageProps>();
+
+  const handleLogin = () => {
+    navigate("Login");
+  };
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <Logo />
+      <View style={styles.logo}>
+        <Logo />
+      </View>
 
       <Illustration name="welcome" />
 
@@ -36,7 +49,11 @@ const WelcomeScreen = () => {
         </View>
 
         <View style={styles.buttons}>
-          <Button kind="primary" text="Continue with email" />
+          <Button
+            kind="primary"
+            text="Continue with email"
+            onPress={handleLogin}
+          />
           <AppleSigninButton onPress={() => console.log("Text Apple")} />
         </View>
       </View>
@@ -49,8 +66,10 @@ const useStyles = makeStyles(() => ({
     flex: 1,
     gap: 20,
     padding: 20,
-    alignItems: "flex-start",
     justifyContent: "flex-start",
+  },
+  logo: {
+    alignItems: "center",
   },
   container: {
     flex: 1,
