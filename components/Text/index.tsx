@@ -4,9 +4,10 @@ import { makeStyles } from "@rneui/themed";
 interface TextProps {
   kind: "header" | "paragraph" | "button";
   text: string;
+  onPress?(): void;
 }
 
-const CustomText = ({ kind, text }: TextProps) => {
+const CustomText = ({ kind, text, onPress }: TextProps) => {
   const { theme } = useTheme();
   return (
     <Text
@@ -16,6 +17,7 @@ const CustomText = ({ kind, text }: TextProps) => {
         color:
           kind === "button" ? theme.colors.primary : theme.colors.secondary,
       }}
+      onPress={onPress}
     >
       {text}
     </Text>
