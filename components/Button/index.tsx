@@ -21,8 +21,7 @@ const CustomButton = ({ text, onPress, kind }: ButtonProps) => {
         minWidth: "100%",
       }}
       titleStyle={{
-        fontSize: 16,
-        fontWeight: "400",
+        fontFamily: "Commissioner Regular",
         color: kind === "secondary" ? theme.colors.primary : theme.colors.white,
       }}
       containerStyle={{ paddingVertical: 13 }}

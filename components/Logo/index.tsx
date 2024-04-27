@@ -6,7 +6,7 @@ const Logo = () => {
       h1
       h1Style={{
         fontSize: 36,
-        fontWeight: "400",
+        fontFamily: "Goudy Bookletter 1911",
       }}
     >
       Bertie
