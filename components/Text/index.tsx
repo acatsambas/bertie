@@ -1,8 +1,4 @@
-import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
-
 import { Text, useTheme } from "@rneui/themed";
-import { useCallback } from "react";
 
 interface TextProps {
   kind: "header" | "paragraph" | "button";
@@ -10,31 +6,11 @@ interface TextProps {
   onPress?(): void;
 }
 
-SplashScreen.preventAutoHideAsync();
-
 const CustomText = ({ kind, text, onPress }: TextProps) => {
   const { theme } = useTheme();
 
-  const [fontsLoaded, fontError] = useFonts({
-    "Goudy Bookletter 1911": require("../../assets/fonts/GoudyBookletter1911-Regular.ttf"),
-    Commissioner: require("../../assets/fonts/Commissioner.ttf"),
-    "Commissioner Regular": require("../../assets/fonts/static/Commissioner-Regular.ttf"),
-    "Commissioner Bold": require("../../assets/fonts/static/Commissioner-Bold.ttf"),
-  });
-
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded || fontError) {
-      await SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded, fontError]);
-
-  if (!fontsLoaded && !fontError) {
-    return null;
-  }
-
   return (
     <Text
-      onLayout={onLayoutRootView}
       style={{
         fontFamily:
           kind === "header"
