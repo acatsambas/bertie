@@ -37,7 +37,7 @@ const SetProfileScreen = () => {
       </View>
 
       <View style={styles.bottomArea}>
-        <Button kind="primary" text="Done" />
+        <Button kind="primary" text="Done" onPress={handleRegister} />
       </View>
     </SafeAreaView>
   );
