@@ -1,5 +1,3 @@
-import { SafeAreaProvider } from "react-native-safe-area-context";
-
 import { ThemeProvider, createTheme } from "@rneui/themed";
 
 import Routes from "./navigation/Routes";
@@ -16,11 +14,9 @@ const theme = createTheme({
 const App = () => {
   return (
     <ThemeProvider theme={theme}>
-      <SafeAreaProvider>
-        <Fonts>
-          <Routes />
-        </Fonts>
-      </SafeAreaProvider>
+      <Fonts>
+        <Routes />
+      </Fonts>
     </ThemeProvider>
   );
 };
