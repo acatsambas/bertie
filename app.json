@@ -13,13 +13,13 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "bundleIdentifier": "com.misscoding.googleauthexporeactnative",
+      "bundleIdentifier": "com.bertie.app",
       "supportsTablet": true,
       "usesAppleSignIn": true,
       "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
-      "package": "com.misscoding.googleauthexporeactnative",
+      "package": "com.bertie.app",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
