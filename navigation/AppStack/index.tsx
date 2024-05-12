@@ -21,3 +21,10 @@ const SettingsNavigator = () => {
     </SettingsStack.Navigator>
   );
 };
+
+// for testing purposes
+const AppNagivator = () => {
+  return <SettingsNavigator />;
+};
+
+export default AppNagivator;
