@@ -1,16 +1,17 @@
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { useContext } from "react";
+
 import StyledNavigationContainer from "../../styles/StyledNavigationContainer";
+import { AuthContext } from "../../api/auth/AuthProvider";
 
 import AuthNavigator from "../AuthStack";
-
-import { AuthNavigatorParamList } from "../AuthStack/params";
-
-const Stack = createNativeStackNavigator<AuthNavigatorParamList>();
+import AppNagivator from "../AppStack";
 
 const Routes = () => {
+  const { user } = useContext(AuthContext);
+
   return (
     <StyledNavigationContainer>
-      <AuthNavigator />
+      {user ? <AppNagivator /> : <AuthNavigator />}
     </StyledNavigationContainer>
   );
 };

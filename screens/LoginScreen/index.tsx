@@ -1,7 +1,12 @@
+import { useContext, useState } from "react";
+
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+
+import { AuthNavigatorParamList } from "../../navigation/AuthStack/params";
+import { AuthContext } from "../../api/auth/AuthProvider";
 
 import { makeStyles } from "@rneui/themed";
 
@@ -9,7 +14,6 @@ import Logo from "../../components/Logo";
 import Button from "../../components/Button";
 import Text from "../../components/Text";
 import Input from "../../components/Input";
-import { AuthNavigatorParamList } from "../../navigation/AuthStack/params";
 
 export interface LoginPageProps
   extends StackNavigationProp<AuthNavigatorParamList, "Login"> {}
@@ -18,6 +22,11 @@ const LoginScreen = () => {
   const styles = useStyles();
   const { navigate } = useNavigation<LoginPageProps>();
 
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const { login } = useContext(AuthContext);
+
   const handleSignup = () => {
     navigate("Register");
   };
@@ -25,6 +34,8 @@ const LoginScreen = () => {
   const handleForgot = () => {
     navigate("Forgot");
   };
+
+  const handlePressLogin = async () => {};
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
@@ -47,7 +58,7 @@ const LoginScreen = () => {
         </View>
       </View>
       <View style={styles.bottomArea}>
-        <Button kind="primary" text="Login" />
+        <Button kind="primary" text="Login" onPress={handlePressLogin} />
         <View style={styles.signUp}>
           <Text kind="paragraph" text="Don't have an account? " />
           <Text kind="button" text="Sign up!" onPress={handleSignup} />

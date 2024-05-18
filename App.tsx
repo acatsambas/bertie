@@ -1,4 +1,5 @@
 import { ThemeProvider, createTheme } from "@rneui/themed";
+import { AuthProvider } from "./api/auth/AuthProvider";
 
 import Routes from "./navigation/Routes";
 import Fonts from "./components/Fonts";
@@ -14,9 +15,11 @@ const theme = createTheme({
 const App = () => {
   return (
     <ThemeProvider theme={theme}>
-      <Fonts>
-        <Routes />
-      </Fonts>
+      <AuthProvider>
+        <Fonts>
+          <Routes />
+        </Fonts>
+      </AuthProvider>
     </ThemeProvider>
   );
 };
