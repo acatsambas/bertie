@@ -10,13 +10,25 @@ import Button from "../../components/Button";
 import Text from "../../components/Text";
 import Input from "../../components/Input";
 import { AuthNavigatorParamList } from "../../navigation/AuthStack/params";
+import { useState } from "react";
 
 export interface RegisterPageProps
   extends StackNavigationProp<AuthNavigatorParamList, "Register"> {}
 
 const RegisterScreen = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   const styles = useStyles();
   const { navigate } = useNavigation<RegisterPageProps>();
+
+  const handleInputEmail = (value: string) => {
+    setEmail(value.toLowerCase().trim());
+  };
+
+  const handleInputPassword = (value: string) => {
+    setPassword(value);
+  };
 
   const handleLogin = () => {
     navigate("Login");
@@ -34,11 +46,17 @@ const RegisterScreen = () => {
       <View style={styles.container}>
         <Text kind="header" text="Sign Up" />
         <View>
-          <Input placeholder="What's your email?" kind="altceva" icon="email" />
+          <Input
+            placeholder="What's your email?"
+            kind="altceva"
+            icon="email"
+            onChangeText={handleInputEmail}
+          />
           <Input
             placeholder="...and a password"
             kind="password"
             icon="password"
+            onChangeText={handleInputPassword}
           />
           <View>
             <Text kind="paragraph" text="By logging in, you agree to our" />

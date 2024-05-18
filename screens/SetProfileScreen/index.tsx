@@ -10,16 +10,28 @@ import Button from "../../components/Button";
 import Text from "../../components/Text";
 import Input from "../../components/Input";
 import { AuthNavigatorParamList } from "../../navigation/AuthStack/params";
+import { useState } from "react";
 
 export interface SetProfilePageProps
   extends StackNavigationProp<AuthNavigatorParamList, "SetProfile"> {}
 
 const SetProfileScreen = () => {
+  const [givenName, setGivenName] = useState("");
+  const [familyName, setFamilyName] = useState("");
+
   const styles = useStyles();
   const { navigate } = useNavigation<SetProfilePageProps>();
 
   const handleRegister = () => {
     console.log("Registration part is over");
+  };
+
+  const handleGivenName = (value: string) => {
+    setGivenName(value.trim());
+  };
+
+  const handleFamilyName = (value: string) => {
+    setFamilyName(value.trim());
   };
 
   return (
@@ -31,8 +43,16 @@ const SetProfileScreen = () => {
       <View style={styles.container}>
         <Text kind="header" text="Profile" />
         <View>
-          <Input placeholder="What's your first name?" kind="altceva" />
-          <Input placeholder="...and your last name?" kind="altceva" />
+          <Input
+            placeholder="What's your first name?"
+            kind="altceva"
+            onChangeText={handleGivenName}
+          />
+          <Input
+            placeholder="...and your last name?"
+            kind="altceva"
+            onChangeText={handleFamilyName}
+          />
         </View>
       </View>
 

@@ -7,6 +7,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 
 import { AuthNavigatorParamList } from "../../navigation/AuthStack/params";
 import { AuthContext } from "../../api/auth/AuthProvider";
+import { isFirebaseError } from "../../api/types";
 
 import { makeStyles } from "@rneui/themed";
 
@@ -27,6 +28,14 @@ const LoginScreen = () => {
 
   const { login } = useContext(AuthContext);
 
+  const handleInputEmail = (value: string) => {
+    setEmail(value.toLowerCase().trim());
+  };
+
+  const handleInputPassword = (value: string) => {
+    setPassword(value);
+  };
+
   const handleSignup = () => {
     navigate("Register");
   };
@@ -35,7 +44,16 @@ const LoginScreen = () => {
     navigate("Forgot");
   };
 
-  const handlePressLogin = async () => {};
+  const handlePressLogin = async () => {
+    try {
+      await login(email, password);
+    } catch (error) {
+      //TODO: handle error
+      if (isFirebaseError(error)) {
+        console.log("ERROR");
+      }
+    }
+  };
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
@@ -46,8 +64,18 @@ const LoginScreen = () => {
       <View style={styles.container}>
         <Text kind="header" text="Login" />
         <View>
-          <Input placeholder="Email" kind="altceva" icon="email" />
-          <Input placeholder="Password" kind="password" icon="password" />
+          <Input
+            placeholder="Email"
+            kind="altceva"
+            icon="email"
+            onChangeText={handleInputEmail}
+          />
+          <Input
+            placeholder="Password"
+            kind="password"
+            icon="password"
+            onChangeText={handleInputPassword}
+          />
           <View style={styles.forgot}>
             <Text
               kind="button"
