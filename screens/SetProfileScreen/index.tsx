@@ -45,12 +45,10 @@ const SetProfileScreen = () => {
         <View>
           <Input
             placeholder="What's your first name?"
-            kind="altceva"
             onChangeText={handleGivenName}
           />
           <Input
             placeholder="...and your last name?"
-            kind="altceva"
             onChangeText={handleFamilyName}
           />
         </View>

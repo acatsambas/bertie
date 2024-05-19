@@ -48,7 +48,6 @@ const RegisterScreen = () => {
         <View>
           <Input
             placeholder="What's your email?"
-            kind="altceva"
             icon="email"
             onChangeText={handleInputEmail}
           />

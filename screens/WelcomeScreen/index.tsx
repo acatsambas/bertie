@@ -54,6 +54,7 @@ const WelcomeScreen = () => {
             text="Continue with email"
             onPress={handleLogin}
           />
+          <GoogleButton />
           <AppleSigninButton onPress={() => console.log("Text Apple")} />
         </View>
       </View>

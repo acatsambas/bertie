@@ -66,7 +66,6 @@ const LoginScreen = () => {
         <View>
           <Input
             placeholder="Email"
-            kind="altceva"
             icon="email"
             onChangeText={handleInputEmail}
           />
