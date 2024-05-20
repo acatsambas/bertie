@@ -1,9 +1,16 @@
 import React, { createContext, useEffect, useMemo, useState } from "react";
 import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import appleAuth from "@invertase/react-native-apple-authentication";
 import firestore from "@react-native-firebase/firestore";
 import messaging from "@react-native-firebase/messaging";
 
 import { createUser, updateUserProfile } from "./hooks";
+
+GoogleSignin.configure({
+  iosClientId:
+    "676639713902-pk0gfppj9r4f38b8nqsojlu5dkfn8mpi.apps.googleusercontent.com",
+});
 
 export const AuthContext = createContext<{
   user: FirebaseAuthTypes.User | null;
@@ -22,6 +29,8 @@ export const AuthContext = createContext<{
   ) => Promise<void>;
   logout: () => Promise<void>;
   forgot: (email: string) => Promise<void>;
+  googleLogin: () => Promise<void>;
+  appleLogin: () => Promise<void>;
 }>(undefined as any);
 
 export interface AuthProviderProps {
@@ -100,6 +109,50 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       },
       forgot: async (email: string) => {
         await auth().sendPasswordResetEmail(email);
+      },
+      googleLogin: async () => {
+        // Check if your device supports Google Play
+        await GoogleSignin.hasPlayServices({
+          showPlayServicesUpdateDialog: true,
+        });
+
+        // Get the users ID token
+        const { idToken } = await GoogleSignin.signIn();
+
+        // Create a Google credential with the token
+        const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+
+        // Sign-in the user with the credential
+        const authUser = await auth().signInWithCredential(googleCredential);
+
+        await createUser({
+          givenName: authUser.additionalUserInfo?.profile?.given_name!,
+          familyName: authUser.additionalUserInfo?.profile?.family_name!,
+        });
+      },
+      appleLogin: async () => {
+        // Start the sign-in request
+        const appleAuthRequestResponse = await appleAuth.performRequest({
+          requestedOperation: appleAuth.Operation.LOGIN,
+          requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
+        });
+
+        // Ensure Apple returned a user identityToken
+        if (!appleAuthRequestResponse.identityToken) {
+          throw new Error("Apple Sign-In failed - no identify token returned");
+        }
+
+        // Create a Firebase credential from the response
+        const { identityToken, nonce } = appleAuthRequestResponse;
+        const appleCredential = auth.AppleAuthProvider.credential(
+          identityToken,
+          nonce
+        );
+
+        // Sign the user in with the credential
+        await auth().signInWithCredential(appleCredential);
+
+        await createUser({});
       },
     }),
     [user]

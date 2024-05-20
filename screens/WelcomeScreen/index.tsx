@@ -55,7 +55,7 @@ const WelcomeScreen = () => {
             onPress={handleLogin}
           />
           <GoogleButton />
-          <AppleSigninButton onPress={() => console.log("Text Apple")} />
+          <AppleSigninButton />
         </View>
       </View>
     </SafeAreaView>

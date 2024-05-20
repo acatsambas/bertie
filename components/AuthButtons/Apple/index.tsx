@@ -1,19 +1,33 @@
+import { useContext } from "react";
+
 import { makeStyles } from "@rneui/themed";
 import * as AppleAuthentication from "expo-apple-authentication";
 
-interface AppleSigninButtonProps {
-  onPress?(): void;
-}
+import { AuthContext } from "../../../api/auth/AuthProvider";
+import { isFirebaseError } from "../../../api/types";
 
-const AppleSigninButton = ({ onPress }) => {
+const AppleSigninButton = () => {
   const styles = useStyles();
+
+  const { appleLogin } = useContext(AuthContext);
+
+  const handleLogin = async () => {
+    try {
+      await appleLogin();
+    } catch (error) {
+      if (isFirebaseError(error)) {
+        console.log(error);
+      }
+    }
+  };
+
   return (
     <AppleAuthentication.AppleAuthenticationButton
       buttonType={AppleAuthentication.AppleAuthenticationButtonType.CONTINUE}
       buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
       style={styles.appleButton}
       cornerRadius={5}
-      onPress={onPress}
+      onPress={handleLogin}
     />
   );
 };

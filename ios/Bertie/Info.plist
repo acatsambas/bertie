@@ -3,9 +3,9 @@
 <plist version="1.0">
   <dict>
     <key>CADisableMinimumFrameDurationOnPhone</key>
-    <true/>
+    <true />
     <key>CFBundleAllowMixedLocalizations</key>
-    <true/>
+    <true />
     <key>CFBundleDevelopmentRegion</key>
     <string>$(DEVELOPMENT_LANGUAGE)</string>
     <key>CFBundleDisplayName</key>
@@ -27,22 +27,32 @@
     <key>CFBundleURLTypes</key>
     <array>
       <dict>
+        <key>CFBundleTypeRole</key>
+        <string>Editor</string>
+        <key>CFBundleURLSchemes</key>
+        <array>
+          <string>com.googleusercontent.apps.676639713902-pk0gfppj9r4f38b8nqsojlu5dkfn8mpi</string>
+        </array>
+      </dict>
+    </array>
+    <!-- <array>
+      <dict>
         <key>CFBundleURLSchemes</key>
         <array>
           <string>com.bertie.app</string>
         </array>
       </dict>
-    </array>
+    </array> -->
     <key>CFBundleVersion</key>
     <string>1</string>
     <key>LSRequiresIPhoneOS</key>
-    <true/>
+    <true />
     <key>NSAppTransportSecurity</key>
     <dict>
       <key>NSAllowsArbitraryLoads</key>
-      <false/>
+      <false />
       <key>NSAllowsLocalNetworking</key>
-      <true/>
+      <true />
     </dict>
     <key>UILaunchStoryboardName</key>
     <string>SplashScreen</string>
@@ -51,7 +61,7 @@
       <string>armv7</string>
     </array>
     <key>UIRequiresFullScreen</key>
-    <false/>
+    <false />
     <key>UIStatusBarStyle</key>
     <string>UIStatusBarStyleDefault</string>
     <key>UISupportedInterfaceOrientations</key>
@@ -69,6 +79,8 @@
     <key>UIUserInterfaceStyle</key>
     <string>Light</string>
     <key>UIViewControllerBasedStatusBarAppearance</key>
-    <false/>
+    <false />
+    <key>GIDConfiguration</key>
+    <string>676639713902-pk0gfppj9r4f38b8nqsojlu5dkfn8mpi.apps.googleusercontent.com</string>
   </dict>
 </plist>
