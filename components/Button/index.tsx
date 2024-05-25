@@ -24,7 +24,7 @@ const CustomButton = ({ text, onPress, kind }: ButtonProps) => {
         fontFamily: "Commissioner Regular",
         color: kind === "secondary" ? theme.colors.primary : theme.colors.white,
       }}
-      containerStyle={{ paddingVertical: 13 }}
+      // containerStyle={{ paddingVertical: 13 }}
     />
   );
 };
