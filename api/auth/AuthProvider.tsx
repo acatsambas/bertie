@@ -10,6 +10,8 @@ import { createUser, updateUserProfile } from "./hooks";
 GoogleSignin.configure({
   iosClientId:
     "676639713902-pk0gfppj9r4f38b8nqsojlu5dkfn8mpi.apps.googleusercontent.com",
+  webClientId:
+    "676639713902-u3ml80mmck0o5o9p31jrfqqs39emjqup.apps.googleusercontent.com",
 });
 
 export const AuthContext = createContext<{
