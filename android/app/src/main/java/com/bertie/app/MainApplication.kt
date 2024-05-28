@@ -1,4 +1,4 @@
-package com.bertie.app
+package com.bertie.com
 
 import android.app.Application
 import android.content.res.Configuration
