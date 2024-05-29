@@ -2,6 +2,6 @@ export type AuthNavigatorParamList = {
   Welcome: undefined;
   Login: undefined;
   Register: undefined;
-  SetProfile: undefined;
+  SetProfile: { email: string; password: string };
   Forgot: undefined;
 };

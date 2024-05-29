@@ -35,7 +35,7 @@ const RegisterScreen = () => {
   };
 
   const handleRegister = () => {
-    navigate("SetProfile");
+    navigate("SetProfile", { email: email, password: password });
   };
   return (
     <SafeAreaView style={styles.safeAreaView}>

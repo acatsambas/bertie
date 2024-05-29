@@ -1,3 +1,5 @@
+import { useContext, useState } from "react";
+import { RouteProp, useRoute } from "@react-navigation/native";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
@@ -5,25 +7,40 @@ import { StackNavigationProp } from "@react-navigation/stack";
 
 import { makeStyles } from "@rneui/themed";
 
+import { AuthNavigatorParamList } from "../../navigation/AuthStack/params";
+import { AuthContext } from "../../api/auth/AuthProvider";
+
 import Logo from "../../components/Logo";
 import Button from "../../components/Button";
 import Text from "../../components/Text";
 import Input from "../../components/Input";
-import { AuthNavigatorParamList } from "../../navigation/AuthStack/params";
-import { useState } from "react";
+import { isFirebaseError } from "../../api/types";
 
 export interface SetProfilePageProps
   extends StackNavigationProp<AuthNavigatorParamList, "SetProfile"> {}
 
 const SetProfileScreen = () => {
+  const { params } =
+    useRoute<RouteProp<AuthNavigatorParamList, "SetProfile">>();
+
   const [givenName, setGivenName] = useState("");
   const [familyName, setFamilyName] = useState("");
+  const [email] = useState(params.email);
+  const [password] = useState(params.password);
 
   const styles = useStyles();
   const { navigate } = useNavigation<SetProfilePageProps>();
 
-  const handleRegister = () => {
-    console.log("Registration part is over");
+  const { register } = useContext(AuthContext);
+
+  const handleRegister = async () => {
+    try {
+      await register(email, password, givenName, familyName);
+    } catch (error) {
+      if (isFirebaseError(error)) {
+        console.log(error);
+      }
+    }
   };
 
   const handleGivenName = (value: string) => {
