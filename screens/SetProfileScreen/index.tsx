@@ -29,8 +29,6 @@ const SetProfileScreen = () => {
   const [password] = useState(params.password);
 
   const styles = useStyles();
-  const { navigate } = useNavigation<SetProfilePageProps>();
-
   const { register } = useContext(AuthContext);
 
   const handleRegister = async () => {
