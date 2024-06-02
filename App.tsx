@@ -1,3 +1,5 @@
+import "./locales/i18n";
+
 import { ThemeProvider, createTheme } from "@rneui/themed";
 import { AuthProvider } from "./api/auth/AuthProvider";
 
