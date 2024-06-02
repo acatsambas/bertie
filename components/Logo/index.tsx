@@ -1,6 +1,9 @@
 import { Text } from "@rneui/themed";
+import { useTranslation } from "react-i18next";
+import { translations } from "../../locales/translations";
 
 const Logo = () => {
+  const { t } = useTranslation();
   return (
     <Text
       h1
@@ -9,7 +12,7 @@ const Logo = () => {
         fontFamily: "Goudy Bookletter 1911",
       }}
     >
-      Bertie
+      {t(translations.appName)}
     </Text>
   );
 };

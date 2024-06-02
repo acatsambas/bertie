@@ -1,3 +1,42 @@
 {
-  "appName": "Bertie"
+  "appName": "Bertie",
+  "welcome": {
+    "title": "Welcome to Bertie!",
+    "purpose": "We help readers create reading lists and order books from independent bookshops.",
+    "agree": "By logging in, you agree to our",
+    "terms": "Terms of Service & Privacy Policy",
+    "email": "Continue with email"
+  },
+  "login": {
+    "title": "Login",
+    "email": "Email",
+    "password": "Password",
+    "forgot": "Forgot password?",
+    "button": "Login",
+    "create": "Don't have an account?",
+    "signup": "Sign up!"
+  },
+  "signup": {
+    "title": "Sign Up",
+    "email": "What's your email?",
+    "password": "...and a password",
+    "agree": "By logging in, you agree to our",
+    "terms": "Terms of Service & Privacy Policy",
+    "button": "Sign Up",
+    "already": "Already having an account?",
+    "login": "Log in!",
+    "profile": {
+      "title": "Profile",
+      "firstName": "What's your first name?",
+      "lastName": "...and your last name?",
+      "button": "Done"
+    }
+  },
+  "forgot": {
+    "title": "Forgot Password?",
+    "enterEmail": "Enter your email address to reset your password.",
+    "sendEmail": "We'll send an email with instructions on how to reset your it.",
+    "placeholder": "Enter your email address",
+    "button": "Reset"
+  }
 }

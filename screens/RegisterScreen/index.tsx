@@ -2,9 +2,11 @@ import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { useTranslation } from "react-i18next";
 
 import { makeStyles } from "@rneui/themed";
 
+import { translations } from "../../locales/translations";
 import Logo from "../../components/Logo";
 import Button from "../../components/Button";
 import Text from "../../components/Text";
@@ -21,6 +23,7 @@ const RegisterScreen = () => {
 
   const styles = useStyles();
   const { navigate } = useNavigation<RegisterPageProps>();
+  const { t } = useTranslation();
 
   const handleInputEmail = (value: string) => {
     setEmail(value.toLowerCase().trim());
@@ -44,30 +47,38 @@ const RegisterScreen = () => {
       </View>
 
       <View style={styles.container}>
-        <Text kind="header" text="Sign Up" />
+        <Text kind="header" text={t(translations.signup.title)} />
         <View>
           <Input
-            placeholder="What's your email?"
+            placeholder={t(translations.signup.email)}
             icon="email"
             onChangeText={handleInputEmail}
           />
           <Input
-            placeholder="...and a password"
+            placeholder={t(translations.signup.password)}
             kind="password"
             icon="password"
             onChangeText={handleInputPassword}
           />
           <View>
-            <Text kind="paragraph" text="By logging in, you agree to our" />
-            <Text kind="button" text="Terms of Service & Privacy Policy" />
+            <Text kind="paragraph" text={t(translations.signup.agree)} />
+            <Text kind="button" text={t(translations.signup.terms)} />
           </View>
         </View>
       </View>
       <View style={styles.bottomArea}>
-        <Button kind="primary" text="Sign Up" onPress={handleRegister} />
+        <Button
+          kind="primary"
+          text={t(translations.signup.button)}
+          onPress={handleRegister}
+        />
         <View style={styles.logIn}>
-          <Text kind="paragraph" text="Already having an account? " />
-          <Text kind="button" text="Log in!" onPress={handleLogin} />
+          <Text kind="paragraph" text={t(translations.signup.already)} />
+          <Text
+            kind="button"
+            text={t(translations.signup.login)}
+            onPress={handleLogin}
+          />
         </View>
       </View>
     </SafeAreaView>
@@ -86,7 +97,7 @@ const useStyles = makeStyles(() => ({
   },
   container: { paddingTop: 20, gap: 20 },
   bottomArea: { flex: 1, justifyContent: "flex-end", marginBottom: 20 },
-  logIn: { flexDirection: "row", justifyContent: "center" },
+  logIn: { flexDirection: "row", justifyContent: "center", gap: 5 },
 }));
 
 export default RegisterScreen;

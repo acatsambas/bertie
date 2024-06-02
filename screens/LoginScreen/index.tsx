@@ -4,7 +4,9 @@ import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { useTranslation } from "react-i18next";
 
+import { translations } from "../../locales/translations";
 import { AuthNavigatorParamList } from "../../navigation/AuthStack/params";
 import { AuthContext } from "../../api/auth/AuthProvider";
 import { isFirebaseError } from "../../api/types";
@@ -22,6 +24,7 @@ export interface LoginPageProps
 const LoginScreen = () => {
   const styles = useStyles();
   const { navigate } = useNavigation<LoginPageProps>();
+  const { t } = useTranslation();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -62,15 +65,15 @@ const LoginScreen = () => {
       </View>
 
       <View style={styles.container}>
-        <Text kind="header" text="Login" />
+        <Text kind="header" text={t(translations.login.title)} />
         <View>
           <Input
-            placeholder="Email"
+            placeholder={t(translations.login.email)}
             icon="email"
             onChangeText={handleInputEmail}
           />
           <Input
-            placeholder="Password"
+            placeholder={t(translations.login.password)}
             kind="password"
             icon="password"
             onChangeText={handleInputPassword}
@@ -78,17 +81,25 @@ const LoginScreen = () => {
           <View style={styles.forgot}>
             <Text
               kind="button"
-              text="Forgot password?"
+              text={t(translations.login.forgot)}
               onPress={handleForgot}
             />
           </View>
         </View>
       </View>
       <View style={styles.bottomArea}>
-        <Button kind="primary" text="Login" onPress={handlePressLogin} />
+        <Button
+          kind="primary"
+          text={t(translations.login.button)}
+          onPress={handlePressLogin}
+        />
         <View style={styles.signUp}>
-          <Text kind="paragraph" text="Don't have an account? " />
-          <Text kind="button" text="Sign up!" onPress={handleSignup} />
+          <Text kind="paragraph" text={t(translations.login.create)} />
+          <Text
+            kind="button"
+            text={t(translations.login.signup)}
+            onPress={handleSignup}
+          />
         </View>
       </View>
     </SafeAreaView>
@@ -108,7 +119,7 @@ const useStyles = makeStyles(() => ({
   container: { paddingTop: 20, gap: 20 },
   forgot: { alignItems: "flex-end" },
   bottomArea: { flex: 1, justifyContent: "flex-end", marginBottom: 20 },
-  signUp: { flexDirection: "row", justifyContent: "center" },
+  signUp: { flexDirection: "row", justifyContent: "center", gap: 5 },
 }));
 
 export default LoginScreen;

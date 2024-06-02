@@ -2,9 +2,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { useTranslation } from "react-i18next";
 
 import { makeStyles } from "@rneui/themed";
 
+import { translations } from "../../locales/translations";
 import Logo from "../../components/Logo";
 import Illustration from "../../components/Illustration";
 import Text from "../../components/Text";
@@ -19,6 +21,7 @@ export interface WelcomePageProps
 const WelcomeScreen = () => {
   const styles = useStyles();
   const { navigate } = useNavigation<WelcomePageProps>();
+  const { t } = useTranslation();
 
   const handleLogin = () => {
     navigate("Login");
@@ -34,24 +37,21 @@ const WelcomeScreen = () => {
 
       <View style={styles.container}>
         <View>
-          <Text kind="header" text="Welcome to Bertie!" />
+          <Text kind="header" text={t(translations.welcome.title)} />
         </View>
 
         <View style={styles.welcomeMessage}>
-          <Text
-            kind="paragraph"
-            text="We help readers create reading lists and order books from independent bookshops."
-          />
+          <Text kind="paragraph" text={t(translations.welcome.purpose)} />
           <View>
-            <Text kind="paragraph" text="By logging in, you agree to our" />
-            <Text kind="button" text="Terms of Service & Privacy Policy" />
+            <Text kind="paragraph" text={t(translations.welcome.agree)} />
+            <Text kind="button" text={t(translations.welcome.terms)} />
           </View>
         </View>
 
         <View style={styles.buttons}>
           <Button
             kind="primary"
-            text="Continue with email"
+            text={t(translations.welcome.email)}
             onPress={handleLogin}
           />
           <GoogleButton />

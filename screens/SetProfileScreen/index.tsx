@@ -2,11 +2,12 @@ import { useContext, useState } from "react";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { useTranslation } from "react-i18next";
 
 import { makeStyles } from "@rneui/themed";
 
+import { translations } from "../../locales/translations";
 import { AuthNavigatorParamList } from "../../navigation/AuthStack/params";
 import { AuthContext } from "../../api/auth/AuthProvider";
 
@@ -30,6 +31,7 @@ const SetProfileScreen = () => {
 
   const styles = useStyles();
   const { register } = useContext(AuthContext);
+  const { t } = useTranslation();
 
   const handleRegister = async () => {
     try {
@@ -56,21 +58,25 @@ const SetProfileScreen = () => {
       </View>
 
       <View style={styles.container}>
-        <Text kind="header" text="Profile" />
+        <Text kind="header" text={t(translations.signup.profile.title)} />
         <View>
           <Input
-            placeholder="What's your first name?"
+            placeholder={t(translations.signup.profile.firstName)}
             onChangeText={handleGivenName}
           />
           <Input
-            placeholder="...and your last name?"
+            placeholder={t(translations.signup.profile.lastName)}
             onChangeText={handleFamilyName}
           />
         </View>
       </View>
 
       <View style={styles.bottomArea}>
-        <Button kind="primary" text="Done" onPress={handleRegister} />
+        <Button
+          kind="primary"
+          text={t(translations.signup.profile.button)}
+          onPress={handleRegister}
+        />
       </View>
     </SafeAreaView>
   );
