@@ -38,5 +38,23 @@
     "sendEmail": "We'll send an email with instructions on how to reset your it.",
     "placeholder": "Enter your email address",
     "button": "Reset"
+  },
+  "settings": {
+    "title": "Settings",
+    "signout": "Sign out",
+    "changeAddress": "Change Address",
+    "reset": "Reset Password",
+    "delete": "Delete Account",
+    "version": "Version 0.1.0",
+    "address": {
+      "title": "Address",
+      "description": "We use it to suggest nearby bookstores and direct them on where to dispatch your orders.",
+      "addr1": "Address Line 1",
+      "addr2": "Address Line 2",
+      "city": "City",
+      "postcode": "Postcode",
+      "country": "Country",
+      "button": "Save"
+    }
   }
 }
