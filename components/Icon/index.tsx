@@ -23,6 +23,18 @@ const iconType = {
     type: "octicon",
     name: "key",
   },
+  myList: {
+    type: "material-community",
+    name: "format-list-bulleted",
+  },
+  discover: {
+    type: "oction",
+    name: "search",
+  },
+  order: {
+    type: "material-community",
+    name: "cart-outline",
+  },
 };
 
 export default CustomIcon;
