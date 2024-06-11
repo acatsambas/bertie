@@ -1,7 +1,7 @@
 import { Text, useTheme } from "@rneui/themed";
 
 interface TextProps {
-  kind: "header" | "paragraph" | "button";
+  kind: "bigHeader" | "header" | "paragraph" | "button";
   text: string;
   onPress?(): void;
 }
@@ -12,13 +12,8 @@ const CustomText = ({ kind, text, onPress }: TextProps) => {
   return (
     <Text
       style={{
-        fontFamily:
-          kind === "header"
-            ? "Goudy Bookletter 1911"
-            : kind === "paragraph"
-            ? "Commissioner Regular"
-            : "Commissioner Bold",
-        fontSize: kind === "header" ? 24 : 16,
+        fontFamily: kind in textKind && textKind[kind].fontFamily,
+        fontSize: kind in textKind && textKind[kind].size,
         color:
           kind === "button" ? theme.colors.primary : theme.colors.secondary,
       }}
@@ -28,5 +23,12 @@ const CustomText = ({ kind, text, onPress }: TextProps) => {
     </Text>
   );
 };
-//kind === "header" ? "" : ""
+
+const textKind = {
+  bigHeader: { size: 36, fontFamily: "Goudy Bookletter 1911" },
+  header: { size: 24, fontFamily: "Goudy Bookletter 1911" },
+  paragraph: { size: 16, fontFamily: "Commissioner Regular" },
+  button: { size: 16, fontFamily: "Commissioner Bold" },
+};
+
 export default CustomText;

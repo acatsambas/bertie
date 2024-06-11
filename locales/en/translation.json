@@ -42,6 +42,7 @@
   "settings": {
     "title": "Settings",
     "signout": "Sign out",
+    "contactAddress": "support@bertie.co.uk",
     "changeAddress": "Change Address",
     "reset": "Reset Password",
     "delete": "Delete Account",

@@ -35,6 +35,18 @@ const iconType = {
     type: "material-community",
     name: "cart-outline",
   },
+  address: {
+    type: "feather",
+    name: "map-pin",
+  },
+  delete: {
+    type: "feather",
+    name: "trash-2",
+  },
+  x: {
+    type: "material-community",
+    name: "close",
+  },
 };
 
 export default CustomIcon;

@@ -1,7 +1,7 @@
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { View } from "react-native";
+import { Linking, View } from "react-native";
 import React, { useContext } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -12,6 +12,7 @@ import { SettingsNavigatorParamList } from "../../navigation/AppStack/params";
 import { AuthContext } from "../../api/auth/AuthProvider";
 import Button from "../../components/Button";
 import Text from "../../components/Text";
+import Icon from "../../components/Icon";
 
 export interface SettingsPageProps
   extends StackNavigationProp<SettingsNavigatorParamList, "Settings"> {}
@@ -33,8 +34,38 @@ const SettingsScreen = () => {
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <View style={styles.container}>
-        <Text kind="header" text={t(translations.settings.title)} />
-        <Button onPress={handleChangeAddress} text="Change Address" />
+        <View style={styles.header}>
+          <Text kind="bigHeader" text={t(translations.settings.title)} />
+          <Icon icon="x" />
+        </View>
+        <Button
+          kind="secondary"
+          text={t(translations.settings.contactAddress)}
+          icon="email"
+          onPress={() =>
+            Linking.openURL(`mailto:${t(translations.settings.contactAddress)}`)
+          }
+        />
+        <View style={styles.buttonsArea}>
+          <Button
+            kind="secondary"
+            onPress={handleChangeAddress}
+            text={t(translations.settings.changeAddress)}
+            icon="address"
+          />
+          <Button
+            kind="secondary"
+            onPress={handleChangeAddress}
+            text={t(translations.settings.reset)}
+            icon="password"
+          />
+          <Button
+            kind="secondary"
+            onPress={handleChangeAddress}
+            text={t(translations.settings.delete)}
+            icon="delete"
+          />
+        </View>
       </View>
       <View style={styles.bottomArea}>
         <Button
@@ -54,7 +85,14 @@ const useStyles = makeStyles(() => ({
     gap: 20,
     paddingHorizontal: 20,
   },
+  header: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
   container: { paddingTop: 20, gap: 20 },
+  buttonsArea: { gap: 10 },
   bottomArea: { flex: 1, alignItems: "center", gap: 20 },
 }));
 

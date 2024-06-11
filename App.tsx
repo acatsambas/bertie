@@ -10,6 +10,7 @@ const theme = createTheme({
   lightColors: {
     primary: "#565EAF",
     secondary: "#222222",
+    grey0: "#EEE9E4",
   },
   mode: "light",
 });
