@@ -47,6 +47,10 @@ const iconType = {
     type: "material-community",
     name: "close",
   },
+  right: {
+    type: "material-community",
+    name: "chevron-right",
+  },
 };
 
 export default CustomIcon;
