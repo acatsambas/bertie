@@ -26,7 +26,7 @@ const Illustration = ({ name }: IllustrationProps) => {
 
 const useStyles = makeStyles(() => ({
   illustration: {
-    height: 240,
+    height: 300,
     width: "100%",
   },
 }));

@@ -33,8 +33,6 @@ const WelcomeScreen = () => {
         <Logo />
       </View>
 
-      <Illustration name="welcome" />
-
       <View style={styles.container}>
         <View>
           <Text kind="header" text={t(translations.welcome.title)} />
@@ -47,6 +45,8 @@ const WelcomeScreen = () => {
             <Text kind="button" text={t(translations.welcome.terms)} />
           </View>
         </View>
+
+        <Illustration name="welcome" />
 
         <View style={styles.buttons}>
           <Button
@@ -71,7 +71,6 @@ const useStyles = makeStyles(() => ({
   },
   logo: {
     alignItems: "center",
-    paddingTop: 30,
   },
   container: {
     flex: 1,
