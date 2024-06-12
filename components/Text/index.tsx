@@ -1,7 +1,7 @@
 import { Text, useTheme } from "@rneui/themed";
 
 interface TextProps {
-  kind: "bigHeader" | "header" | "paragraph" | "button";
+  kind: "bigHeader" | "header" | "paragraph" | "author" | "button";
   text: string;
   onPress?(): void;
 }
@@ -28,6 +28,7 @@ const textKind = {
   bigHeader: { size: 36, fontFamily: "Goudy Bookletter 1911" },
   header: { size: 24, fontFamily: "Goudy Bookletter 1911" },
   paragraph: { size: 16, fontFamily: "Commissioner Regular" },
+  author: { size: 12, fontFamily: "Commissioner Regular" },
   button: { size: 16, fontFamily: "Commissioner Bold" },
 };
 

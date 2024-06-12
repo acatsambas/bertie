@@ -1,5 +1,5 @@
 import { CheckBox as CustomCheckBox } from "@rneui/themed";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TouchableOpacityProps } from "react-native";
 
 interface CheckBoxProps extends TouchableOpacityProps {
@@ -17,7 +17,21 @@ const CheckBox = ({
     isChecked || defaultValue
   );
 
-  return <CustomCheckBox checked={checked} {...props} />;
+  useEffect(() => {
+    setChecked(isChecked);
+  }, [isChecked]);
+
+  const handlePressCheck = () => {
+    if (props.disabled) return;
+
+    const newValue = !checked;
+    setChecked(newValue);
+    props.onChange?.(newValue);
+  };
+
+  return (
+    <CustomCheckBox checked={checked} onPress={handlePressCheck} {...props} />
+  );
 };
 
 export default CheckBox;

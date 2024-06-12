@@ -1,5 +1,7 @@
 import React from "react";
-import { View } from "react-native";
+import { View, TouchableOpacity } from "react-native";
+
+import { makeStyles } from "@rneui/themed";
 
 import CheckBox from "../CheckBox";
 import Text from "../Text";
@@ -10,14 +12,39 @@ interface BookType {
 }
 
 const Book = ({ kind }: BookType) => {
+  const styles = useStyles();
+
+  const handlePress = () => {
+    //TODO: Navigates to book information
+  };
   return (
-    <View>
-      {(kind === "current" || "past") && <CheckBox />}
-      <Text kind="paragraph" text="Title" />
-      <Text kind="paragraph" text="Author" />
-      <Icon icon="right" />
+    <View style={styles.container}>
+      {(kind === "current" || kind === "past") && <CheckBox />}
+      <TouchableOpacity
+        onPress={handlePress}
+        style={styles.interactiveContainer}
+      >
+        <View style={styles.texts}>
+          <Text kind="paragraph" text="Title" />
+          <Text kind="author" text="Author" />
+        </View>
+        {kind !== "remove" && <Icon icon="right" />}
+      </TouchableOpacity>
     </View>
   );
 };
+
+const useStyles = makeStyles(() => ({
+  container: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  texts: {
+    flexDirection: "column",
+  },
+  interactiveContainer: {
+    flexDirection: "row",
+  },
+}));
 
 export default Book;
