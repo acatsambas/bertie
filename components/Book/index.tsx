@@ -1,4 +1,3 @@
-import React from "react";
 import { View, TouchableOpacity } from "react-native";
 import { CheckBox } from "@rneui/themed";
 import { useEffect, useState } from "react";
@@ -65,7 +64,7 @@ const Book = ({
             <View style={styles.content}>
               <View>
                 <Text text={title} kind="paragraph" />
-                <Text text={author} kind="author" />
+                <Text text={author} kind="littleText" />
               </View>
               <Icon icon="right" />
             </View>
@@ -75,7 +74,7 @@ const Book = ({
         <View style={styles.removeBookContainer}>
           <View>
             <Text text={title} kind="paragraph" />
-            <Text text={author} kind="author" />
+            <Text text={author} kind="littleText" />
           </View>
           <Icon color="red" icon="minus" onPress={handleDelete} />
         </View>
