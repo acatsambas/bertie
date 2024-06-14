@@ -7,9 +7,11 @@ import Icon from "../Icon";
 
 interface BookShopProps {
   kind?: "default" | "favorite" | "favoriteSelected";
+  name: string;
+  location: string;
 }
 
-const BookShop = ({ kind }: BookShopProps) => {
+const BookShop = ({ kind, name, location }: BookShopProps) => {
   const styles = useStyles();
 
   const handlePress = () => {
@@ -21,8 +23,8 @@ const BookShop = ({ kind }: BookShopProps) => {
       onPress={handlePress}
     >
       <View>
-        <Text text="Daunt Books" kind="paragraph" />
-        <Text text="London" kind="littleText" />
+        <Text text={name} kind="paragraph" />
+        <Text text={location} kind="littleText" />
       </View>
       {kind === "default" && <Icon icon="right" />}
     </TouchableOpacity>
