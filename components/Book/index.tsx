@@ -25,7 +25,7 @@ const Book = ({
   defaultValue = false,
   ...props
 }: BookProps) => {
-  const styles = useStyles();
+  const styles = useStyles(isChecked);
 
   const [checked, setChecked] = useState<boolean | undefined>(
     isChecked || defaultValue
@@ -52,24 +52,34 @@ const Book = ({
   };
 
   return (
-    <TouchableOpacity style={styles.component}>
+    <View>
       {kind !== "order" ? (
-        <CheckBox
-          wrapperStyle={styles.wrapper}
-          containerStyle={styles.container}
-          checked={checked}
-          onPress={handlePressCheck}
-          {...props}
-          title={
-            <View style={styles.content}>
-              <View>
-                <Text text={title} kind="paragraph" />
-                <Text text={author} kind="littleText" />
-              </View>
-              <Icon icon="right" />
+        <View style={styles.container}>
+          <CheckBox
+            containerStyle={{ backgroundColor: "transparent" }}
+            checked={checked}
+            onPress={handlePressCheck}
+            iconType="material-community"
+            checkedIcon={
+              kind === "library" ? "checkbox-outline" : "plus-circle-outline"
+            }
+            uncheckedIcon={
+              kind === "library"
+                ? "checkbox-blank-outline"
+                : "plus-circle-outline"
+            }
+            checkedColor={kind === "library" ? "black" : "#38AD59"}
+            uncheckedColor={kind === "library" ? "gray" : "black"}
+            {...props}
+          />
+          <TouchableOpacity style={styles.content} onPress={handlePress}>
+            <View>
+              <Text text={title} kind="paragraph" />
+              <Text text={author} kind="littleText" />
             </View>
-          }
-        />
+            <Icon icon="right" />
+          </TouchableOpacity>
+        </View>
       ) : (
         <View style={styles.removeBookContainer}>
           <View>
@@ -79,23 +89,26 @@ const Book = ({
           <Icon color="red" icon="minus" onPress={handleDelete} />
         </View>
       )}
-    </TouchableOpacity>
+    </View>
   );
 };
 
-const useStyles = makeStyles(() => ({
-  component: {
-    minWidth: "100%",
-  },
-  wrapper: { gap: 20 },
+const useStyles = makeStyles((isChecked) => ({
   container: {
+    paddingRight: 20,
+    flexDirection: "row",
     minWidth: "100%",
   },
+
   content: {
+    flex: 1,
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "space-between",
   },
+
   removeBookContainer: {
+    minWidth: "100%",
     backgroundColor: "#F8EBDD",
     paddingHorizontal: 20,
     paddingVertical: 10,
