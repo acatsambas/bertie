@@ -2,14 +2,18 @@ import { Icon } from "@rneui/themed";
 
 interface IconProps {
   icon: string;
+  onPress?(): void;
+  color?: string;
 }
 
-const CustomIcon = ({ icon }: IconProps) => {
+const CustomIcon = ({ icon, onPress, color }: IconProps) => {
   return (
     <Icon
       type={icon in iconType && iconType[icon].type}
       name={icon in iconType && iconType[icon].name}
       containerStyle={{}}
+      onPress={onPress}
+      color={color}
     />
   );
 };
@@ -50,6 +54,10 @@ const iconType = {
   right: {
     type: "material-community",
     name: "chevron-right",
+  },
+  minus: {
+    type: "material-community",
+    name: "minus-circle-outline",
   },
 };
 

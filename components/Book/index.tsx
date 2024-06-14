@@ -47,11 +47,17 @@ const Book = ({
   const handlePress = () => {
     //TODO: Navigates to book information
   };
+
+  const handleDelete = () => {
+    //TODO: Remove book from the cart
+  };
+
   return (
-    <TouchableOpacity style={styles.container}>
-      {kind !== "order" && (
+    <TouchableOpacity style={styles.component}>
+      {kind !== "order" ? (
         <CheckBox
           wrapperStyle={styles.wrapper}
+          containerStyle={styles.container}
           checked={checked}
           onPress={handlePressCheck}
           {...props}
@@ -65,19 +71,39 @@ const Book = ({
             </View>
           }
         />
+      ) : (
+        <View style={styles.removeBookContainer}>
+          <View>
+            <Text text={title} kind="paragraph" />
+            <Text text={author} kind="author" />
+          </View>
+          <Icon color="red" icon="minus" onPress={handleDelete} />
+        </View>
       )}
     </TouchableOpacity>
   );
 };
 
 const useStyles = makeStyles(() => ({
-  container: {
+  component: {
     minWidth: "100%",
   },
   wrapper: { gap: 20 },
+  container: {
+    minWidth: "100%",
+  },
   content: {
     flexDirection: "row",
     alignItems: "center",
+  },
+  removeBookContainer: {
+    backgroundColor: "#F8EBDD",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 20,
   },
 }));
 
