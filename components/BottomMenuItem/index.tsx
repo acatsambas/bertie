@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 
 import { makeStyles } from "@rneui/themed";
 
@@ -8,15 +8,16 @@ import Icon from "../Icon";
 interface BottomMenuItem {
   icon: string;
   title: string;
+  onPress(): void;
 }
 
-const BottomMenuItem = ({ icon, title }: BottomMenuItem) => {
+const BottomMenuItem = ({ icon, title, onPress }: BottomMenuItem) => {
   const styles = useStyles();
   return (
-    <View style={styles.menuItem}>
+    <TouchableOpacity style={styles.menuItem} onPress={onPress}>
       <Icon icon={icon} />
       <Text text={title} kind="paragraph" />
-    </View>
+    </TouchableOpacity>
   );
 };
 

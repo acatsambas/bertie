@@ -8,6 +8,8 @@ import AddressScreen from "../../screens/AddressScreen";
 import DiscoverScreen from "../../screens/DiscoverScreen";
 import LibraryScreen from "../../screens/LibraryScreen";
 import OrderScreen from "../../screens/OrderScreen";
+import { Platform } from "react-native";
+import { TransitionPresets } from "@react-navigation/stack";
 
 export const AppStack = createNativeStackNavigator<AppNavigatorParamList>();
 
@@ -47,17 +49,26 @@ const AppNagivator = () => {
       <AppStack.Screen
         name="Discover"
         component={DiscoverScreen}
-        options={{ title: t(translations.discover.title), headerShown: false }}
+        options={{
+          title: t(translations.discover.title),
+          animation: "none",
+        }}
       />
       <AppStack.Screen
         name="Library"
         component={LibraryScreen}
-        options={{ title: t(translations.library.title), headerShown: false }}
+        options={{
+          title: t(translations.library.title),
+          animation: "none",
+        }}
       />
       <AppStack.Screen
         name="Order"
         component={OrderScreen}
-        options={{ title: t(translations.order.title), headerShown: false }}
+        options={{
+          title: t(translations.order.title),
+          animation: "none",
+        }}
       />
     </AppStack.Navigator>
   );

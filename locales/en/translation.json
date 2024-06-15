@@ -59,7 +59,10 @@
     }
   },
   "discover": {
-    "title": "Discover"
+    "title": "Discover",
+    "bookshops": "Bookshops",
+    "books": "Books",
+    "description": "Add your address to see bookshops near you!"
   },
   "library": {
     "title": "My list"
