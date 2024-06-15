@@ -13,6 +13,8 @@ import { AuthContext } from "../../api/auth/AuthProvider";
 import Button from "../../components/Button";
 import Text from "../../components/Text";
 import Icon from "../../components/Icon";
+import Book from "../../components/Book";
+import BookShop from "../../components/Bookshop";
 
 export interface SettingsPageProps
   extends StackNavigationProp<SettingsNavigatorParamList, "Settings"> {}
@@ -92,7 +94,7 @@ const useStyles = makeStyles(() => ({
     justifyContent: "space-between",
   },
   container: { paddingTop: 20, gap: 20 },
-  buttonsArea: { gap: 10 },
+  buttonsArea: { gap: 10, marginTop: 20 },
   bottomArea: { flex: 1, alignItems: "center", gap: 20 },
 }));
 
