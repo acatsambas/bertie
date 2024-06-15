@@ -13,8 +13,6 @@ import { AuthContext } from "../../api/auth/AuthProvider";
 import Button from "../../components/Button";
 import Text from "../../components/Text";
 import Icon from "../../components/Icon";
-import Book from "../../components/Book";
-import BookShop from "../../components/Bookshop";
 
 export interface SettingsPageProps
   extends StackNavigationProp<SettingsNavigatorParamList, "Settings"> {}
