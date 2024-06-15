@@ -57,5 +57,14 @@
       "country": "Country",
       "button": "Save"
     }
+  },
+  "discover": {
+    "title": "Discover"
+  },
+  "library": {
+    "title": "My list"
+  },
+  "order": {
+    "title": "Order"
   }
 }
