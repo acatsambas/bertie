@@ -47,18 +47,18 @@ const AppNagivator = () => {
       }}
     >
       <AppStack.Screen
-        name="Discover"
-        component={DiscoverScreen}
-        options={{
-          title: t(translations.discover.title),
-          animation: "none",
-        }}
-      />
-      <AppStack.Screen
         name="Library"
         component={LibraryScreen}
         options={{
           title: t(translations.library.title),
+          animation: "none",
+        }}
+      />
+      <AppStack.Screen
+        name="Discover"
+        component={DiscoverScreen}
+        options={{
+          title: t(translations.discover.title),
           animation: "none",
         }}
       />
