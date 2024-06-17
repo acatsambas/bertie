@@ -31,12 +31,16 @@ const SettingsScreen = () => {
     navigate("ChangeAddress");
   };
 
+  const handleExit = () => {
+    // TODO: Go back to previous screen / close settings
+  };
+
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <View style={styles.container}>
         <View style={styles.header}>
           <Text kind="bigHeader" text={t(translations.settings.title)} />
-          <Icon icon="x" />
+          <Icon icon="x" onPress={handleExit} />
         </View>
         <Button
           kind="secondary"

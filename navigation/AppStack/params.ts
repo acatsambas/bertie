@@ -7,4 +7,5 @@ export type AppNavigatorParamList = {
   Discover: undefined;
   Library: undefined;
   Order: undefined;
+  Settings: undefined;
 };

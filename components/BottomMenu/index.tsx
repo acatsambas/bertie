@@ -9,7 +9,7 @@ import { menuItems } from "../../utils/data";
 import { AppNavigatorParamList } from "../../navigation/AppStack/params";
 
 export interface BottomMenuProps
-  extends StackNavigationProp<AppNavigatorParamList, "Discover"> {}
+  extends StackNavigationProp<AppNavigatorParamList, "Library"> {}
 
 const BottomMenu = () => {
   const { navigate } = useNavigation<BottomMenuProps>();
