@@ -23,6 +23,7 @@ const Book = ({
   kind,
   isChecked,
   defaultValue = false,
+  onPress,
   ...props
 }: BookProps) => {
   const styles = useStyles(isChecked);
@@ -41,10 +42,6 @@ const Book = ({
     const newValue = !checked;
     setChecked(newValue);
     props.onChange?.(newValue);
-  };
-
-  const handlePress = () => {
-    //TODO: Navigates to book information
   };
 
   const handleDelete = () => {
@@ -72,7 +69,7 @@ const Book = ({
             uncheckedColor={kind === "library" ? "gray" : "black"}
             {...props}
           />
-          <TouchableOpacity style={styles.content} onPress={handlePress}>
+          <TouchableOpacity style={styles.content} onPress={onPress}>
             <View>
               <Text text={title} kind="paragraph" />
               <Text text={author} kind="littleText" />

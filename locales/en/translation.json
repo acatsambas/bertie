@@ -65,7 +65,9 @@
     "description": "Add your address to see bookshops near you!"
   },
   "library": {
-    "title": "My list"
+    "title": "My list",
+    "current": "Current",
+    "past": "Past"
   },
   "order": {
     "title": "Order"

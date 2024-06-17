@@ -1,4 +1,3 @@
-import React from "react";
 import { View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -12,6 +11,7 @@ import { translations } from "../../locales/translations";
 import BottomMenu from "../../components/BottomMenu";
 import Text from "../../components/Text";
 import Avatar from "../../components/Avatar";
+import MyList from "../../components/MyList";
 
 export interface LibraryScreenProps
   extends StackNavigationProp<AppNavigatorParamList, "Library"> {}
@@ -32,6 +32,7 @@ const LibraryScreen = () => {
           <Text text={t(translations.library.title)} kind="bigHeader" />
           <Avatar onPress={handleAvatarClick} />
         </View>
+        <MyList />
       </View>
       <View style={styles.bottomArea}>
         <BottomMenu />
