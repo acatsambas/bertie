@@ -1,4 +1,4 @@
-import { Icon } from "@rneui/themed";
+import { Icon as RNEIcon } from "@rneui/themed";
 
 interface IconProps {
   icon: string;
@@ -6,9 +6,9 @@ interface IconProps {
   color?: string;
 }
 
-const CustomIcon = ({ icon, onPress, color }: IconProps) => {
+const Icon = ({ icon, onPress, color }: IconProps) => {
   return (
-    <Icon
+    <RNEIcon
       type={icon in iconType && iconType[icon].type}
       name={icon in iconType && iconType[icon].name}
       containerStyle={{}}
@@ -61,4 +61,4 @@ const iconType = {
   },
 };
 
-export default CustomIcon;
+export default Icon;

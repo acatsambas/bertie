@@ -1,4 +1,4 @@
-import { Input } from "@rneui/themed";
+import { Input as RNEInput } from "@rneui/themed";
 
 import Icon from "../Icon";
 import { TextInputProps } from "react-native";
@@ -9,14 +9,9 @@ interface InputProps extends TextInputProps {
   icon?: string;
 }
 
-const CustomInput = ({
-  placeholder,
-  kind,
-  icon,
-  ...inputProps
-}: InputProps) => {
+const Input = ({ placeholder, kind, icon, ...inputProps }: InputProps) => {
   return (
-    <Input
+    <RNEInput
       {...inputProps}
       placeholder={placeholder}
       secureTextEntry={kind === "password" ? true : false}
@@ -34,4 +29,4 @@ const CustomInput = ({
   );
 };
 
-export default CustomInput;
+export default Input;

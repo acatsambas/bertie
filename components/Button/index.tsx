@@ -1,4 +1,4 @@
-import { Button, useTheme } from "@rneui/themed";
+import { Button as RNEButton, useTheme } from "@rneui/themed";
 import Icon from "../Icon";
 
 interface ButtonProps {
@@ -8,11 +8,11 @@ interface ButtonProps {
   icon?: string;
 }
 
-const CustomButton = ({ text, onPress, kind, icon }: ButtonProps) => {
+const Button = ({ text, onPress, kind, icon }: ButtonProps) => {
   const { theme } = useTheme();
 
   return (
-    <Button
+    <RNEButton
       onPress={onPress}
       buttonStyle={{
         justifyContent: kind === "secondary" ? "flex-start" : "center",
@@ -31,8 +31,8 @@ const CustomButton = ({ text, onPress, kind, icon }: ButtonProps) => {
     >
       {icon && <Icon icon={icon} />}
       {text}
-    </Button>
+    </RNEButton>
   );
 };
 
-export default CustomButton;
+export default Button;

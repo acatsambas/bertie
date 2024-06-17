@@ -1,4 +1,4 @@
-import { Text, useTheme } from "@rneui/themed";
+import { Text as RNEText, useTheme } from "@rneui/themed";
 
 interface TextProps {
   kind: "bigHeader" | "header" | "paragraph" | "littleText" | "button";
@@ -6,11 +6,11 @@ interface TextProps {
   onPress?(): void;
 }
 
-const CustomText = ({ kind, text, onPress }: TextProps) => {
+const Text = ({ kind, text, onPress }: TextProps) => {
   const { theme } = useTheme();
 
   return (
-    <Text
+    <RNEText
       style={{
         fontFamily: kind in textKind && textKind[kind].fontFamily,
         fontSize: kind in textKind && textKind[kind].size,
@@ -20,7 +20,7 @@ const CustomText = ({ kind, text, onPress }: TextProps) => {
       onPress={onPress}
     >
       {text}
-    </Text>
+    </RNEText>
   );
 };
 
@@ -32,4 +32,4 @@ const textKind = {
   button: { size: 16, fontFamily: "Commissioner Bold" },
 };
 
-export default CustomText;
+export default Text;
