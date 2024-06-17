@@ -26,7 +26,7 @@ const Book = ({
   onPress,
   ...props
 }: BookProps) => {
-  const styles = useStyles(isChecked);
+  const styles = useStyles();
 
   const [checked, setChecked] = useState<boolean | undefined>(
     isChecked || defaultValue
@@ -42,6 +42,7 @@ const Book = ({
     const newValue = !checked;
     setChecked(newValue);
     props.onChange?.(newValue);
+    console.log(checked);
   };
 
   return (
@@ -61,16 +62,16 @@ const Book = ({
                 ? "checkbox-blank-outline"
                 : "plus-circle-outline"
             }
-            checkedColor={kind === "library" ? "black" : "#38AD59"}
-            uncheckedColor={kind === "library" ? "gray" : "black"}
+            checkedColor={kind === "library" ? "gray" : "#38AD59"}
+            uncheckedColor={kind === "library" ? "black" : "gray"}
             {...props}
           />
           <TouchableOpacity style={styles.content} onPress={onPress}>
             <View>
-              <Text text={title} kind="paragraph" />
-              <Text text={author} kind="littleText" />
+              <Text text={title} kind="paragraph" color={checked && "grey"} />
+              <Text text={author} kind="littleText" color={checked && "grey"} />
             </View>
-            <Icon icon="right" />
+            <Icon icon="right" color={checked && "grey"} />
           </TouchableOpacity>
         </View>
       ) : (
@@ -86,7 +87,7 @@ const Book = ({
   );
 };
 
-const useStyles = makeStyles((isChecked) => ({
+const useStyles = makeStyles(() => ({
   container: {
     paddingRight: 20,
     flexDirection: "row",
