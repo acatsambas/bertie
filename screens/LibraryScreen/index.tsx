@@ -32,7 +32,8 @@ const LibraryScreen = () => {
           <Text text={t(translations.library.title)} kind="bigHeader" />
           <Avatar onPress={handleAvatarClick} />
         </View>
-        <MyList />
+        <MyList kind="current" />
+        <MyList kind="past" />
       </View>
       <View style={styles.bottomArea}>
         <BottomMenu />

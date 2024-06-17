@@ -42,7 +42,6 @@ const Book = ({
     const newValue = !checked;
     setChecked(newValue);
     props.onChange?.(newValue);
-    console.log(checked);
   };
 
   return (

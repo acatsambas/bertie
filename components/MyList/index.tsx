@@ -9,7 +9,11 @@ import Text from "../Text";
 import Book from "../Book";
 import Icon from "../Icon";
 
-const MyList = () => {
+interface MyListProps {
+  kind?: "current" | "past";
+}
+
+const MyList = ({ kind }: MyListProps) => {
   const styles = useStyles();
   const { t } = useTranslation();
   const { navigate } = useNavigation();
@@ -18,31 +22,43 @@ const MyList = () => {
 
   return (
     <View style={styles.container}>
-      <Text text={t(translations.library.current)} kind="header" />
-      <TouchableOpacity style={styles.text}>
-        <Icon icon="plus" color="grey" />
-        <Text
-          kind="paragraph"
-          text={t(translations.library.addBook)}
-          color="grey"
-        />
-      </TouchableOpacity>
+      <Text
+        text={
+          kind === "current"
+            ? t(translations.library.current)
+            : t(translations.library.past)
+        }
+        kind="header"
+      />
+      {kind === "current" && (
+        <TouchableOpacity style={styles.text}>
+          <Icon icon="plus" color="grey" />
+          <Text
+            kind="paragraph"
+            text={t(translations.library.addBook)}
+            color="grey"
+          />
+        </TouchableOpacity>
+      )}
       <View>
         <Book
           title="Infinite Jest"
           author="David Foster Wallance"
           kind="library"
+          isChecked={kind === "past"}
           onPress={() => handleBook("Infinite Jest")}
         />
         <Book
           title="A Gentleman in Moscow"
           author="Armor Towles"
           kind="library"
+          isChecked={kind === "past"}
         />
         <Book
           title="The Blind Assassin"
           author="Margaret Atwood"
           kind="library"
+          isChecked={kind === "past"}
         />
       </View>
     </View>
