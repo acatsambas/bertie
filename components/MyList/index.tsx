@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useNavigation } from "@react-navigation/native";
 
@@ -7,6 +7,7 @@ import { makeStyles } from "@rneui/themed";
 import { translations } from "../../locales/translations";
 import Text from "../Text";
 import Book from "../Book";
+import Icon from "../Icon";
 
 const MyList = () => {
   const styles = useStyles();
@@ -16,8 +17,16 @@ const MyList = () => {
   const handleBook = (bookName: string) => {};
 
   return (
-    <View>
+    <View style={styles.container}>
       <Text text={t(translations.library.current)} kind="header" />
+      <TouchableOpacity style={styles.text}>
+        <Icon icon="plus" color="grey" />
+        <Text
+          kind="paragraph"
+          text={t(translations.library.addBook)}
+          color="grey"
+        />
+      </TouchableOpacity>
       <View>
         <Book
           title="Infinite Jest"
@@ -40,6 +49,21 @@ const MyList = () => {
   );
 };
 
-const useStyles = makeStyles(() => ({}));
+const useStyles = makeStyles(() => ({
+  container: {
+    gap: 20,
+  },
+  text: {
+    flexDirection: "row",
+    paddingHorizontal: 20,
+    paddingVertical: 17,
+    gap: 20,
+    borderWidth: 1,
+    borderRadius: 5,
+    borderStyle: "dashed",
+    alignItems: "center",
+    borderColor: "grey",
+  },
+}));
 
 export default MyList;

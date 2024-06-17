@@ -44,10 +44,6 @@ const Book = ({
     props.onChange?.(newValue);
   };
 
-  const handleDelete = () => {
-    //TODO: Remove book from the cart
-  };
-
   return (
     <View>
       {kind !== "order" ? (
@@ -83,7 +79,7 @@ const Book = ({
             <Text text={title} kind="paragraph" />
             <Text text={author} kind="littleText" />
           </View>
-          <Icon color="red" icon="minus" onPress={handleDelete} />
+          <Icon color="red" icon="minus" />
         </View>
       )}
     </View>

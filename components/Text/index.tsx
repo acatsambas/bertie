@@ -4,9 +4,10 @@ interface TextProps {
   kind: "bigHeader" | "header" | "paragraph" | "littleText" | "button";
   text: string;
   onPress?(): void;
+  color?: string;
 }
 
-const Text = ({ kind, text, onPress }: TextProps) => {
+const Text = ({ kind, text, onPress, color }: TextProps) => {
   const { theme } = useTheme();
 
   return (
@@ -14,8 +15,11 @@ const Text = ({ kind, text, onPress }: TextProps) => {
       style={{
         fontFamily: kind in textKind && textKind[kind].fontFamily,
         fontSize: kind in textKind && textKind[kind].size,
-        color:
-          kind === "button" ? theme.colors.primary : theme.colors.secondary,
+        color: color
+          ? color
+          : kind === "button"
+          ? theme.colors.primary
+          : theme.colors.secondary,
       }}
       onPress={onPress}
     >

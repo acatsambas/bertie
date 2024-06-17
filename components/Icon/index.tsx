@@ -59,6 +59,10 @@ const iconType = {
     type: "material-community",
     name: "minus-circle-outline",
   },
+  plus: {
+    type: "material-community",
+    name: "plus",
+  },
 };
 
 export default Icon;
