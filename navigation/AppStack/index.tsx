@@ -1,6 +1,10 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useTranslation } from "react-i18next";
-import { AppNavigatorParamList, SettingsNavigatorParamList } from "./params";
+import {
+  AppNavigatorParamList,
+  LibraryNavigatorParamList,
+  SettingsNavigatorParamList,
+} from "./params";
 
 import { translations } from "../../locales/translations";
 import SettingsScreen from "../../screens/SettingsScreen";
@@ -8,11 +12,15 @@ import AddressScreen from "../../screens/AddressScreen";
 import DiscoverScreen from "../../screens/DiscoverScreen";
 import LibraryScreen from "../../screens/LibraryScreen";
 import OrderScreen from "../../screens/OrderScreen";
+import BookScreen from "../../screens/BookScreen";
 
 export const AppStack = createNativeStackNavigator<AppNavigatorParamList>();
 
 export const SettingsStack =
   createNativeStackNavigator<SettingsNavigatorParamList>();
+
+export const LibraryStack =
+  createNativeStackNavigator<LibraryNavigatorParamList>();
 
 const SettingsNavigator = () => {
   const { t } = useTranslation();
@@ -36,6 +44,28 @@ const SettingsNavigator = () => {
   );
 };
 
+const LibraryNavigator = () => {
+  const { t } = useTranslation();
+  return (
+    <LibraryStack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <LibraryStack.Screen
+        name="Library"
+        component={LibraryScreen}
+        options={{ title: t(translations.library.title), animation: "none" }}
+      />
+      <LibraryStack.Screen
+        name="Book"
+        component={BookScreen}
+        options={{ title: t(translations.library.book), animation: "none" }}
+      />
+    </LibraryStack.Navigator>
+  );
+};
+
 const AppNagivator = () => {
   const { t } = useTranslation();
   return (
@@ -46,7 +76,7 @@ const AppNagivator = () => {
     >
       <AppStack.Screen
         name="Library"
-        component={LibraryScreen}
+        component={LibraryNavigator}
         options={{
           title: t(translations.library.title),
           animation: "none",
@@ -70,7 +100,7 @@ const AppNagivator = () => {
       />
       <AppStack.Screen
         name="Settings"
-        component={SettingsScreen}
+        component={SettingsNavigator}
         options={{
           title: t(translations.settings.title),
           animation: "none",

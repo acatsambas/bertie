@@ -1,9 +1,11 @@
 import { View, TouchableOpacity } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 import { makeStyles } from "@rneui/themed";
 
+import { LibraryNavigatorParamList } from "../../navigation/AppStack/params";
 import { translations } from "../../locales/translations";
 import Text from "../Text";
 import Book from "../Book";
@@ -13,12 +15,17 @@ interface MyListProps {
   kind?: "current" | "past";
 }
 
+export interface LibraryPageProps
+  extends StackNavigationProp<LibraryNavigatorParamList, "Library"> {}
+
 const MyList = ({ kind }: MyListProps) => {
   const styles = useStyles();
   const { t } = useTranslation();
-  const { navigate } = useNavigation();
+  const { navigate } = useNavigation<LibraryPageProps>();
 
-  const handleBook = (bookName: string) => {};
+  const handleBook = (bookName: string) => {
+    navigate("Book", { bookName: bookName });
+  };
 
   return (
     <View style={styles.container}>
@@ -35,7 +42,7 @@ const MyList = ({ kind }: MyListProps) => {
           <Icon icon="plus" color="grey" />
           <Text
             kind="paragraph"
-            text={t(translations.library.addBook)}
+            text={t(translations.library.searchTitle)}
             color="grey"
           />
         </TouchableOpacity>

@@ -3,6 +3,11 @@ export type SettingsNavigatorParamList = {
   ChangeAddress: undefined;
 };
 
+export type LibraryNavigatorParamList = {
+  Library: undefined;
+  Book: { bookName: string };
+};
+
 export type AppNavigatorParamList = {
   Discover: undefined;
   Library: undefined;

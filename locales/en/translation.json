@@ -68,7 +68,10 @@
     "title": "My list",
     "current": "Current",
     "past": "Past",
-    "addBook": "Type the title of a book to add it"
+    "searchTitle": "Type the title of a book to add it",
+    "book": "Book",
+    "add": "Add to My List",
+    "back": "Back"
   },
   "order": {
     "title": "Order"
