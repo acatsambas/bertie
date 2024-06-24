@@ -6,6 +6,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
 
 import { makeStyles } from "@rneui/themed";
+import { Tab } from "@rneui/themed";
 
 import { AppNavigatorParamList } from "../../navigation/AppStack/params";
 import { translations } from "../../locales/translations";
@@ -22,7 +23,7 @@ const DiscoverScreen = () => {
   const { t } = useTranslation();
   const { navigate } = useNavigation<DiscoverScreenProps>();
 
-  const [tab, setTab] = useState("Bookshops");
+  const [index, setIndex] = useState(0);
 
   const handleAvatarClick = () => {
     navigate("Settings");
@@ -35,19 +36,15 @@ const DiscoverScreen = () => {
           <Text text={t(translations.discover.title)} kind="bigHeader" />
           <Avatar onPress={handleAvatarClick} />
         </View>
-        <View style={styles.tabs}>
-          <Text
-            text={t(translations.discover.bookshops)}
-            kind="header"
-            onPress={() => setTab("Bookshops")}
-          />
-          <Text
-            text={t(translations.discover.books)}
-            kind="header"
-            onPress={() => setTab("Books")}
-          />
-        </View>
-        {tab === "Bookshops" ? (
+        <Tab
+          value={index}
+          onChange={setIndex}
+          titleStyle={{ fontFamily: "Goudy Bookletter 1911", fontSize: 24 }}
+        >
+          <Tab.Item>{t(translations.discover.bookshops)}</Tab.Item>
+          <Tab.Item>{t(translations.discover.books)}</Tab.Item>
+        </Tab>
+        {index === 0 ? (
           <View style={styles.bookshopContainer}>
             <View style={styles.description}>
               <Text
