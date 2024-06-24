@@ -8,6 +8,11 @@ export type LibraryNavigatorParamList = {
   Book: { bookName: string };
 };
 
+export type DiscoverNavigatorParamList = {
+  Discover: undefined;
+  Bookshop: { bookshopName: string };
+};
+
 export type AppNavigatorParamList = {
   Discover: undefined;
   Library: undefined;
