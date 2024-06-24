@@ -62,7 +62,10 @@
     "title": "Discover",
     "bookshops": "Bookshops",
     "books": "Books",
-    "description": "Add your address to see bookshops near you!"
+    "description": "Add your address to see bookshops near you!",
+    "bookshop": "Bookshop",
+    "add": "Add to Favourites",
+    "back": "Back"
   },
   "library": {
     "title": "My list",
