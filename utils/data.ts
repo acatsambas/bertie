@@ -2,12 +2,12 @@ export const menuItems = [
   {
     icon: "myList",
     title: "My list",
-    screen: "Library",
+    screen: "LibraryNavigator",
   },
   {
     icon: "discover",
     title: "Discover",
-    screen: "Discover",
+    screen: "DiscoverNavigator",
   },
   {
     icon: "order",

@@ -17,7 +17,7 @@ import Avatar from "../../components/Avatar";
 import BookshopsList from "../../components/BookshopsList";
 
 export interface DiscoverScreenProps
-  extends StackNavigationProp<AppNavigatorParamList, "Discover"> {}
+  extends StackNavigationProp<AppNavigatorParamList, "DiscoverNavigator"> {}
 
 const DiscoverScreen = () => {
   const styles = useStyles();
@@ -27,7 +27,7 @@ const DiscoverScreen = () => {
   const [index, setIndex] = useState(0);
 
   const handleAvatarClick = () => {
-    navigate("Settings");
+    navigate("SettingsNavigator");
   };
 
   return (

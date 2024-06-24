@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useTranslation } from "react-i18next";
 import {
   AppNavigatorParamList,
+  DiscoverNavigatorParamList,
   LibraryNavigatorParamList,
   SettingsNavigatorParamList,
 } from "./params";
@@ -13,6 +14,7 @@ import DiscoverScreen from "../../screens/DiscoverScreen";
 import LibraryScreen from "../../screens/LibraryScreen";
 import OrderScreen from "../../screens/OrderScreen";
 import BookScreen from "../../screens/BookScreen";
+import BookshopScreen from "../../screens/BookshopScreen";
 
 export const AppStack = createNativeStackNavigator<AppNavigatorParamList>();
 
@@ -21,6 +23,9 @@ export const SettingsStack =
 
 export const LibraryStack =
   createNativeStackNavigator<LibraryNavigatorParamList>();
+
+export const DiscoverStack =
+  createNativeStackNavigator<DiscoverNavigatorParamList>();
 
 const SettingsNavigator = () => {
   const { t } = useTranslation();
@@ -66,6 +71,31 @@ const LibraryNavigator = () => {
   );
 };
 
+const DiscoverNavigator = () => {
+  const { t } = useTranslation();
+  return (
+    <DiscoverStack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <DiscoverStack.Screen
+        name="Discover"
+        component={DiscoverScreen}
+        options={{ title: t(translations.discover.title), animation: "none" }}
+      />
+      <DiscoverStack.Screen
+        name="Bookshop"
+        component={BookshopScreen}
+        options={{
+          title: t(translations.discover.bookshop),
+          animation: "none",
+        }}
+      />
+    </DiscoverStack.Navigator>
+  );
+};
+
 const AppNagivator = () => {
   const { t } = useTranslation();
   return (
@@ -75,7 +105,7 @@ const AppNagivator = () => {
       }}
     >
       <AppStack.Screen
-        name="Library"
+        name="LibraryNavigator"
         component={LibraryNavigator}
         options={{
           title: t(translations.library.title),
@@ -83,8 +113,8 @@ const AppNagivator = () => {
         }}
       />
       <AppStack.Screen
-        name="Discover"
-        component={DiscoverScreen}
+        name="DiscoverNavigator"
+        component={DiscoverNavigator}
         options={{
           title: t(translations.discover.title),
           animation: "none",
@@ -99,7 +129,7 @@ const AppNagivator = () => {
         }}
       />
       <AppStack.Screen
-        name="Settings"
+        name="SettingsNavigator"
         component={SettingsNavigator}
         options={{
           title: t(translations.settings.title),

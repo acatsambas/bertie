@@ -14,8 +14,8 @@ export type DiscoverNavigatorParamList = {
 };
 
 export type AppNavigatorParamList = {
-  Discover: undefined;
-  Library: undefined;
+  DiscoverNavigator: undefined;
+  LibraryNavigator: undefined;
   Order: undefined;
-  Settings: undefined;
+  SettingsNavigator: undefined;
 };

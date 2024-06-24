@@ -14,7 +14,7 @@ import Avatar from "../../components/Avatar";
 import MyList from "../../components/MyList";
 
 export interface LibraryScreenProps
-  extends StackNavigationProp<AppNavigatorParamList, "Library"> {}
+  extends StackNavigationProp<AppNavigatorParamList, "LibraryNavigator"> {}
 
 const LibraryScreen = () => {
   const styles = useStyles();
@@ -22,7 +22,7 @@ const LibraryScreen = () => {
   const { navigate } = useNavigation<LibraryScreenProps>();
 
   const handleAvatarClick = () => {
-    navigate("Settings");
+    navigate("SettingsNavigator");
   };
 
   return (
