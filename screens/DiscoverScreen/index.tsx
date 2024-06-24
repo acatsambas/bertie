@@ -14,6 +14,7 @@ import Text from "../../components/Text";
 import BottomMenu from "../../components/BottomMenu";
 import BookShop from "../../components/Bookshop";
 import Avatar from "../../components/Avatar";
+import BookshopsList from "../../components/BookshopsList";
 
 export interface DiscoverScreenProps
   extends StackNavigationProp<AppNavigatorParamList, "Discover"> {}
@@ -52,14 +53,7 @@ const DiscoverScreen = () => {
                 kind="paragraph"
               />
             </View>
-            <View style={styles.bookshops}>
-              <BookShop name="Daunt Books" location="London" kind="default" />
-              <BookShop
-                name="John Sandoe Books"
-                location="London"
-                kind="default"
-              />
-            </View>
+            <BookshopsList />
           </View>
         ) : (
           <View></View>
@@ -93,9 +87,6 @@ const useStyles = makeStyles(() => ({
     backgroundColor: "#F3EAFF",
     paddingHorizontal: 15,
     paddingVertical: 10,
-  },
-  bookshops: {
-    overflow: "hidden",
   },
   bottomArea: {
     flex: 1,
