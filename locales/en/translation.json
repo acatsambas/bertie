@@ -74,7 +74,11 @@
     "searchTitle": "Type the title of a book to add it",
     "book": "Book",
     "add": "Add to My List",
-    "back": "Back"
+    "back": "Back",
+    "search": {
+      "title": "Search for books",
+      "addToList": "Tap on the plus sign to add a book to your list"
+    }
   },
   "order": {
     "title": "Order"

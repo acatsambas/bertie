@@ -15,6 +15,7 @@ import LibraryScreen from "../../screens/LibraryScreen";
 import OrderScreen from "../../screens/OrderScreen";
 import BookScreen from "../../screens/BookScreen";
 import BookshopScreen from "../../screens/BookshopScreen";
+import SearchBookScreen from "../../screens/SearchBookScreen";
 
 export const AppStack = createNativeStackNavigator<AppNavigatorParamList>();
 
@@ -66,6 +67,14 @@ const LibraryNavigator = () => {
         name="Book"
         component={BookScreen}
         options={{ title: t(translations.library.book), animation: "none" }}
+      />
+      <LibraryStack.Screen
+        name="Search"
+        component={SearchBookScreen}
+        options={{
+          title: t(translations.library.search.title),
+          animation: "none",
+        }}
       />
     </LibraryStack.Navigator>
   );

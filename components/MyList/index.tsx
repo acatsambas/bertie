@@ -27,6 +27,10 @@ const MyList = ({ kind }: MyListProps) => {
     navigate("Book", { bookName: bookName });
   };
 
+  const handlePress = () => {
+    navigate("Search");
+  };
+
   return (
     <View style={styles.container}>
       <Text
@@ -38,7 +42,7 @@ const MyList = ({ kind }: MyListProps) => {
         kind="header"
       />
       {kind === "current" && (
-        <TouchableOpacity style={styles.text}>
+        <TouchableOpacity style={styles.text} onPress={handlePress}>
           <Icon icon="plus" color="grey" />
           <Text
             kind="paragraph"
