@@ -67,10 +67,21 @@ const Book = ({
           />
           <TouchableOpacity style={styles.content} onPress={onPress}>
             <View>
-              <Text text={title} kind="paragraph" color={checked && "grey"} />
-              <Text text={author} kind="littleText" color={checked && "grey"} />
+              <Text
+                text={title}
+                kind="paragraph"
+                color={checked && kind === "library" && "grey"}
+              />
+              <Text
+                text={author}
+                kind="littleText"
+                color={checked && kind === "library" && "grey"}
+              />
             </View>
-            <Icon icon="right" color={checked && "grey"} />
+            <Icon
+              icon="right"
+              color={checked && kind === "library" && "grey"}
+            />
           </TouchableOpacity>
         </View>
       ) : (
