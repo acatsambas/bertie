@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 
 import { makeStyles } from "@rneui/themed";
 
-import { AppNavigatorParamList } from "../../navigation/AppStack/params";
+import { LibraryNavigatorParamList } from "../../navigation/AppStack/params";
 import { translations } from "../../locales/translations";
 import BottomMenu from "../../components/BottomMenu";
 import Text from "../../components/Text";
@@ -14,16 +14,16 @@ import Icon from "../../components/Icon";
 import Input from "../../components/Input";
 import SearchBooks from "../../components/SearchBooks";
 
-export interface LibraryScreenProps
-  extends StackNavigationProp<AppNavigatorParamList, "LibraryNavigator"> {}
+export interface SearchBookProps
+  extends StackNavigationProp<LibraryNavigatorParamList, "Search"> {}
 
 const SearchBookScreen = () => {
   const styles = useStyles();
   const { t } = useTranslation();
-  const { navigate } = useNavigation<LibraryScreenProps>();
+  const { navigate } = useNavigation<SearchBookProps>();
 
-  const handleAvatarClick = () => {
-    navigate("SettingsNavigator");
+  const handleCloseClick = () => {
+    navigate("Library");
   };
 
   return (
@@ -31,9 +31,9 @@ const SearchBookScreen = () => {
       <View style={styles.container}>
         <View style={styles.header}>
           <Text text={t(translations.library.search.title)} kind="bigHeader" />
-          <Icon icon="x" />
+          <Icon icon="x" onPress={handleCloseClick} />
         </View>
-        <Input />
+        <Input placeholder="What are you looking for today?" kind="search" />
         <Text
           kind="paragraph"
           text={t(translations.library.search.addToList)}
