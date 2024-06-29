@@ -17,12 +17,13 @@ const Input = ({ placeholder, kind, icon, ...inputProps }: InputProps) => {
       secureTextEntry={kind === "password" ? true : false}
       leftIcon={icon && <Icon icon={icon} />}
       inputContainerStyle={{
-        backgroundColor: "#EEE9E4",
+        backgroundColor: kind === "search" ? "white" : "#EEE9E4",
         borderRadius: 15,
-        borderBottomColor: "transparent",
+        borderBottomColor: kind !== "search" ? "transparent" : "gray",
         paddingVertical: 5,
         paddingLeft: 20,
         gap: 10,
+        borderWidth: kind === "search" && 1,
       }}
       inputStyle={{ fontFamily: "Commissioner Regular" }}
     />
