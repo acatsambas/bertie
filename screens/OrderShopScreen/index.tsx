@@ -1,61 +1,52 @@
-import React from "react";
-import { FlatList, View } from "react-native";
+import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
-import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { useNavigation } from "@react-navigation/native";
 
 import { makeStyles } from "@rneui/themed";
 
 import { translations } from "../../locales/translations";
 import { OrderNavigatorParamList } from "../../navigation/AppStack/params";
-import BottomMenu from "../../components/BottomMenu";
 import Text from "../../components/Text";
-import OrderBooksList from "../../components/OrderBooksList";
 import Button from "../../components/Button";
+import OrderBookshopList from "../../components/OrderBookshopList";
 
 export interface OrderPageProps
-  extends StackNavigationProp<OrderNavigatorParamList, "Order"> {}
+  extends StackNavigationProp<OrderNavigatorParamList, "OrderShop"> {}
 
-const OrderScreen = () => {
+const OrderShopScreen = () => {
   const styles = useStyles();
   const { t } = useTranslation();
   const { navigate } = useNavigation<OrderPageProps>();
 
-  const handleNext = () => {
-    navigate("OrderShop");
+  const handlePlace = () => {
+    navigate("OrderPlaced");
+  };
+
+  const handleBack = () => {
+    navigate("Order");
   };
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <View style={styles.container}>
         <Text text={t(translations.order.title)} kind="bigHeader" />
-        <Text text={t(translations.order.header)} kind="header" />
-        <OrderBooksList />
-        <Text text={t(translations.order.details)} kind="header" />
-        <FlatList
-          data={[
-            { key: "First Name" },
-            { key: "Last Name" },
-            { key: "Email" },
-            { key: "Address" },
-          ]}
-          renderItem={({ item }) => {
-            return (
-              <View style={{ marginBottom: 10 }}>
-                <Text text={`\u2022 ${item.key}`} kind="description" />
-              </View>
-            );
-          }}
-        />
+        <Text text={t(translations.order.where)} kind="paragraph" />
+        <OrderBookshopList kind="favourites" />
+        <OrderBookshopList kind="more" />
       </View>
       <View style={styles.bottomArea}>
         <Button
           kind="primary"
-          text={t(translations.order.next)}
-          onPress={handleNext}
+          text={t(translations.order.place)}
+          onPress={handlePlace}
         />
-        <BottomMenu />
+        <Button
+          kind="tertiary"
+          text={t(translations.order.back)}
+          onPress={handleBack}
+        />
       </View>
     </SafeAreaView>
   );
@@ -76,4 +67,4 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export default OrderScreen;
+export default OrderShopScreen;

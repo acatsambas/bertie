@@ -5,6 +5,7 @@ import {
   DiscoverNavigatorParamList,
   LibraryNavigatorParamList,
   SettingsNavigatorParamList,
+  OrderNavigatorParamList,
 } from "./params";
 
 import { translations } from "../../locales/translations";
@@ -16,6 +17,8 @@ import OrderScreen from "../../screens/OrderScreen";
 import BookScreen from "../../screens/BookScreen";
 import BookshopScreen from "../../screens/BookshopScreen";
 import SearchBookScreen from "../../screens/SearchBookScreen";
+import OrderShopScreen from "../../screens/OrderShopScreen";
+import OrderPlacedScreen from "../../screens/OrderPlacedScreen";
 
 export const AppStack = createNativeStackNavigator<AppNavigatorParamList>();
 
@@ -27,6 +30,8 @@ export const LibraryStack =
 
 export const DiscoverStack =
   createNativeStackNavigator<DiscoverNavigatorParamList>();
+
+export const OrderStack = createNativeStackNavigator<OrderNavigatorParamList>();
 
 const SettingsNavigator = () => {
   const { t } = useTranslation();
@@ -105,6 +110,37 @@ const DiscoverNavigator = () => {
   );
 };
 
+const OrderNavigator = () => {
+  const { t } = useTranslation();
+  return (
+    <OrderStack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <OrderStack.Screen
+        name="Order"
+        component={OrderScreen}
+        options={{ animation: "none" }}
+      />
+      <OrderStack.Screen
+        name="OrderShop"
+        component={OrderShopScreen}
+        options={{
+          animation: "none",
+        }}
+      />
+      <OrderStack.Screen
+        name="OrderPlaced"
+        component={OrderPlacedScreen}
+        options={{
+          animation: "none",
+        }}
+      />
+    </OrderStack.Navigator>
+  );
+};
+
 const AppNagivator = () => {
   const { t } = useTranslation();
   return (
@@ -130,8 +166,8 @@ const AppNagivator = () => {
         }}
       />
       <AppStack.Screen
-        name="Order"
-        component={OrderScreen}
+        name="OrderNavigator"
+        component={OrderNavigator}
         options={{
           title: t(translations.order.title),
           animation: "none",

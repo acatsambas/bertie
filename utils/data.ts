@@ -12,6 +12,6 @@ export const menuItems = [
   {
     icon: "order",
     title: "Order",
-    screen: "Order",
+    screen: "OrderNavigator",
   },
 ];

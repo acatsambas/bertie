@@ -14,9 +14,15 @@ export type DiscoverNavigatorParamList = {
   Bookshop: { bookshopName: string };
 };
 
+export type OrderNavigatorParamList = {
+  Order: undefined;
+  OrderShop: undefined;
+  OrderPlaced: undefined;
+};
+
 export type AppNavigatorParamList = {
   DiscoverNavigator: undefined;
   LibraryNavigator: undefined;
-  Order: undefined;
+  OrderNavigator: undefined;
   SettingsNavigator: undefined;
 };
