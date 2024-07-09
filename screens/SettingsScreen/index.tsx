@@ -17,7 +17,7 @@ import Icon from "../../components/Icon";
 export interface SettingsPageProps
   extends StackNavigationProp<SettingsNavigatorParamList, "Settings"> {}
 
-const SettingsScreen = () => {
+const SettingsScreen = ({ navigation }) => {
   const { navigate } = useNavigation<SettingsPageProps>();
   const { t } = useTranslation();
   const styles = useStyles();
@@ -32,7 +32,7 @@ const SettingsScreen = () => {
   };
 
   const handleExit = () => {
-    // TODO: Go back to previous screen / close settings
+    navigation.goBack();
   };
 
   return (
