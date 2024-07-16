@@ -1,6 +1,8 @@
 export type SettingsNavigatorParamList = {
   Settings: undefined;
   ChangeAddress: undefined;
+  ResetPassword: undefined;
+  DeleteAccount: undefined;
 };
 
 export type LibraryNavigatorParamList = {

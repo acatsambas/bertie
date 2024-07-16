@@ -19,6 +19,8 @@ import BookshopScreen from "../../screens/BookshopScreen";
 import SearchBookScreen from "../../screens/SearchBookScreen";
 import OrderShopScreen from "../../screens/OrderShopScreen";
 import OrderPlacedScreen from "../../screens/OrderPlacedScreen";
+import DeleteScreen from "../../screens/DeleteScreen";
+import ResetScreen from "../../screens/ResetScreen";
 
 export const AppStack = createNativeStackNavigator<AppNavigatorParamList>();
 
@@ -50,6 +52,16 @@ const SettingsNavigator = () => {
         name="ChangeAddress"
         component={AddressScreen}
         options={{ title: t(translations.settings.address.title) }}
+      />
+      <SettingsStack.Screen
+        name="ResetPassword"
+        component={ResetScreen}
+        // options={{ title: t(translations.settings.address.title) }}
+      />
+      <SettingsStack.Screen
+        name="DeleteAccount"
+        component={DeleteScreen}
+        // options={{ title: t(translations.settings.address.title) }}
       />
     </SettingsStack.Navigator>
   );

@@ -31,6 +31,14 @@ const SettingsScreen = ({ navigation }) => {
     navigate("ChangeAddress");
   };
 
+  const handlePassword = () => {
+    navigate("ResetPassword");
+  };
+
+  const handleDelete = () => {
+    navigate("DeleteAccount");
+  };
+
   const handleExit = () => {
     navigation.goBack();
   };
@@ -59,13 +67,13 @@ const SettingsScreen = ({ navigation }) => {
           />
           <Button
             kind="secondary"
-            onPress={handleChangeAddress}
+            onPress={handlePassword}
             text={t(translations.settings.reset)}
             icon="password"
           />
           <Button
             kind="secondary"
-            onPress={handleChangeAddress}
+            onPress={handleDelete}
             text={t(translations.settings.delete)}
             icon="delete"
           />

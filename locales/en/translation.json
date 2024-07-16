@@ -96,5 +96,25 @@
     "sent2": "via email, copying you in.",
     "relax": "They will get in touch to arrange delivery and payment. You just sit back and read a book in the meantime!",
     "done": "Done"
+  },
+  "delete": {
+    "title": "Delete account",
+    "paragraph1": "We’re very sorry to see you go. But we suppose it wasn’t meant to be.",
+    "paragraph2": "Just to make sure you’re not pocket-deleting, just write ‘begone!’ below.",
+    "begone": "begone!",
+    "button": "Delete account",
+    "done": "Done",
+    "finalMessage": "All done. We’ve deleted your account from our systems. Now you’re just someone that we used to know."
+  },
+  "reset": {
+    "title": "Reset passsword",
+    "enterPassword": "Enter your current password...",
+    "newPassword": "... and the new one...",
+    "confirmPassword": "... and write it down once again to make sure you didn’t get any mistakes...",
+    "placeholder1": "Password",
+    "placeholder2": "New password",
+    "button": "Save",
+    "allDone": "All done! Your password has been updated.",
+    "done": "Done"
   }
 }
