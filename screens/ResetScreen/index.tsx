@@ -12,12 +12,32 @@ import Button from "../../components/Button";
 
 const ResetScreen = () => {
   const [isReseted, setIsReseted] = useState(false);
+  const [password, setPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [newPassword2, setNewPassword2] = useState("");
+  const [error, setError] = useState("");
 
   const styles = useStyles();
   const { t } = useTranslation();
 
-  const handleReset = () => {
-    setIsReseted(true);
+  const handlePassword = (value: string) => {
+    setPassword(value);
+  };
+
+  const handleNewPassword = (value: string) => {
+    setNewPassword(value);
+  };
+
+  const handleNewPassword2 = (value: string) => {
+    setNewPassword2(value);
+  };
+
+  const handleSave = () => {
+    if (newPassword === newPassword2) {
+      setIsReseted(true);
+    } else {
+      setError("Passwords do not match!");
+    }
   };
 
   const handleDone = () => {};
@@ -28,14 +48,31 @@ const ResetScreen = () => {
         {!isReseted ? (
           <>
             <Text text={t(translations.reset.enterPassword)} kind="paragraph" />
-            <Input placeholder={t(translations.reset.placeholder1)} />
+            <Input
+              placeholder={t(translations.reset.placeholder1)}
+              kind="password"
+              onChangeText={handlePassword}
+            />
             <Text text={t(translations.reset.newPassword)} kind="paragraph" />
-            <Input placeholder={t(translations.reset.placeholder2)} />
+            <Input
+              placeholder={t(translations.reset.placeholder2)}
+              kind="password"
+              onChangeText={handleNewPassword}
+            />
             <Text
               text={t(translations.reset.confirmPassword)}
               kind="paragraph"
             />
-            <Input placeholder={t(translations.reset.placeholder2)} />
+            <Input
+              placeholder={t(translations.reset.placeholder2)}
+              kind="password"
+              onChangeText={handleNewPassword2}
+            />
+            {error && (
+              <View style={styles.error}>
+                <Text text={error} kind="paragraph" />
+              </View>
+            )}
           </>
         ) : (
           <Text text={t(translations.reset.allDone)} kind="paragraph" />
@@ -46,7 +83,7 @@ const ResetScreen = () => {
           <Button
             text={t(translations.reset.button)}
             kind="primary"
-            onPress={handleReset}
+            onPress={handleSave}
           />
         ) : (
           <Button
@@ -66,6 +103,11 @@ const useStyles = makeStyles(() => ({
     paddingHorizontal: 20,
   },
   container: { paddingTop: 20, gap: 20 },
+  error: {
+    backgroundColor: "#FDEDED",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+  },
   bottomArea: {
     flex: 1,
     alignItems: "center",
