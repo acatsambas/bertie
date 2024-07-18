@@ -46,22 +46,22 @@ const SettingsNavigator = () => {
       <SettingsStack.Screen
         name="Settings"
         component={SettingsScreen}
-        options={{ title: t(translations.settings.title) }}
+        options={{}}
       />
       <SettingsStack.Screen
         name="ChangeAddress"
         component={AddressScreen}
-        options={{ title: t(translations.settings.address.title) }}
+        options={{}}
       />
       <SettingsStack.Screen
         name="ResetPassword"
         component={ResetScreen}
-        // options={{ title: t(translations.settings.address.title) }}
+        options={{}}
       />
       <SettingsStack.Screen
         name="DeleteAccount"
         component={DeleteScreen}
-        // options={{ title: t(translations.settings.address.title) }}
+        options={{}}
       />
     </SettingsStack.Navigator>
   );
@@ -78,18 +78,17 @@ const LibraryNavigator = () => {
       <LibraryStack.Screen
         name="Library"
         component={LibraryScreen}
-        options={{ title: t(translations.library.title), animation: "none" }}
+        options={{ animation: "none" }}
       />
       <LibraryStack.Screen
         name="Book"
         component={BookScreen}
-        options={{ title: t(translations.library.book), animation: "none" }}
+        options={{ animation: "none" }}
       />
       <LibraryStack.Screen
         name="Search"
         component={SearchBookScreen}
         options={{
-          title: t(translations.library.search.title),
           animation: "none",
         }}
       />
@@ -108,13 +107,12 @@ const DiscoverNavigator = () => {
       <DiscoverStack.Screen
         name="Discover"
         component={DiscoverScreen}
-        options={{ title: t(translations.discover.title), animation: "none" }}
+        options={{ animation: "none" }}
       />
       <DiscoverStack.Screen
         name="Bookshop"
         component={BookshopScreen}
         options={{
-          title: t(translations.discover.bookshop),
           animation: "none",
         }}
       />
