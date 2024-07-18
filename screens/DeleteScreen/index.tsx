@@ -12,12 +12,20 @@ import Button from "../../components/Button";
 
 const DeleteScreen = () => {
   const [isDeleted, setIsDeleted] = useState(false);
+  const [begone, setBegone] = useState("");
+  const [error, setError] = useState("");
 
   const styles = useStyles();
   const { t } = useTranslation();
 
+  const handleInput = (value: string) => {
+    setBegone(value.toLowerCase());
+  };
+
   const handleDelete = () => {
-    setIsDeleted(true);
+    begone === "begone!"
+      ? setIsDeleted(true)
+      : setError("You didn't write well the word 'begone!'");
   };
 
   const handleDone = () => {};
@@ -29,7 +37,12 @@ const DeleteScreen = () => {
           <>
             <Text text={t(translations.delete.paragraph1)} kind="paragraph" />
             <Text text={t(translations.delete.paragraph2)} kind="paragraph" />
-            <Input placeholder="begone!" />
+            <Input placeholder="begone!" onChangeText={handleInput} />
+            {error && (
+              <View style={styles.error}>
+                <Text text={error} kind="paragraph" />
+              </View>
+            )}
           </>
         ) : (
           <Text text={t(translations.delete.finalMessage)} kind="paragraph" />
@@ -60,6 +73,11 @@ const useStyles = makeStyles(() => ({
     paddingHorizontal: 20,
   },
   container: { paddingTop: 20, gap: 20 },
+  error: {
+    backgroundColor: "#FDEDED",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+  },
   bottomArea: {
     flex: 1,
     alignItems: "center",
