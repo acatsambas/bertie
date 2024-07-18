@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
 
@@ -9,6 +9,7 @@ import { View } from "react-native";
 import Text from "../../components/Text";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
+import { AuthContext } from "../../api/auth/AuthProvider";
 
 const DeleteScreen = () => {
   const [isDeleted, setIsDeleted] = useState(false);
@@ -17,6 +18,7 @@ const DeleteScreen = () => {
 
   const styles = useStyles();
   const { t } = useTranslation();
+  const { user } = useContext(AuthContext);
 
   const handleInput = (value: string) => {
     setBegone(value.toLowerCase());
@@ -28,7 +30,10 @@ const DeleteScreen = () => {
       : setError("You didn't write well the word 'begone!'");
   };
 
-  const handleDone = () => {};
+  const handleDone = () => {
+    user.delete();
+  };
+
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <View style={styles.container}>
