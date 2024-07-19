@@ -22,7 +22,7 @@ const SettingsScreen = ({ navigation }) => {
   const { t } = useTranslation();
   const styles = useStyles();
 
-  const { logout } = useContext(AuthContext);
+  const { logout, user } = useContext(AuthContext);
   const handleLogout = async () => {
     await logout();
   };
@@ -65,12 +65,14 @@ const SettingsScreen = ({ navigation }) => {
             text={t(translations.settings.changeAddress)}
             icon="address"
           />
-          <Button
-            kind="secondary"
-            onPress={handlePassword}
-            text={t(translations.settings.reset)}
-            icon="password"
-          />
+          {user.providerData[0].providerId === "password" && (
+            <Button
+              kind="secondary"
+              onPress={handlePassword}
+              text={t(translations.settings.reset)}
+              icon="password"
+            />
+          )}
           <Button
             kind="secondary"
             onPress={handleDelete}
