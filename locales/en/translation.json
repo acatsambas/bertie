@@ -25,6 +25,7 @@
     "button": "Sign Up",
     "already": "Already having an account?",
     "login": "Log in!",
+    "mailError": "The entered email address is invalid.",
     "profile": {
       "title": "Profile",
       "firstName": "What's your first name?",

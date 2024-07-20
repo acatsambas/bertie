@@ -20,6 +20,7 @@ export interface RegisterPageProps
 const RegisterScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(false);
 
   const styles = useStyles();
   const { navigate } = useNavigation<RegisterPageProps>();
@@ -38,7 +39,12 @@ const RegisterScreen = () => {
   };
 
   const handleRegister = () => {
-    navigate("SetProfile", { email: email, password: password });
+    const validRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
+    if (email.match(validRegex)) {
+      navigate("SetProfile", { email: email, password: password });
+    } else {
+      setError(true);
+    }
   };
   return (
     <SafeAreaView style={styles.safeAreaView}>
@@ -65,6 +71,11 @@ const RegisterScreen = () => {
             <Text kind="button" text={t(translations.signup.terms)} />
           </View>
         </View>
+        {error && (
+          <View style={styles.error}>
+            <Text kind="paragraph" text={t(translations.signup.mailError)} />
+          </View>
+        )}
       </View>
       <View style={styles.bottomArea}>
         <Button
@@ -96,6 +107,12 @@ const useStyles = makeStyles(() => ({
     paddingTop: 20,
   },
   container: { paddingTop: 20, gap: 20 },
+  error: {
+    backgroundColor: "#FDEDED",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    alignItems: "center",
+  },
   bottomArea: { flex: 1, justifyContent: "flex-end", marginBottom: 20 },
   logIn: { flexDirection: "row", justifyContent: "center", gap: 5 },
 }));
