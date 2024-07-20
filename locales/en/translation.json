@@ -37,7 +37,10 @@
     "enterEmail": "Enter your email address to reset your password.",
     "sendEmail": "We'll send an email with instructions on how to reset your it.",
     "placeholder": "Enter your email address",
-    "button": "Reset"
+    "button": "Reset",
+    "success": "We sent you an email with instructions on how to reset your password. Please check your inbox!",
+    "done": "Done",
+    "error": "The entered email address is invalid."
   },
   "settings": {
     "title": "Settings",
