@@ -1,5 +1,8 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import firestore from "@react-native-firebase/firestore";
+
 import { Avatar as RNEAvatar } from "@rneui/themed";
+
 import { AuthContext } from "../../api/auth/AuthProvider";
 
 interface AvatarProps {
@@ -7,24 +10,29 @@ interface AvatarProps {
 }
 
 const Avatar = ({ onPress }: AvatarProps) => {
+  const [userInitials, setUserInitials] = useState("");
   const { user } = useContext(AuthContext);
 
-  const initials =
-    user.displayName &&
-    user.displayName
-      .match(/(\b\S)?/g)
-      .join("")
-      .toUpperCase();
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    const json = await firestore().collection("users").doc(user.uid).get();
+    setUserInitials(
+      json.data().givenName.charAt(0) + json.data().familyName.charAt(0)
+    );
+  };
 
   const avatarURL = user.photoURL && user.photoURL;
 
   return (
     <RNEAvatar
-      title={!avatarURL && initials}
+      title={!avatarURL && userInitials}
       source={avatarURL && { uri: avatarURL }}
       rounded
       size={44}
-      containerStyle={{ backgroundColor: "blue" }}
+      containerStyle={{ backgroundColor: "#6E78D7" }}
       onPress={onPress}
     />
   );
