@@ -58,13 +58,16 @@ const AddressScreen = () => {
   };
   const handleSave = async () => {
     try {
-      await firestore().collection("Address").doc(userId).set({
-        addr1: addr1,
-        addr2: addr2,
-        city: city,
-        postcode: postcode,
-        country: country,
-      });
+      await firestore().collection("Address").doc(userId).set(
+        {
+          addr1: addr1,
+          addr2: addr2,
+          city: city,
+          postcode: postcode,
+          country: country,
+        },
+        { merge: true }
+      );
     } catch (error) {
       console.log(error);
     }
