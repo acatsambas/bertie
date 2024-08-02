@@ -23,8 +23,8 @@ const MyList = ({ kind }: MyListProps) => {
   const { t } = useTranslation();
   const { navigate } = useNavigation<LibraryPageProps>();
 
-  const handleBook = (bookName: string) => {
-    navigate("Book", { bookName: bookName });
+  const handleBook = (bookName: string, author: string) => {
+    navigate("Book", { bookName: bookName, author: author });
   };
 
   const handlePress = () => {
@@ -57,7 +57,7 @@ const MyList = ({ kind }: MyListProps) => {
           author="David Foster Wallance"
           kind="library"
           isChecked={kind === "past"}
-          onPress={() => handleBook("Infinite Jest")}
+          onPress={() => handleBook("Infinite Jest", "David Foster Wallance")}
         />
         <Book
           title="A Gentleman in Moscow"
