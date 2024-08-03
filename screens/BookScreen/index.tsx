@@ -15,18 +15,18 @@ import Button from "../../components/Button";
 
 interface BookScreenProps {
   picture?: string;
-  author?: string;
   description?: string;
 }
 
 export interface BookPageProps
   extends StackNavigationProp<LibraryNavigatorParamList, "Book"> {}
 
-const BookScreen = ({ picture, author, description }: BookScreenProps) => {
+const BookScreen = ({ picture, description }: BookScreenProps) => {
   const { params } = useRoute<RouteProp<LibraryNavigatorParamList, "Book">>();
   const styles = useStyles();
   const { t } = useTranslation();
   const { navigate } = useNavigation<BookPageProps>();
+  const { bookName, author, isMyList } = params;
 
   const handleBack = () => {
     navigate("Library");
@@ -37,14 +37,16 @@ const BookScreen = ({ picture, author, description }: BookScreenProps) => {
       <View style={styles.container}>
         <Image />
         <View>
-          <Text kind="bigHeader" text={params.bookName} />
-          <Text kind="paragraph" text={params.author} />
+          <Text kind="bigHeader" text={bookName} />
+          <Text kind="paragraph" text={author} />
         </View>
         <Text
           kind="description"
           text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
         />
-        <Button kind="primary" text={t(translations.library.add)} />
+        {!isMyList && (
+          <Button kind="primary" text={t(translations.library.add)} />
+        )}
         <Button
           kind="tertiary"
           text={t(translations.library.back)}

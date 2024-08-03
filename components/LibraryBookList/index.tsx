@@ -45,8 +45,12 @@ const CurrentBooks = ({ kind }: BookListProps) => {
   const { user } = useContext(AuthContext);
   const userId = user.uid;
 
-  const handleBook = (bookName: string, author: string) => {
-    navigate("Book", { bookName: bookName, author: author });
+  const handleBook = (bookName: string, author: string, isMyList: boolean) => {
+    navigate("Book", {
+      bookName: bookName,
+      author: author,
+      isMyList: isMyList,
+    });
   };
 
   const handleRead = async (bookId: string, isRead: boolean) => {
@@ -102,7 +106,7 @@ const CurrentBooks = ({ kind }: BookListProps) => {
               author={book.author}
               kind="library"
               isChecked={book.isRead}
-              onPress={() => handleBook(book.title, book.author)}
+              onPress={() => handleBook(book.title, book.author, true)}
               onChange={() => handleRead(book.id, book.isRead)}
             />
           ) : (
@@ -114,7 +118,7 @@ const CurrentBooks = ({ kind }: BookListProps) => {
                 author={book.author}
                 kind="library"
                 isChecked={book.isRead}
-                onPress={() => handleBook(book.title, book.author)}
+                onPress={() => handleBook(book.title, book.author, true)}
                 onChange={() => handleRead(book.id, book.isRead)}
               />
             )
