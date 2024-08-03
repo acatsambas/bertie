@@ -12,7 +12,8 @@ import { translations } from "../../locales/translations";
 import BottomMenu from "../../components/BottomMenu";
 import Text from "../../components/Text";
 import Avatar from "../../components/Avatar";
-import MyList from "../../components/MyList";
+import CurrentBooks from "../../components/CurrentBooks";
+import PastBooks from "../../components/PastBooks";
 
 export interface LibraryScreenProps
   extends StackNavigationProp<AppNavigatorParamList, "LibraryNavigator"> {}
@@ -33,8 +34,8 @@ const LibraryScreen = () => {
           <Text text={t(translations.library.title)} kind="bigHeader" />
           <Avatar onPress={handleAvatarClick} />
         </View>
-        <MyList kind="current" />
-        <MyList kind="past" />
+        <CurrentBooks />
+        <PastBooks />
       </View>
       <View style={styles.bottomArea}>
         <BottomMenu />
