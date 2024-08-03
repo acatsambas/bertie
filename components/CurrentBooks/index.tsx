@@ -21,7 +21,7 @@ const CurrentBooks = () => {
   const [books, setBooks] = useState([]);
   useEffect(() => {
     fetchBooks();
-  }, []);
+  }, [books]);
 
   const fetchBooks = async () => {
     const userBooksSnapshot = await firestore()
@@ -45,6 +45,24 @@ const CurrentBooks = () => {
 
   const handleBook = (bookName: string, author: string) => {
     navigate("Book", { bookName: bookName, author: author });
+  };
+
+  const handleRead = async (bookId: string, isRead: boolean) => {
+    try {
+      await firestore()
+        .collection("users")
+        .doc(userId)
+        .collection("books")
+        .doc(bookId)
+        .set(
+          {
+            isRead: !isRead,
+          },
+          { merge: true }
+        );
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handlePress = () => {
@@ -75,6 +93,7 @@ const CurrentBooks = () => {
                 kind="library"
                 isChecked={book.isRead}
                 onPress={() => handleBook(book.title, book.author)}
+                onChange={() => handleRead(book.id, book.isRead)}
               />
             )
         )}

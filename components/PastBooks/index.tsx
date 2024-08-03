@@ -20,7 +20,7 @@ const PastBooks = () => {
   const [books, setBooks] = useState([]);
   useEffect(() => {
     fetchBooks();
-  }, []);
+  }, [books]);
 
   const fetchBooks = async () => {
     const userBooksSnapshot = await firestore()
@@ -47,6 +47,24 @@ const PastBooks = () => {
     navigate("Book", { bookName: bookName, author: author });
   };
 
+  const handleRead = async (bookId: string, isRead: boolean) => {
+    try {
+      await firestore()
+        .collection("users")
+        .doc(userId)
+        .collection("books")
+        .doc(bookId)
+        .set(
+          {
+            isRead: !isRead,
+          },
+          { merge: true }
+        );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text text={t(translations.library.past)} kind="header" />
@@ -62,6 +80,7 @@ const PastBooks = () => {
                 kind="library"
                 isChecked={book.isRead}
                 onPress={() => handleBook(book.title, book.author)}
+                onChange={() => handleRead(book.id, book.isRead)}
               />
             )
         )}
