@@ -17,7 +17,7 @@ const Input = ({ placeholder, kind, icon, ...inputProps }: InputProps) => {
       secureTextEntry={kind === "password" ? true : false}
       leftIcon={icon && <Icon icon={icon} />}
       inputContainerStyle={{
-        backgroundColor: kind === "search" ? "white" : "#EEE9E4",
+        backgroundColor: kind === "search" ? "#FDF9F6" : "#EEE9E4",
         borderRadius: 15,
         borderBottomColor: kind !== "search" ? "transparent" : "gray",
         paddingVertical: 5,
