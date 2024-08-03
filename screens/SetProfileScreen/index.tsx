@@ -87,6 +87,7 @@ const useStyles = makeStyles(() => ({
     flex: 1,
     gap: 20,
     paddingHorizontal: 20,
+    backgroundColor: "#FDF9F6",
   },
   logo: {
     alignItems: "center",

@@ -51,6 +51,7 @@ const useStyles = makeStyles(() => ({
   safeAreaView: {
     flex: 1,
     paddingHorizontal: 20,
+    backgroundColor: "#FDF9F6",
   },
   container: { paddingTop: 20, gap: 20 },
   header: {

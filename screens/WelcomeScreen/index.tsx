@@ -68,6 +68,7 @@ const useStyles = makeStyles(() => ({
     gap: 20,
     padding: 20,
     justifyContent: "flex-start",
+    backgroundColor: "#FDF9F6",
   },
   logo: {
     alignItems: "center",

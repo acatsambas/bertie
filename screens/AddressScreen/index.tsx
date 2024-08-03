@@ -125,6 +125,7 @@ const useStyles = makeStyles(() => ({
     flex: 1,
     gap: 20,
     paddingHorizontal: 20,
+    backgroundColor: "#FDF9F6",
   },
   container: { paddingTop: 20, gap: 20 },
   bottomArea: { flex: 1, justifyContent: "flex-end", marginBottom: 20 },
