@@ -38,7 +38,7 @@ const BookScreen = ({ picture, author, description }: BookScreenProps) => {
         <Image />
         <View>
           <Text kind="bigHeader" text={params.bookName} />
-          <Text kind="paragraph" text="David Foster Wallance" />
+          <Text kind="paragraph" text={params.author} />
         </View>
         <Text
           kind="description"

@@ -1,12 +1,15 @@
-import { View, TouchableOpacity } from "react-native";
+import { useContext, useEffect, useState } from "react";
+import { View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import firestore from "@react-native-firebase/firestore";
 
 import { makeStyles } from "@rneui/themed";
 
 import { LibraryNavigatorParamList } from "../../navigation/AppStack/params";
 import { translations } from "../../locales/translations";
+import { AuthContext } from "../../api/auth/AuthProvider";
 import Text from "../Text";
 import Book from "../Book";
 
@@ -14,16 +17,34 @@ export interface LibraryPageProps
   extends StackNavigationProp<LibraryNavigatorParamList, "Library"> {}
 
 const PastBooks = () => {
+  const [books, setBooks] = useState([]);
+  useEffect(() => {
+    fetchBooks();
+  }, []);
+
+  const fetchBooks = async () => {
+    const userBooksSnapshot = await firestore()
+      .collection("users")
+      .doc(userId)
+      .collection("books")
+      .get();
+
+    const booksList = userBooksSnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    setBooks(booksList);
+  };
+
   const styles = useStyles();
   const { t } = useTranslation();
   const { navigate } = useNavigation<LibraryPageProps>();
 
+  const { user } = useContext(AuthContext);
+  const userId = user.uid;
+
   const handleBook = (bookName: string, author: string) => {
     navigate("Book", { bookName: bookName, author: author });
-  };
-
-  const handlePress = () => {
-    navigate("Search");
   };
 
   return (
@@ -31,25 +52,19 @@ const PastBooks = () => {
       <Text text={t(translations.library.past)} kind="header" />
 
       <View>
-        <Book
-          title="Infinite Jest"
-          author="David Foster Wallance"
-          kind="library"
-          isChecked={true}
-          onPress={() => handleBook("Infinite Jest", "David Foster Wallance")}
-        />
-        <Book
-          title="A Gentleman in Moscow"
-          author="Armor Towles"
-          kind="library"
-          isChecked={true}
-        />
-        <Book
-          title="The Blind Assassin"
-          author="Margaret Atwood"
-          kind="library"
-          isChecked={true}
-        />
+        {books.map(
+          (book) =>
+            book.isRead && (
+              <Book
+                key={book.id}
+                title={book.title}
+                author={book.author}
+                kind="library"
+                isChecked={book.isRead}
+                onPress={() => handleBook(book.title, book.author)}
+              />
+            )
+        )}
       </View>
     </View>
   );
