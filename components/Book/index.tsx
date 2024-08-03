@@ -62,7 +62,7 @@ const Book = ({
                 : "plus-circle-outline"
             }
             checkedColor={kind === "library" ? "gray" : "#38AD59"}
-            uncheckedColor={kind === "library" ? "black" : "gray"}
+            uncheckedColor={kind === "search" && "black"}
             {...props}
           />
           <TouchableOpacity style={styles.content} onPress={onPress}>
