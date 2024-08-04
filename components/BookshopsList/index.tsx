@@ -22,7 +22,7 @@ const BookshopsList = () => {
   const fetchBookshops = async () => {
     const bookShopsSnapshot = await firestore().collection("shops").get();
     const bookShopsList = bookShopsSnapshot.docs.map((doc) => ({
-      id: doc.id,
+      bookId: doc.id,
       ...doc.data(),
     }));
     setBookshops(bookShopsList);

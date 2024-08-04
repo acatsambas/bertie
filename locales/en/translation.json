@@ -70,6 +70,7 @@
     "description": "Add your address to see bookshops near you!",
     "bookshop": "Bookshop",
     "add": "Add to Favourites",
+    "remove": "Remove from Favourites",
     "back": "Back"
   },
   "library": {
