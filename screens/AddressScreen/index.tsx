@@ -6,11 +6,11 @@ import firestore from "@react-native-firebase/firestore";
 
 import { makeStyles } from "@rneui/themed";
 
+import { AuthContext } from "../../api/auth/AuthProvider";
 import { translations } from "../../locales/translations";
 import Text from "../../components/Text";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
-import { AuthContext } from "../../api/auth/AuthProvider";
 
 const AddressScreen = () => {
   const [addr1, setAddr1] = useState("");
