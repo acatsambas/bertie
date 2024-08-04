@@ -4,7 +4,10 @@ import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import firestore from "@react-native-firebase/firestore";
 
-import { DiscoverNavigatorParamList } from "../../navigation/AppStack/params";
+import {
+  DiscoverNavigatorParamList,
+  BookshopType,
+} from "../../navigation/AppStack/params";
 import BookShop from "../Bookshop";
 
 export interface DiscoverPageProps
@@ -26,9 +29,9 @@ const BookshopsList = () => {
   };
 
   const { navigate } = useNavigation<DiscoverPageProps>();
-  //
-  const handleBookshop = (bookshopName: string) => {
-    navigate("Bookshop", { bookshopName: bookshopName });
+
+  const handleBookshop = (bookshop: BookshopType) => {
+    navigate("Bookshop", bookshop);
   };
 
   return (
@@ -39,7 +42,7 @@ const BookshopsList = () => {
           name={bookshop.name}
           location={bookshop.city}
           kind="default"
-          onPress={() => handleBookshop(bookshop.name)}
+          onPress={() => handleBookshop(bookshop)}
         />
       ))}
     </View>

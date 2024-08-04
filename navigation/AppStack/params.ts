@@ -11,9 +11,17 @@ export type LibraryNavigatorParamList = {
   Search: undefined;
 };
 
+export type BookshopType = {
+  address: string;
+  city: string;
+  country: string;
+  name: string;
+  zipcode: string;
+};
+
 export type DiscoverNavigatorParamList = {
   Discover: undefined;
-  Bookshop: { bookshopName: string };
+  Bookshop: BookshopType;
 };
 
 export type OrderNavigatorParamList = {

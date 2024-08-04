@@ -13,18 +13,13 @@ import Text from "../../components/Text";
 import Button from "../../components/Button";
 import GoogleMaps from "../../components/GoogleMaps";
 
-interface BookshopScreenProps {
-  name?: string;
-  location?: string;
-  favorite?: boolean;
-}
-
 export interface BookshopPageProps
   extends StackNavigationProp<DiscoverNavigatorParamList, "Bookshop"> {}
 
-const BookshopScreen = ({ name, location, favorite }: BookshopScreenProps) => {
+const BookshopScreen = () => {
   const { params } =
     useRoute<RouteProp<DiscoverNavigatorParamList, "Bookshop">>();
+  const { address, city, country, name, zipcode } = params;
   const styles = useStyles();
   const { t } = useTranslation();
   const { navigate } = useNavigation<BookshopPageProps>();
@@ -38,10 +33,10 @@ const BookshopScreen = ({ name, location, favorite }: BookshopScreenProps) => {
       <View style={styles.container}>
         <GoogleMaps />
         <View>
-          <Text kind="bigHeader" text={params.bookshopName} />
+          <Text kind="bigHeader" text={name} />
           <Text
             kind="paragraph"
-            text="84 Marylebone High St, London W1U 4QW, United Kingdom"
+            text={`${address}, ${city} ${zipcode}, ${country}`}
           />
         </View>
         <Button kind="primary" text={t(translations.discover.add)} />
