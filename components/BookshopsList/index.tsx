@@ -42,13 +42,6 @@ const BookshopsList = () => {
           onPress={() => handleBookshop(bookshop.name)}
         />
       ))}
-      {/* <BookShop
-        name="Daunt Books"
-        location="London"
-        kind="default"
-        onPress={() => handleBookshop("Daunt Books")}
-      />
-      <BookShop name="John Sandoe Books" location="London" kind="default" /> */}
     </View>
   );
 };
