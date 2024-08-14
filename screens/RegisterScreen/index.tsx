@@ -1,4 +1,5 @@
 import { View } from "react-native";
+import { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -7,12 +8,11 @@ import { useTranslation } from "react-i18next";
 import { makeStyles } from "@rneui/themed";
 
 import { translations } from "../../locales/translations";
+import { AuthNavigatorParamList } from "../../navigation/AuthStack/params";
 import Logo from "../../components/Logo";
 import Button from "../../components/Button";
 import Text from "../../components/Text";
 import Input from "../../components/Input";
-import { AuthNavigatorParamList } from "../../navigation/AuthStack/params";
-import { useState } from "react";
 
 export interface RegisterPageProps
   extends StackNavigationProp<AuthNavigatorParamList, "Register"> {}

@@ -7,13 +7,13 @@ import { StackNavigationProp } from "@react-navigation/stack";
 
 import { makeStyles } from "@rneui/themed";
 
+import { AuthContext } from "../../api/auth/AuthProvider";
+import { AuthNavigatorParamList } from "../../navigation/AuthStack/params";
 import { translations } from "../../locales/translations";
 import Logo from "../../components/Logo";
 import Text from "../../components/Text";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
-import { AuthContext } from "../../api/auth/AuthProvider";
-import { AuthNavigatorParamList } from "../../navigation/AuthStack/params";
 
 export interface ForgotPageProps
   extends StackNavigationProp<AuthNavigatorParamList, "Forgot"> {}

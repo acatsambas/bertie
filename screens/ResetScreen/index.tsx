@@ -10,6 +10,8 @@ import Text from "../../components/Text";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
 
+//TODO: Reset password doesn't work
+
 const ResetScreen = () => {
   const [isReseted, setIsReseted] = useState(false);
   const [password, setPassword] = useState("");

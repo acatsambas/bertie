@@ -11,11 +11,11 @@ import { translations } from "../../locales/translations";
 import { AuthNavigatorParamList } from "../../navigation/AuthStack/params";
 import { AuthContext } from "../../api/auth/AuthProvider";
 
+import { isFirebaseError } from "../../api/types";
 import Logo from "../../components/Logo";
 import Button from "../../components/Button";
 import Text from "../../components/Text";
 import Input from "../../components/Input";
-import { isFirebaseError } from "../../api/types";
 
 export interface SetProfilePageProps
   extends StackNavigationProp<AuthNavigatorParamList, "SetProfile"> {}

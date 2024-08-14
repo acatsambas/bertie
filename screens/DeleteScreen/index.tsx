@@ -4,12 +4,12 @@ import { useTranslation } from "react-i18next";
 
 import { makeStyles } from "@rneui/themed";
 
+import { AuthContext } from "../../api/auth/AuthProvider";
 import { translations } from "../../locales/translations";
 import { View } from "react-native";
 import Text from "../../components/Text";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
-import { AuthContext } from "../../api/auth/AuthProvider";
 
 const DeleteScreen = () => {
   const [isDeleted, setIsDeleted] = useState(false);

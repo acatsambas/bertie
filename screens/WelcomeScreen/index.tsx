@@ -7,13 +7,13 @@ import { useTranslation } from "react-i18next";
 import { makeStyles } from "@rneui/themed";
 
 import { translations } from "../../locales/translations";
+import { AuthNavigatorParamList } from "../../navigation/AuthStack/params";
 import Logo from "../../components/Logo";
 import Illustration from "../../components/Illustration";
 import Text from "../../components/Text";
 import Button from "../../components/Button";
 import GoogleButton from "../../components/AuthButtons/GoogleButton";
 import AppleSigninButton from "../../components/AuthButtons/Apple";
-import { AuthNavigatorParamList } from "../../navigation/AuthStack/params";
 
 export interface WelcomePageProps
   extends StackNavigationProp<AuthNavigatorParamList, "Welcome"> {}

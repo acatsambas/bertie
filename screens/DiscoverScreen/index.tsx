@@ -12,7 +12,6 @@ import { AppNavigatorParamList } from "../../navigation/AppStack/params";
 import { translations } from "../../locales/translations";
 import Text from "../../components/Text";
 import BottomMenu from "../../components/BottomMenu";
-import BookShop from "../../components/Bookshop";
 import Avatar from "../../components/Avatar";
 import BookshopsList from "../../components/BookshopsList";
 

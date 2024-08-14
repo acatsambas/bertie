@@ -5,8 +5,8 @@ import { useTranslation } from "react-i18next";
 
 import { makeStyles } from "@rneui/themed";
 
-import Text from "../../components/Text";
 import { translations } from "../../locales/translations";
+import Text from "../../components/Text";
 import Button from "../../components/Button";
 
 const OrderPlacedScreen = () => {
