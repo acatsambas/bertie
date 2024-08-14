@@ -1,7 +1,7 @@
+import { TextInputProps } from "react-native";
 import { Input as RNEInput } from "@rneui/themed";
 
 import Icon from "../Icon";
-import { TextInputProps } from "react-native";
 
 interface InputProps extends TextInputProps {
   placeholder?: string;

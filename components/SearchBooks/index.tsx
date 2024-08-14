@@ -1,6 +1,5 @@
 import React from "react";
 import { View } from "react-native";
-import firestore from "@react-native-firebase/firestore";
 
 import Book from "../Book";
 

@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+
 import { translations } from "../../locales/translations";
 import Text from "../Text";
 

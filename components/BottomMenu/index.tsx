@@ -4,9 +4,9 @@ import { StackNavigationProp } from "@react-navigation/stack";
 
 import { makeStyles } from "@rneui/themed";
 
-import BottomMenuItem from "../BottomMenuItem";
-import { menuItems } from "../../utils/data";
 import { AppNavigatorParamList } from "../../navigation/AppStack/params";
+import { menuItems } from "../../utils/data";
+import BottomMenuItem from "../BottomMenuItem";
 
 export interface BottomMenuProps
   extends StackNavigationProp<AppNavigatorParamList, "LibraryNavigator"> {}
