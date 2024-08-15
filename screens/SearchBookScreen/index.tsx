@@ -20,12 +20,19 @@ export interface SearchBookProps
 
 const SearchBookScreen = () => {
   const [searchInput, setSearchInput] = useState("");
+  const [searchResults, setSearchResults] = useState({});
   const styles = useStyles();
   const { t } = useTranslation();
   const { navigate } = useNavigation<SearchBookProps>();
 
   useEffect(() => {
-    searchInput.length !== 0 && fetchData();
+    const timer = setTimeout(() => {
+      searchInput.length !== 0 && fetchData();
+    }, 500);
+
+    return () => {
+      clearTimeout(timer);
+    };
   }, [searchInput]);
 
   const fetchData = async () => {
@@ -33,6 +40,7 @@ const SearchBookScreen = () => {
       `https://www.googleapis.com/books/v1/volumes?q=${searchInput}&key=${process.env.EXPO_PUBLIC_BOOKS_API_KEY}`
     );
     const json = await data.json();
+    setSearchResults(json);
     console.log(json);
   };
 
