@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -19,20 +19,25 @@ export interface SearchBookProps
   extends StackNavigationProp<LibraryNavigatorParamList, "Search"> {}
 
 const SearchBookScreen = () => {
+  const [searchInput, setSearchInput] = useState("");
   const styles = useStyles();
   const { t } = useTranslation();
   const { navigate } = useNavigation<SearchBookProps>();
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    searchInput.length !== 0 && fetchData();
+  }, [searchInput]);
 
   const fetchData = async () => {
     const data = await fetch(
-      `https://www.googleapis.com/books/v1/volumes?q=Death+on+the+Nile&key=${process.env.EXPO_PUBLIC_BOOKS_API_KEY}`
+      `https://www.googleapis.com/books/v1/volumes?q=${searchInput}&key=${process.env.EXPO_PUBLIC_BOOKS_API_KEY}`
     );
     const json = await data.json();
-    console.log(json.items.length);
+    console.log(json);
+  };
+
+  const handleSearchQuery = (value: string) => {
+    setSearchInput(value.trim());
   };
 
   const handleCloseClick = () => {
@@ -46,7 +51,11 @@ const SearchBookScreen = () => {
           <Text text={t(translations.library.search.title)} kind="bigHeader" />
           <Icon icon="x" onPress={handleCloseClick} />
         </View>
-        <Input placeholder="What are you looking for today?" kind="search" />
+        <Input
+          placeholder="What are you looking for today?"
+          kind="search"
+          onChangeText={handleSearchQuery}
+        />
         <Text
           kind="paragraph"
           text={t(translations.library.search.addToList)}
