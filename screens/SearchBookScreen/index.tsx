@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -21,6 +22,18 @@ const SearchBookScreen = () => {
   const styles = useStyles();
   const { t } = useTranslation();
   const { navigate } = useNavigation<SearchBookProps>();
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    const data = await fetch(
+      `https://www.googleapis.com/books/v1/volumes?q=Death+on+the+Nile&key=${process.env.EXPO_PUBLIC_BOOKS_API_KEY}`
+    );
+    const json = await data.json();
+    console.log(json.items.length);
+  };
 
   const handleCloseClick = () => {
     navigate("Library");
