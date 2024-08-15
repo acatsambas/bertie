@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
+import { debounce } from "lodash";
 
 import { makeStyles } from "@rneui/themed";
 
@@ -26,26 +27,23 @@ const SearchBookScreen = () => {
   const { navigate } = useNavigation<SearchBookProps>();
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      searchInput.length !== 0 && fetchData();
-    }, 500);
-
-    return () => {
-      clearTimeout(timer);
-    };
+    searchInput.length !== 0 && fetchData();
   }, [searchInput]);
 
   const fetchData = async () => {
+    /* fields=items/volumeInfo/title,items/volumeInfo/description,items/volumeInfo/authors,items/volumeInfo/imageLinks/thumbnail */
     const data = await fetch(
-      `https://www.googleapis.com/books/v1/volumes?q=${searchInput}&key=${process.env.EXPO_PUBLIC_BOOKS_API_KEY}`
+      `https://www.googleapis.com/books/v1/volumes?q=${searchInput}&fields=items/volumeInfo/title,items/id,items/volumeInfo/description,items/volumeInfo/authors,items/volumeInfo/imageLinks/thumbnail&orderBy=relevance&key=${process.env.EXPO_PUBLIC_BOOKS_API_KEY}`
     );
     const json = await data.json();
-    setSearchResults(json);
-    console.log(json);
+    setSearchResults(json.items);
+    console.log(json.items);
   };
 
+  const searchDebounce = debounce((value) => setSearchInput(value.trim()), 500);
+
   const handleSearchQuery = (value: string) => {
-    setSearchInput(value.trim());
+    searchDebounce(value);
   };
 
   const handleCloseClick = () => {
@@ -68,7 +66,7 @@ const SearchBookScreen = () => {
           kind="paragraph"
           text={t(translations.library.search.addToList)}
         />
-        <SearchBooks />
+        <SearchBooks books={searchResults} />
       </View>
       <View style={styles.bottomArea}>
         <BottomMenu />
