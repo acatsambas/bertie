@@ -13,20 +13,15 @@ import Text from "../../components/Text";
 import Image from "../../components/Image";
 import Button from "../../components/Button";
 
-interface BookScreenProps {
-  picture?: string;
-  description?: string;
-}
-
 export interface BookPageProps
   extends StackNavigationProp<LibraryNavigatorParamList, "Book"> {}
 
-const BookScreen = ({ picture, description }: BookScreenProps) => {
+const BookScreen = () => {
   const { params } = useRoute<RouteProp<LibraryNavigatorParamList, "Book">>();
   const styles = useStyles();
   const { t } = useTranslation();
   const { navigate } = useNavigation<BookPageProps>();
-  const { bookName, author, isMyList } = params;
+  const { bookName, author, isMyList, id } = params;
 
   const handleBack = () => {
     navigate("Library");

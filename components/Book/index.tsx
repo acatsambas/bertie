@@ -12,6 +12,7 @@ interface BookProps extends TouchableOpacityProps {
   author: string;
   title: string;
   kind?: "library" | "search" | "order";
+  id?: string;
   isChecked?: boolean;
   defaultValue?: boolean;
   onChange?: (value: boolean) => void;
@@ -21,6 +22,7 @@ const Book = ({
   author,
   title,
   kind,
+  id,
   isChecked,
   defaultValue = false,
   onPress,
