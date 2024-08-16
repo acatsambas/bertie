@@ -4,10 +4,10 @@ import DefaultImage from "./assets/default.png";
 
 //TODO: Adapt to data coming from API
 
-const Image = () => {
+const Image = ({ imgSource }) => {
   return (
     <RNEImage
-      source={DefaultImage}
+      source={imgSource ? imgSource : DefaultImage}
       containerStyle={{ height: 127, width: 350 }}
     />
   );

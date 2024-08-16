@@ -43,11 +43,17 @@ const CurrentBooks = () => {
   const { user } = useContext(AuthContext);
   const userId = user.uid;
 
-  const handleBook = (bookName: string, author: string, isMyList: boolean) => {
+  const handleBook = (
+    bookName: string,
+    author: string,
+    isMyList: boolean,
+    bookId: string
+  ) => {
     navigate("Book", {
       bookName: bookName,
       author: author,
       isMyList: isMyList,
+      id: bookId,
     });
   };
 
@@ -96,7 +102,9 @@ const CurrentBooks = () => {
                 author={book.author}
                 kind="library"
                 isChecked={book.isRead}
-                onPress={() => handleBook(book.title, book.author, true)}
+                onPress={() =>
+                  handleBook(book.title, book.author, true, book.bookId)
+                }
                 onChange={() => handleRead(book.id, book.isRead)}
               />
             )

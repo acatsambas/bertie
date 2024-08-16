@@ -37,7 +37,6 @@ const SearchBookScreen = () => {
     );
     const json = await data.json();
     setSearchResults(json.items);
-    console.log(json.items);
   };
 
   const searchDebounce = debounce((value) => setSearchInput(value.trim()), 500);

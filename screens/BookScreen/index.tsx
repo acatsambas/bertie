@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
@@ -17,11 +18,27 @@ export interface BookPageProps
   extends StackNavigationProp<LibraryNavigatorParamList, "Book"> {}
 
 const BookScreen = () => {
+  const [description, setDescription] = useState("");
+  const [imageCover, setImageCover] = useState("");
+
   const { params } = useRoute<RouteProp<LibraryNavigatorParamList, "Book">>();
   const styles = useStyles();
   const { t } = useTranslation();
   const { navigate } = useNavigation<BookPageProps>();
   const { bookName, author, isMyList, id } = params;
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    const data = await fetch(
+      `https://www.googleapis.com/books/v1/volumes/${id}?key=${process.env.EXPO_PUBLIC_BOOKS_API_KEY}`
+    );
+    const json = await data.json();
+    setDescription(json?.volumeInfo?.description);
+    setImageCover(json?.volumeInfo?.imageLinks?.medium);
+  };
 
   const handleBack = () => {
     navigate("Library");
@@ -30,15 +47,12 @@ const BookScreen = () => {
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <View style={styles.container}>
-        <Image />
+        <Image imgSource={imageCover} />
         <View>
           <Text kind="bigHeader" text={bookName} />
           <Text kind="paragraph" text={author} />
         </View>
-        <Text
-          kind="description"
-          text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-        />
+        <Text kind="description" text={description} />
         {!isMyList && (
           <Button kind="primary" text={t(translations.library.add)} />
         )}
