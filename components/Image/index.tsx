@@ -7,7 +7,7 @@ import DefaultImage from "./assets/default.png";
 const Image = ({ imgSource }) => {
   return (
     <RNEImage
-      source={imgSource ? imgSource : DefaultImage}
+      source={{ uri: imgSource ? imgSource : DefaultImage }}
       containerStyle={{ height: 127, width: 350 }}
     />
   );
