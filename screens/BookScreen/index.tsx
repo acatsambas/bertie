@@ -79,7 +79,7 @@ const BookScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <View style={styles.container}>
-        <Image imgSource={imageCover} />
+        {imageCover && <Image imgSource={imageCover} />}
         <View>
           <Text kind="bigHeader" text={bookName} />
           <Text kind="paragraph" text={author} />
