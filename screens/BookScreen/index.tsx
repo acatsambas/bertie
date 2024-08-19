@@ -22,6 +22,7 @@ export interface BookPageProps
 const BookScreen = () => {
   const [description, setDescription] = useState("");
   const [imageCover, setImageCover] = useState("");
+  const [myList, setMyList] = useState(false);
 
   const { params } = useRoute<RouteProp<LibraryNavigatorParamList, "Book">>();
   const styles = useStyles();
@@ -29,10 +30,11 @@ const BookScreen = () => {
   const { navigate } = useNavigation<BookPageProps>();
   const { user } = useContext(AuthContext);
   const userId = user.uid;
-  const { bookName, author, isMyList, id } = params;
+  const { bookName, author, id } = params;
 
   useEffect(() => {
     fetchData();
+    fetchBookData();
   }, []);
 
   const fetchData = async () => {
@@ -42,6 +44,16 @@ const BookScreen = () => {
     const json = await data.json();
     setDescription(json?.volumeInfo?.description);
     setImageCover(json?.volumeInfo?.imageLinks?.medium);
+  };
+
+  const fetchBookData = async () => {
+    const bookData = await firestore()
+      .collection("users")
+      .doc(userId)
+      .collection("books")
+      .doc(id)
+      .get();
+    setMyList(bookData.exists);
   };
 
   const handleAddBook = async (
@@ -63,6 +75,7 @@ const BookScreen = () => {
         },
         { merge: true }
       );
+    fetchBookData();
   };
 
   const handleBack = () => {
@@ -78,7 +91,7 @@ const BookScreen = () => {
           <Text kind="paragraph" text={author} />
         </View>
         <Text kind="description" text={description} />
-        {!isMyList && (
+        {!myList && (
           <Button
             kind="primary"
             text={t(translations.library.add)}
