@@ -1,15 +1,17 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import firestore from "@react-native-firebase/firestore";
 
 import { makeStyles } from "@rneui/themed";
 
 import { translations } from "../../locales/translations";
 import { LibraryNavigatorParamList } from "../../navigation/AppStack/params";
+import { AuthContext } from "../../api/auth/AuthProvider";
 import Text from "../../components/Text";
 import Image from "../../components/Image";
 import Button from "../../components/Button";
@@ -25,6 +27,8 @@ const BookScreen = () => {
   const styles = useStyles();
   const { t } = useTranslation();
   const { navigate } = useNavigation<BookPageProps>();
+  const { user } = useContext(AuthContext);
+  const userId = user.uid;
   const { bookName, author, isMyList, id } = params;
 
   useEffect(() => {
@@ -38,6 +42,27 @@ const BookScreen = () => {
     const json = await data.json();
     setDescription(json?.volumeInfo?.description);
     setImageCover(json?.volumeInfo?.imageLinks?.medium);
+  };
+
+  const handleAddBook = async (
+    author: string,
+    id: string,
+    bookName: string
+  ) => {
+    await firestore()
+      .collection("users")
+      .doc(userId)
+      .collection("books")
+      .doc(id)
+      .set(
+        {
+          author: author,
+          bookId: id,
+          isRead: false,
+          title: bookName,
+        },
+        { merge: true }
+      );
   };
 
   const handleBack = () => {
@@ -54,7 +79,11 @@ const BookScreen = () => {
         </View>
         <Text kind="description" text={description} />
         {!isMyList && (
-          <Button kind="primary" text={t(translations.library.add)} />
+          <Button
+            kind="primary"
+            text={t(translations.library.add)}
+            onPress={() => handleAddBook(author, id, bookName)}
+          />
         )}
         <Button
           kind="tertiary"
