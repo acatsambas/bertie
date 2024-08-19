@@ -82,5 +82,12 @@
     <false />
     <key>GIDConfiguration</key>
     <string>676639713902-pk0gfppj9r4f38b8nqsojlu5dkfn8mpi.apps.googleusercontent.com</string>
+    <key>NSAppTransportSecurity</key>
+    <dict>
+      <!--Include
+      to allow all connections (DANGER)-->
+      <key>NSAllowsArbitraryLoads</key>
+      <true />
+    </dict>
   </dict>
 </plist>
