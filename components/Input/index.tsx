@@ -23,7 +23,7 @@ const Input = ({ placeholder, kind, icon, ...inputProps }: InputProps) => {
         paddingVertical: 5,
         paddingLeft: 20,
         gap: 10,
-        borderWidth: kind === "search" && 1,
+        borderWidth: kind === "search" ? 1 : 0,
       }}
       inputStyle={{ fontFamily: "Commissioner Regular" }}
     />

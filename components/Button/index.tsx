@@ -27,7 +27,7 @@ const Button = ({ text, onPress, kind, icon }: ButtonProps) => {
         paddingHorizontal: 20,
         minWidth: "100%",
         gap: 10,
-        borderWidth: kind === "tertiary" && 1,
+        borderWidth: kind === "tertiary" ? 1 : 0,
       }}
       titleStyle={{
         fontFamily: "Commissioner Regular",
