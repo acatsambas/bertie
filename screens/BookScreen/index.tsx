@@ -19,7 +19,7 @@ import Button from "../../components/Button";
 export interface BookPageProps
   extends StackNavigationProp<LibraryNavigatorParamList, "Book"> {}
 
-const BookScreen = () => {
+const BookScreen = ({ navigation }) => {
   const [description, setDescription] = useState("");
   const [imageCover, setImageCover] = useState("");
   const [myList, setMyList] = useState(false);
@@ -79,7 +79,7 @@ const BookScreen = () => {
   };
 
   const handleBack = () => {
-    navigate("Library");
+    navigation.goBack();
   };
 
   return (
