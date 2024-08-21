@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { View } from "react-native";
+import { Platform, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -104,6 +104,8 @@ const PastBooks = () => {
 const useStyles = makeStyles(() => ({
   container: {
     gap: 20,
+    paddingBottom: Platform.OS === "ios" ? 80 : 120,
+    paddingTop: 10,
   },
   text: {
     flexDirection: "row",
