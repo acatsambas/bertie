@@ -66,14 +66,18 @@ const useStyles = makeStyles(() => ({
     flex: 1,
     paddingHorizontal: 20,
     backgroundColor: "#FDF9F6",
+    position: "relative",
   },
   container: { paddingTop: 20, gap: 20 },
   bottomArea: {
     flex: 1,
     alignItems: "center",
     justifyContent: "flex-end",
-    marginBottom: 20,
     gap: 20,
+    position: "absolute",
+    bottom: 0,
+    right: 0,
+    left: 0,
   },
 }));
 

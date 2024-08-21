@@ -32,7 +32,11 @@ const useStyles = makeStyles(() => ({
   bottomMenu: {
     display: "flex",
     flexDirection: "row",
+    justifyContent: "center",
     gap: 40,
+    width: "100%",
+    backgroundColor: "#FDF9F6",
+    paddingVertical: 30,
   },
 }));
 
