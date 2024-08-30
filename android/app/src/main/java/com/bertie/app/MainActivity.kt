@@ -1,4 +1,4 @@
-package com.bertie.com
+package com.bertieapp.app
 
 import android.os.Build
 import android.os.Bundle

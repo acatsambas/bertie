@@ -38,6 +38,9 @@ yarn-error.*
 # Firebase
 GoogleService-Info.plist
 google-services.json
+bertie-434108-5fd4928195d9.json
+my-upload-key.keystore
+android/gradle.properties
 
 # env
 .env
