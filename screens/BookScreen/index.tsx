@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
-import { View } from "react-native";
+import { View, ScrollView } from "react-native";
 import firestore from "@react-native-firebase/firestore";
 
 import { makeStyles } from "@rneui/themed";
@@ -78,7 +78,7 @@ const BookScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.container}>
         {imageCover && <Image imgSource={imageCover} />}
         <View>
           <Text kind="bigHeader" text={bookName} />
@@ -97,7 +97,7 @@ const BookScreen = ({ navigation }) => {
           text={t(translations.library.back)}
           onPress={handleBack}
         />
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
