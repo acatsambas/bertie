@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { View } from "react-native";
+import { View, ScrollView, Platform } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -51,7 +51,7 @@ const SearchBookScreen = () => {
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.header}>
           <Text text={t(translations.library.search.title)} kind="bigHeader" />
           <Icon icon="x" onPress={handleCloseClick} />
@@ -66,7 +66,7 @@ const SearchBookScreen = () => {
           text={t(translations.library.search.addToList)}
         />
         <SearchBooks books={searchResults} />
-      </View>
+      </ScrollView>
       <View style={styles.bottomArea}>
         <BottomMenu />
       </View>
@@ -81,7 +81,11 @@ const useStyles = makeStyles(() => ({
     backgroundColor: "#FDF9F6",
     position: "relative",
   },
-  container: { paddingTop: 20, gap: 20 },
+  container: {
+    paddingTop: 20,
+    gap: 20,
+    paddingBottom: Platform.OS === "ios" ? 80 : 120,
+  },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
