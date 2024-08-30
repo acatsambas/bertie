@@ -12,7 +12,7 @@ import Text from "../../components/Text";
 import Input from "../../components/Input";
 import Button from "../../components/Button";
 
-const AddressScreen = () => {
+const AddressScreen = ({ navigation }) => {
   const [addr1, setAddr1] = useState("");
   const [addr2, setAddr2] = useState("");
   const [city, setCity] = useState("");
@@ -31,11 +31,13 @@ const AddressScreen = () => {
       .collection("Address")
       .doc(userId)
       .get();
-    setAddr1(userAddress.data().addr1);
-    setAddr2(userAddress.data().addr2);
-    setCity(userAddress.data().city);
-    setPostcode(userAddress.data().postcode);
-    setCountry(userAddress.data().country);
+    if (userAddress) {
+      setAddr1(userAddress?.data()?.addr1);
+      setAddr2(userAddress?.data()?.addr2);
+      setCity(userAddress?.data()?.city);
+      setPostcode(userAddress?.data()?.postcode);
+      setCountry(userAddress?.data()?.country);
+    }
   };
 
   const styles = useStyles();
@@ -68,6 +70,7 @@ const AddressScreen = () => {
         },
         { merge: true }
       );
+      navigation.goBack();
     } catch (error) {
       console.log(error);
     }
