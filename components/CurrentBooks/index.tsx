@@ -117,7 +117,6 @@ const CurrentBooks = () => {
 const useStyles = makeStyles(() => ({
   container: {
     gap: 20,
-    paddingTop: 10,
   },
   text: {
     flexDirection: "row",

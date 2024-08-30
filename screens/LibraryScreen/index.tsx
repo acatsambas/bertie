@@ -28,7 +28,7 @@ const LibraryScreen = () => {
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <ScrollView style={styles.container}>
+      <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.header}>
           <Text text={t(translations.library.title)} kind="bigHeader" />
           <Avatar onPress={handleAvatarClick} />
