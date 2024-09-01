@@ -62,10 +62,12 @@ const SearchBookScreen = () => {
           onChangeText={handleSearchQuery}
           autoFocus={true}
         />
-        <Text
-          kind="paragraph"
-          text={t(translations.library.search.addToList)}
-        />
+        {Object.keys(searchResults).length !== 0 && (
+          <Text
+            kind="paragraph"
+            text={t(translations.library.search.addToList)}
+          />
+        )}
         <SearchBooks books={searchResults} />
       </ScrollView>
       <View style={styles.bottomArea}>
@@ -84,7 +86,7 @@ const useStyles = makeStyles(() => ({
   },
   container: {
     paddingTop: 20,
-    gap: 20,
+    gap: 10,
     paddingBottom: Platform.OS === "ios" ? 80 : 120,
   },
   header: {
