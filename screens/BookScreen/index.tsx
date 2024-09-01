@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
-import { View, ScrollView } from "react-native";
+import { View, ScrollView, Platform } from "react-native";
 import firestore from "@react-native-firebase/firestore";
 
 import { makeStyles } from "@rneui/themed";
@@ -107,6 +107,7 @@ const useStyles = makeStyles(() => ({
     flex: 1,
     paddingHorizontal: 20,
     backgroundColor: "#FDF9F6",
+    paddingBottom: Platform.OS === "ios" ? 10 : 30,
   },
   container: { paddingTop: 20, gap: 20 },
 }));
