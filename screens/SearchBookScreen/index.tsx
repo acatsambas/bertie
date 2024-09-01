@@ -60,6 +60,7 @@ const SearchBookScreen = () => {
           placeholder="What are you looking for today?"
           kind="search"
           onChangeText={handleSearchQuery}
+          autoFocus={true}
         />
         <Text
           kind="paragraph"
