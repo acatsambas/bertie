@@ -86,7 +86,7 @@ const useStyles = makeStyles(() => ({
   },
   container: {
     paddingTop: 20,
-    gap: 10,
+    gap: 20,
     paddingBottom: Platform.OS === "ios" ? 80 : 120,
   },
   header: {
