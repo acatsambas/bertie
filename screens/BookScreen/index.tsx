@@ -11,12 +11,10 @@ import { translations } from "../../locales/translations";
 import { LibraryNavigatorParamList } from "../../navigation/AppStack/params";
 import { AuthContext } from "../../api/auth/AuthProvider";
 import Text from "../../components/Text";
-import Image from "../../components/Image";
 import Button from "../../components/Button";
 
 const BookScreen = ({ navigation }) => {
   const [description, setDescription] = useState("");
-  const [imageCover, setImageCover] = useState("");
   const [myList, setMyList] = useState(false);
 
   const { params } = useRoute<RouteProp<LibraryNavigatorParamList, "Book">>();
@@ -37,7 +35,6 @@ const BookScreen = ({ navigation }) => {
     );
     const json = await data.json();
     setDescription(json?.volumeInfo?.description);
-    setImageCover(json?.volumeInfo?.imageLinks?.medium);
   };
 
   const fetchBookData = async () => {
@@ -79,7 +76,6 @@ const BookScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <ScrollView contentContainerStyle={styles.container}>
-        {imageCover && <Image imgSource={imageCover} />}
         <View>
           <Text kind="bigHeader" text={bookName} />
           <Text kind="paragraph" text={author} />
