@@ -33,7 +33,7 @@ const SearchBookScreen = () => {
   const fetchData = async () => {
     /* fields=items/volumeInfo/title,items/volumeInfo/description,items/volumeInfo/authors,items/volumeInfo/imageLinks/thumbnail */
     const data = await fetch(
-      `https://www.googleapis.com/books/v1/volumes?q=${searchInput}&fields=items/volumeInfo/title,items/id,items/volumeInfo/description,items/volumeInfo/authors,items/volumeInfo/imageLinks/thumbnail&orderBy=relevance&key=${process.env.EXPO_PUBLIC_BOOKS_API_KEY}`
+      `https://www.googleapis.com/books/v1/volumes?q=${searchInput}&fields=items/volumeInfo/title,items/id,items/volumeInfo/description,items/volumeInfo/authors&orderBy=relevance&maxResults=40&key=${process.env.EXPO_PUBLIC_BOOKS_API_KEY}`
     );
     const json = await data.json();
     setSearchResults(json.items);
