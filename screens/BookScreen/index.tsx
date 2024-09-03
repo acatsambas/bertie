@@ -103,7 +103,6 @@ const useStyles = makeStyles(() => ({
     flex: 1,
     paddingHorizontal: 20,
     backgroundColor: "#FDF9F6",
-    paddingBottom: Platform.OS === "ios" ? 10 : 30,
   },
   container: { paddingTop: 20, gap: 20 },
 }));
