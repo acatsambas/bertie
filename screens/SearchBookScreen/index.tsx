@@ -70,9 +70,6 @@ const SearchBookScreen = () => {
         )}
         <SearchBooks books={searchResults} />
       </ScrollView>
-      <View style={styles.bottomArea}>
-        <BottomMenu />
-      </View>
     </SafeAreaView>
   );
 };
@@ -93,15 +90,6 @@ const useStyles = makeStyles(() => ({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-  },
-  bottomArea: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "flex-end",
-    position: "absolute",
-    bottom: 0,
-    right: 0,
-    left: 0,
   },
 }));
 
