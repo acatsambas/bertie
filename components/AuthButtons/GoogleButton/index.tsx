@@ -1,5 +1,8 @@
 import { useContext } from "react";
-import { GoogleSigninButton } from "@react-native-google-signin/google-signin";
+import {
+  GoogleSigninButton,
+  statusCodes,
+} from "@react-native-google-signin/google-signin";
 import { makeStyles } from "@rneui/themed";
 
 import { AuthContext } from "../../../api/auth/AuthProvider";
@@ -16,7 +19,17 @@ const GoogleButton = () => {
       await googleLogin();
     } catch (error) {
       if (isFirebaseError(error)) {
-        console.log(error);
+        switch (error.code) {
+          case statusCodes.IN_PROGRESS:
+            // operation (eg. sign in) already in progress
+            break;
+          case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
+            // Android only, play services not available or outdated
+            break;
+          default:
+            // some other error happened
+            console.log(error);
+        }
       }
     }
   };
