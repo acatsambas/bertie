@@ -114,7 +114,12 @@ const useStyles = makeStyles(() => ({
     paddingVertical: 10,
     alignItems: "center",
   },
-  bottomArea: { flex: 1, justifyContent: "flex-end", marginBottom: 20 },
+  bottomArea: {
+    flex: 1,
+    justifyContent: "flex-end",
+    marginBottom: 20,
+    gap: 10,
+  },
   logIn: { flexDirection: "row", justifyContent: "center", gap: 5 },
 }));
 
