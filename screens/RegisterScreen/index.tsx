@@ -20,7 +20,9 @@ export interface RegisterPageProps
 const RegisterScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(false);
+  const [checkPassword, setCheckPassword] = useState("");
+  const [mailError, setMailError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
 
   const styles = useStyles();
   const { navigate } = useNavigation<RegisterPageProps>();
@@ -28,10 +30,17 @@ const RegisterScreen = () => {
 
   const handleInputEmail = (value: string) => {
     setEmail(value.toLowerCase().trim());
+    setMailError(false);
   };
 
   const handleInputPassword = (value: string) => {
     setPassword(value);
+    setPasswordError(false);
+  };
+
+  const handleInputPasswordCheck = (value: string) => {
+    setCheckPassword(value);
+    setPasswordError(false);
   };
 
   const handleLogin = () => {
@@ -41,9 +50,13 @@ const RegisterScreen = () => {
   const handleRegister = () => {
     const validRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
     if (email.match(validRegex)) {
-      navigate("SetProfile", { email: email, password: password });
+      if (checkPassword === password) {
+        navigate("SetProfile", { email: email, password: password });
+      } else {
+        setPasswordError(true);
+      }
     } else {
-      setError(true);
+      setMailError(true);
     }
   };
   return (
@@ -66,14 +79,25 @@ const RegisterScreen = () => {
             icon="password"
             onChangeText={handleInputPassword}
           />
+          <Input
+            placeholder={t(translations.signup.password2)}
+            kind="password"
+            icon="password"
+            onChangeText={handleInputPasswordCheck}
+          />
           <View>
             <Text kind="paragraph" text={t(translations.signup.agree)} />
             <Text kind="button" text={t(translations.signup.terms)} />
           </View>
         </View>
-        {error && (
+        {mailError && (
           <View style={styles.error}>
             <Text kind="paragraph" text={t(translations.signup.mailError)} />
+          </View>
+        )}
+        {passwordError && (
+          <View style={styles.error}>
+            <Text kind="paragraph" text={t(translations.signup.pwNoMatch)} />
           </View>
         )}
       </View>
