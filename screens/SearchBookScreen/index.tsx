@@ -54,7 +54,7 @@ const SearchBookScreen = () => {
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.header}>
           <Text text={t(translations.library.search.title)} kind="bigHeader" />
-          <Icon icon="x" onPress={handleCloseClick} />
+          <Icon icon="left" onPress={handleCloseClick} />
         </View>
         <Input
           placeholder="What are you looking for today?"

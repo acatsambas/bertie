@@ -63,6 +63,10 @@ const iconType = {
     type: "material-community",
     name: "plus",
   },
+  left: {
+    type: "material-community",
+    name: "arrow-u-left-top",
+  },
 };
 
 export default Icon;
