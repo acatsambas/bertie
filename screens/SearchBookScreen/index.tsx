@@ -84,7 +84,7 @@ const useStyles = makeStyles(() => ({
   container: {
     paddingTop: 20,
     gap: 20,
-    paddingBottom: Platform.OS === "ios" ? 80 : 120,
+    paddingBottom: Platform.OS === "ios" ? 20 : 40,
   },
   header: {
     flexDirection: "row",
