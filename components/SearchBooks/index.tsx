@@ -62,7 +62,7 @@ const SearchBooks = ({ books }) => {
   return (
     <View>
       {Object.keys(books).length !== 0 &&
-        books.map((book: any, index: number) => (
+        books.map((book: any) => (
           <Book
             key={book.key.replace("/works/", "")}
             kind="search"
