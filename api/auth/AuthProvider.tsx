@@ -11,7 +11,7 @@ GoogleSignin.configure({
   iosClientId:
     "246694758886-01ksnr8p0d363ifpfk5ch3e06j53b2pt.apps.googleusercontent.com",
   webClientId:
-    "246694758886-fdlc1sll0odcmqi0hh6a8ha7m8nnh43a.apps.googleusercontent.com",
+    "246694758886-9el7vs0fp2grktk07le096abala2560p.apps.googleusercontent.com",
 });
 
 export const AuthContext = createContext<{

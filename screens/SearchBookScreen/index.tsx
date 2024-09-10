@@ -10,7 +10,6 @@ import { makeStyles } from "@rneui/themed";
 
 import { LibraryNavigatorParamList } from "../../navigation/AppStack/params";
 import { translations } from "../../locales/translations";
-import BottomMenu from "../../components/BottomMenu";
 import Text from "../../components/Text";
 import Icon from "../../components/Icon";
 import Input from "../../components/Input";
@@ -31,12 +30,11 @@ const SearchBookScreen = () => {
   }, [searchInput]);
 
   const fetchData = async () => {
-    /* fields=items/volumeInfo/title,items/volumeInfo/description,items/volumeInfo/authors,items/volumeInfo/imageLinks/thumbnail */
     const data = await fetch(
-      `https://www.googleapis.com/books/v1/volumes?q=${searchInput}&fields=items/volumeInfo/title,items/id,items/volumeInfo/description,items/volumeInfo/authors&orderBy=relevance&maxResults=40&key=${process.env.EXPO_PUBLIC_BOOKS_API_KEY}`
+      `https://openlibrary.org/search.json?q=${searchInput}&limit=50&lang=en&fields=author_name,title,key`
     );
     const json = await data.json();
-    setSearchResults(json.items);
+    setSearchResults(json.docs);
   };
 
   const searchDebounce = debounce((value) => setSearchInput(value.trim()), 500);

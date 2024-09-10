@@ -62,36 +62,36 @@ const SearchBooks = ({ books }) => {
   return (
     <View>
       {Object.keys(books).length !== 0 &&
-        books.map((book: any) => (
+        books.map((book: any, index: number) => (
           <Book
-            key={book.id}
+            key={book.key.replace("/works/", "")}
             kind="search"
-            title={book.volumeInfo.title}
+            title={book.title}
             author={
-              book?.volumeInfo?.authors?.length > 1
-                ? book.volumeInfo.authors.map(
+              book?.author_name?.length > 1
+                ? book?.author_name.map(
                     (author: string, index: number) =>
                       (index ? ", " : "") + author
                   )
-                : book.volumeInfo.authors
+                : book.author_name
             }
             onPress={() =>
               handleBook(
-                book.id,
-                book.volumeInfo.title,
-                book?.volumeInfo?.authors?.length > 1
-                  ? book.volumeInfo.authors.map(
+                book?.key.replace("/works/", ""),
+                book?.title,
+                book?.author_name?.length > 1
+                  ? book?.author_name.map(
                       (author: string, index: number) =>
                         (index ? ", " : "") + author
                     )
-                  : book.volumeInfo.authors
+                  : book.author_name
               )
             }
             onChange={() =>
               handleAddBook(
-                book.id,
-                book.volumeInfo.title,
-                book.volumeInfo.authors,
+                book?.key.replace("/works/", ""),
+                book?.title,
+                book?.author_name,
                 false
               )
             }
