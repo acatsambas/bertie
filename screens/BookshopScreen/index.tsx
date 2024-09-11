@@ -32,7 +32,7 @@ const BookshopScreen = () => {
       .doc(zipcode)
       .get();
 
-    setIsFav(bookData.data().isFav);
+    setIsFav(bookData?.data()?.isFav);
   };
 
   const { user } = useContext(AuthContext);
