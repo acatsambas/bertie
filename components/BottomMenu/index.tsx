@@ -33,7 +33,7 @@ const useStyles = makeStyles(() => ({
     display: "flex",
     flexDirection: "row",
     justifyContent: "center",
-    gap: 40,
+    gap: 60,
     width: "100%",
     backgroundColor: "#FDF9F6",
     paddingVertical: 30,
