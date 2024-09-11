@@ -36,7 +36,7 @@ const useStyles = makeStyles(() => ({
     gap: 60,
     width: "100%",
     backgroundColor: "#FDF9F6",
-    paddingVertical: 30,
+    paddingVertical: 25,
   },
 }));
 
