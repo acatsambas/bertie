@@ -92,9 +92,7 @@ const Book = ({
             <Text text={title} kind="paragraph" />
             <Text text={author} kind="littleText" />
           </View>
-          {/* <Icon color="red" icon="minus" /> */}
           <CheckBox
-            //checked
             onPress={handlePressCheck}
             iconType="material-community"
             checkedIcon="minus-circle-outline"
