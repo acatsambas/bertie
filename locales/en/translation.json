@@ -81,7 +81,8 @@
     "past": "Past",
     "searchTitle": "Search for a book or author",
     "book": "Book",
-    "add": "Add to My List",
+    "add": "Add to list",
+    "remove": "Remove from list",
     "back": "Back",
     "search": {
       "title": "Search for books",

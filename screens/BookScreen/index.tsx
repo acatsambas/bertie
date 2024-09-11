@@ -32,7 +32,7 @@ const BookScreen = ({ navigation }) => {
   const fetchData = async () => {
     const data = await fetch(`https://openlibrary.org/works/${id}.json`);
     const json = await data.json();
-    console.log(json);
+
     json?.description?.value
       ? setDescription(json.description.value)
       : json?.description
@@ -72,6 +72,16 @@ const BookScreen = ({ navigation }) => {
     fetchBookData();
   };
 
+  const handleRemoveBook = async (id: string) => {
+    await firestore()
+      .collection("users")
+      .doc(userId)
+      .collection("books")
+      .doc(id)
+      .delete();
+    fetchBookData();
+  };
+
   const handleBack = () => {
     navigation.goBack();
   };
@@ -84,18 +94,35 @@ const BookScreen = ({ navigation }) => {
           <Text kind="paragraph" text={author} />
         </View>
         <Text kind="description" text={description} />
-        {!myList && (
-          <Button
-            kind="primary"
-            text={t(translations.library.add)}
-            onPress={() => handleAddBook(author, id, bookName)}
-          />
+        {!myList ? (
+          <>
+            <Button
+              kind="primary"
+              text={t(translations.library.add)}
+              onPress={() => handleAddBook(author, id, bookName)}
+            />
+
+            <Button
+              kind="tertiary"
+              text={t(translations.library.back)}
+              onPress={handleBack}
+            />
+          </>
+        ) : (
+          <>
+            <Button
+              kind="primary"
+              text={t(translations.library.back)}
+              onPress={handleBack}
+            />
+
+            <Button
+              kind="tertiary"
+              text={t(translations.library.remove)}
+              onPress={() => handleRemoveBook(id)}
+            />
+          </>
         )}
-        <Button
-          kind="tertiary"
-          text={t(translations.library.back)}
-          onPress={handleBack}
-        />
       </ScrollView>
     </SafeAreaView>
   );
