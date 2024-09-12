@@ -20,7 +20,7 @@ const Input = ({ placeholder, kind, icon, ...inputProps }: InputProps) => {
         backgroundColor: kind === "search" ? "#FDF9F6" : "#EEE9E4",
         borderRadius: 15,
         borderBottomColor: kind !== "search" ? "transparent" : "gray",
-        paddingVertical: 5,
+        paddingVertical: 7,
         paddingLeft: 20,
         gap: 10,
         borderWidth: kind === "search" ? 1 : 0,
