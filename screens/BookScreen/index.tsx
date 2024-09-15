@@ -2,7 +2,8 @@ import { useContext, useEffect, useState } from "react";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
-import { View, ScrollView, Platform } from "react-native";
+import { View, ScrollView } from "react-native";
+import RenderHtml from "react-native-render-html";
 import firestore from "@react-native-firebase/firestore";
 
 import { makeStyles } from "@rneui/themed";
@@ -93,7 +94,8 @@ const BookScreen = ({ navigation }) => {
           <Text kind="bigHeader" text={bookName} />
           <Text kind="paragraph" text={author} />
         </View>
-        <Text kind="description" text={description} />
+        {/* <Text kind="description" text={description} /> */}
+        <RenderHtml source={{ html: description }} contentWidth={0} />
         {!myList ? (
           <>
             <Button
