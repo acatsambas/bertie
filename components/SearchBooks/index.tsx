@@ -64,34 +64,34 @@ const SearchBooks = ({ books }) => {
       {Object.keys(books).length !== 0 &&
         books.map((book: any) => (
           <Book
-            key={book.key.replace("/works/", "")}
+            key={book.id}
             kind="search"
-            title={book.title}
+            title={book.volumeInfo?.title}
             author={
-              book?.author_name?.length > 1
-                ? book?.author_name.map(
+              book?.volumeInfo?.authors?.length > 1
+                ? book.volumeInfo.authors.map(
                     (author: string, index: number) =>
                       (index ? ", " : "") + author
                   )
-                : book.author_name
+                : book?.volumeInfo?.authors
             }
             onPress={() =>
               handleBook(
-                book?.key.replace("/works/", ""),
-                book?.title,
-                book?.author_name?.length > 1
+                book?.id,
+                book?.volumeInfo?.title,
+                book?.volumeInfo?.authors?.length > 1
                   ? book?.author_name.map(
                       (author: string, index: number) =>
                         (index ? ", " : "") + author
                     )
-                  : book.author_name
+                  : book?.volumeInfo?.authors
               )
             }
             onChange={() =>
               handleAddBook(
-                book?.key.replace("/works/", ""),
-                book?.title,
-                book?.author_name,
+                book?.id,
+                book?.volumeInfo?.title,
+                book?.volumeInfo?.authors,
                 false
               )
             }

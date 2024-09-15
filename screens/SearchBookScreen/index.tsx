@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { debounce } from "lodash";
 
 import { makeStyles } from "@rneui/themed";
+import { Switch } from "@rneui/themed";
 
 import { LibraryNavigatorParamList } from "../../navigation/AppStack/params";
 import { translations } from "../../locales/translations";
@@ -21,6 +22,7 @@ export interface SearchBookProps
 const SearchBookScreen = () => {
   const [searchInput, setSearchInput] = useState("");
   const [searchResults, setSearchResults] = useState({});
+  const [author, setAuthor] = useState(false);
   const styles = useStyles();
   const { t } = useTranslation();
   const { navigate } = useNavigation<SearchBookProps>();
@@ -31,10 +33,10 @@ const SearchBookScreen = () => {
 
   const fetchData = async () => {
     const data = await fetch(
-      `https://openlibrary.org/search.json?q=${searchInput}&limit=50&lang=en&fields=author_name,title,key`
+      `https://www.googleapis.com/books/v1/volumes?q=${searchInput}&fields=items/volumeInfo/title,items/id,items/volumeInfo/description,items/volumeInfo/authors&orderBy=relevance&maxResults=40&key=${process.env.EXPO_PUBLIC_BOOKS_API_KEY}`
     );
     const json = await data.json();
-    setSearchResults(json.docs);
+    setSearchResults(json.items);
   };
 
   const searchDebounce = debounce((value) => setSearchInput(value.trim()), 500);
@@ -54,12 +56,15 @@ const SearchBookScreen = () => {
           <Text text={t(translations.library.search.title)} kind="bigHeader" />
           <Icon icon="left" onPress={handleCloseClick} />
         </View>
-        <Input
-          placeholder="What are you looking for today?"
-          kind="search"
-          onChangeText={handleSearchQuery}
-          autoFocus={true}
-        />
+        <View style={styles.search}>
+          <Input
+            placeholder="What are you looking for today?"
+            kind="search"
+            onChangeText={handleSearchQuery}
+            autoFocus={true}
+          />
+          <Switch />
+        </View>
         {Object.keys(searchResults).length !== 0 && (
           <Text
             kind="paragraph"
@@ -89,6 +94,7 @@ const useStyles = makeStyles(() => ({
     justifyContent: "space-between",
     alignItems: "center",
   },
+  search: { alignItems: "flex-start" },
 }));
 
 export default SearchBookScreen;

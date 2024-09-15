@@ -30,13 +30,13 @@ const BookScreen = ({ navigation }) => {
   }, []);
 
   const fetchData = async () => {
-    const data = await fetch(`https://openlibrary.org/works/${id}.json`);
+    const data = await fetch(
+      `https://www.googleapis.com/books/v1/volumes/${id}?key=${process.env.EXPO_PUBLIC_BOOKS_API_KEY}`
+    );
     const json = await data.json();
 
-    json?.description?.value
-      ? setDescription(json.description.value)
-      : json?.description
-      ? setDescription(json.description)
+    json?.volumeInfo?.description
+      ? setDescription(json?.volumeInfo?.description)
       : setDescription("This edition doesn't have a description yet.");
   };
 
