@@ -94,7 +94,6 @@ const BookScreen = ({ navigation }) => {
           <Text kind="bigHeader" text={bookName} />
           <Text kind="paragraph" text={author} />
         </View>
-        {/* <Text kind="description" text={description} /> */}
         <RenderHtml source={{ html: description }} contentWidth={0} />
         {!myList ? (
           <>
