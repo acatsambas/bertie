@@ -31,7 +31,6 @@ const OrderBooksList = () => {
   };
 
   const handleRemoveBook = async (id: string) => {
-    console.log(id);
     await firestore()
       .collection("users")
       .doc(userId)
