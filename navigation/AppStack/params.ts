@@ -17,6 +17,7 @@ export type BookshopType = {
   country: string;
   name: string;
   zipcode: string;
+  description: string;
 };
 
 export type DiscoverNavigatorParamList = {

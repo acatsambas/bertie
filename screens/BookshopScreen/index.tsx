@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import firestore from "@react-native-firebase/firestore";
+import RenderHtml from "react-native-render-html";
 
 import { makeStyles } from "@rneui/themed";
 
@@ -40,7 +41,7 @@ const BookshopScreen = () => {
 
   const { params } =
     useRoute<RouteProp<DiscoverNavigatorParamList, "Bookshop">>();
-  const { address, city, country, name, zipcode } = params;
+  const { address, city, country, name, zipcode, description } = params;
 
   const styles = useStyles();
   const { t } = useTranslation();
@@ -70,10 +71,10 @@ const BookshopScreen = () => {
         <GoogleMaps />
         <View>
           <Text kind="bigHeader" text={name} />
-          <Text
-            kind="paragraph"
-            text={`${address}, ${city} ${zipcode}, ${country}`}
-          />
+          <Text kind="paragraph" text={`${address}, ${city} ${zipcode}`} />
+        </View>
+        <View>
+          <RenderHtml source={{ html: description }} contentWidth={0} />
         </View>
         <Button
           kind="primary"
