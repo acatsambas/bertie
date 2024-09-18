@@ -33,7 +33,6 @@ const SearchBookScreen = () => {
   }, [searchInput]);
 
   const fetchData = async () => {
-    console.log(toggleWord);
     const data = await fetch(
       `https://www.googleapis.com/books/v1/volumes?q=${toggleWord}:${searchInput}&fields=items/volumeInfo/title,items/id,items/volumeInfo/description,items/volumeInfo/authors&orderBy=relevance&maxResults=40&key=${process.env.EXPO_PUBLIC_BOOKS_API_KEY}`
     );
