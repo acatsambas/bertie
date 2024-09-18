@@ -18,9 +18,9 @@ const Avatar = ({ onPress }: AvatarProps) => {
   }, []);
 
   const fetchData = async () => {
-    const json = await firestore().collection("users").doc(user.uid).get();
+    const json = await firestore()?.collection("users")?.doc(user.uid)?.get();
     setUserInitials(
-      json.data().givenName.charAt(0) + json.data().familyName.charAt(0)
+      json?.data()?.givenName.charAt(0) + json?.data()?.familyName.charAt(0)
     );
   };
 
