@@ -13,7 +13,7 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "bundleIdentifier": "com.bertie.app",
+      "bundleIdentifier": "com.bertieapp.app",
       "supportsTablet": true,
       "usesAppleSignIn": true,
       "googleServicesFile": "./GoogleService-Info.plist"
