@@ -64,9 +64,9 @@ const SearchBooks = ({ books }) => {
       {Object.keys(books).length !== 0 &&
         books.map((book: any) => (
           <Book
-            key={book.id}
+            key={book?.id}
             kind="search"
-            title={book.volumeInfo?.title}
+            title={book?.volumeInfo?.title}
             author={
               book?.volumeInfo?.authors?.length > 1
                 ? book.volumeInfo.authors.map(
@@ -80,7 +80,7 @@ const SearchBooks = ({ books }) => {
                 book?.id,
                 book?.volumeInfo?.title,
                 book?.volumeInfo?.authors?.length > 1
-                  ? book?.author_name.map(
+                  ? book?.author_name?.map(
                       (author: string, index: number) =>
                         (index ? ", " : "") + author
                     )

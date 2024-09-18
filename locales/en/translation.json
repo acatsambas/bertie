@@ -86,12 +86,17 @@
     "back": "Back",
     "search": {
       "title": "Search for books",
+      "placeholder": "What are you looking for today?",
+      "toggle": "Toggle to search by author",
+      "toggle2": "Toggle to search by title",
       "addToList": "Tap on the plus sign to add a book to your list"
     }
   },
   "order": {
     "title": "Order",
     "header": "You're buying...",
+    "headerNoBooks": "Uh oh. There are no books in your list. Add some to get started!",
+    "suggestions": "Here are some of our own favourites - just tap on the plus sign to add them to your list, and refresh this page to order.",
     "details": "...and we'll share these details with the bookshops for you:",
     "next": "Next",
     "where": "Where do you want to order from?",

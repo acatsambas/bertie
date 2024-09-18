@@ -22,7 +22,8 @@ export interface SearchBookProps
 const SearchBookScreen = () => {
   const [searchInput, setSearchInput] = useState("");
   const [searchResults, setSearchResults] = useState({});
-  const [author, setAuthor] = useState(false);
+  const [isTitle, setIsTitle] = useState(false);
+  const [toggleWord, setToggleWord] = useState("intitle");
   const styles = useStyles();
   const { t } = useTranslation();
   const { navigate } = useNavigation<SearchBookProps>();
@@ -32,8 +33,9 @@ const SearchBookScreen = () => {
   }, [searchInput]);
 
   const fetchData = async () => {
+    console.log(toggleWord);
     const data = await fetch(
-      `https://www.googleapis.com/books/v1/volumes?q=${searchInput}&fields=items/volumeInfo/title,items/id,items/volumeInfo/description,items/volumeInfo/authors&orderBy=relevance&maxResults=40&key=${process.env.EXPO_PUBLIC_BOOKS_API_KEY}`
+      `https://www.googleapis.com/books/v1/volumes?q=${toggleWord}:${searchInput}&fields=items/volumeInfo/title,items/id,items/volumeInfo/description,items/volumeInfo/authors&orderBy=relevance&maxResults=40&key=${process.env.EXPO_PUBLIC_BOOKS_API_KEY}`
     );
     const json = await data.json();
     setSearchResults(json.items);
@@ -49,6 +51,11 @@ const SearchBookScreen = () => {
     navigate("Library");
   };
 
+  const handleToggle = () => {
+    setIsTitle(!isTitle);
+    isTitle ? setToggleWord("intitle") : setToggleWord("inauthor");
+  };
+
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <ScrollView contentContainerStyle={styles.container}>
@@ -58,19 +65,28 @@ const SearchBookScreen = () => {
         </View>
         <View style={styles.search}>
           <Input
-            placeholder="What are you looking for today?"
+            placeholder={t(translations.library.search.placeholder)}
             kind="search"
             onChangeText={handleSearchQuery}
             autoFocus={true}
           />
-          <Switch />
+          <View style={styles.toggle}>
+            <Switch value={isTitle} onValueChange={handleToggle} />
+            <Text
+              text={
+                isTitle
+                  ? t(translations.library.search.toggle2)
+                  : t(translations.library.search.toggle)
+              }
+              kind="paragraph"
+            />
+          </View>
         </View>
-        {Object.keys(searchResults).length !== 0 && (
-          <Text
-            kind="paragraph"
-            text={t(translations.library.search.addToList)}
-          />
-        )}
+        <Text
+          kind="paragraph"
+          text={t(translations.library.search.addToList)}
+        />
+
         <SearchBooks books={searchResults} />
       </ScrollView>
     </SafeAreaView>
@@ -95,6 +111,7 @@ const useStyles = makeStyles(() => ({
     alignItems: "center",
   },
   search: { alignItems: "flex-start" },
+  toggle: { flexDirection: "row", alignItems: "center", gap: 20 },
 }));
 
 export default SearchBookScreen;
