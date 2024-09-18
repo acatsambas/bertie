@@ -49,12 +49,15 @@ const OrderScreen = () => {
           }}
         />
       </View>
+
       <View style={styles.bottomArea}>
-        <Button
-          kind="primary"
-          text={t(translations.order.next)}
-          onPress={handleNext}
-        />
+        <View style={styles.nextButton}>
+          <Button
+            kind="primary"
+            text={t(translations.order.next)}
+            onPress={handleNext}
+          />
+        </View>
         <BottomMenu />
       </View>
     </SafeAreaView>
@@ -69,6 +72,7 @@ const useStyles = makeStyles(() => ({
     position: "relative",
   },
   container: { paddingTop: 20, gap: 20 },
+  nextButton: { paddingHorizontal: 20 },
   bottomArea: {
     flex: 1,
     alignItems: "center",
