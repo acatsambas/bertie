@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -30,24 +30,24 @@ const OrderShopScreen = () => {
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.container}>
         <Text text={t(translations.order.title)} kind="bigHeader" />
         <Text text={t(translations.order.where)} kind="paragraph" />
         <OrderBookshopList kind="favourites" />
         <OrderBookshopList kind="more" />
-      </View>
-      <View style={styles.bottomArea}>
-        <Button
-          kind="primary"
-          text={t(translations.order.place)}
-          onPress={handlePlace}
-        />
-        <Button
-          kind="tertiary"
-          text={t(translations.order.back)}
-          onPress={handleBack}
-        />
-      </View>
+        <View style={styles.bottomArea}>
+          <Button
+            kind="primary"
+            text={t(translations.order.place)}
+            onPress={handlePlace}
+          />
+          <Button
+            kind="tertiary"
+            text={t(translations.order.back)}
+            onPress={handleBack}
+          />
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };

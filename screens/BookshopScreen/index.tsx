@@ -54,7 +54,7 @@ const BookshopScreen = () => {
         .doc(userId)
         .collection("bookstores")
         .doc(zipcode)
-        .set({ name: name, isFav: !isFav }, { merge: true });
+        .set({ name: name, isFav: !isFav, city: city }, { merge: true });
       setIsFav(!isFav);
     } catch (error) {
       console.log(error);

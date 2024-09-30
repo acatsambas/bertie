@@ -28,6 +28,7 @@ export type DiscoverNavigatorParamList = {
 export type OrderNavigatorParamList = {
   Order: undefined;
   OrderShop: undefined;
+  AddressScreen: undefined;
   OrderPlaced: undefined;
 };
 

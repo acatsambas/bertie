@@ -147,6 +147,13 @@ const OrderNavigator = () => {
           animation: "none",
         }}
       />
+      <OrderStack.Screen
+        name="AddressScreen"
+        component={AddressScreen}
+        options={{
+          animation: "none",
+        }}
+      />
     </OrderStack.Navigator>
   );
 };
