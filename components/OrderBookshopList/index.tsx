@@ -23,6 +23,7 @@ const OrderBookshopList = ({ kind }: OrderBookshopListProps) => {
   const [favoriteShops, setFavoriteShops] = useState([]);
   const [allShops, setAllShops] = useState([]);
   const [hasAddress, setHasAddress] = useState(true);
+  const [isFavorite, setIsFavorite] = useState([]);
 
   const styles = useStyles();
   const { t } = useTranslation();
@@ -58,7 +59,6 @@ const OrderBookshopList = ({ kind }: OrderBookshopListProps) => {
     try {
       const shopsSnapshot = await firestore().collection("shops").get();
       const bookShopsList = shopsSnapshot.docs.map((doc) => ({
-        // zipcode: doc.data().zipcode,
         id: doc.id,
         ...doc.data(),
       }));
@@ -84,6 +84,10 @@ const OrderBookshopList = ({ kind }: OrderBookshopListProps) => {
     navigate("AddressScreen");
   };
 
+  const handlePick = (id: string, name: string) => {
+    setIsFavorite([id, name, !isFavorite[2]]);
+  };
+
   return (
     <View>
       {kind === "favourites" ? (
@@ -92,7 +96,15 @@ const OrderBookshopList = ({ kind }: OrderBookshopListProps) => {
           {favoriteShops.map(
             (shop) =>
               shop.isFav && (
-                <BookShop name={shop.name} location={shop.city} key={shop.id} />
+                <BookShop
+                  name={shop.name}
+                  location={shop.city}
+                  key={shop.id}
+                  onPress={() => handlePick(shop.id, shop.name)}
+                  kind={
+                    shop.id === isFavorite[0] ? "favoriteSelected" : "favorite"
+                  }
+                />
               )
           )}
         </View>
@@ -109,7 +121,12 @@ const OrderBookshopList = ({ kind }: OrderBookshopListProps) => {
             </View>
           )}
           {allShops.map((shop) => (
-            <BookShop name={shop.name} location={shop.city} key={shop.id} />
+            <BookShop
+              name={shop.name}
+              location={shop.city}
+              key={shop.id}
+              kind="default"
+            />
           ))}
         </View>
       )}
