@@ -27,6 +27,7 @@
     "already": "Already having an account?",
     "login": "Log in!",
     "mailError": "The entered email address is invalid.",
+    "mailDuplicateError": "That email is already registered! Try signing in instead",
     "pwNoMatch": "Passwords don’t match!",
     "pwError": "Your password must have minimum eight characters, at least one upper case letter, one lower case letter, one number and one special character.",
     "profile": {
