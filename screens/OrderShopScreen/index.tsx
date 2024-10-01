@@ -35,19 +35,19 @@ const OrderShopScreen = () => {
         <Text text={t(translations.order.where)} kind="paragraph" />
         <OrderBookshopList kind="favourites" />
         <OrderBookshopList kind="more" />
-        <View style={styles.bottomArea}>
-          <Button
-            kind="primary"
-            text={t(translations.order.place)}
-            onPress={handlePlace}
-          />
-          <Button
-            kind="tertiary"
-            text={t(translations.order.back)}
-            onPress={handleBack}
-          />
-        </View>
       </ScrollView>
+      <View style={styles.bottomArea}>
+        <Button
+          kind="primary"
+          text={t(translations.order.place)}
+          onPress={handlePlace}
+        />
+        <Button
+          kind="tertiary"
+          text={t(translations.order.back)}
+          onPress={handleBack}
+        />
+      </View>
     </SafeAreaView>
   );
 };
@@ -57,14 +57,20 @@ const useStyles = makeStyles(() => ({
     flex: 1,
     paddingHorizontal: 20,
     backgroundColor: "#FDF9F6",
+    position: "relative",
   },
-  container: { paddingTop: 20, gap: 20 },
+  container: { paddingTop: 20, gap: 20, paddingBottom: 150 },
   bottomArea: {
+    backgroundColor: "#FDF9F6",
     flex: 1,
     alignItems: "center",
     justifyContent: "flex-end",
-    marginBottom: 20,
+    paddingVertical: 20,
     gap: 20,
+    position: "absolute",
+    bottom: 0,
+    right: 20,
+    left: 20,
   },
 }));
 
