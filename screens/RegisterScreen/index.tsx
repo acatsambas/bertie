@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { Linking, View } from "react-native";
 import { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
@@ -59,6 +59,10 @@ const RegisterScreen = () => {
       setMailError(true);
     }
   };
+
+  const handlePrivacy = () => {
+    Linking.openURL("https://www.bertieapp.com/privacypolicy.html");
+  };
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <View style={styles.logo}>
@@ -87,7 +91,11 @@ const RegisterScreen = () => {
           />
           <View>
             <Text kind="paragraph" text={t(translations.signup.agree)} />
-            <Text kind="button" text={t(translations.signup.terms)} />
+            <Text
+              kind="button"
+              text={t(translations.signup.terms)}
+              onPress={handlePrivacy}
+            />
           </View>
         </View>
         {mailError && (
