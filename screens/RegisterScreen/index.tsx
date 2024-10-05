@@ -115,11 +115,7 @@ const RegisterScreen = () => {
           text={t(translations.signup.button)}
           onPress={handleRegister}
         />
-        <Button
-          kind="tertiary"
-          text={t(translations.signup.explore)}
-          onPress={handleRegister}
-        />
+        <Button kind="tertiary" text={t(translations.signup.explore)} />
       </View>
     </SafeAreaView>
   );
