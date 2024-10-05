@@ -93,14 +93,11 @@ const LoginScreen = () => {
           text={t(translations.login.button)}
           onPress={handlePressLogin}
         />
-        <View style={styles.signUp}>
-          <Text kind="paragraph" text={t(translations.login.create)} />
-          <Text
-            kind="button"
-            text={t(translations.login.signup)}
-            onPress={handleSignup}
-          />
-        </View>
+        <Button
+          kind="tertiary"
+          text={t(translations.login.create)}
+          onPress={handleSignup}
+        />
       </View>
     </SafeAreaView>
   );
@@ -123,9 +120,8 @@ const useStyles = makeStyles(() => ({
     flex: 1,
     justifyContent: "flex-end",
     marginBottom: 20,
-    gap: 10,
+    gap: 20,
   },
-  signUp: { flexDirection: "row", justifyContent: "center", gap: 5 },
 }));
 
 export default LoginScreen;

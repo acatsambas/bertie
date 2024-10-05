@@ -115,14 +115,11 @@ const RegisterScreen = () => {
           text={t(translations.signup.button)}
           onPress={handleRegister}
         />
-        <View style={styles.logIn}>
-          <Text kind="paragraph" text={t(translations.signup.already)} />
-          <Text
-            kind="button"
-            text={t(translations.signup.login)}
-            onPress={handleLogin}
-          />
-        </View>
+        <Button
+          kind="tertiary"
+          text={t(translations.signup.explore)}
+          onPress={handleRegister}
+        />
       </View>
     </SafeAreaView>
   );
@@ -150,9 +147,8 @@ const useStyles = makeStyles(() => ({
     flex: 1,
     justifyContent: "flex-end",
     marginBottom: 20,
-    gap: 10,
+    gap: 20,
   },
-  logIn: { flexDirection: "row", justifyContent: "center", gap: 5 },
 }));
 
 export default RegisterScreen;

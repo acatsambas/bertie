@@ -13,8 +13,7 @@
     "password": "Password",
     "forgot": "Forgot password?",
     "button": "Login",
-    "create": "Don't have an account?",
-    "signup": "Sign up!"
+    "create": "Create account"
   },
   "signup": {
     "title": "Sign Up",
@@ -24,8 +23,7 @@
     "agree": "By logging in, you agree to our",
     "terms": "Terms of Service & Privacy Policy",
     "button": "Sign Up",
-    "already": "Already having an account?",
-    "login": "Log in!",
+    "explore": "Explore Bertie",
     "mailError": "The entered email address is invalid.",
     "mailDuplicateError": "That email is already registered! Try signing in instead",
     "pwNoMatch": "Passwords don’t match!",
