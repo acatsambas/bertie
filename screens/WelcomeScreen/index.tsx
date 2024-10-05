@@ -1,5 +1,5 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import { View } from "react-native";
+import { Linking, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useTranslation } from "react-i18next";
@@ -27,6 +27,10 @@ const WelcomeScreen = () => {
     navigate("Login");
   };
 
+  const handlePrivacy = () => {
+    Linking.openURL("https://www.bertieapp.com/privacypolicy.html");
+  };
+
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <View style={styles.logo}>
@@ -42,7 +46,11 @@ const WelcomeScreen = () => {
           <Text kind="paragraph" text={t(translations.welcome.purpose)} />
           <View>
             <Text kind="paragraph" text={t(translations.welcome.agree)} />
-            <Text kind="button" text={t(translations.welcome.terms)} />
+            <Text
+              kind="button"
+              text={t(translations.welcome.terms)}
+              onPress={handlePrivacy}
+            />
           </View>
         </View>
 
