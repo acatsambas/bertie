@@ -108,6 +108,7 @@ const useStyles = makeStyles(() => ({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    paddingRight: 20,
   },
   search: { alignItems: "flex-start" },
   toggle: { flexDirection: "row", alignItems: "center", gap: 20 },
