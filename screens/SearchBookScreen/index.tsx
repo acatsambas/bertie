@@ -1,13 +1,14 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { View, ScrollView, Platform } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
-import { debounce } from "lodash";
+import firestore from "@react-native-firebase/firestore";
 
 import { makeStyles } from "@rneui/themed";
 import { Switch } from "@rneui/themed";
+import { debounce } from "lodash";
 
 import { LibraryNavigatorParamList } from "../../navigation/AppStack/params";
 import { translations } from "../../locales/translations";
@@ -15,6 +16,7 @@ import Text from "../../components/Text";
 import Icon from "../../components/Icon";
 import Input from "../../components/Input";
 import SearchBooks from "../../components/SearchBooks";
+import { AuthContext } from "../../api/auth/AuthProvider";
 
 export interface SearchBookProps
   extends StackNavigationProp<LibraryNavigatorParamList, "Search"> {}
@@ -24,6 +26,11 @@ const SearchBookScreen = () => {
   const [searchResults, setSearchResults] = useState({});
   const [isTitle, setIsTitle] = useState(false);
   const [toggleWord, setToggleWord] = useState("intitle");
+  const [isFirstSearch, setIsFirstSearch] = useState(true);
+
+  const { user } = useContext(AuthContext);
+  const userId = user.uid;
+
   const styles = useStyles();
   const { t } = useTranslation();
   const { navigate } = useNavigation<SearchBookProps>();
@@ -31,6 +38,10 @@ const SearchBookScreen = () => {
   useEffect(() => {
     searchInput.length !== 0 && fetchData();
   }, [searchInput]);
+
+  useEffect(() => {
+    handleFirstSearch();
+  }, []);
 
   const fetchData = async () => {
     const data = await fetch(
@@ -42,8 +53,15 @@ const SearchBookScreen = () => {
 
   const searchDebounce = debounce((value) => setSearchInput(value.trim()), 500);
 
-  const handleSearchQuery = (value: string) => {
+  const handleSearchQuery = async (value: string) => {
     searchDebounce(value);
+    setIsFirstSearch(false);
+    await firestore().collection("users").doc(userId).set(
+      {
+        isFirstSearch: false,
+      },
+      { merge: true }
+    );
   };
 
   const handleCloseClick = () => {
@@ -53,6 +71,12 @@ const SearchBookScreen = () => {
   const handleToggle = () => {
     setIsTitle(!isTitle);
     isTitle ? setToggleWord("intitle") : setToggleWord("inauthor");
+  };
+
+  const handleFirstSearch = async () => {
+    const json = await firestore()?.collection("users")?.doc(userId)?.get();
+    json.data().isFirstSearch === false &&
+      setIsFirstSearch(json.data().isFirstSearch);
   };
 
   return (
@@ -81,10 +105,12 @@ const SearchBookScreen = () => {
             />
           </View>
         </View>
-        <Text
-          kind="paragraph"
-          text={t(translations.library.search.addToList)}
-        />
+        {isFirstSearch && (
+          <Text
+            kind="paragraph"
+            text={t(translations.library.search.addToList)}
+          />
+        )}
 
         <SearchBooks books={searchResults} />
       </ScrollView>
