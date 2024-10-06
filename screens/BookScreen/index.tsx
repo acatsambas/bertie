@@ -26,7 +26,6 @@ const BookScreen = ({ navigation }) => {
   const { bookName, author, id } = params;
 
   useEffect(() => {
-    fetchData();
     fetchBookData();
   }, []);
 
@@ -48,13 +47,19 @@ const BookScreen = ({ navigation }) => {
       .collection("books")
       .doc(id)
       .get();
+
+    bookData?.data()?.description
+      ? setDescription(bookData.data().description)
+      : fetchData();
+
     setMyList(bookData.exists);
   };
 
   const handleAddBook = async (
     author: string,
     id: string,
-    bookName: string
+    bookName: string,
+    description: string
   ) => {
     await firestore()
       .collection("users")
@@ -67,6 +72,7 @@ const BookScreen = ({ navigation }) => {
           bookId: id,
           isRead: false,
           title: bookName,
+          description: description,
         },
         { merge: true }
       );
@@ -100,7 +106,7 @@ const BookScreen = ({ navigation }) => {
             <Button
               kind="primary"
               text={t(translations.library.add)}
-              onPress={() => handleAddBook(author, id, bookName)}
+              onPress={() => handleAddBook(author, id, bookName, description)}
             />
 
             <Button

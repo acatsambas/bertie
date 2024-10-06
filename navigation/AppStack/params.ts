@@ -7,7 +7,13 @@ export type SettingsNavigatorParamList = {
 
 export type LibraryNavigatorParamList = {
   Library: undefined;
-  Book: { bookName?: string; author?: string; isMyList?: boolean; id?: string };
+  Book: {
+    bookName?: string;
+    author?: string;
+    isMyList?: boolean;
+    id?: string;
+    description?: string;
+  };
   Search: undefined;
 };
 

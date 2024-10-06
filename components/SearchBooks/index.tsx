@@ -29,7 +29,8 @@ const SearchBooks = ({ books }) => {
     id: string,
     title: string,
     author: string,
-    isRead: boolean
+    isRead: boolean,
+    description: string
   ) => {
     try {
       !isSaved
@@ -44,6 +45,7 @@ const SearchBooks = ({ books }) => {
                 bookId: id,
                 isRead: isRead,
                 title: title,
+                description: description,
               },
               { merge: true }
             )
@@ -92,7 +94,8 @@ const SearchBooks = ({ books }) => {
                 book?.id,
                 book?.volumeInfo?.title,
                 book?.volumeInfo?.authors,
-                false
+                false,
+                book?.volumeInfo?.description
               )
             }
           />
