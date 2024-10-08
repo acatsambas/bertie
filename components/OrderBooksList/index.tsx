@@ -14,7 +14,7 @@ const OrderBooksList = () => {
 
   useEffect(() => {
     fetchBooks();
-  }, [books]);
+  }, []);
 
   const fetchBooks = async () => {
     const userBooksSnapshot = await firestore()
@@ -30,14 +30,12 @@ const OrderBooksList = () => {
     setBooks(booksList);
   };
 
-  const handleRemoveBook = async (id: string) => {
-    await firestore()
-      .collection("users")
-      .doc(userId)
-      .collection("books")
-      .doc(id)
-      .delete();
+  const handleRemoveBook = (id: string) => {
+    const element = books.find((book) => book.id === id); //find element
+    const index = books.indexOf(element); //find its index
+    books.splice(index, 1); //remove element
   };
+
   const styles = useStyles();
   return (
     <View style={styles.container}>
