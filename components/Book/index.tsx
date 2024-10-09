@@ -88,7 +88,7 @@ const Book = ({
         </View>
       ) : (
         <View style={styles.removeBookContainer}>
-          <View>
+          <View style={{ width: "80%" }}>
             <Text text={title} kind="paragraph" />
             <Text text={author} kind="littleText" />
           </View>
