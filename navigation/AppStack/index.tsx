@@ -154,6 +154,13 @@ const OrderNavigator = () => {
           animation: "none",
         }}
       />
+      <OrderStack.Screen
+        name="Bookshop"
+        component={BookshopScreen}
+        options={{
+          animation: "none",
+        }}
+      />
     </OrderStack.Navigator>
   );
 };

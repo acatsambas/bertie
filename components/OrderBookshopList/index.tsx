@@ -11,7 +11,10 @@ import { AuthContext } from "../../api/auth/AuthProvider";
 import Text from "../../components/Text";
 import BookShop from "../Bookshop";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { OrderNavigatorParamList } from "../../navigation/AppStack/params";
+import {
+  OrderNavigatorParamList,
+  BookshopType,
+} from "../../navigation/AppStack/params";
 
 interface OrderBookshopListProps {
   kind: "favourites" | "more";
@@ -88,6 +91,10 @@ const OrderBookshopList = ({ kind }: OrderBookshopListProps) => {
     setIsFavorite([id, name, !isFavorite[2]]);
   };
 
+  const handleNavigateBookshop = (bookshop: BookshopType) => {
+    navigate("Bookshop", bookshop);
+  };
+
   return (
     <View>
       {kind === "favourites" ? (
@@ -126,6 +133,7 @@ const OrderBookshopList = ({ kind }: OrderBookshopListProps) => {
               location={shop.city}
               key={shop.id}
               kind="default"
+              onPress={() => handleNavigateBookshop(shop)}
             />
           ))}
         </View>

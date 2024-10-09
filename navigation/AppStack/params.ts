@@ -35,6 +35,7 @@ export type OrderNavigatorParamList = {
   Order: undefined;
   OrderShop: undefined;
   AddressScreen: undefined;
+  Bookshop: BookshopType;
   OrderPlaced: undefined;
 };
 

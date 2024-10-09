@@ -20,7 +20,7 @@ import GoogleMaps from "../../components/GoogleMaps";
 export interface BookshopPageProps
   extends StackNavigationProp<DiscoverNavigatorParamList, "Bookshop"> {}
 
-const BookshopScreen = () => {
+const BookshopScreen = ({ navigation }) => {
   const [isFav, setIsFav] = useState(false);
   useEffect(() => {
     fetchBook();
@@ -62,7 +62,7 @@ const BookshopScreen = () => {
   };
 
   const handleBack = () => {
-    navigate("Discover");
+    navigation.goBack();
   };
 
   return (
