@@ -37,7 +37,7 @@ const SearchBookScreen = () => {
 
   useEffect(() => {
     searchInput.length !== 0 && fetchData();
-  }, [searchInput]);
+  }, [searchInput, isTitle]);
 
   useEffect(() => {
     handleFirstSearch();
