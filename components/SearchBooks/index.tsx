@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -13,9 +13,14 @@ export interface SearchBookProps
 
 const SearchBooks = ({ books }) => {
   const [isSaved, setIsSaved] = useState(false);
+  const [existingBooks, setExistingBooks] = useState([]);
   const { navigate } = useNavigation<SearchBookProps>();
   const { user } = useContext(AuthContext);
   const userId = user.uid;
+
+  useEffect(() => {
+    handleStoredBooks();
+  }, [books]);
 
   const handleBook = (id: string, title: string, author: string) => {
     navigate("Book", {
@@ -61,12 +66,30 @@ const SearchBooks = ({ books }) => {
     }
   };
 
+  const handleStoredBooks = async () => {
+    const booksSnapshop = await firestore()
+      ?.collection("users")
+      ?.doc(userId)
+      ?.collection("books")
+      .get();
+
+    const savedBooks = booksSnapshop.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    setExistingBooks(savedBooks);
+  };
+
   return (
     <View>
       {Object.keys(books).length !== 0 &&
         books.map((book: any) => (
           <Book
             key={book?.id}
+            isChecked={existingBooks.find(
+              (existingBook) => existingBook.bookId === book.id
+            )}
             kind="search"
             title={book?.volumeInfo?.title}
             author={
