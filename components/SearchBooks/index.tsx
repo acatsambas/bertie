@@ -83,12 +83,12 @@ const SearchBooks = ({ books }) => {
 
   return (
     <View>
-      {Object.keys(books).length !== 0 &&
+      {Object?.keys(books || {})?.length !== 0 &&
         books.map((book: any) => (
           <Book
             key={book?.id}
             isChecked={existingBooks.find(
-              (existingBook) => existingBook.bookId === book.id
+              (existingBook) => existingBook?.bookId === book?.id
             )}
             kind="search"
             title={book?.volumeInfo?.title}
