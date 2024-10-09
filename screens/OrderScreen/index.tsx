@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { FlatList, View } from "react-native";
+import { FlatList, ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
 import { useNavigation } from "@react-navigation/native";
@@ -50,7 +50,7 @@ const OrderScreen = () => {
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.container}>
         <Text text={t(translations.order.title)} kind="bigHeader" />
         {books.length > 0 ? (
           <Text text={t(translations.order.header)} kind="header" />
@@ -64,34 +64,22 @@ const OrderScreen = () => {
           <Text text={t(translations.order.suggestions)} kind="paragraph" />
         )}
         {books.length > 0 && (
-          <FlatList
-            data={[
-              { key: "First Name" },
-              { key: "Last Name" },
-              { key: "Email" },
-              { key: "Address" },
-            ]}
-            renderItem={({ item }) => {
-              return (
-                <View style={{ marginBottom: 10 }}>
-                  <Text text={`\u2022 ${item.key}`} kind="description" />
-                </View>
-              );
-            }}
-          />
-        )}
-      </View>
-
-      <View style={styles.bottomArea}>
-        {books.length > 0 && (
-          <View style={styles.nextButton}>
+          <>
+            <View>
+              <Text text={`\u2022 First Name`} kind="description" />
+              <Text text={`\u2022 Last Name`} kind="description" />
+              <Text text={`\u2022 Email`} kind="description" />
+              <Text text={`\u2022 Address`} kind="description" />
+            </View>
             <Button
               kind="primary"
               text={t(translations.order.next)}
               onPress={handleNext}
             />
-          </View>
+          </>
         )}
+      </ScrollView>
+      <View style={styles.bottomArea}>
         <BottomMenu />
       </View>
     </SafeAreaView>
@@ -103,9 +91,13 @@ const useStyles = makeStyles(() => ({
     flex: 1,
     paddingHorizontal: 20,
     backgroundColor: "#FDF9F6",
+  },
+  container: {
+    paddingTop: 20,
+    paddingBottom: 120,
+    gap: 20,
     position: "relative",
   },
-  container: { paddingTop: 20, gap: 20 },
   nextButton: { paddingHorizontal: 20 },
   bottomArea: {
     flex: 1,
