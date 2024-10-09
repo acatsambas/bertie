@@ -68,7 +68,7 @@ const Book = ({
             {...props}
           />
           <TouchableOpacity style={styles.content} onPress={onPress}>
-            <View>
+            <View style={{ width: "90%" }}>
               <Text
                 text={title}
                 kind="paragraph"
