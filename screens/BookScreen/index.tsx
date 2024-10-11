@@ -105,37 +105,29 @@ const BookScreen = ({ navigation }) => {
       <View style={styles.buttonContainer}>
         {!myList ? (
           <>
-          <View style={styles.buttonWrapper}>
             <Button
               kind="primary"
               text={t(translations.library.add)}
               onPress={() => handleAddBook(author, id, bookName, description)}
             />
-            </View>
-            <View style={styles.buttonWrapper}>
             <Button
               kind="tertiary"
               text={t(translations.library.back)}
               onPress={handleBack}
             />
-            </View>
           </>
         ) : (
           <>
-          <View style={styles.buttonWrapper}>
             <Button
               kind="primary"
               text={t(translations.library.back)}
               onPress={handleBack}
             />
-          </View>
-          <View style={styles.buttonWrapper}>
             <Button
               kind="tertiary"
               text={t(translations.library.remove)}
               onPress={() => handleRemoveBook(id)}
             />
-          </View>
           </>
         )}
       </View>
@@ -152,13 +144,10 @@ const useStyles = makeStyles(() => ({
   container: { paddingTop: 20, gap: 20 },
   buttonContainer: {
     padding: 20,
+    gap: 20,
     flexDirection: 'column', 
     alignItems: 'center', 
-  },
-  buttonWrapper: {
-    marginBottom: 20, // Space between buttons
-    width: '100%', // Optional: ensure buttons fill container width
-  },
+  }
 
 }));
 
