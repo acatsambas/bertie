@@ -72,7 +72,8 @@
     "bookshop": "Bookshop",
     "add": "Add to Favourites",
     "remove": "Remove from Favourites",
-    "back": "Back"
+    "back": "Back",
+    "booksHeader": "Coming soon: your personal, AI-powered literary advisor. In the meantime, you can explore some of our own favourites!"
   },
   "library": {
     "title": "My list",
