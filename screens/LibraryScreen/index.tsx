@@ -28,7 +28,7 @@ const LibraryScreen = () => {
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false} >
         <View style={styles.header}>
           <Text text={t(translations.library.title)} kind="bigHeader" />
           <Avatar onPress={handleAvatarClick} />
@@ -54,6 +54,8 @@ const useStyles = makeStyles(() => ({
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
+
+
   },
   bottomArea: {
     flex: 1,

@@ -121,7 +121,7 @@ const useStyles = makeStyles(() => ({
   text: {
     flexDirection: "row",
     paddingHorizontal: 20,
-    paddingVertical: 17,
+    paddingVertical: 20,
     gap: 20,
     borderWidth: 1,
     borderRadius: 5,
