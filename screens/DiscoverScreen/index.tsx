@@ -13,7 +13,8 @@ import { translations } from "../../locales/translations";
 import Text from "../../components/Text";
 import BottomMenu from "../../components/BottomMenu";
 import Avatar from "../../components/Avatar";
-import BookshopsList from "../../components/BookshopsList";
+import BookshopsList from "../../components/BookshopsList"; // Assuming you have a BookshopsList component
+import DiscoverRecommendedBooks from "../../components/DiscoverRecommendedBooks"; // Importing DiscoverRecommendedBooks
 
 export interface DiscoverScreenProps
   extends StackNavigationProp<AppNavigatorParamList, "DiscoverNavigator"> {}
@@ -55,7 +56,10 @@ const DiscoverScreen = () => {
             <BookshopsList />
           </View>
         ) : (
-          <View></View>
+          <View style={styles.booksTab}>
+            <Text text={t(translations.discover.booksHeader)} kind="paragraph" />
+            <DiscoverRecommendedBooks />
+          </View>
         )}
       </View>
       <View style={styles.bottomArea}>
@@ -97,6 +101,9 @@ const useStyles = makeStyles(() => ({
     bottom: 0,
     right: 0,
     left: 0,
+  },
+  booksTab: {
+    gap: 20,
   },
 }));
 

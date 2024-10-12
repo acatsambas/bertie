@@ -101,6 +101,8 @@ const BookScreen = ({ navigation }) => {
           <Text kind="paragraph" text={author} />
         </View>
         <RenderHtml source={{ html: description }} contentWidth={0} />
+      </ScrollView>
+      <View style={styles.buttonContainer}>
         {!myList ? (
           <>
             <Button
@@ -108,7 +110,6 @@ const BookScreen = ({ navigation }) => {
               text={t(translations.library.add)}
               onPress={() => handleAddBook(author, id, bookName, description)}
             />
-
             <Button
               kind="tertiary"
               text={t(translations.library.back)}
@@ -122,7 +123,6 @@ const BookScreen = ({ navigation }) => {
               text={t(translations.library.back)}
               onPress={handleBack}
             />
-
             <Button
               kind="tertiary"
               text={t(translations.library.remove)}
@@ -130,7 +130,7 @@ const BookScreen = ({ navigation }) => {
             />
           </>
         )}
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 };
@@ -142,6 +142,13 @@ const useStyles = makeStyles(() => ({
     backgroundColor: "#FDF9F6",
   },
   container: { paddingTop: 20, gap: 20 },
+  buttonContainer: {
+    padding: 20,
+    gap: 20,
+    flexDirection: 'column', 
+    alignItems: 'center', 
+  }
+
 }));
 
 export default BookScreen;
