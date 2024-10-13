@@ -1,4 +1,4 @@
-import { KeyboardAvoidingView, Linking, View } from "react-native";
+import { KeyboardAvoidingView, Linking, Platform, View } from "react-native";
 import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -42,10 +42,6 @@ const RegisterScreen = () => {
     setPasswordError(false);
   };
 
-  const handleLogin = () => {
-    navigate("Login");
-  };
-
   const handleRegister = () => {
     const validRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
     if (email.match(validRegex)) {
@@ -63,7 +59,7 @@ const RegisterScreen = () => {
     Linking.openURL("https://www.bertieapp.com/privacypolicy.html");
   };
   return (
-    <KeyboardAvoidingView style={styles.safeAreaView}>
+    <KeyboardAvoidingView style={styles.safeAreaView} behavior="height">
       <View style={styles.logo}>
         <Logo />
       </View>
@@ -141,7 +137,7 @@ const useStyles = makeStyles(() => ({
   bottomArea: {
     flex: 1,
     justifyContent: "flex-end",
-    marginBottom: 20,
+    marginBottom: Platform.OS === "ios" ? 20 : 10,
     gap: 20,
   },
 }));
