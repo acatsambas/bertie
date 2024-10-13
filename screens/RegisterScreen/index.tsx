@@ -1,6 +1,5 @@
-import { Linking, View } from "react-native";
+import { KeyboardAvoidingView, Linking, View } from "react-native";
 import { useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useTranslation } from "react-i18next";
@@ -64,7 +63,7 @@ const RegisterScreen = () => {
     Linking.openURL("https://www.bertieapp.com/privacypolicy.html");
   };
   return (
-    <SafeAreaView style={styles.safeAreaView}>
+    <KeyboardAvoidingView style={styles.safeAreaView}>
       <View style={styles.logo}>
         <Logo />
       </View>
@@ -117,7 +116,7 @@ const RegisterScreen = () => {
         />
         <Button kind="tertiary" text={t(translations.signup.explore)} />
       </View>
-    </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 
