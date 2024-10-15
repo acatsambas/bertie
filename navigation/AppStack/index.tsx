@@ -21,6 +21,7 @@ import OrderShopScreen from "../../screens/OrderShopScreen";
 import OrderPlacedScreen from "../../screens/OrderPlacedScreen";
 import DeleteScreen from "../../screens/DeleteScreen";
 import ResetScreen from "../../screens/ResetScreen";
+import NoAccountScreen from "../../screens/NoAccountScreen";
 
 export const AppStack = createNativeStackNavigator<AppNavigatorParamList>();
 

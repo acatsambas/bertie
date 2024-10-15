@@ -45,6 +45,10 @@
     "done": "Done",
     "error": "The entered email address is invalid."
   },
+  "noAccount": {
+    "title": "Terribly sorry, but...",
+    "paragraph": "... you need an account to do that. Choose one of the options below please."
+  },
   "settings": {
     "title": "Settings",
     "signout": "Sign out",
