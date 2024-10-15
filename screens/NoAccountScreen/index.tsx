@@ -1,10 +1,12 @@
 import { SafeAreaView } from "react-native-safe-area-context";
 import { View } from "react-native";
 import { useTranslation } from "react-i18next";
+import { useNavigation } from "@react-navigation/native";
 
 import { makeStyles } from "@rneui/themed";
 
 import { translations } from "../../locales/translations";
+import { AuthNavigatorParamList } from "../../navigation/AuthStack/params";
 import Text from "../../components/Text";
 import Icon from "../../components/Icon";
 import Button from "../../components/Button";
@@ -18,6 +20,9 @@ const NoAccountScreen = ({ navigation }) => {
   const handleBack = () => {
     navigation.goBack();
   };
+
+  const handleLogin = () => {};
+
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <View style={styles.container}>
@@ -27,7 +32,11 @@ const NoAccountScreen = ({ navigation }) => {
         </View>
         <Text kind="paragraph" text={t(translations.noAccount.paragraph)} />
         <View style={styles.buttons}>
-          <Button kind="primary" text={t(translations.welcome.email)} />
+          <Button
+            kind="primary"
+            text={t(translations.welcome.email)}
+            onPress={handleLogin}
+          />
           <GoogleButton />
           <AppleSigninButton />
         </View>
