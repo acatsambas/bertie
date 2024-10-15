@@ -62,6 +62,9 @@ const SearchBookScreen = () => {
       },
       { merge: true }
     );
+    if (value === "") {
+      setSearchResults({});
+    }
   };
 
   const handleCloseClick = () => {
