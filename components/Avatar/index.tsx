@@ -15,13 +15,14 @@ const Avatar = ({ onPress }: AvatarProps) => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [user]);
 
   const fetchData = async () => {
     const json = await firestore()?.collection("users")?.doc(user.uid)?.get();
-    setUserInitials(
-      json?.data()?.givenName.charAt(0) + json?.data()?.familyName.charAt(0)
-    );
+    json?.data()?.documentId &&
+      setUserInitials(
+        json?.data()?.givenName?.charAt(0) + json?.data()?.familyName?.charAt(0)
+      );
   };
 
   const avatarURL = user.photoURL && user.photoURL;
