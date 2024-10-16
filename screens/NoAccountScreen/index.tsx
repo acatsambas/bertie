@@ -1,5 +1,5 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import { View } from "react-native";
+import { Platform, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useNavigation } from "@react-navigation/native";
 
@@ -38,7 +38,7 @@ const NoAccountScreen = ({ navigation }) => {
             onPress={handleLogin}
           />
           <GoogleButton />
-          <AppleSigninButton />
+          {Platform.OS === "ios" && <AppleSigninButton />}
         </View>
       </View>
     </SafeAreaView>

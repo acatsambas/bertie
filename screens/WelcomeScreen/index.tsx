@@ -1,5 +1,5 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Linking, View } from "react-native";
+import { Linking, Platform, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useTranslation } from "react-i18next";
@@ -63,7 +63,7 @@ const WelcomeScreen = () => {
             onPress={handleLogin}
           />
           <GoogleButton />
-          <AppleSigninButton />
+          {Platform.OS === "ios" && <AppleSigninButton />}
         </View>
       </View>
     </SafeAreaView>
