@@ -1,23 +1,23 @@
-import React, { useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useTranslation } from "react-i18next";
+import React, { useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 
-import { makeStyles } from "@rneui/themed";
+import { makeStyles } from '@rneui/themed';
 
-import { translations } from "../../locales/translations";
-import { View } from "react-native";
-import Text from "../../components/Text";
-import Input from "../../components/Input";
-import Button from "../../components/Button";
+import { translations } from '../../locales/translations';
+import { View } from 'react-native';
+import Text from '../../components/Text';
+import Input from '../../components/Input';
+import Button from '../../components/Button';
 
 //TODO: Reset password doesn't work
 
 const ResetScreen = () => {
   const [isReseted, setIsReseted] = useState(false);
-  const [password, setPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [newPassword2, setNewPassword2] = useState("");
-  const [error, setError] = useState("");
+  const [password, setPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [newPassword2, setNewPassword2] = useState('');
+  const [error, setError] = useState('');
 
   const styles = useStyles();
   const { t } = useTranslation();
@@ -38,7 +38,7 @@ const ResetScreen = () => {
     if (newPassword === newPassword2) {
       setIsReseted(true);
     } else {
-      setError("Passwords do not match!");
+      setError('Passwords do not match!');
     }
   };
 
@@ -103,18 +103,18 @@ const useStyles = makeStyles(() => ({
   safeAreaView: {
     flex: 1,
     paddingHorizontal: 20,
-    backgroundColor: "#FDF9F6",
+    backgroundColor: '#FDF9F6',
   },
   container: { paddingTop: 20, gap: 20 },
   error: {
-    backgroundColor: "#FDEDED",
+    backgroundColor: '#FDEDED',
     paddingHorizontal: 20,
     paddingVertical: 10,
   },
   bottomArea: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "flex-end",
+    alignItems: 'center',
+    justifyContent: 'flex-end',
     marginBottom: 20,
   },
 }));

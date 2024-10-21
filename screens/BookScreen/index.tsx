@@ -1,24 +1,24 @@
-import { useContext, useEffect, useState } from "react";
-import { RouteProp, useRoute } from "@react-navigation/native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useTranslation } from "react-i18next";
-import { View, ScrollView } from "react-native";
-import RenderHtml from "react-native-render-html";
-import firestore from "@react-native-firebase/firestore";
+import { useContext, useEffect, useState } from 'react';
+import { RouteProp, useRoute } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
+import { View, ScrollView } from 'react-native';
+import RenderHtml from 'react-native-render-html';
+import firestore from '@react-native-firebase/firestore';
 
-import { makeStyles } from "@rneui/themed";
+import { makeStyles } from '@rneui/themed';
 
-import { translations } from "../../locales/translations";
-import { LibraryNavigatorParamList } from "../../navigation/AppStack/params";
-import { AuthContext } from "../../api/auth/AuthProvider";
-import Text from "../../components/Text";
-import Button from "../../components/Button";
+import { translations } from '../../locales/translations';
+import { LibraryNavigatorParamList } from '../../navigation/AppStack/params';
+import { AuthContext } from '../../api/auth/AuthProvider';
+import Text from '../../components/Text';
+import Button from '../../components/Button';
 
 const BookScreen = ({ navigation }) => {
-  const [description, setDescription] = useState("");
+  const [description, setDescription] = useState('');
   const [myList, setMyList] = useState(false);
 
-  const { params } = useRoute<RouteProp<LibraryNavigatorParamList, "Book">>();
+  const { params } = useRoute<RouteProp<LibraryNavigatorParamList, 'Book'>>();
   const styles = useStyles();
   const { t } = useTranslation();
   const { user } = useContext(AuthContext);
@@ -31,7 +31,7 @@ const BookScreen = ({ navigation }) => {
 
   const fetchData = async () => {
     const data = await fetch(
-      `https://www.googleapis.com/books/v1/volumes/${id}?key=${process.env.EXPO_PUBLIC_BOOKS_API_KEY}`
+      `https://www.googleapis.com/books/v1/volumes/${id}?key=${process.env.EXPO_PUBLIC_BOOKS_API_KEY}`,
     );
     const json = await data.json();
 
@@ -42,9 +42,9 @@ const BookScreen = ({ navigation }) => {
 
   const fetchBookData = async () => {
     const bookData = await firestore()
-      .collection("users")
+      .collection('users')
       .doc(userId)
-      .collection("books")
+      .collection('books')
       .doc(id)
       .get();
 
@@ -59,12 +59,12 @@ const BookScreen = ({ navigation }) => {
     author: string,
     id: string,
     bookName: string,
-    description: string
+    description: string,
   ) => {
     await firestore()
-      .collection("users")
+      .collection('users')
       .doc(userId)
-      .collection("books")
+      .collection('books')
       .doc(id)
       .set(
         {
@@ -74,16 +74,16 @@ const BookScreen = ({ navigation }) => {
           title: bookName,
           description: description,
         },
-        { merge: true }
+        { merge: true },
       );
     fetchBookData();
   };
 
   const handleRemoveBook = async (id: string) => {
     await firestore()
-      .collection("users")
+      .collection('users')
       .doc(userId)
-      .collection("books")
+      .collection('books')
       .doc(id)
       .delete();
     fetchBookData();
@@ -139,16 +139,15 @@ const useStyles = makeStyles(() => ({
   safeAreaView: {
     flex: 1,
     paddingHorizontal: 20,
-    backgroundColor: "#FDF9F6",
+    backgroundColor: '#FDF9F6',
   },
   container: { paddingTop: 20, gap: 20 },
   buttonContainer: {
     padding: 20,
     gap: 20,
-    flexDirection: 'column', 
-    alignItems: 'center', 
-  }
-
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
 }));
 
 export default BookScreen;

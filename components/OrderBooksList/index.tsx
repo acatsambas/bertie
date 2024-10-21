@@ -1,11 +1,11 @@
-import React, { useContext, useEffect, useState } from "react";
-import { View } from "react-native";
-import firestore from "@react-native-firebase/firestore";
+import React, { useContext, useEffect, useState } from 'react';
+import { View } from 'react-native';
+import firestore from '@react-native-firebase/firestore';
 
-import { makeStyles } from "@rneui/themed";
+import { makeStyles } from '@rneui/themed';
 
-import { AuthContext } from "../../api/auth/AuthProvider";
-import Book from "../Book";
+import { AuthContext } from '../../api/auth/AuthProvider';
+import Book from '../Book';
 
 const OrderBooksList = () => {
   const [books, setBooks] = useState([]);
@@ -18,12 +18,12 @@ const OrderBooksList = () => {
 
   const fetchBooks = async () => {
     const userBooksSnapshot = await firestore()
-      .collection("users")
+      .collection('users')
       .doc(userId)
-      .collection("books")
+      .collection('books')
       .get();
 
-    const booksList = userBooksSnapshot.docs.map((doc) => ({
+    const booksList = userBooksSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data(),
     }));
@@ -31,7 +31,7 @@ const OrderBooksList = () => {
   };
 
   const handleRemoveBook = (id: string) => {
-    const element = books.find((book) => book.id === id); //find element
+    const element = books.find(book => book.id === id); //find element
     const index = books.indexOf(element); //find its index
     books.splice(index, 1); //remove element
   };
@@ -40,7 +40,7 @@ const OrderBooksList = () => {
   return (
     <View style={styles.container}>
       {books.map(
-        (book) =>
+        book =>
           book.isRead === false && (
             <Book
               key={book.id}
@@ -50,7 +50,7 @@ const OrderBooksList = () => {
               isChecked={book.isRead}
               onChange={() => handleRemoveBook(book.id)}
             />
-          )
+          ),
       )}
     </View>
   );

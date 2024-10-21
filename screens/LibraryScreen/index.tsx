@@ -1,21 +1,21 @@
-import { ScrollView, View } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useTranslation } from "react-i18next";
+import { ScrollView, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 
-import { makeStyles } from "@rneui/themed";
+import { makeStyles } from '@rneui/themed';
 
-import { AppNavigatorParamList } from "../../navigation/AppStack/params";
-import { translations } from "../../locales/translations";
-import BottomMenu from "../../components/BottomMenu";
-import Text from "../../components/Text";
-import Avatar from "../../components/Avatar";
-import CurrentBooks from "../../components/CurrentBooks";
-import PastBooks from "../../components/PastBooks";
+import { AppNavigatorParamList } from '../../navigation/AppStack/params';
+import { translations } from '../../locales/translations';
+import BottomMenu from '../../components/BottomMenu';
+import Text from '../../components/Text';
+import Avatar from '../../components/Avatar';
+import CurrentBooks from '../../components/CurrentBooks';
+import PastBooks from '../../components/PastBooks';
 
 export interface LibraryScreenProps
-  extends StackNavigationProp<AppNavigatorParamList, "LibraryNavigator"> {}
+  extends StackNavigationProp<AppNavigatorParamList, 'LibraryNavigator'> {}
 
 const LibraryScreen = () => {
   const styles = useStyles();
@@ -23,12 +23,15 @@ const LibraryScreen = () => {
   const { navigate } = useNavigation<LibraryScreenProps>();
 
   const handleAvatarClick = () => {
-    navigate("SettingsNavigator");
+    navigate('SettingsNavigator');
   };
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false} >
+      <ScrollView
+        contentContainerStyle={styles.container}
+        showsVerticalScrollIndicator={false}
+      >
         <View style={styles.header}>
           <Text text={t(translations.library.title)} kind="bigHeader" />
           <Avatar onPress={handleAvatarClick} />
@@ -47,21 +50,19 @@ const useStyles = makeStyles(() => ({
   safeAreaView: {
     flex: 1,
     paddingHorizontal: 20,
-    backgroundColor: "#FDF9F6",
-    position: "relative",
+    backgroundColor: '#FDF9F6',
+    position: 'relative',
   },
   container: { paddingTop: 20, gap: 20 },
   header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-
-
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   bottomArea: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "flex-end",
-    position: "absolute",
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    position: 'absolute',
     bottom: 0,
     right: 0,
     left: 0,

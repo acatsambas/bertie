@@ -1,5 +1,5 @@
 const languages: { [key in string]: string } = {
-  en: "English",
+  en: 'English',
 };
 
 export default languages;

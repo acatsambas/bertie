@@ -1,10 +1,10 @@
-import { useContext } from "react";
+import { useContext } from 'react';
 
-import { makeStyles } from "@rneui/themed";
-import * as AppleAuthentication from "expo-apple-authentication";
+import { makeStyles } from '@rneui/themed';
+import * as AppleAuthentication from 'expo-apple-authentication';
 
-import { AuthContext } from "../../../api/auth/AuthProvider";
-import { isFirebaseError } from "../../../api/types";
+import { AuthContext } from '../../../api/auth/AuthProvider';
+import { isFirebaseError } from '../../../api/types';
 
 const AppleSigninButton = () => {
   const styles = useStyles();
@@ -34,7 +34,7 @@ const AppleSigninButton = () => {
 
 const useStyles = makeStyles(() => ({
   appleButton: {
-    width: "100%",
+    width: '100%',
     height: 54,
   },
 }));

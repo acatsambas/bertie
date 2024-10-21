@@ -1,17 +1,13 @@
-import React, { createContext, useEffect, useMemo, useState } from "react";
-import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
-import appleAuth from "@invertase/react-native-apple-authentication";
-import firestore from "@react-native-firebase/firestore";
-import messaging from "@react-native-firebase/messaging";
+import React, { createContext, useEffect, useMemo, useState } from 'react';
+import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import appleAuth from '@invertase/react-native-apple-authentication';
 
-import { createUser, updateUserProfile } from "./hooks";
+import { createUser, updateUserProfile } from './hooks';
 
 GoogleSignin.configure({
-  iosClientId:
-    "246694758886-01ksnr8p0d363ifpfk5ch3e06j53b2pt.apps.googleusercontent.com",
-  webClientId:
-    "246694758886-9el7vs0fp2grktk07le096abala2560p.apps.googleusercontent.com",
+  offlineAccess: true,
+  webClientId: process.env.EXPO_PUBLIC_ANDROID_BERTIE_WEB_CLIENT_ID,
 });
 
 export const AuthContext = createContext<{
@@ -22,12 +18,12 @@ export const AuthContext = createContext<{
     password: string,
     givenName: string,
     familyName: string,
-    updates?: FirebaseAuthTypes.UpdateProfile
+    updates?: FirebaseAuthTypes.UpdateProfile,
   ) => Promise<void>;
   update: (
     updates: FirebaseAuthTypes.UpdateProfile,
     givenName?: string,
-    familyName?: string
+    familyName?: string,
   ) => Promise<void>;
   logout: () => Promise<void>;
   forgot: (email: string) => Promise<void>;
@@ -43,7 +39,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null);
 
   useEffect(() => {
-    const unsubscribe = auth().onUserChanged((authUser) => {
+    const unsubscribe = auth().onUserChanged(authUser => {
       // called each time the user changes
       setUser(authUser);
     });
@@ -51,20 +47,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, []);
 
   useEffect(() => {
-    const unsubscribe = auth().onAuthStateChanged((authUser) => {
+    const unsubscribe = auth().onAuthStateChanged(authUser => {
       // get the current signed-in user
       setUser(authUser);
-
-      (async () => {
-        const fcmToken = await messaging().getToken();
-
-        if (authUser?.uid && fcmToken) {
-          firestore()
-            .collection("users")
-            .doc(authUser?.uid)
-            .set({ fcmToken }, { merge: true });
-        }
-      })();
     });
 
     return unsubscribe;
@@ -81,11 +66,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         password: string,
         givenName: string,
         familyName: string,
-        updates?: FirebaseAuthTypes.UpdateProfile
+        updates?: FirebaseAuthTypes.UpdateProfile,
       ) => {
         const { user: authUser } = await auth().createUserWithEmailAndPassword(
           email,
-          password
+          password,
         );
         updates && (await authUser.updateProfile(updates));
         await createUser({ givenName, familyName });
@@ -93,7 +78,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       update: async (
         updates: FirebaseAuthTypes.UpdateProfile,
         givenName?: string,
-        familyName?: string
+        familyName?: string,
       ) => {
         const displayName = `${givenName} ${familyName}`.trim();
         const nameUpdates: { givenName?: string; familyName?: string } = {};
@@ -119,7 +104,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         });
 
         // Get the users ID token
-        const { idToken } = await GoogleSignin.signIn();
+        const {
+          data: { idToken },
+        } = await GoogleSignin.signIn();
 
         // Create a Google credential with the token
         const googleCredential = auth.GoogleAuthProvider.credential(idToken);
@@ -141,14 +128,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
         // Ensure Apple returned a user identityToken
         if (!appleAuthRequestResponse.identityToken) {
-          throw new Error("Apple Sign-In failed - no identify token returned");
+          throw new Error('Apple Sign-In failed - no identify token returned');
         }
 
         // Create a Firebase credential from the response
         const { identityToken, nonce } = appleAuthRequestResponse;
         const appleCredential = auth.AppleAuthProvider.credential(
           identityToken,
-          nonce
+          nonce,
         );
 
         // Sign the user in with the credential
@@ -156,8 +143,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
         await createUser({});
       },
+      anonymousLogin: async () => {
+        await auth().signInAnonymously();
+
+        await createUser({});
+      },
     }),
-    [user]
+    [user],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

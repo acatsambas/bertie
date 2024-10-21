@@ -34,13 +34,13 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
-
 # Firebase
 GoogleService-Info.plist
 google-services.json
-bertie-434108-5fd4928195d9.json
-my-upload-key.keystore
-android/gradle.properties
+release.keystore
 
 # env
 .env
+
+# Development
+.idea/

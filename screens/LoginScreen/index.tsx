@@ -1,33 +1,33 @@
-import { useContext, useState } from "react";
+import { useContext, useState } from 'react';
 
-import { View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { useTranslation } from "react-i18next";
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { useTranslation } from 'react-i18next';
+import { View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { translations } from "../../locales/translations";
-import { AuthNavigatorParamList } from "../../navigation/AuthStack/params";
-import { AuthContext } from "../../api/auth/AuthProvider";
-import { isFirebaseError } from "../../api/types";
+import { AuthContext } from '../../api/auth/AuthProvider';
+import { isFirebaseError } from '../../api/types';
+import { translations } from '../../locales/translations';
+import { AuthNavigatorParamList } from '../../navigation/AuthStack/params';
 
-import { makeStyles } from "@rneui/themed";
+import { makeStyles } from '@rneui/themed';
 
-import Logo from "../../components/Logo";
-import Button from "../../components/Button";
-import Text from "../../components/Text";
-import Input from "../../components/Input";
+import Button from '../../components/Button';
+import Input from '../../components/Input';
+import Logo from '../../components/Logo';
+import Text from '../../components/Text';
 
 export interface LoginPageProps
-  extends StackNavigationProp<AuthNavigatorParamList, "Login"> {}
+  extends StackNavigationProp<AuthNavigatorParamList, 'Login'> {}
 
 const LoginScreen = () => {
   const styles = useStyles();
   const { navigate } = useNavigation<LoginPageProps>();
   const { t } = useTranslation();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const { login } = useContext(AuthContext);
 
@@ -40,11 +40,11 @@ const LoginScreen = () => {
   };
 
   const handleSignup = () => {
-    navigate("Register");
+    navigate('Register');
   };
 
   const handleForgot = () => {
-    navigate("Forgot");
+    navigate('Forgot');
   };
 
   const handlePressLogin = async () => {
@@ -53,7 +53,7 @@ const LoginScreen = () => {
     } catch (error) {
       //TODO: handle error
       if (isFirebaseError(error)) {
-        console.log("ERROR");
+        console.log('ERROR');
       }
     }
   };
@@ -71,12 +71,17 @@ const LoginScreen = () => {
             placeholder={t(translations.login.email)}
             icon="email"
             onChangeText={handleInputEmail}
+            keyboardType="email-address"
+            textContentType="emailAddress"
+            autoCapitalize="none"
+            autoCorrect={false}
           />
           <Input
             placeholder={t(translations.login.password)}
             kind="password"
             icon="password"
             onChangeText={handleInputPassword}
+            textContentType="password"
           />
           <View style={styles.forgot}>
             <Text
@@ -108,17 +113,17 @@ const useStyles = makeStyles(() => ({
     flex: 1,
     gap: 20,
     paddingHorizontal: 20,
-    backgroundColor: "#FDF9F6",
+    backgroundColor: '#FDF9F6',
   },
   logo: {
-    alignItems: "center",
+    alignItems: 'center',
     paddingTop: 20,
   },
   container: { paddingTop: 20, gap: 20 },
-  forgot: { alignItems: "flex-end" },
+  forgot: { alignItems: 'flex-end' },
   bottomArea: {
     flex: 1,
-    justifyContent: "flex-end",
+    justifyContent: 'flex-end',
     marginBottom: 20,
     gap: 20,
   },

@@ -1,12 +1,12 @@
-import { useContext } from "react";
+import { useContext } from 'react';
 import {
   GoogleSigninButton,
   statusCodes,
-} from "@react-native-google-signin/google-signin";
-import { makeStyles } from "@rneui/themed";
+} from '@react-native-google-signin/google-signin';
+import { makeStyles } from '@rneui/themed';
 
-import { AuthContext } from "../../../api/auth/AuthProvider";
-import { isFirebaseError } from "../../../api/types";
+import { AuthContext } from '../../../api/auth/AuthProvider';
+import { isFirebaseError } from '../../../api/types';
 
 /* https://github.com/chelseafarley/expo-google-signin/blob/main/App.js */
 
@@ -46,7 +46,7 @@ const GoogleButton = () => {
 
 const useStyles = makeStyles(() => ({
   appleButton: {
-    width: "100%",
+    width: '100%',
     height: 54,
   },
 }));

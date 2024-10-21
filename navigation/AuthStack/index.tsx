@@ -1,11 +1,11 @@
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { AuthNavigatorParamList } from "./params";
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { AuthNavigatorParamList } from './params';
 
-import WelcomeScreen from "../../screens/WelcomeScreen";
-import LoginScreen from "../../screens/LoginScreen";
-import RegisterScreen from "../../screens/RegisterScreen";
-import ForgotScreen from "../../screens/ForgotScreen";
-import SetProfileScreen from "../../screens/SetProfileScreen";
+import ForgotScreen from '../../screens/ForgotScreen';
+import LoginScreen from '../../screens/LoginScreen';
+import RegisterScreen from '../../screens/RegisterScreen';
+import SetProfileScreen from '../../screens/SetProfileScreen';
+import WelcomeScreen from '../../screens/WelcomeScreen';
 
 export const Stack = createNativeStackNavigator<AuthNavigatorParamList>();
 
@@ -14,34 +14,35 @@ const AuthNavigator = () => {
     <Stack.Navigator
       screenOptions={{
         headerShadowVisible: false,
-        headerTitle: "",
-        headerStyle: { backgroundColor: "transparent" },
+        headerTitle: '',
+        headerStyle: { backgroundColor: 'transparent' },
+        headerShown: false,
       }}
     >
       <Stack.Screen
         name="Welcome"
         component={WelcomeScreen}
-        options={{ title: "Welcome", headerShown: false }}
+        options={{ title: 'Welcome' }}
       />
       <Stack.Screen
         name="Login"
         component={LoginScreen}
-        options={{ title: "Login", headerShown: false }}
+        options={{ title: 'Login' }}
       />
       <Stack.Screen
         name="Register"
         component={RegisterScreen}
-        options={{ title: "Register", headerShown: false }}
+        options={{ title: 'Register' }}
       />
       <Stack.Screen
         name="SetProfile"
         component={SetProfileScreen}
-        options={{ title: "SetProfile", headerShown: false }}
+        options={{ title: 'SetProfile' }}
       />
       <Stack.Screen
         name="Forgot"
         component={ForgotScreen}
-        options={{ title: "Forgot", headerShown: false }}
+        options={{ title: 'Forgot' }}
       />
     </Stack.Navigator>
   );

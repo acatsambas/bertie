@@ -1,23 +1,23 @@
-import { useContext, useEffect, useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useTranslation } from "react-i18next";
-import { View } from "react-native";
-import firestore from "@react-native-firebase/firestore";
+import { useContext, useEffect, useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
+import { View } from 'react-native';
+import firestore from '@react-native-firebase/firestore';
 
-import { makeStyles } from "@rneui/themed";
+import { makeStyles } from '@rneui/themed';
 
-import { AuthContext } from "../../api/auth/AuthProvider";
-import { translations } from "../../locales/translations";
-import Text from "../../components/Text";
-import Input from "../../components/Input";
-import Button from "../../components/Button";
+import { AuthContext } from '../../api/auth/AuthProvider';
+import { translations } from '../../locales/translations';
+import Text from '../../components/Text';
+import Input from '../../components/Input';
+import Button from '../../components/Button';
 
 const AddressScreen = ({ navigation }) => {
-  const [addr1, setAddr1] = useState("");
-  const [addr2, setAddr2] = useState("");
-  const [city, setCity] = useState("");
-  const [postcode, setPostcode] = useState("");
-  const [country, setCountry] = useState("");
+  const [addr1, setAddr1] = useState('');
+  const [addr2, setAddr2] = useState('');
+  const [city, setCity] = useState('');
+  const [postcode, setPostcode] = useState('');
+  const [country, setCountry] = useState('');
 
   const { user } = useContext(AuthContext);
   const userId = user.uid;
@@ -28,7 +28,7 @@ const AddressScreen = ({ navigation }) => {
 
   const fetchAddress = async () => {
     const userAddress = await firestore()
-      .collection("Address")
+      .collection('Address')
       .doc(userId)
       .get();
     if (userAddress) {
@@ -60,7 +60,7 @@ const AddressScreen = ({ navigation }) => {
   };
   const handleSave = async () => {
     try {
-      await firestore().collection("Address").doc(userId).set(
+      await firestore().collection('Address').doc(userId).set(
         {
           addr1: addr1,
           addr2: addr2,
@@ -68,7 +68,7 @@ const AddressScreen = ({ navigation }) => {
           postcode: postcode,
           country: country,
         },
-        { merge: true }
+        { merge: true },
       );
       navigation.goBack();
     } catch (error) {
@@ -128,10 +128,10 @@ const useStyles = makeStyles(() => ({
     flex: 1,
     gap: 20,
     paddingHorizontal: 20,
-    backgroundColor: "#FDF9F6",
+    backgroundColor: '#FDF9F6',
   },
   container: { paddingTop: 20, gap: 20 },
-  bottomArea: { flex: 1, justifyContent: "flex-end", marginBottom: 20 },
+  bottomArea: { flex: 1, justifyContent: 'flex-end', marginBottom: 20 },
 }));
 
 export default AddressScreen;

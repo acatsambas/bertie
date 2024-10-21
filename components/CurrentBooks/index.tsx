@@ -1,21 +1,21 @@
-import { useContext, useEffect, useState } from "react";
-import { View, TouchableOpacity } from "react-native";
-import { useTranslation } from "react-i18next";
-import { useNavigation } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
-import firestore from "@react-native-firebase/firestore";
+import { useContext, useEffect, useState } from 'react';
+import { View, TouchableOpacity } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import firestore from '@react-native-firebase/firestore';
 
-import { makeStyles } from "@rneui/themed";
+import { makeStyles } from '@rneui/themed';
 
-import { LibraryNavigatorParamList } from "../../navigation/AppStack/params";
-import { translations } from "../../locales/translations";
-import { AuthContext } from "../../api/auth/AuthProvider";
-import Text from "../Text";
-import Book from "../Book";
-import Icon from "../Icon";
+import { LibraryNavigatorParamList } from '../../navigation/AppStack/params';
+import { translations } from '../../locales/translations';
+import { AuthContext } from '../../api/auth/AuthProvider';
+import Text from '../Text';
+import Book from '../Book';
+import Icon from '../Icon';
 
 export interface LibraryPageProps
-  extends StackNavigationProp<LibraryNavigatorParamList, "Library"> {}
+  extends StackNavigationProp<LibraryNavigatorParamList, 'Library'> {}
 
 const CurrentBooks = () => {
   const [books, setBooks] = useState([]);
@@ -25,12 +25,12 @@ const CurrentBooks = () => {
 
   const fetchBooks = async () => {
     const userBooksSnapshot = await firestore()
-      .collection("users")
+      .collection('users')
       .doc(userId)
-      .collection("books")
+      .collection('books')
       .get();
 
-    const booksList = userBooksSnapshot.docs.map((doc) => ({
+    const booksList = userBooksSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data(),
     }));
@@ -47,9 +47,9 @@ const CurrentBooks = () => {
     bookName: string,
     author: string,
     isMyList: boolean,
-    bookId: string
+    bookId: string,
   ) => {
-    navigate("Book", {
+    navigate('Book', {
       bookName: bookName,
       author: author,
       isMyList: isMyList,
@@ -60,15 +60,15 @@ const CurrentBooks = () => {
   const handleRead = async (bookId: string, isRead: boolean) => {
     try {
       await firestore()
-        .collection("users")
+        .collection('users')
         .doc(userId)
-        .collection("books")
+        .collection('books')
         .doc(bookId)
         .set(
           {
             isRead: !isRead,
           },
-          { merge: true }
+          { merge: true },
         );
     } catch (error) {
       console.log(error);
@@ -76,7 +76,7 @@ const CurrentBooks = () => {
   };
 
   const handlePress = () => {
-    navigate("Search");
+    navigate('Search');
   };
 
   return (
@@ -94,7 +94,7 @@ const CurrentBooks = () => {
 
       <View>
         {books.map(
-          (book) =>
+          book =>
             book.isRead === false && (
               <Book
                 key={book.id}
@@ -107,7 +107,7 @@ const CurrentBooks = () => {
                 }
                 onChange={() => handleRead(book.id, book.isRead)}
               />
-            )
+            ),
         )}
       </View>
     </View>
@@ -119,15 +119,15 @@ const useStyles = makeStyles(() => ({
     gap: 20,
   },
   text: {
-    flexDirection: "row",
+    flexDirection: 'row',
     paddingHorizontal: 20,
     paddingVertical: 20,
     gap: 20,
     borderWidth: 1,
     borderRadius: 5,
-    borderStyle: "dashed",
-    alignItems: "center",
-    borderColor: "grey",
+    borderStyle: 'dashed',
+    alignItems: 'center',
+    borderColor: 'grey',
   },
 }));
 

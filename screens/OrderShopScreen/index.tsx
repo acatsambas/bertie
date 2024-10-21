@@ -1,19 +1,19 @@
-import { ScrollView, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useTranslation } from "react-i18next";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { useNavigation } from "@react-navigation/native";
+import { ScrollView, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { useNavigation } from '@react-navigation/native';
 
-import { makeStyles } from "@rneui/themed";
+import { makeStyles } from '@rneui/themed';
 
-import { translations } from "../../locales/translations";
-import { OrderNavigatorParamList } from "../../navigation/AppStack/params";
-import Text from "../../components/Text";
-import Button from "../../components/Button";
-import OrderBookshopList from "../../components/OrderBookshopList";
+import { translations } from '../../locales/translations';
+import { OrderNavigatorParamList } from '../../navigation/AppStack/params';
+import Text from '../../components/Text';
+import Button from '../../components/Button';
+import OrderBookshopList from '../../components/OrderBookshopList';
 
 export interface OrderPageProps
-  extends StackNavigationProp<OrderNavigatorParamList, "OrderShop"> {}
+  extends StackNavigationProp<OrderNavigatorParamList, 'OrderShop'> {}
 
 const OrderShopScreen = () => {
   const styles = useStyles();
@@ -21,11 +21,11 @@ const OrderShopScreen = () => {
   const { navigate } = useNavigation<OrderPageProps>();
 
   const handlePlace = () => {
-    navigate("OrderPlaced");
+    navigate('OrderPlaced');
   };
 
   const handleBack = () => {
-    navigate("Order");
+    navigate('Order');
   };
 
   return (
@@ -56,18 +56,18 @@ const useStyles = makeStyles(() => ({
   safeAreaView: {
     flex: 1,
     paddingHorizontal: 20,
-    backgroundColor: "#FDF9F6",
-    position: "relative",
+    backgroundColor: '#FDF9F6',
+    position: 'relative',
   },
   container: { paddingTop: 20, gap: 20, paddingBottom: 150 },
   bottomArea: {
-    backgroundColor: "#FDF9F6",
+    backgroundColor: '#FDF9F6',
     flex: 1,
-    alignItems: "center",
-    justifyContent: "flex-end",
+    alignItems: 'center',
+    justifyContent: 'flex-end',
     paddingVertical: 20,
     gap: 20,
-    position: "absolute",
+    position: 'absolute',
     bottom: 0,
     right: 20,
     left: 20,

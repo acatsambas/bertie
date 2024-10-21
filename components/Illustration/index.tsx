@@ -1,9 +1,9 @@
 // import { Image } from "@rneui/themed";
-import { Image } from "react-native";
-import { makeStyles } from "@rneui/themed";
+import { Image } from 'react-native';
+import { makeStyles } from '@rneui/themed';
 
-import WelcomeIllustration from "./assets/welcome.png";
-import DefaultIllustration from "./assets/default.png";
+import WelcomeIllustration from './assets/welcome.png';
+import DefaultIllustration from './assets/default.png';
 
 const illustrations = {
   welcome: WelcomeIllustration,
@@ -27,7 +27,7 @@ const Illustration = ({ name }: IllustrationProps) => {
 const useStyles = makeStyles(() => ({
   illustration: {
     height: 300,
-    width: "100%",
+    width: '100%',
   },
 }));
 

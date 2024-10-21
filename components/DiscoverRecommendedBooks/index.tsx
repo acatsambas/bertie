@@ -1,15 +1,15 @@
-import React, { useContext, useEffect, useState } from "react";
-import { View } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
-import firestore from "@react-native-firebase/firestore";
+import React, { useContext, useEffect, useState } from 'react';
+import { View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import firestore from '@react-native-firebase/firestore';
 
-import { LibraryNavigatorParamList } from "../../navigation/AppStack/params";
-import { AuthContext } from "../../api/auth/AuthProvider";
-import Book from "../Book";
+import { LibraryNavigatorParamList } from '../../navigation/AppStack/params';
+import { AuthContext } from '../../api/auth/AuthProvider';
+import Book from '../Book';
 
 export interface SearchBookProps
-  extends StackNavigationProp<LibraryNavigatorParamList, "Search"> {}
+  extends StackNavigationProp<LibraryNavigatorParamList, 'Search'> {}
 
 const SearchBooks = () => {
   const [isSaved, setIsSaved] = useState(false);
@@ -21,34 +21,34 @@ const SearchBooks = () => {
   // Hard-coded books data
   const books = [
     {
-      id: "1TJgCMgxDU1UC",
-      title: "The Canterbury Tales",
-      authors: ["Geoffrey Chaucer"],
-      description: "n/a",
+      id: '1TJgCMgxDU1UC',
+      title: 'The Canterbury Tales',
+      authors: ['Geoffrey Chaucer'],
+      description: 'n/a',
     },
     {
-      id: "f6txCwAAQBAJ",
-      title: "A Gentleman in Moscow",
-      authors: ["Amor Towles"],
-      description: "n/a",
+      id: 'f6txCwAAQBAJ',
+      title: 'A Gentleman in Moscow',
+      authors: ['Amor Towles'],
+      description: 'n/a',
     },
     {
-      id: "cGCYAwAAQBAJ",
-      title: "Family Furnishings",
-      authors: ["Alice Munro"],
-      description: "Description of Book 3",
+      id: 'cGCYAwAAQBAJ',
+      title: 'Family Furnishings',
+      authors: ['Alice Munro'],
+      description: 'Description of Book 3',
     },
     {
-      id: "MSurBex2xcUC",
-      title: "The Remains of the Day",
-      authors: ["Kazuo Ishiguro"],
-      description: "n/a",
+      id: 'MSurBex2xcUC',
+      title: 'The Remains of the Day',
+      authors: ['Kazuo Ishiguro'],
+      description: 'n/a',
     },
     {
-      id: "LDy8DwAAQBAJ",
-      title: "The Glass Hotel",
-      authors: ["Emily St. John Mandel"],
-      description: "n/a",
+      id: 'LDy8DwAAQBAJ',
+      title: 'The Glass Hotel',
+      authors: ['Emily St. John Mandel'],
+      description: 'n/a',
     },
   ];
 
@@ -57,7 +57,7 @@ const SearchBooks = () => {
   }, []);
 
   const handleBook = (id: string, title: string, author: string) => {
-    navigate("Book", {
+    navigate('Book', {
       id: id,
       bookName: title,
       author: author,
@@ -69,14 +69,14 @@ const SearchBooks = () => {
     title: string,
     author: string,
     isRead: boolean,
-    description: string
+    description: string,
   ) => {
     try {
       !isSaved
         ? await firestore()
-            .collection("users")
+            .collection('users')
             .doc(userId)
-            .collection("books")
+            .collection('books')
             .doc(id)
             .set(
               {
@@ -86,12 +86,12 @@ const SearchBooks = () => {
                 title: title,
                 description: description,
               },
-              { merge: true }
+              { merge: true },
             )
         : await firestore()
-            .collection("users")
+            .collection('users')
             .doc(userId)
-            .collection("books")
+            .collection('books')
             .doc(id)
             .delete();
       setIsSaved(!isSaved);
@@ -102,12 +102,12 @@ const SearchBooks = () => {
 
   const handleStoredBooks = async () => {
     const booksSnapshop = await firestore()
-      ?.collection("users")
+      ?.collection('users')
       ?.doc(userId)
-      ?.collection("books")
+      ?.collection('books')
       .get();
 
-    const savedBooks = booksSnapshop.docs.map((doc) => ({
+    const savedBooks = booksSnapshop.docs.map(doc => ({
       id: doc.id,
       ...doc.data(),
     }));
@@ -117,23 +117,25 @@ const SearchBooks = () => {
 
   return (
     <View>
-      {books.map((book) => (
+      {books.map(book => (
         <Book
           key={book.id}
           isChecked={existingBooks.find(
-            (existingBook) => existingBook.bookId === book.id
+            existingBook => existingBook.bookId === book.id,
           )}
           kind="search"
           title={book.title}
-          author={book.authors.join(", ")}
-          onPress={() => handleBook(book.id, book.title, book.authors.join(", "))}
+          author={book.authors.join(', ')}
+          onPress={() =>
+            handleBook(book.id, book.title, book.authors.join(', '))
+          }
           onChange={() =>
             handleAddBook(
               book.id,
               book.title,
-              book.authors.join(", "),
+              book.authors.join(', '),
               false,
-              book.description
+              book.description,
             )
           }
         />

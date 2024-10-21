@@ -1,22 +1,22 @@
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Linking, Platform, View } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { useTranslation } from "react-i18next";
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { useTranslation } from 'react-i18next';
+import { Linking, Platform, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { makeStyles } from "@rneui/themed";
+import { makeStyles } from '@rneui/themed';
 
-import { translations } from "../../locales/translations";
-import { AuthNavigatorParamList } from "../../navigation/AuthStack/params";
-import Logo from "../../components/Logo";
-import Illustration from "../../components/Illustration";
-import Text from "../../components/Text";
-import Button from "../../components/Button";
-import GoogleButton from "../../components/AuthButtons/GoogleButton";
-import AppleSigninButton from "../../components/AuthButtons/Apple";
+import AppleSigninButton from '../../components/AuthButtons/Apple';
+import GoogleButton from '../../components/AuthButtons/GoogleButton';
+import Button from '../../components/Button';
+import Illustration from '../../components/Illustration';
+import Logo from '../../components/Logo';
+import Text from '../../components/Text';
+import { translations } from '../../locales/translations';
+import { AuthNavigatorParamList } from '../../navigation/AuthStack/params';
 
 export interface WelcomePageProps
-  extends StackNavigationProp<AuthNavigatorParamList, "Welcome"> {}
+  extends StackNavigationProp<AuthNavigatorParamList, 'Welcome'> {}
 
 const WelcomeScreen = () => {
   const styles = useStyles();
@@ -24,11 +24,11 @@ const WelcomeScreen = () => {
   const { t } = useTranslation();
 
   const handleLogin = () => {
-    navigate("Login");
+    navigate('Login');
   };
 
-  const handlePrivacy = () => {
-    Linking.openURL("https://www.bertieapp.com/privacypolicy.html");
+  const handlePrivacy = async () => {
+    await Linking.openURL('https://www.bertieapp.com/privacypolicy.html');
   };
 
   return (
@@ -38,12 +38,11 @@ const WelcomeScreen = () => {
       </View>
 
       <View style={styles.container}>
-        <View>
-          <Text kind="header" text={t(translations.welcome.title)} />
-        </View>
+        <Text kind="header" text={t(translations.welcome.title)} />
 
         <View style={styles.welcomeMessage}>
           <Text kind="paragraph" text={t(translations.welcome.purpose)} />
+
           <View>
             <Text kind="paragraph" text={t(translations.welcome.agree)} />
             <Text
@@ -62,8 +61,10 @@ const WelcomeScreen = () => {
             text={t(translations.welcome.email)}
             onPress={handleLogin}
           />
+
           <GoogleButton />
-          {Platform.OS === "ios" && <AppleSigninButton />}
+
+          {Platform.OS === 'ios' && <AppleSigninButton />}
         </View>
       </View>
     </SafeAreaView>
@@ -75,26 +76,26 @@ const useStyles = makeStyles(() => ({
     flex: 1,
     gap: 20,
     padding: 20,
-    justifyContent: "flex-start",
-    backgroundColor: "#FDF9F6",
+    justifyContent: 'flex-start',
+    backgroundColor: '#FDF9F6',
   },
   logo: {
-    alignItems: "center",
+    alignItems: 'center',
   },
   container: {
     flex: 1,
     gap: 20,
-    width: "100%",
+    width: '100%',
   },
   welcomeMessage: {
     flex: 1,
     gap: 20,
-    alignItems: "flex-start",
+    alignItems: 'flex-start',
   },
   buttons: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     gap: 5,
   },
 }));
