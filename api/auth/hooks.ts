@@ -1,11 +1,11 @@
-import auth from "@react-native-firebase/auth";
-import firestore from "@react-native-firebase/firestore";
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
-import { UserData } from "../types";
+import { UserData } from '../types';
 
 export const updateUserProfile = async (userProfile: Partial<UserData>) =>
   firestore()
-    .collection("users")
+    .collection('users')
     .doc(auth().currentUser?.uid)
     .set(
       {
@@ -13,12 +13,12 @@ export const updateUserProfile = async (userProfile: Partial<UserData>) =>
         documentId: auth().currentUser?.uid,
         email: auth().currentUser?.email,
       },
-      { merge: true }
+      { merge: true },
     );
 
 export const createUser = (userProfile: Partial<UserData>) => {
   return firestore()
-    .collection("users")
+    .collection('users')
     .doc(auth().currentUser?.uid)
     .set(
       {
@@ -26,6 +26,6 @@ export const createUser = (userProfile: Partial<UserData>) => {
         documentId: auth().currentUser?.uid,
         email: auth().currentUser?.email,
       } as UserData,
-      { merge: true }
+      { merge: true },
     );
 };

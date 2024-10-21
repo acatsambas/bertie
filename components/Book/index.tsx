@@ -1,17 +1,17 @@
-import { View, TouchableOpacity } from "react-native";
-import { CheckBox } from "@rneui/themed";
-import { useEffect, useState } from "react";
-import { TouchableOpacityProps } from "react-native";
+import { View, TouchableOpacity } from 'react-native';
+import { CheckBox } from '@rneui/themed';
+import { useEffect, useState } from 'react';
+import { TouchableOpacityProps } from 'react-native';
 
-import { makeStyles } from "@rneui/themed";
+import { makeStyles } from '@rneui/themed';
 
-import Text from "../Text";
-import Icon from "../Icon";
+import Text from '../Text';
+import Icon from '../Icon';
 
 interface BookProps extends TouchableOpacityProps {
   author: string;
   title: string;
-  kind?: "library" | "search" | "order";
+  kind?: 'library' | 'search' | 'order';
   id?: string;
   isChecked?: boolean;
   defaultValue?: boolean;
@@ -31,7 +31,7 @@ const Book = ({
   const styles = useStyles();
 
   const [checked, setChecked] = useState<boolean | undefined>(
-    isChecked || defaultValue
+    isChecked || defaultValue,
   );
 
   useEffect(() => {
@@ -48,47 +48,47 @@ const Book = ({
 
   return (
     <View>
-      {kind !== "order" ? (
+      {kind !== 'order' ? (
         <View style={styles.container}>
           <CheckBox
-            containerStyle={{ backgroundColor: "transparent" }}
+            containerStyle={{ backgroundColor: 'transparent' }}
             checked={checked}
             onPress={handlePressCheck}
             iconType="material-community"
             checkedIcon={
-              kind === "library" ? "checkbox-outline" : "plus-circle-outline"
+              kind === 'library' ? 'checkbox-outline' : 'plus-circle-outline'
             }
             uncheckedIcon={
-              kind === "library"
-                ? "checkbox-blank-outline"
-                : "plus-circle-outline"
+              kind === 'library'
+                ? 'checkbox-blank-outline'
+                : 'plus-circle-outline'
             }
-            checkedColor={kind === "library" ? "gray" : "#38AD59"}
-            uncheckedColor={kind === "search" && "black"}
+            checkedColor={kind === 'library' ? 'gray' : '#38AD59'}
+            uncheckedColor={kind === 'search' && 'black'}
             {...props}
           />
           <TouchableOpacity style={styles.content} onPress={onPress}>
-            <View style={{ width: "90%" }}>
+            <View style={{ width: '90%' }}>
               <Text
                 text={title}
                 kind="paragraph"
-                color={checked && kind === "library" && "grey"}
+                color={checked && kind === 'library' && 'grey'}
               />
               <Text
                 text={author}
                 kind="littleText"
-                color={checked && kind === "library" && "grey"}
+                color={checked && kind === 'library' && 'grey'}
               />
             </View>
             <Icon
               icon="right"
-              color={checked && kind === "library" && "grey"}
+              color={checked && kind === 'library' && 'grey'}
             />
           </TouchableOpacity>
         </View>
       ) : (
         <View style={styles.removeBookContainer}>
-          <View style={{ width: "80%" }}>
+          <View style={{ width: '80%' }}>
             <Text text={title} kind="paragraph" />
             <Text text={author} kind="littleText" />
           </View>
@@ -97,7 +97,7 @@ const Book = ({
             iconType="material-community"
             checkedIcon="minus-circle-outline"
             checkedColor="red"
-            containerStyle={{ backgroundColor: "transparent" }}
+            containerStyle={{ backgroundColor: 'transparent' }}
             checked
           />
         </View>
@@ -109,25 +109,25 @@ const Book = ({
 const useStyles = makeStyles(() => ({
   container: {
     paddingRight: 20,
-    flexDirection: "row",
-    minWidth: "100%",
+    flexDirection: 'row',
+    minWidth: '100%',
   },
 
   content: {
     flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
 
   removeBookContainer: {
-    minWidth: "100%",
-    backgroundColor: "#F8EBDD",
+    minWidth: '100%',
+    backgroundColor: '#F8EBDD',
     paddingHorizontal: 20,
     paddingVertical: 10,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     gap: 20,
   },
 }));

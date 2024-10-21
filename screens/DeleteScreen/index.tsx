@@ -1,20 +1,20 @@
-import React, { useContext, useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useTranslation } from "react-i18next";
+import React, { useContext, useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 
-import { makeStyles } from "@rneui/themed";
+import { makeStyles } from '@rneui/themed';
 
-import { AuthContext } from "../../api/auth/AuthProvider";
-import { translations } from "../../locales/translations";
-import { View } from "react-native";
-import Text from "../../components/Text";
-import Input from "../../components/Input";
-import Button from "../../components/Button";
+import { AuthContext } from '../../api/auth/AuthProvider';
+import { translations } from '../../locales/translations';
+import { View } from 'react-native';
+import Text from '../../components/Text';
+import Input from '../../components/Input';
+import Button from '../../components/Button';
 
 const DeleteScreen = () => {
   const [isDeleted, setIsDeleted] = useState(false);
-  const [begone, setBegone] = useState("");
-  const [error, setError] = useState("");
+  const [begone, setBegone] = useState('');
+  const [error, setError] = useState('');
 
   const styles = useStyles();
   const { t } = useTranslation();
@@ -25,7 +25,7 @@ const DeleteScreen = () => {
   };
 
   const handleDelete = () => {
-    begone === "begone!"
+    begone === 'begone!'
       ? setIsDeleted(true)
       : setError("You didn't write well the word 'begone!'");
   };
@@ -76,18 +76,18 @@ const useStyles = makeStyles(() => ({
   safeAreaView: {
     flex: 1,
     paddingHorizontal: 20,
-    backgroundColor: "#FDF9F6",
+    backgroundColor: '#FDF9F6',
   },
   container: { paddingTop: 20, gap: 20 },
   error: {
-    backgroundColor: "#FDEDED",
+    backgroundColor: '#FDEDED',
     paddingHorizontal: 20,
     paddingVertical: 10,
   },
   bottomArea: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "flex-end",
+    alignItems: 'center',
+    justifyContent: 'flex-end',
     marginBottom: 20,
   },
 }));

@@ -1,0 +1,8 @@
+git_url("https://github.com/razvangeangu/bertie-certs.git")
+
+storage_mode("git")
+
+type("development")
+
+app_identifier(["com.bertieapp.app"])
+username("...@bertieapp.app")

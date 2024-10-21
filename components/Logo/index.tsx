@@ -1,7 +1,7 @@
-import { useTranslation } from "react-i18next";
+import { useTranslation } from 'react-i18next';
 
-import { translations } from "../../locales/translations";
-import Text from "../Text";
+import { translations } from '../../locales/translations';
+import Text from '../Text';
 
 const Logo = () => {
   const { t } = useTranslation();

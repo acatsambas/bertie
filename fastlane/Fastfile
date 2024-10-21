@@ -1,0 +1,209 @@
+fastlane_require "dotenv"
+
+before_all do
+  Dotenv.overload(".env")
+end
+
+package = load_json(json_path: "./package.json")
+
+# --------------- Bump Android Version ---------------
+desc "Android: Increase versionCode"
+private_lane :increase_android_version do
+  latest_version_code = google_play_track_version_codes(track: "internal").max
+
+  increment_version_code(
+    gradle_file_path: "./android/app/build.gradle",
+    version_code: latest_version_code + 1
+  )
+  increment_version_name(
+    gradle_file_path: "./android/app/build.gradle",
+    version_name: package["version"]
+  )
+end
+
+# --------------- Bump iOS Version ---------------
+desc "iOS: Increment versionCode and set versionName to package.json version"
+private_lane :increase_ios_version do
+  scheme = "Bertie"
+
+  api_key = app_store_connect_api_key(
+    key_id: "6C5352C8R8",
+    key_filepath: "./fastlane/AuthKey_6C5352C8R8.p8",
+    issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
+    in_house: false # optional but may be required if using match/sigh
+  )
+
+  latest_release = latest_testflight_build_number(
+    api_key: api_key
+  )
+
+  increment_build_number(
+    xcodeproj: "./ios/#{scheme}.xcodeproj",
+    build_number: latest_release + 1
+  )
+  increment_version_number(
+    xcodeproj: "./ios/#{scheme}.xcodeproj",
+    version_number: package["version"]
+  )
+end
+
+desc "Bump build numbers, and set the version to match the package.json version."
+lane :bump do
+  increase_android_version
+  increase_ios_version
+end
+
+# --------------- Android App Distribution ---------------
+platform :android do
+  desc "Bertie Android App Distribution"
+  lane :distribute do
+    increase_android_version
+
+    gradle(
+      task: "clean bundleRelease",
+      project_dir: "./android",
+      print_command: false,
+      properties: {
+        "EXPO_PUBLIC_BOOKS_API_KEY" => ENV["EXPO_PUBLIC_BOOKS_API_KEY"],
+        "EXPO_PUBLIC_ANDROID_BERTIE_WEB_CLIENT_ID" => ENV["EXPO_PUBLIC_ANDROID_BERTIE_WEB_CLIENT_ID"],
+        "ANDROID_BERTIE_STORE_FILE" => ENV["ANDROID_BERTIE_STORE_FILE"],
+        "ANDROID_BERTIE_KEY_ALIAS" => ENV["ANDROID_BERTIE_KEY_ALIAS"],
+        "ANDROID_BERTIE_STORE_PASSWORD" => ENV["ANDROID_BERTIE_STORE_PASSWORD"],
+        "ANDROID_BERTIE_KEY_PASSWORD" => ENV["ANDROID_BERTIE_KEY_PASSWORD"]
+      }
+    )
+
+    upload_to_play_store(
+      version_name: "#{google_play_track_version_codes(track: "internal").max + 1} (#{package["version"]})",
+      track: "internal",
+      release_status: "completed",
+      skip_upload_apk: true,
+      json_key: ENV["ANDROID_BERTIE_JSON_KEY"]
+    )
+  end
+end
+
+platform :ios do
+  desc "iOS Certificate matching"
+  lane :certify do
+    setup_ci
+
+    scheme = "Bertie"
+    build_configuration = "Release"
+    ios_derived_data_path = File.expand_path("../.local_derived_data")
+    cache_folder = File.expand_path("#{ios_derived_data_path}/Build/Intermediates.noindex/ArchiveIntermediates/#{scheme}/BuildProductsPath/#{build_configuration}-iphoneos")
+
+    api_key = app_store_connect_api_key(
+      key_id: "6C5352C8R8",
+      key_filepath: "./fastlane/AuthKey_6C5352C8R8.p8",
+      issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
+      in_house: false # optional but may be required if using match/sigh
+    )
+
+    match(
+      git_basic_authorization: Base64.strict_encode64("CristiManolescu:#{ENV["GIT_PAT"]}"),
+      api_key: api_key,
+      type: "adhoc",
+      readonly: is_ci
+    )
+  end
+end
+
+# --------------- iOS App Distribution ---------------
+platform :ios do
+  desc "Bertie iOS App Distribution"
+  lane :distribute do
+    setup_ci
+
+    scheme = "Bertie"
+    build_configuration = "Release"
+    ios_derived_data_path = File.expand_path("../.local_derived_data")
+    cache_folder = File.expand_path("#{ios_derived_data_path}/Build/Intermediates.noindex/ArchiveIntermediates/#{scheme}/BuildProductsPath/#{build_configuration}-iphoneos")
+
+    api_key = app_store_connect_api_key(
+      key_id: "6C5352C8R8",
+      key_filepath: "./fastlane/AuthKey_6C5352C8R8.p8",
+      issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
+      in_house: false # optional but may be required if using match/sigh
+    )
+
+    match(
+      git_basic_authorization: Base64.strict_encode64("CristiManolescu:#{ENV["GIT_PAT"]}"),
+      api_key: api_key,
+      type: "appstore",
+      readonly: is_ci
+    )
+
+    increase_ios_version
+
+    if(File.exist?(cache_folder))
+      # Step 1) Apply a fix of "Copy Pods Resources" Build Phase
+      fastlane_require "xcodeproj"
+      project = Xcodeproj::Project.open("../ios/#{scheme}.xcodeproj")
+      target = project.targets.select { |target| target.name == scheme }.first
+      phase = target.shell_script_build_phases.select { |phase| phase.name && phase.name.include?("Copy Pods Resources") }.first
+      if (!phase.shell_script.start_with?("BUILT_PRODUCTS_DIR"))
+        phase.shell_script = "BUILT_PRODUCTS_DIR=#{cache_folder} #{phase.shell_script}"
+        project.save()
+      end
+
+      # Step 2) Build only .xcodeproj
+      gym(
+        clean: false,
+        project: "./ios/#{scheme}.xcodeproj",
+        scheme: scheme,
+        configuration: build_configuration,
+        export_method: "app-store",
+        destination: "generic/platform=iOS",
+        export_options: {
+          compileBitcode: false,
+          uploadBitcode: false,
+          uploadSymbols: false
+        },
+        xcargs: [
+            # Step 3) Provide paths where xcode can't find pods binaries
+            "PODS_CONFIGURATION_BUILD_DIR=#{cache_folder}",
+            "FRAMEWORK_SEARCH_PATHS='#{cache_folder} $(inherited)'",
+            "LIBRARY_SEARCH_PATHS='#{cache_folder} $(inherited)'",
+            "SWIFT_INCLUDE_PATHS=#{cache_folder}"
+        ].join(" ")
+      )
+    else
+      cocoapods(
+        podfile: "./ios/Podfile",
+        repo_update: true
+      )
+
+      # Step 4) Build full app .xcworkspace
+      gym(
+        scheme: scheme,
+        workspace: "./ios/#{scheme}.xcworkspace",
+        derived_data_path: ios_derived_data_path,
+        export_method: "app-store",
+        configuration: build_configuration,
+        clean: true
+      )
+
+      # Step 5) Remove not a Pods binaries to reduce cache size
+      require "fileutils";
+      dirs = [
+        File.expand_path("#{ios_derived_data_path}/info.plist"),
+        File.expand_path("#{ios_derived_data_path}/Logs"),
+        File.expand_path("#{ios_derived_data_path}/SourcePackages"),
+        File.expand_path("#{ios_derived_data_path}/ModuleCache.noindex"),
+        File.expand_path("#{ios_derived_data_path}/Build/Intermediates.noindex/ArchiveIntermediates/#{scheme}/IntermediateBuildFilesPath/#{scheme}.build"),
+        File.expand_path("#{ios_derived_data_path}/Build/Intermediates.noindex/ArchiveIntermediates/#{scheme}/IntermediateBuildFilesPath/XCBuildData"),
+        File.expand_path("#{ios_derived_data_path}/Build/Intermediates.noindex/ArchiveIntermediates/#{scheme}/BuildProductsPath/SwiftSupport"),
+        File.expand_path("#{ios_derived_data_path}/Build/Intermediates.noindex/ArchiveIntermediates/#{scheme}/PrecompiledHeaders")
+      ]
+      dirs.each { |dir| FileUtils.rm_rf(dir) }
+    end
+
+    # Step 6) Publish to TestFlight
+    pilot(
+      api_key: api_key,
+      skip_submission: true,
+      skip_waiting_for_build_processing: true,
+    )
+  end
+end

@@ -1,31 +1,31 @@
-import { useContext, useState } from "react";
-import { RouteProp, useRoute } from "@react-navigation/native";
-import { View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { useTranslation } from "react-i18next";
+import { useContext, useState } from 'react';
+import { RouteProp, useRoute } from '@react-navigation/native';
+import { View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { useTranslation } from 'react-i18next';
 
-import { makeStyles } from "@rneui/themed";
+import { makeStyles } from '@rneui/themed';
 
-import { translations } from "../../locales/translations";
-import { AuthNavigatorParamList } from "../../navigation/AuthStack/params";
-import { AuthContext } from "../../api/auth/AuthProvider";
+import { translations } from '../../locales/translations';
+import { AuthNavigatorParamList } from '../../navigation/AuthStack/params';
+import { AuthContext } from '../../api/auth/AuthProvider';
 
-import { isFirebaseError } from "../../api/types";
-import Logo from "../../components/Logo";
-import Button from "../../components/Button";
-import Text from "../../components/Text";
-import Input from "../../components/Input";
+import { isFirebaseError } from '../../api/types';
+import Logo from '../../components/Logo';
+import Button from '../../components/Button';
+import Text from '../../components/Text';
+import Input from '../../components/Input';
 
 export interface SetProfilePageProps
-  extends StackNavigationProp<AuthNavigatorParamList, "SetProfile"> {}
+  extends StackNavigationProp<AuthNavigatorParamList, 'SetProfile'> {}
 
 const SetProfileScreen = () => {
   const { params } =
-    useRoute<RouteProp<AuthNavigatorParamList, "SetProfile">>();
+    useRoute<RouteProp<AuthNavigatorParamList, 'SetProfile'>>();
 
-  const [givenName, setGivenName] = useState("");
-  const [familyName, setFamilyName] = useState("");
+  const [givenName, setGivenName] = useState('');
+  const [familyName, setFamilyName] = useState('');
   const [email] = useState(params.email);
   const [password] = useState(params.password);
 
@@ -87,15 +87,15 @@ const useStyles = makeStyles(() => ({
     flex: 1,
     gap: 20,
     paddingHorizontal: 20,
-    backgroundColor: "#FDF9F6",
+    backgroundColor: '#FDF9F6',
   },
   logo: {
-    alignItems: "center",
+    alignItems: 'center',
     paddingTop: 20,
   },
   container: { paddingTop: 20, gap: 20 },
-  bottomArea: { flex: 1, justifyContent: "flex-end", marginBottom: 20 },
-  done: { flexDirection: "row", justifyContent: "center" },
+  bottomArea: { flex: 1, justifyContent: 'flex-end', marginBottom: 20 },
+  done: { flexDirection: 'row', justifyContent: 'center' },
 }));
 
 export default SetProfileScreen;

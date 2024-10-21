@@ -26,7 +26,7 @@
     "explore": "Explore Bertie",
     "mailError": "The entered email address is invalid.",
     "mailDuplicateError": "That email is already registered! Try signing in instead",
-    "pwNoMatch": "Passwords don’t match!",
+    "pwNoMatch": "Passwords don't match!",
     "pwError": "Your password must have minimum eight characters, at least one upper case letter, one lower case letter, one number and one special character.",
     "profile": {
       "title": "Profile",
@@ -56,7 +56,7 @@
     "changeAddress": "Change Address",
     "reset": "Reset Password",
     "delete": "Delete Account",
-    "version": "Version 0.1.0",
+    "version": "Version {{version}}",
     "address": {
       "title": "Address",
       "description": "We use it to suggest nearby bookstores and direct them on where to dispatch your orders.",
@@ -117,18 +117,18 @@
   },
   "delete": {
     "title": "Delete account",
-    "paragraph1": "We’re very sorry to see you go. But we suppose it wasn’t meant to be.",
-    "paragraph2": "Just to make sure you’re not pocket-deleting, just write ‘begone!’ below.",
+    "paragraph1": "We're very sorry to see you go. But we suppose it wasn't meant to be.",
+    "paragraph2": "Just to make sure you're not pocket-deleting, just write ‘begone!' below.",
     "begone": "begone!",
     "button": "Delete account",
     "done": "Done",
-    "finalMessage": "All done. We’ve deleted your account from our systems. Now you’re just someone that we used to know."
+    "finalMessage": "All done. We've deleted your account from our systems. Now you're just someone that we used to know."
   },
   "reset": {
     "title": "Reset passsword",
     "enterPassword": "Enter your current password...",
     "newPassword": "... and the new one...",
-    "confirmPassword": "... and write it down once again to make sure you didn’t get any mistakes...",
+    "confirmPassword": "... and write it down once again to make sure you didn't get any mistakes...",
     "placeholder1": "Password",
     "placeholder2": "New password",
     "button": "Save",

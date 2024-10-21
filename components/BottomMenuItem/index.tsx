@@ -1,17 +1,17 @@
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity } from 'react-native';
 
-import { makeStyles } from "@rneui/themed";
+import { makeStyles } from '@rneui/themed';
 
-import Text from "../Text";
-import Icon from "../Icon";
+import Icon, { IconProps } from '../Icon';
+import Text from '../Text';
 
-interface BottomMenuItem {
-  icon: string;
+interface BottomMenuItemProps {
+  icon: IconProps['icon'];
   title: string;
   onPress(): void;
 }
 
-const BottomMenuItem = ({ icon, title, onPress }: BottomMenuItem) => {
+const BottomMenuItem = ({ icon, title, onPress }: BottomMenuItemProps) => {
   const styles = useStyles();
   return (
     <TouchableOpacity style={styles.menuItem} onPress={onPress}>
@@ -23,9 +23,9 @@ const BottomMenuItem = ({ icon, title, onPress }: BottomMenuItem) => {
 
 const useStyles = makeStyles(() => ({
   menuItem: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
 }));
 

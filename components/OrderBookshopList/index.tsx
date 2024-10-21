@@ -1,26 +1,26 @@
-import { useContext, useEffect, useState } from "react";
-import { View } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { useTranslation } from "react-i18next";
-import firestore from "@react-native-firebase/firestore";
+import { useContext, useEffect, useState } from 'react';
+import { View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
+import firestore from '@react-native-firebase/firestore';
 
-import { makeStyles } from "@rneui/themed";
+import { makeStyles } from '@rneui/themed';
 
-import { translations } from "../../locales/translations";
-import { AuthContext } from "../../api/auth/AuthProvider";
-import Text from "../../components/Text";
-import BookShop from "../Bookshop";
-import { StackNavigationProp } from "@react-navigation/stack";
+import { translations } from '../../locales/translations';
+import { AuthContext } from '../../api/auth/AuthProvider';
+import Text from '../../components/Text';
+import BookShop from '../Bookshop';
+import { StackNavigationProp } from '@react-navigation/stack';
 import {
   OrderNavigatorParamList,
   BookshopType,
-} from "../../navigation/AppStack/params";
+} from '../../navigation/AppStack/params';
 
 interface OrderBookshopListProps {
-  kind: "favourites" | "more";
+  kind: 'favourites' | 'more';
 }
 export interface OrderPageProps
-  extends StackNavigationProp<OrderNavigatorParamList, "OrderShop"> {}
+  extends StackNavigationProp<OrderNavigatorParamList, 'OrderShop'> {}
 
 const OrderBookshopList = ({ kind }: OrderBookshopListProps) => {
   const [favoriteShops, setFavoriteShops] = useState([]);
@@ -44,11 +44,11 @@ const OrderBookshopList = ({ kind }: OrderBookshopListProps) => {
   const handleFavouriteShops = async () => {
     try {
       const shopsSnapshot = await firestore()
-        .collection("users")
+        .collection('users')
         .doc(userId)
-        .collection("bookstores")
+        .collection('bookstores')
         .get();
-      const bookShopsList = shopsSnapshot.docs.map((doc) => ({
+      const bookShopsList = shopsSnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data(),
       }));
@@ -60,8 +60,8 @@ const OrderBookshopList = ({ kind }: OrderBookshopListProps) => {
 
   const handleAllBookShops = async () => {
     try {
-      const shopsSnapshot = await firestore().collection("shops").get();
-      const bookShopsList = shopsSnapshot.docs.map((doc) => ({
+      const shopsSnapshot = await firestore().collection('shops').get();
+      const bookShopsList = shopsSnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data(),
       }));
@@ -74,7 +74,7 @@ const OrderBookshopList = ({ kind }: OrderBookshopListProps) => {
   const handleUserAddress = async () => {
     try {
       const usrSnapshop = await firestore()
-        .collection("Address")
+        .collection('Address')
         .doc(userId)
         .get();
       usrSnapshop.exists ? setHasAddress(true) : setHasAddress(false);
@@ -84,7 +84,7 @@ const OrderBookshopList = ({ kind }: OrderBookshopListProps) => {
   };
 
   const handleAdd = () => {
-    navigate("AddressScreen");
+    navigate('AddressScreen');
   };
 
   const handlePick = (id: string, name: string) => {
@@ -92,16 +92,16 @@ const OrderBookshopList = ({ kind }: OrderBookshopListProps) => {
   };
 
   const handleNavigateBookshop = (bookshop: BookshopType) => {
-    navigate("Bookshop", bookshop);
+    navigate('Bookshop', bookshop);
   };
 
   return (
     <View>
-      {kind === "favourites" ? (
+      {kind === 'favourites' ? (
         <View>
           <Text kind="header" text={t(translations.order.favourites)} />
           {favoriteShops.map(
-            (shop) =>
+            shop =>
               shop.isFav && (
                 <BookShop
                   name={shop.name}
@@ -109,10 +109,10 @@ const OrderBookshopList = ({ kind }: OrderBookshopListProps) => {
                   key={shop.id}
                   onPress={() => handlePick(shop.id, shop.name)}
                   kind={
-                    shop.id === isFavorite[0] ? "favoriteSelected" : "favorite"
+                    shop.id === isFavorite[0] ? 'favoriteSelected' : 'favorite'
                   }
                 />
-              )
+              ),
           )}
         </View>
       ) : (
@@ -127,7 +127,7 @@ const OrderBookshopList = ({ kind }: OrderBookshopListProps) => {
               />
             </View>
           )}
-          {allShops.map((shop) => (
+          {allShops.map(shop => (
             <BookShop
               name={shop.name}
               location={shop.city}
@@ -145,7 +145,7 @@ const OrderBookshopList = ({ kind }: OrderBookshopListProps) => {
 const useStyles = makeStyles(() => ({
   container: { gap: 20 },
   purple: {
-    backgroundColor: "#F3EAFF",
+    backgroundColor: '#F3EAFF',
     paddingHorizontal: 15,
     paddingVertical: 10,
   },

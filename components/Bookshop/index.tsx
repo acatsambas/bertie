@@ -1,12 +1,12 @@
-import { TouchableOpacity, TouchableOpacityProps, View } from "react-native";
+import { TouchableOpacity, TouchableOpacityProps, View } from 'react-native';
 
-import { makeStyles } from "@rneui/themed";
+import { makeStyles } from '@rneui/themed';
 
-import Text from "../../components/Text";
-import Icon from "../Icon";
+import Text from '../../components/Text';
+import Icon from '../Icon';
 
 interface BookShopProps extends TouchableOpacityProps {
-  kind?: "default" | "favorite" | "favoriteSelected";
+  kind?: 'default' | 'favorite' | 'favoriteSelected';
   name: string;
   location: string;
 }
@@ -16,36 +16,36 @@ const BookShop = ({ kind, name, location, onPress }: BookShopProps) => {
 
   return (
     <TouchableOpacity
-      style={kind === "favoriteSelected" ? styles.fav : styles.container}
+      style={kind === 'favoriteSelected' ? styles.fav : styles.container}
       onPress={onPress}
     >
       <View>
         <Text text={name} kind="paragraph" />
         <Text text={location} kind="littleText" />
       </View>
-      {kind === "default" && <Icon icon="right" />}
+      {kind === 'default' && <Icon icon="right" />}
     </TouchableOpacity>
   );
 };
 
 const useStyles = makeStyles(() => ({
   container: {
-    flexDirection: "row",
-    alignItems: "center",
-    minWidth: "100%",
+    flexDirection: 'row',
+    alignItems: 'center',
+    minWidth: '100%',
     padding: 20,
     gap: 20,
-    justifyContent: "space-between",
+    justifyContent: 'space-between',
   },
   fav: {
-    flexDirection: "row",
-    alignItems: "center",
-    minWidth: "100%",
+    flexDirection: 'row',
+    alignItems: 'center',
+    minWidth: '100%',
     borderWidth: 1,
     borderRadius: 5,
     padding: 20,
     gap: 20,
-    justifyContent: "space-between",
+    justifyContent: 'space-between',
   },
 }));
 

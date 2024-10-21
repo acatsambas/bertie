@@ -1,17 +1,15 @@
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Platform, View } from "react-native";
-import { useTranslation } from "react-i18next";
-import { useNavigation } from "@react-navigation/native";
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Platform, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
-import { makeStyles } from "@rneui/themed";
+import { makeStyles } from '@rneui/themed';
 
-import { translations } from "../../locales/translations";
-import { AuthNavigatorParamList } from "../../navigation/AuthStack/params";
-import Text from "../../components/Text";
-import Icon from "../../components/Icon";
-import Button from "../../components/Button";
-import GoogleButton from "../../components/AuthButtons/GoogleButton";
-import AppleSigninButton from "../../components/AuthButtons/Apple";
+import { translations } from '../../locales/translations';
+import Text from '../../components/Text';
+import Icon from '../../components/Icon';
+import Button from '../../components/Button';
+import GoogleButton from '../../components/AuthButtons/GoogleButton';
+import AppleSigninButton from '../../components/AuthButtons/Apple';
 
 const NoAccountScreen = ({ navigation }) => {
   const styles = useStyles();
@@ -38,7 +36,7 @@ const NoAccountScreen = ({ navigation }) => {
             onPress={handleLogin}
           />
           <GoogleButton />
-          {Platform.OS === "ios" && <AppleSigninButton />}
+          {Platform.OS === 'ios' && <AppleSigninButton />}
         </View>
       </View>
     </SafeAreaView>
@@ -50,13 +48,13 @@ const useStyles = makeStyles(() => ({
     flex: 1,
     gap: 20,
     paddingHorizontal: 20,
-    backgroundColor: "#FDF9F6",
+    backgroundColor: '#FDF9F6',
   },
   container: { paddingTop: 20, gap: 20 },
   top: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     paddingRight: 20,
   },
   buttons: {

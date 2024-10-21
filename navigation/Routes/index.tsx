@@ -1,10 +1,10 @@
-import { useContext } from "react";
+import { useContext } from 'react';
 
-import StyledNavigationContainer from "../../styles/StyledNavigationContainer";
-import { AuthContext } from "../../api/auth/AuthProvider";
+import { AuthContext } from '../../api/auth/AuthProvider';
+import StyledNavigationContainer from '../../styles/StyledNavigationContainer';
 
-import AuthNavigator from "../AuthStack";
-import AppNagivator from "../AppStack";
+import AppNagivator from '../AppStack';
+import AuthNavigator from '../AuthStack';
 
 const Routes = () => {
   const { user } = useContext(AuthContext);

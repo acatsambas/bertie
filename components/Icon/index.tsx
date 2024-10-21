@@ -1,7 +1,7 @@
-import { Icon as RNEIcon } from "@rneui/themed";
+import { Icon as RNEIcon } from '@rneui/themed';
 
-interface IconProps {
-  icon: string;
+export interface IconProps {
+  icon: keyof typeof iconType;
   onPress?(): void;
   color?: string;
 }
@@ -20,52 +20,52 @@ const Icon = ({ icon, onPress, color }: IconProps) => {
 
 const iconType = {
   email: {
-    type: "material-community",
-    name: "email-outline",
+    type: 'material-community',
+    name: 'email-outline',
   },
   password: {
-    type: "octicon",
-    name: "key",
+    type: 'octicon',
+    name: 'key',
   },
   myList: {
-    type: "material-community",
-    name: "format-list-bulleted",
+    type: 'material-community',
+    name: 'format-list-bulleted',
   },
   discover: {
-    type: "oction",
-    name: "search",
+    type: 'oction',
+    name: 'search',
   },
   order: {
-    type: "material-community",
-    name: "cart-outline",
+    type: 'material-community',
+    name: 'cart-outline',
   },
   address: {
-    type: "feather",
-    name: "map-pin",
+    type: 'feather',
+    name: 'map-pin',
   },
   delete: {
-    type: "feather",
-    name: "trash-2",
+    type: 'feather',
+    name: 'trash-2',
   },
   x: {
-    type: "material-community",
-    name: "close",
+    type: 'material-community',
+    name: 'close',
   },
   right: {
-    type: "material-community",
-    name: "chevron-right",
+    type: 'material-community',
+    name: 'chevron-right',
   },
   minus: {
-    type: "material-community",
-    name: "minus-circle-outline",
+    type: 'material-community',
+    name: 'minus-circle-outline',
   },
   plus: {
-    type: "material-community",
-    name: "plus",
+    type: 'material-community',
+    name: 'plus',
   },
   left: {
-    type: "material-community",
-    name: "arrow-u-left-top",
+    type: 'material-community',
+    name: 'arrow-u-left-top',
   },
 };
 

@@ -1,26 +1,26 @@
-import { SafeAreaView } from "react-native-safe-area-context";
-import { View } from "react-native";
-import { useTranslation } from "react-i18next";
-import { useContext, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { View } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { useContext, useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 
-import { makeStyles } from "@rneui/themed";
+import { makeStyles } from '@rneui/themed';
 
-import { AuthContext } from "../../api/auth/AuthProvider";
-import { AuthNavigatorParamList } from "../../navigation/AuthStack/params";
-import { translations } from "../../locales/translations";
-import Logo from "../../components/Logo";
-import Text from "../../components/Text";
-import Input from "../../components/Input";
-import Button from "../../components/Button";
+import { AuthContext } from '../../api/auth/AuthProvider';
+import { AuthNavigatorParamList } from '../../navigation/AuthStack/params';
+import { translations } from '../../locales/translations';
+import Logo from '../../components/Logo';
+import Text from '../../components/Text';
+import Input from '../../components/Input';
+import Button from '../../components/Button';
 
 export interface ForgotPageProps
-  extends StackNavigationProp<AuthNavigatorParamList, "Forgot"> {}
+  extends StackNavigationProp<AuthNavigatorParamList, 'Forgot'> {}
 
 const ForgotScreen = () => {
   const { forgot } = useContext(AuthContext);
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState('');
   const [isSent, setIsSent] = useState(false);
   const [error, setError] = useState(false);
 
@@ -43,7 +43,7 @@ const ForgotScreen = () => {
   };
 
   const handleDone = () => {
-    navigate("Welcome");
+    navigate('Welcome');
   };
 
   return (
@@ -99,20 +99,20 @@ const useStyles = makeStyles(() => ({
     flex: 1,
     gap: 20,
     paddingHorizontal: 20,
-    backgroundColor: "#FDF9F6",
+    backgroundColor: '#FDF9F6',
   },
   logo: {
-    alignItems: "center",
+    alignItems: 'center',
     paddingTop: 20,
   },
   container: { paddingTop: 20, gap: 20 },
   error: {
-    backgroundColor: "#FDEDED",
+    backgroundColor: '#FDEDED',
     paddingHorizontal: 20,
     paddingVertical: 10,
-    alignItems: "center",
+    alignItems: 'center',
   },
-  bottomArea: { flex: 1, justifyContent: "flex-end", marginBottom: 20 },
+  bottomArea: { flex: 1, justifyContent: 'flex-end', marginBottom: 20 },
 }));
 
 export default ForgotScreen;
