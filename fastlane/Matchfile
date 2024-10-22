@@ -5,4 +5,4 @@ storage_mode("git")
 type("development")
 
 app_identifier(["com.bertieapp.app"])
-username("...@bertieapp.app")
+username("acatsambas@bertieapp.app")
