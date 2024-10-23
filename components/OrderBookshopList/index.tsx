@@ -74,8 +74,8 @@ const OrderBookshopList = ({ kind }: OrderBookshopListProps) => {
   const handleUserAddress = async () => {
     try {
       const usrSnapshop = await firestore()
-        .collection('Address')
-        .doc(userId)
+        ?.collection('Address')
+        ?.doc(userId)
         .get();
       usrSnapshop.exists ? setHasAddress(true) : setHasAddress(false);
     } catch (error) {
