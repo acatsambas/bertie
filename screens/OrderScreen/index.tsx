@@ -29,7 +29,7 @@ const OrderScreen = () => {
 
   useEffect(() => {
     fetchBooks();
-  }, [books]);
+  }, []);
 
   const fetchBooks = async () => {
     const userBooksSnapshot = await firestore()
@@ -57,7 +57,9 @@ const OrderScreen = () => {
         ) : (
           <Text text={t(translations.order.headerNoBooks)} kind="header" />
         )}
-        {books.length > 0 && <OrderBooksList />}
+        {books.length > 0 && (
+          <OrderBooksList books={books} setBooks={setBooks} />
+        )}
         {books.length > 0 ? (
           <Text text={t(translations.order.details)} kind="header" />
         ) : (

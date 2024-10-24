@@ -1,35 +1,16 @@
-import React, { useContext, useEffect, useState } from 'react';
 import { View } from 'react-native';
-import firestore from '@react-native-firebase/firestore';
 
 import { makeStyles } from '@rneui/themed';
 
-import { AuthContext } from '../../api/auth/AuthProvider';
+import { BookType } from '../../api/app/types';
 import Book from '../Book';
 
-const OrderBooksList = () => {
-  const [books, setBooks] = useState([]);
-  const { user } = useContext(AuthContext);
-  const userId = user.uid;
+interface OrderBooksListProps {
+  books: BookType[];
+  setBooks: React.Dispatch<React.SetStateAction<any[]>>;
+}
 
-  useEffect(() => {
-    fetchBooks();
-  }, []);
-
-  const fetchBooks = async () => {
-    const userBooksSnapshot = await firestore()
-      .collection('users')
-      .doc(userId)
-      .collection('books')
-      .get();
-
-    const booksList = userBooksSnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    setBooks(booksList);
-  };
-
+const OrderBooksList = ({ books, setBooks }: OrderBooksListProps) => {
   const handleRemoveBook = (id: string) => {
     const element = books.find(book => book.id === id); //find element
     const index = books.indexOf(element); //find its index
