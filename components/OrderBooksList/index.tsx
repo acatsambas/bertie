@@ -11,10 +11,9 @@ interface OrderBooksListProps {
 }
 
 const OrderBooksList = ({ books, setBooks }: OrderBooksListProps) => {
-  const handleRemoveBook = (id: string) => {
-    const element = books.find(book => book.id === id); //find element
-    const index = books.indexOf(element); //find its index
-    books.splice(index, 1); //remove element
+  const handleRemoveBook = (bookId: string) => {
+    const updatedBooks = books.filter(book => book.id !== bookId);
+    setBooks(updatedBooks);
   };
 
   const styles = useStyles();
