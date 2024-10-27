@@ -6,16 +6,16 @@ import firestore from '@react-native-firebase/firestore';
 
 import { makeStyles } from '@rneui/themed';
 
-import { translations } from '../../locales/translations';
-import { AuthContext } from '../../api/auth/AuthProvider';
-import Text from '../../components/Text';
-import BookShop from '../Bookshop';
 import { StackNavigationProp } from '@react-navigation/stack';
 import {
   OrderNavigatorParamList,
   BookshopType,
 } from '../../navigation/AppStack/params';
 import { fetchBookshops } from '../../api/app/hooks';
+import { translations } from '../../locales/translations';
+import { AuthContext } from '../../api/auth/AuthProvider';
+import Text from '../../components/Text';
+import BookShop from '../Bookshop';
 
 interface OrderBookshopListProps {
   kind: 'favourites' | 'more';

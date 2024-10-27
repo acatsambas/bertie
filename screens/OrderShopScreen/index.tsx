@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
@@ -12,7 +13,6 @@ import { fetchUserBookShops } from '../../api/app/hooks';
 import Text from '../../components/Text';
 import Button from '../../components/Button';
 import OrderBookshopList from '../../components/OrderBookshopList';
-import { useEffect, useState } from 'react';
 
 export interface OrderPageProps
   extends StackNavigationProp<OrderNavigatorParamList, 'OrderShop'> {}
