@@ -18,12 +18,14 @@ export type LibraryNavigatorParamList = {
 };
 
 export type BookshopType = {
+  id: string;
   address: string;
   city: string;
   country: string;
   name: string;
   zipcode: string;
   description: string;
+  isFav: boolean;
 };
 
 export type DiscoverNavigatorParamList = {

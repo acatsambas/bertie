@@ -8,15 +8,17 @@ import { makeStyles } from '@rneui/themed';
 
 import { translations } from '../../locales/translations';
 import { OrderNavigatorParamList } from '../../navigation/AppStack/params';
+import { fetchUserBookShops } from '../../api/app/hooks';
 import Text from '../../components/Text';
 import Button from '../../components/Button';
 import OrderBookshopList from '../../components/OrderBookshopList';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export interface OrderPageProps
   extends StackNavigationProp<OrderNavigatorParamList, 'OrderShop'> {}
 
 const OrderShopScreen = () => {
+  const [favShops, setFavShops] = useState([]);
   const styles = useStyles();
   const { t } = useTranslation();
   const { navigate } = useNavigation<OrderPageProps>();
@@ -31,12 +33,21 @@ const OrderShopScreen = () => {
     navigate('Order');
   };
 
+  useEffect(() => {
+    getUserFavShops();
+  }, []);
+
+  const getUserFavShops = async () => {
+    const usrFavShops = await fetchUserBookShops();
+    setFavShops(usrFavShops);
+  };
+
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <ScrollView contentContainerStyle={styles.container}>
         <Text text={t(translations.order.title)} kind="bigHeader" />
         <Text text={t(translations.order.where)} kind="paragraph" />
-        <OrderBookshopList kind="favourites" />
+        <OrderBookshopList kind="favourites" shops={favShops} />
         <OrderBookshopList kind="more" />
       </ScrollView>
       <View style={styles.bottomArea}>
