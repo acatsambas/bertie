@@ -15,12 +15,16 @@ export const fetchUserBooks = async () => {
 };
 
 export const fetchBookshops = async () => {
-  const bookShopsSnapshot = await firestore()?.collection('shops').get();
-  const bookShopsList = bookShopsSnapshot?.docs.map(doc => ({
-    id: doc.id,
-    ...doc.data(),
-  }));
-  return bookShopsList;
+  try {
+    const bookShopsSnapshot = await firestore()?.collection('shops').get();
+    const bookShopsList = bookShopsSnapshot?.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    return bookShopsList;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const fetchUserBookShops = async () => {

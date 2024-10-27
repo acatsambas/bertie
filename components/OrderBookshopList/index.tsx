@@ -15,6 +15,7 @@ import {
   OrderNavigatorParamList,
   BookshopType,
 } from '../../navigation/AppStack/params';
+import { fetchBookshops } from '../../api/app/hooks';
 
 interface OrderBookshopListProps {
   kind: 'favourites' | 'more';
@@ -41,16 +42,8 @@ const OrderBookshopList = ({ kind, shops }: OrderBookshopListProps) => {
   }, []);
 
   const handleAllBookShops = async () => {
-    try {
-      const shopsSnapshot = await firestore().collection('shops').get();
-      const bookShopsList = shopsSnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setAllShops(bookShopsList);
-    } catch (error) {
-      console.log(error);
-    }
+    const bookShops = await fetchBookshops();
+    setAllShops(bookShops);
   };
 
   const handleUserAddress = async () => {

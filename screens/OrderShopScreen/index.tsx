@@ -44,7 +44,10 @@ const OrderShopScreen = () => {
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        showsVerticalScrollIndicator={false}
+      >
         <Text text={t(translations.order.title)} kind="bigHeader" />
         <Text text={t(translations.order.where)} kind="paragraph" />
         <OrderBookshopList kind="favourites" shops={favShops} />
