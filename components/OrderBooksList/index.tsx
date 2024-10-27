@@ -2,7 +2,7 @@ import { View } from 'react-native';
 
 import { makeStyles } from '@rneui/themed';
 
-import { BookType } from '../../api/app/types';
+import { BookType } from '../../navigation/AppStack/params';
 import Book from '../Book';
 
 interface OrderBooksListProps {

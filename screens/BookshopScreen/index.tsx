@@ -41,7 +41,7 @@ const BookshopScreen = ({ navigation }) => {
 
   const { params } =
     useRoute<RouteProp<DiscoverNavigatorParamList, 'Bookshop'>>();
-  const { address, city, country, name, zipcode, description } = params;
+  const { address, city, name, zipcode, description } = params;
 
   const styles = useStyles();
   const { t } = useTranslation();

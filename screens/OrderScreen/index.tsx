@@ -45,7 +45,7 @@ const OrderScreen = () => {
   };
 
   const handleNext = () => {
-    navigate('OrderShop');
+    navigate('OrderShop', books);
   };
 
   return (

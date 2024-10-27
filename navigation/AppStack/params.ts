@@ -31,9 +31,18 @@ export type DiscoverNavigatorParamList = {
   Bookshop: BookshopType;
 };
 
+export type BookType = {
+  author?: string;
+  bookId?: string;
+  id?: string;
+  isRead?: boolean;
+  description?: string;
+  title?: string;
+};
+
 export type OrderNavigatorParamList = {
   Order: undefined;
-  OrderShop: undefined;
+  OrderShop: BookType[];
   AddressScreen: undefined;
   Bookshop: BookshopType;
   OrderPlaced: undefined;
