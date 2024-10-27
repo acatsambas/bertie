@@ -27,7 +27,7 @@ export interface OrderPageProps
 const OrderBookshopList = ({ kind, shops }: OrderBookshopListProps) => {
   const [allShops, setAllShops] = useState([]);
   const [hasAddress, setHasAddress] = useState(true);
-  const [isFavorite, setIsFavorite] = useState([]);
+  const [isPicked, setIsPicked] = useState([]);
 
   const styles = useStyles();
   const { t } = useTranslation();
@@ -63,7 +63,7 @@ const OrderBookshopList = ({ kind, shops }: OrderBookshopListProps) => {
   };
 
   const handlePick = (id: string, name: string) => {
-    setIsFavorite([id, name, !isFavorite[2]]);
+    setIsPicked([id, name, !isPicked[2]]);
   };
 
   const handleNavigateBookshop = (bookshop: BookshopType) => {
@@ -84,7 +84,7 @@ const OrderBookshopList = ({ kind, shops }: OrderBookshopListProps) => {
                   key={shop.id}
                   onPress={() => handlePick(shop.id, shop.name)}
                   kind={
-                    shop.id === isFavorite[0] ? 'favoriteSelected' : 'favorite'
+                    shop.id === isPicked[0] ? 'favoriteSelected' : 'favorite'
                   }
                 />
               ),
