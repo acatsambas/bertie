@@ -9,7 +9,7 @@ import { makeStyles } from '@rneui/themed';
 
 import { translations } from '../../locales/translations';
 import { OrderNavigatorParamList } from '../../navigation/AppStack/params';
-import { fetchUserBookShops } from '../../api/app/hooks';
+import { fetchUserBookShops, getBookshopNameById } from '../../api/app/hooks';
 import Text from '../../components/Text';
 import Button from '../../components/Button';
 import OrderBookshopList from '../../components/OrderBookshopList';
@@ -19,6 +19,8 @@ export interface OrderPageProps
 
 const OrderShopScreen = () => {
   const [favShops, setFavShops] = useState([]);
+  const [isPicked, setIsPicked] = useState('');
+  const [shopName, setShopName] = useState('');
   const styles = useStyles();
   const { t } = useTranslation();
   const { navigate } = useNavigation<OrderPageProps>();
@@ -26,16 +28,22 @@ const OrderShopScreen = () => {
     useRoute<RouteProp<OrderNavigatorParamList, 'OrderShop'>>();
 
   const handlePlace = () => {
-    navigate('OrderPlaced');
+    navigate('OrderPlaced', { bookshopName: shopName });
   };
 
   const handleBack = () => {
     navigate('Order');
+    console.log('test');
   };
 
   useEffect(() => {
     getUserFavShops();
   }, []);
+
+  useEffect(() => {
+    const getShopName = getBookshopNameById(isPicked, favShops);
+    setShopName(getShopName);
+  }, [isPicked]);
 
   const getUserFavShops = async () => {
     const usrFavShops = await fetchUserBookShops();
@@ -50,7 +58,12 @@ const OrderShopScreen = () => {
       >
         <Text text={t(translations.order.title)} kind="bigHeader" />
         <Text text={t(translations.order.where)} kind="paragraph" />
-        <OrderBookshopList kind="favourites" shops={favShops} />
+        <OrderBookshopList
+          kind="favourites"
+          shops={favShops}
+          isPicked={isPicked}
+          setIsPicked={setIsPicked}
+        />
         <OrderBookshopList kind="more" />
       </ScrollView>
       <View style={styles.bottomArea}>

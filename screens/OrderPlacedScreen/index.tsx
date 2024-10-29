@@ -1,10 +1,12 @@
 import React from 'react';
 import { View } from 'react-native';
+import { RouteProp, useRoute } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
 import { makeStyles } from '@rneui/themed';
 
+import { OrderNavigatorParamList } from '../../navigation/AppStack/params';
 import { translations } from '../../locales/translations';
 import Text from '../../components/Text';
 import Button from '../../components/Button';
@@ -12,6 +14,9 @@ import Button from '../../components/Button';
 const OrderPlacedScreen = () => {
   const styles = useStyles();
   const { t } = useTranslation();
+  const { params } =
+    useRoute<RouteProp<OrderNavigatorParamList, 'OrderPlaced'>>();
+  const { bookshopName } = params;
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <View style={styles.container}>
@@ -19,7 +24,7 @@ const OrderPlacedScreen = () => {
         <Text
           text={
             t(translations.order.sent) +
-            ' <bookshop> ' +
+            ` ${bookshopName} ` +
             t(translations.order.sent2)
           }
           kind="paragraph"

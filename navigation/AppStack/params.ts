@@ -42,12 +42,16 @@ export type BookType = {
   title?: string;
 };
 
+export type OrderPlaceProps = {
+  bookshopName?: string;
+};
+
 export type OrderNavigatorParamList = {
   Order: undefined;
   OrderShop: BookType[];
   AddressScreen: undefined;
   Bookshop: BookshopType;
-  OrderPlaced: undefined;
+  OrderPlaced: OrderPlaceProps;
 };
 
 export type AppNavigatorParamList = {

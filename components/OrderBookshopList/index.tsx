@@ -24,14 +24,20 @@ import BookShop from '../Bookshop';
 interface OrderBookshopListProps {
   kind: 'favourites' | 'more';
   shops?: BookshopType[];
+  isPicked?: string;
+  setIsPicked?: React.Dispatch<React.SetStateAction<string>>;
 }
 export interface OrderPageProps
   extends StackNavigationProp<OrderNavigatorParamList, 'OrderShop'> {}
 
-const OrderBookshopList = ({ kind, shops }: OrderBookshopListProps) => {
+const OrderBookshopList = ({
+  kind,
+  shops,
+  isPicked,
+  setIsPicked,
+}: OrderBookshopListProps) => {
   const [allShops, setAllShops] = useState([]);
   const [hasAddress, setHasAddress] = useState(true);
-  const [isPicked, setIsPicked] = useState('');
 
   const styles = useStyles();
   const { t } = useTranslation();

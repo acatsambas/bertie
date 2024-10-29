@@ -81,3 +81,8 @@ export const getPickedFavoriteShop = async () => {
   const pickedShopId = userDoc.data()?.pickedShopId;
   return pickedShopId;
 };
+
+export const getBookshopNameById = (id: string, bookshops: any[]) => {
+  const bookshop = bookshops.find(shop => shop.id === id);
+  return bookshop ? bookshop?.name : null;
+};
