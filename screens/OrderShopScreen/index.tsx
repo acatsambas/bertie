@@ -33,7 +33,6 @@ const OrderShopScreen = () => {
 
   const handleBack = () => {
     navigate('Order');
-    console.log('test');
   };
 
   useEffect(() => {
