@@ -63,17 +63,21 @@ export const updateBookRead = (bookId: string, isRead: boolean) => {
     );
 };
 
-//TODO: Check if there is another picked bookstore
-export const pickFavoriteShop = (shopId: string, isPicked: boolean) => {
-  return firestore()
-    .collection('users')
-    .doc(auth().currentUser?.uid)
-    .collection('bookstores')
-    .doc(shopId)
-    .set(
-      {
-        isPicked: !isPicked,
-      },
-      { merge: true },
-    );
+export const pickFavoriteShop = (shopId: string) => {
+  return firestore()?.collection('users')?.doc(auth().currentUser?.uid)?.set(
+    {
+      pickedShopId: shopId,
+    },
+    { merge: true },
+  );
+};
+
+export const getPickedFavoriteShop = async () => {
+  const userDoc = await firestore()
+    ?.collection('users')
+    ?.doc(auth().currentUser?.uid)
+    ?.get();
+
+  const pickedShopId = userDoc.data()?.pickedShopId;
+  return pickedShopId;
 };

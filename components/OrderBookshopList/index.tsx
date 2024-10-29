@@ -11,7 +11,11 @@ import {
   OrderNavigatorParamList,
   BookshopType,
 } from '../../navigation/AppStack/params';
-import { fetchBookshops } from '../../api/app/hooks';
+import {
+  fetchBookshops,
+  pickFavoriteShop,
+  getPickedFavoriteShop,
+} from '../../api/app/hooks';
 import { translations } from '../../locales/translations';
 import { AuthContext } from '../../api/auth/AuthProvider';
 import Text from '../../components/Text';
@@ -27,7 +31,7 @@ export interface OrderPageProps
 const OrderBookshopList = ({ kind, shops }: OrderBookshopListProps) => {
   const [allShops, setAllShops] = useState([]);
   const [hasAddress, setHasAddress] = useState(true);
-  const [isPicked, setIsPicked] = useState([]);
+  const [isPicked, setIsPicked] = useState('');
 
   const styles = useStyles();
   const { t } = useTranslation();
@@ -39,11 +43,17 @@ const OrderBookshopList = ({ kind, shops }: OrderBookshopListProps) => {
   useEffect(() => {
     handleAllBookShops();
     handleUserAddress();
+    handlePickedBookShop();
   }, []);
 
   const handleAllBookShops = async () => {
     const bookShops = await fetchBookshops();
     setAllShops(bookShops);
+  };
+
+  const handlePickedBookShop = async () => {
+    const pickedBookShop = await getPickedFavoriteShop();
+    setIsPicked(pickedBookShop);
   };
 
   const handleUserAddress = async () => {
@@ -52,6 +62,7 @@ const OrderBookshopList = ({ kind, shops }: OrderBookshopListProps) => {
         ?.collection('Address')
         ?.doc(userId)
         .get();
+      // eslint-disable-next-line no-unused-expressions
       usrSnapshop.exists ? setHasAddress(true) : setHasAddress(false);
     } catch (error) {
       console.log(error);
@@ -62,8 +73,9 @@ const OrderBookshopList = ({ kind, shops }: OrderBookshopListProps) => {
     navigate('AddressScreen');
   };
 
-  const handlePick = (id: string, name: string) => {
-    setIsPicked([id, name, !isPicked[2]]);
+  const handlePick = async (id: string) => {
+    await pickFavoriteShop(id);
+    handlePickedBookShop();
   };
 
   const handleNavigateBookshop = (bookshop: BookshopType) => {
@@ -82,10 +94,8 @@ const OrderBookshopList = ({ kind, shops }: OrderBookshopListProps) => {
                   name={shop.name}
                   location={shop.city}
                   key={shop.id}
-                  onPress={() => handlePick(shop.id, shop.name)}
-                  kind={
-                    shop.id === isPicked[0] ? 'favoriteSelected' : 'favorite'
-                  }
+                  onPress={() => handlePick(shop.id)}
+                  kind={shop.id === isPicked ? 'favoriteSelected' : 'favorite'}
                 />
               ),
           )}
