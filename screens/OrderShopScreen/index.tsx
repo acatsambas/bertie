@@ -27,8 +27,6 @@ const OrderShopScreen = () => {
   const { params } =
     useRoute<RouteProp<OrderNavigatorParamList, 'OrderShop'>>();
 
-  console.log(params);
-
   const handlePlace = () => {
     navigate('OrderPlaced', { bookshopName: shopName });
   };
