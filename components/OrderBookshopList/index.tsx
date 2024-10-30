@@ -3,10 +3,10 @@ import { View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import firestore from '@react-native-firebase/firestore';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 import { makeStyles } from '@rneui/themed';
 
-import { StackNavigationProp } from '@react-navigation/stack';
 import {
   OrderNavigatorParamList,
   BookshopType,
