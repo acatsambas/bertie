@@ -4,8 +4,8 @@ import base64 from 'base-64';
 // Initialize Google Sign-In
 GoogleSignin.configure({
   scopes: ['https://www.googleapis.com/auth/gmail.send'], // Scope to send Gmail
-  webClientId:
-    '478743508904-u15j767hvl8oo6r8d1vali9kkjufnltf.apps.googleusercontent.com', // Replace with your OAuth client ID
+  webClientId: process.env.EXPO_PUBLIC_ANDROID_BERTIE_WEB_CLIENT_ID,
+  // '478743508904-u15j767hvl8oo6r8d1vali9kkjufnltf.apps.googleusercontent.com',
 });
 
 export const sendEmailToBookshop = async (
@@ -20,9 +20,11 @@ export const sendEmailToBookshop = async (
     // Check if the user is signed in
     const userInfo = await GoogleSignin.getCurrentUser();
     if (!userInfo) {
-      console.log('User not signed in');
       throw new Error('User not signed in');
     }
+
+    // await GoogleSignin.revokeAccess();
+    // await GoogleSignin.signIn();
 
     // Get the access token
     const tokens = await GoogleSignin.getTokens();
