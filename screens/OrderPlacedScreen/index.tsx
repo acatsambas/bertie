@@ -10,10 +10,17 @@ import { OrderNavigatorParamList } from '../../navigation/AppStack/params';
 import { translations } from '../../locales/translations';
 import Text from '../../components/Text';
 import Button from '../../components/Button';
-import { handleSendEmail } from '../../api/app/handleSendEmail';
+import { sendEmailToBookshop } from '../../api/app/sendEmailToBookshop';
 
 const OrderPlacedScreen = () => {
-  handleSendEmail();
+  sendEmailToBookshop(
+    'test',
+    'test',
+    'test',
+    'test',
+    'test',
+    'cristianm.manolescu96@gmail.com',
+  );
   const styles = useStyles();
   const { t } = useTranslation();
   const { params } =
