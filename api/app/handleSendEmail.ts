@@ -1,118 +1,104 @@
-// Import necessary modules
-import { authorize } from 'react-native-app-auth';
-import { encode as base64Encode } from 'base-64';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import axios from 'axios';
+import base64 from 'base-64';
 
-// Google OAuth Configuration
-const config = {
-  clientId:
-    '478743508904-u15j767hvl8oo6r8d1vali9kkjufnltf.apps.googleusercontent.com',
-  redirectUrl: 'com.bertie.app:/oauth2redirect', // Set up a URL scheme for redirects
+// Initialize Google Sign-In
+GoogleSignin.configure({
+  webClientId: process.env.EXPO_PUBLIC_ANDROID_BERTIE_WEB_CLIENT_ID, // Replace with your OAuth Client ID from Google Cloud
+  offlineAccess: true,
   scopes: ['https://www.googleapis.com/auth/gmail.send'],
-  serviceConfiguration: {
-    authorizationEndpoint: 'https://accounts.google.com/o/oauth2/v2/auth',
-    tokenEndpoint: 'https://oauth2.googleapis.com/token',
-  },
-};
+});
 
-// Authenticate with Google and get access token
-async function authenticateWithGoogle() {
+async function signInWithGoogle() {
   try {
-    const result = await authorize(config);
-    return result.accessToken;
+    await GoogleSignin.hasPlayServices();
+    const userInfo = await GoogleSignin.signIn();
+    const tokens = await GoogleSignin.getTokens();
+    return tokens.accessToken;
   } catch (error) {
-    console.error('Authentication error:', error);
+    console.error('Error during Google Sign-In:', error);
     throw error;
   }
 }
 
-// Create email content based on the template
-function createEmailTemplate(
-  bookshopName: string,
-  customerName: string,
-  bookName: string,
-  bookAuthor: string,
-  customerAddress: string,
-) {
-  return `
-Dear ${bookshopName} team,
-
-${customerName} would like to order these books:
-${bookName} by ${bookAuthor}
-
-Their address is
-${customerAddress}
-
-Please get in touch with them directly to arrange payment and delivery. We have copied their email address to this email.
-
-Thank you,
-Bertie
-`;
-}
-
-// Function to send the email using Gmail API
 async function sendEmail(
   accessToken,
-  recipientEmail,
   bookshopName,
   customerName,
   bookName,
   bookAuthor,
   customerAddress,
+  customerEmail,
 ) {
-  const emailContent = createEmailTemplate(
-    bookshopName,
-    customerName,
-    bookName,
-    bookAuthor,
-    customerAddress,
-  );
-  const rawEmail = base64Encode(
-    `To: ${recipientEmail}\nSubject: Book Order\n\n${emailContent}`,
-  );
+  // Email content
+  const emailContent = `
+    Dear ${bookshopName} team,
+
+    ${customerName} would like to order these books:
+    ${bookName} by ${bookAuthor}
+
+    Their address is:
+    ${customerAddress}
+
+    Please get in touch with them directly to arrange payment and delivery. We have copied their email address to this email.
+
+    Thank you,
+    Bertie;
+  `;
+
+  const message = [
+    `To: ${bookshopName}@gmail.com`,
+    `Cc: ${customerEmail}`,
+    'Subject: Book Order',
+    '',
+    emailContent,
+  ].join('\n');
+
+  // Encode the message in Base64 format
+  const encodedMessage = base64
+    .encode(message)
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=+$/, '');
 
   try {
-    const response = await fetch(
-      'https://www.googleapis.com/gmail/v1/users/me/messages/send',
+    const response = await axios.post(
+      'https://gmail.googleapis.com/gmail/v1/users/me/messages/send',
       {
-        method: 'POST',
+        raw: encodedMessage,
+      },
+      {
         headers: {
           Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          raw: rawEmail,
-        }),
       },
     );
-
-    if (response.ok) {
-      console.log('Email sent successfully!');
-    } else {
-      const errorText = await response.text();
-      console.error('Error sending email:', errorText);
-    }
+    console.log('Email sent successfully:', response.data);
   } catch (error) {
-    console.error('Error in email sending:', error);
+    console.error(
+      'Error sending email:',
+      error.response ? error.response.data : error.message,
+    );
   }
 }
 
-// Main function to authenticate and send email
-export default async function handleSendEmail() {
+export async function handleSendEmail() {
   try {
-    // Step 1: Authenticate and get access token
-    const accessToken = await authenticateWithGoogle();
+    // Sign in to get the access token
+    const accessToken = await signInWithGoogle();
 
-    // Step 2: Send email with template details
+    // Send the email with sample data
     await sendEmail(
       accessToken,
-      'cristianm.manolescu96@gmail.com', // Replace with recipient's email
-      'Your Bookshop Name', // Replace with the bookshop's name
-      'Customer Name', // Replace with the customer's name
-      'Book Title', // Replace with the book's title
-      'Book Author', // Replace with the book's author
-      'Customer Address', // Replace with the customer's address
+      'Bookshop Name', // Bookshop name placeholder
+      'Customer Name', // Customer name placeholder
+      'Book Title', // Book name placeholder
+      'Book Author', // Book author placeholder
+      'Customer Address', // Customer address placeholder
+      'cristianm.manolescu96@gmail.com', // Customer email placeholder
     );
   } catch (error) {
-    console.error('Failed to send email:', error);
+    console.error("Couldn't send email:", error);
   }
 }

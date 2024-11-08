@@ -10,7 +10,7 @@ import { OrderNavigatorParamList } from '../../navigation/AppStack/params';
 import { translations } from '../../locales/translations';
 import Text from '../../components/Text';
 import Button from '../../components/Button';
-import handleSendEmail from '../../api/app/handleSendEmail';
+import { handleSendEmail } from '../../api/app/handleSendEmail';
 
 const OrderPlacedScreen = () => {
   handleSendEmail();
