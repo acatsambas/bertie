@@ -1,48 +1,32 @@
-import { useEffect, useState } from 'react';
-import { View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import firestore from '@react-native-firebase/firestore';
+import { View } from 'react-native';
 
-import {
-  DiscoverNavigatorParamList,
-  BookshopType,
-} from '../../navigation/AppStack/params';
+import { useShops } from '../../api/app/hooks';
+import { Shop } from '../../api/app/types';
+import { DiscoverNavigatorParamList } from '../../navigation/AppStack/params';
 import BookShop from '../Bookshop';
 
 export interface DiscoverPageProps
   extends StackNavigationProp<DiscoverNavigatorParamList, 'Discover'> {}
 
 const BookshopsList = () => {
-  const [bookshops, setBookshops] = useState([]);
-  useEffect(() => {
-    fetchBookshops();
-  }, []);
-
-  const fetchBookshops = async () => {
-    const bookShopsSnapshot = await firestore().collection('shops').get();
-    const bookShopsList = bookShopsSnapshot?.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    setBookshops(bookShopsList);
-  };
-
+  const shops = useShops();
   const { navigate } = useNavigation<DiscoverPageProps>();
 
-  const handleBookshop = (bookshop: BookshopType) => {
-    navigate('Bookshop', bookshop);
+  const handlePressShop = (shop: Shop) => {
+    navigate('Bookshop', { shop });
   };
 
   return (
     <View>
-      {bookshops.map(bookshop => (
+      {shops.map(shop => (
         <BookShop
-          key={bookshop.id}
-          name={bookshop.name}
-          location={bookshop.city}
+          key={shop.id}
+          name={shop.name}
+          location={shop.city}
           kind="default"
-          onPress={() => handleBookshop(bookshop)}
+          onPress={() => handlePressShop(shop)}
         />
       ))}
     </View>

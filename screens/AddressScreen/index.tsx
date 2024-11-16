@@ -1,79 +1,42 @@
-import { useContext, useEffect, useState } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import firestore from '@react-native-firebase/firestore';
+import { makeStyles } from '@rneui/themed';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
-import firestore from '@react-native-firebase/firestore';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { makeStyles } from '@rneui/themed';
-
-import { AuthContext } from '../../api/auth/AuthProvider';
-import { translations } from '../../locales/translations';
-import Text from '../../components/Text';
-import Input from '../../components/Input';
+import { useUser } from '../../api/app/hooks';
 import Button from '../../components/Button';
+import Input from '../../components/Input';
+import Text from '../../components/Text';
+import { translations } from '../../locales/translations';
 
 const AddressScreen = ({ navigation }) => {
-  const [addr1, setAddr1] = useState('');
-  const [addr2, setAddr2] = useState('');
-  const [city, setCity] = useState('');
-  const [postcode, setPostcode] = useState('');
-  const [country, setCountry] = useState('');
-
-  const { user } = useContext(AuthContext);
-  const userId = user.uid;
-
-  useEffect(() => {
-    fetchAddress();
-  }, []);
-
-  const fetchAddress = async () => {
-    const userAddress = await firestore()
-      .collection('Address')
-      .doc(userId)
-      .get();
-    if (userAddress) {
-      setAddr1(userAddress?.data()?.addr1);
-      setAddr2(userAddress?.data()?.addr2);
-      setCity(userAddress?.data()?.city);
-      setPostcode(userAddress?.data()?.postcode);
-      setCountry(userAddress?.data()?.country);
-    }
-  };
-
   const styles = useStyles();
   const { t } = useTranslation();
+  const user = useUser();
+  const [address, setAddress] = useState<typeof user.address>({
+    firstLine: '',
+    secondLine: '',
+    city: '',
+    postcode: '',
+    country: '',
+  });
+  const [componentMounted, setComponentMounted] = useState(false);
 
-  const handleAddr1 = (value: string) => {
-    setAddr1(value);
-  };
-  const handleAddr2 = (value: string) => {
-    setAddr2(value);
-  };
-  const handleCity = (value: string) => {
-    setCity(value);
-  };
-  const handlePostcode = (value: string) => {
-    setPostcode(value);
-  };
-  const handleCountry = (value: string) => {
-    setCountry(value);
-  };
-  const handleSave = async () => {
-    try {
-      await firestore().collection('Address').doc(userId).set(
-        {
-          addr1: addr1,
-          addr2: addr2,
-          city: city,
-          postcode: postcode,
-          country: country,
-        },
-        { merge: true },
-      );
-      navigation.goBack();
-    } catch (error) {
-      console.log(error);
+  useEffect(() => {
+    if (user?.address && !componentMounted) {
+      setAddress(user.address);
+      setComponentMounted(true);
     }
+  }, [componentMounted, user]);
+
+  const handleSave = async () => {
+    await firestore().collection('users').doc(user.documentId).update({
+      address,
+    });
+
+    navigation.goBack();
   };
 
   return (
@@ -87,31 +50,32 @@ const AddressScreen = ({ navigation }) => {
         <View>
           <Input
             placeholder={t(translations.settings.address.addr1)}
-            onChangeText={handleAddr1}
-            value={addr1}
+            onChangeText={text => setAddress({ ...address, firstLine: text })}
+            value={address?.firstLine}
           />
           <Input
             placeholder={t(translations.settings.address.addr2)}
-            onChangeText={handleAddr2}
-            value={addr2}
+            onChangeText={text => setAddress({ ...address, secondLine: text })}
+            value={address?.secondLine}
           />
           <Input
             placeholder={t(translations.settings.address.city)}
-            onChangeText={handleCity}
-            value={city}
+            onChangeText={text => setAddress({ ...address, city: text })}
+            value={address?.city}
           />
           <Input
             placeholder={t(translations.settings.address.postcode)}
-            onChangeText={handlePostcode}
-            value={postcode}
+            onChangeText={text => setAddress({ ...address, postcode: text })}
+            value={address?.postcode}
           />
           <Input
             placeholder={t(translations.settings.address.country)}
-            onChangeText={handleCountry}
-            value={country}
+            onChangeText={text => setAddress({ ...address, country: text })}
+            value={address?.country}
           />
         </View>
       </View>
+
       <View style={styles.bottomArea}>
         <Button
           kind="primary"
@@ -123,12 +87,12 @@ const AddressScreen = ({ navigation }) => {
   );
 };
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   safeAreaView: {
     flex: 1,
     gap: 20,
     paddingHorizontal: 20,
-    backgroundColor: '#FDF9F6',
+    backgroundColor: theme.colors.white,
   },
   container: { paddingTop: 20, gap: 20 },
   bottomArea: { flex: 1, justifyContent: 'flex-end', marginBottom: 20 },

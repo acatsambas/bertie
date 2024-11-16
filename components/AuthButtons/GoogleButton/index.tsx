@@ -1,9 +1,9 @@
-import { useContext } from 'react';
 import {
   GoogleSigninButton,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
 import { makeStyles } from '@rneui/themed';
+import { useContext } from 'react';
 
 import { AuthContext } from '../../../api/auth/AuthProvider';
 import { isFirebaseError } from '../../../api/types';
@@ -28,7 +28,7 @@ const GoogleButton = () => {
             break;
           default:
             // some other error happened
-            console.log(error);
+            console.error(error);
         }
       }
     }

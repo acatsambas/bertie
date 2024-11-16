@@ -1,21 +1,19 @@
-import { useContext, useState } from 'react';
 import { RouteProp, useRoute } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { makeStyles } from '@rneui/themed';
+import { useContext, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { useTranslation } from 'react-i18next';
 
-import { makeStyles } from '@rneui/themed';
-
+import { AuthContext } from '../../api/auth/AuthProvider';
+import { isFirebaseError } from '../../api/types';
+import Button from '../../components/Button';
+import Input from '../../components/Input';
+import Logo from '../../components/Logo';
+import Text from '../../components/Text';
 import { translations } from '../../locales/translations';
 import { AuthNavigatorParamList } from '../../navigation/AuthStack/params';
-import { AuthContext } from '../../api/auth/AuthProvider';
-
-import { isFirebaseError } from '../../api/types';
-import Logo from '../../components/Logo';
-import Button from '../../components/Button';
-import Text from '../../components/Text';
-import Input from '../../components/Input';
 
 export interface SetProfilePageProps
   extends StackNavigationProp<AuthNavigatorParamList, 'SetProfile'> {}
@@ -38,7 +36,7 @@ const SetProfileScreen = () => {
       await register(email, password, givenName, familyName);
     } catch (error) {
       if (isFirebaseError(error)) {
-        console.log(error);
+        console.error(error);
       }
     }
   };
@@ -63,10 +61,12 @@ const SetProfileScreen = () => {
           <Input
             placeholder={t(translations.signup.profile.firstName)}
             onChangeText={handleGivenName}
+            value={givenName}
           />
           <Input
             placeholder={t(translations.signup.profile.lastName)}
             onChangeText={handleFamilyName}
+            value={familyName}
           />
         </View>
       </View>
@@ -82,12 +82,12 @@ const SetProfileScreen = () => {
   );
 };
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   safeAreaView: {
     flex: 1,
     gap: 20,
     paddingHorizontal: 20,
-    backgroundColor: '#FDF9F6',
+    backgroundColor: theme.colors.white,
   },
   logo: {
     alignItems: 'center',

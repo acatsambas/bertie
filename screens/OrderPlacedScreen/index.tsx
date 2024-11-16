@@ -1,57 +1,57 @@
-import React from 'react';
-import { View } from 'react-native';
-import { RouteProp, useRoute } from '@react-navigation/native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useTranslation } from 'react-i18next';
-
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { makeStyles } from '@rneui/themed';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { OrderNavigatorParamList } from '../../navigation/AppStack/params';
-import { translations } from '../../locales/translations';
-import Text from '../../components/Text';
 import Button from '../../components/Button';
-import { sendEmailToBookshop } from '../../api/app/sendEmailToBookshop';
+import Text from '../../components/Text';
+import { translations } from '../../locales/translations';
+import { OrderNavigatorParamList } from '../../navigation/AppStack/params';
 
 const OrderPlacedScreen = () => {
-  sendEmailToBookshop(
-    'test',
-    'test',
-    'test',
-    'test',
-    'test',
-    'cristianm.manolescu96@gmail.com',
-  );
   const styles = useStyles();
   const { t } = useTranslation();
   const { params } =
     useRoute<RouteProp<OrderNavigatorParamList, 'OrderPlaced'>>();
   const { bookshopName } = params;
+  const navigation = useNavigation<any>();
+
+  const handlePressDone = () => {
+    navigation.replace('LibraryNavigator', {
+      screen: 'Library',
+    });
+  };
+
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <View style={styles.container}>
         <Text text={t(translations.order.allDone)} kind="bigHeader" />
         <Text
-          text={
-            t(translations.order.sent) +
-            ` ${bookshopName} ` +
-            t(translations.order.sent2)
-          }
+          text={t(translations.order.sent, {
+            bookshopName: bookshopName || t(translations.order.bookshop),
+          })}
           kind="paragraph"
         />
         <Text text={t(translations.order.relax)} kind="paragraph" />
       </View>
       <View style={styles.bottomArea}>
-        <Button kind="primary" text={t(translations.order.done)} />
+        <Button
+          kind="primary"
+          text={t(translations.order.done)}
+          onPress={handlePressDone}
+        />
       </View>
     </SafeAreaView>
   );
 };
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   safeAreaView: {
     flex: 1,
     paddingHorizontal: 20,
-    backgroundColor: '#FDF9F6',
+    backgroundColor: theme.colors.white,
   },
   container: { paddingTop: 20, gap: 20 },
   bottomArea: {

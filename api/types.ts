@@ -7,8 +7,18 @@ export function isFirebaseError(error: unknown): error is FirebaseError {
 }
 
 export interface UserData {
-  givenName: string;
-  familyName: string;
-  email: string;
   documentId: string;
+  email: string;
+  familyName: string;
+  givenName: string;
+  isFirstSearch?: boolean;
+  favouriteShop?: string;
+  address?: {
+    // TODO: make those required...
+    firstLine?: string;
+    secondLine?: string;
+    city?: string;
+    postcode?: string;
+    country?: string;
+  };
 }

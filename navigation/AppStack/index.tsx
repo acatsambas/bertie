@@ -1,12 +1,5 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useTranslation } from 'react-i18next';
-import {
-  AppNavigatorParamList,
-  DiscoverNavigatorParamList,
-  LibraryNavigatorParamList,
-  OrderNavigatorParamList,
-  SettingsNavigatorParamList,
-} from './params';
 
 import { translations } from '../../locales/translations';
 import AddressScreen from '../../screens/AddressScreen';
@@ -21,6 +14,13 @@ import OrderShopScreen from '../../screens/OrderShopScreen';
 import ResetScreen from '../../screens/ResetScreen';
 import SearchBookScreen from '../../screens/SearchBookScreen';
 import SettingsScreen from '../../screens/SettingsScreen';
+import {
+  AppNavigatorParamList,
+  DiscoverNavigatorParamList,
+  LibraryNavigatorParamList,
+  OrderNavigatorParamList,
+  SettingsNavigatorParamList,
+} from './params';
 
 export const AppStack = createNativeStackNavigator<AppNavigatorParamList>();
 

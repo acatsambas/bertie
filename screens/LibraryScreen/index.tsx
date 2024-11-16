@@ -1,18 +1,17 @@
-import { ScrollView, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useTranslation } from 'react-i18next';
-
 import { makeStyles } from '@rneui/themed';
+import { useTranslation } from 'react-i18next';
+import { ScrollView, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { AppNavigatorParamList } from '../../navigation/AppStack/params';
-import { translations } from '../../locales/translations';
-import BottomMenu from '../../components/BottomMenu';
-import Text from '../../components/Text';
 import Avatar from '../../components/Avatar';
+import BottomMenu from '../../components/BottomMenu';
 import CurrentBooks from '../../components/CurrentBooks';
 import PastBooks from '../../components/PastBooks';
+import Text from '../../components/Text';
+import { translations } from '../../locales/translations';
+import { AppNavigatorParamList } from '../../navigation/AppStack/params';
 
 export interface LibraryScreenProps
   extends StackNavigationProp<AppNavigatorParamList, 'LibraryNavigator'> {}
@@ -46,11 +45,11 @@ const LibraryScreen = () => {
   );
 };
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   safeAreaView: {
     flex: 1,
     paddingHorizontal: 20,
-    backgroundColor: '#FDF9F6',
+    backgroundColor: theme.colors.white,
     position: 'relative',
   },
   container: { paddingTop: 20, gap: 20 },

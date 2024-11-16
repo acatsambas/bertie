@@ -1,20 +1,18 @@
-import { useState } from 'react';
-import { View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { makeStyles, Tab } from '@rneui/themed';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { makeStyles } from '@rneui/themed';
-import { Tab } from '@rneui/themed';
-
-import { AppNavigatorParamList } from '../../navigation/AppStack/params';
-import { translations } from '../../locales/translations';
-import Text from '../../components/Text';
-import BottomMenu from '../../components/BottomMenu';
 import Avatar from '../../components/Avatar';
-import BookshopsList from '../../components/BookshopsList'; // Assuming you have a BookshopsList component
-import DiscoverRecommendedBooks from '../../components/DiscoverRecommendedBooks'; // Importing DiscoverRecommendedBooks
+import BookshopsList from '../../components/BookshopsList';
+import BottomMenu from '../../components/BottomMenu';
+import DiscoverRecommendedBooks from '../../components/DiscoverRecommendedBooks';
+import Text from '../../components/Text';
+import { translations } from '../../locales/translations';
+import { AppNavigatorParamList } from '../../navigation/AppStack/params';
 
 export interface DiscoverScreenProps
   extends StackNavigationProp<AppNavigatorParamList, 'DiscoverNavigator'> {}
@@ -75,11 +73,11 @@ const DiscoverScreen = () => {
   );
 };
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   safeAreaView: {
     flex: 1,
     paddingHorizontal: 20,
-    backgroundColor: '#FDF9F6',
+    backgroundColor: theme.colors.white,
     position: 'relative',
   },
   container: { paddingTop: 20, gap: 20 },

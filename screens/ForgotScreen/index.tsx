@@ -1,19 +1,18 @@
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { View } from 'react-native';
-import { useTranslation } from 'react-i18next';
-import { useContext, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-
 import { makeStyles } from '@rneui/themed';
+import React, { useContext, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AuthContext } from '../../api/auth/AuthProvider';
-import { AuthNavigatorParamList } from '../../navigation/AuthStack/params';
-import { translations } from '../../locales/translations';
+import Button from '../../components/Button';
+import Input from '../../components/Input';
 import Logo from '../../components/Logo';
 import Text from '../../components/Text';
-import Input from '../../components/Input';
-import Button from '../../components/Button';
+import { translations } from '../../locales/translations';
+import { AuthNavigatorParamList } from '../../navigation/AuthStack/params';
 
 export interface ForgotPageProps
   extends StackNavigationProp<AuthNavigatorParamList, 'Forgot'> {}
@@ -64,6 +63,11 @@ const ForgotScreen = () => {
               kind="email"
               icon="email"
               onChangeText={handleInputEmail}
+              value={email}
+              keyboardType="email-address"
+              textContentType="emailAddress"
+              autoCapitalize="none"
+              autoCorrect={false}
             />
             {error && (
               <View style={styles.error}>
@@ -94,12 +98,12 @@ const ForgotScreen = () => {
   );
 };
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   safeAreaView: {
     flex: 1,
     gap: 20,
     paddingHorizontal: 20,
-    backgroundColor: '#FDF9F6',
+    backgroundColor: theme.colors.white,
   },
   logo: {
     alignItems: 'center',

@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
 import { Image as RNEImage } from '@rneui/themed';
+import React from 'react';
+
 import DefaultImage from './assets/default.png';
-import Text from '../Text';
 
 //TODO: Adapt to data coming from API
 

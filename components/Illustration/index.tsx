@@ -1,9 +1,8 @@
-// import { Image } from "@rneui/themed";
-import { Image } from 'react-native';
 import { makeStyles } from '@rneui/themed';
+import { Image } from 'react-native';
 
-import WelcomeIllustration from './assets/welcome.png';
 import DefaultIllustration from './assets/default.png';
+import WelcomeIllustration from './assets/welcome.png';
 
 const illustrations = {
   welcome: WelcomeIllustration,

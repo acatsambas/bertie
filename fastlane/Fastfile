@@ -76,9 +76,14 @@ platform :android do
     upload_to_play_store(
       version_name: "#{google_play_track_version_codes(track: "internal").max + 1} (#{package["version"]})",
       track: "internal",
-      release_status: "completed",
+      release_status: "draft",
       skip_upload_apk: true,
-      json_key: ENV["ANDROID_BERTIE_JSON_KEY"]
+      json_key: "./fastlane/bertie-74d8c-e01b7dfc401f.json"
+    )
+
+    increment_version_code(
+      gradle_file_path: "./android/app/build.gradle",
+      version_code: 1
     )
   end
 end

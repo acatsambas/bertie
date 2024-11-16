@@ -1,88 +1,133 @@
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+import { useEffect, useState } from 'react';
 
-export const fetchUserBooks = async () => {
-  const userBooksSnapshot = await firestore()
-    ?.collection('users')
-    ?.doc(auth().currentUser?.uid)
-    ?.collection('books')
-    .get();
-  const booksList = userBooksSnapshot.docs.map(doc => ({
-    id: doc.id,
-    ...doc.data(),
-  }));
-  return booksList;
-};
+import { BookResult } from '../google-books/search';
+import { UserData } from '../types';
+import { Shop, UserBook, UserShop } from './types';
 
-export const fetchBookshops = async () => {
-  try {
-    const bookShopsSnapshot = await firestore()?.collection('shops').get();
-    const bookShopsList = bookShopsSnapshot?.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    return bookShopsList;
-  } catch (error) {
-    console.log(error);
-  }
-};
+export const useShops = () => {
+  const [shops, setShops] = useState<Shop[]>([]);
 
-export const fetchUserBookShops = async () => {
-  const shopsSnapshot = await firestore()
-    ?.collection('users')
-    ?.doc(auth().currentUser?.uid)
-    ?.collection('bookstores')
-    .get();
-  const bookShopsList = shopsSnapshot.docs.map(doc => ({
-    id: doc.id,
-    ...doc.data(),
-  }));
-  return bookShopsList;
-};
-
-export const fetchUserAddress = async () => {
-  const usrSnapshop = await firestore()
-    ?.collection('Address')
-    ?.doc(auth().currentUser?.uid)
-    .get();
-
-  return usrSnapshop;
-};
-
-export const updateBookRead = (bookId: string, isRead: boolean) => {
-  return firestore()
-    .collection('users')
-    .doc(auth().currentUser?.uid)
-    .collection('books')
-    .doc(bookId)
-    .set(
-      {
-        isRead: !isRead,
-      },
-      { merge: true },
-    );
-};
-
-export const pickFavoriteShop = (shopId: string) => {
-  return firestore()?.collection('users')?.doc(auth().currentUser?.uid)?.set(
-    {
-      pickedShopId: shopId,
-    },
-    { merge: true },
+  useEffect(
+    () =>
+      firestore()
+        ?.collection('shops')
+        .onSnapshot(snapshot => {
+          setShops(
+            snapshot.docs.map(
+              doc =>
+                ({
+                  id: doc.id,
+                  ...doc.data(),
+                }) as Shop,
+            ),
+          );
+        }),
+    [],
   );
+
+  return shops;
 };
 
-export const getPickedFavoriteShop = async () => {
-  const userDoc = await firestore()
-    ?.collection('users')
-    ?.doc(auth().currentUser?.uid)
-    ?.get();
+export const useFavouriteShops = () => {
+  const [favouriteShops, setFavouriteShops] = useState<UserShop[]>([]);
 
-  const pickedShopId = userDoc.data()?.pickedShopId;
-  return pickedShopId;
+  useEffect(
+    () =>
+      firestore()
+        ?.collection('users')
+        ?.doc(auth().currentUser?.uid)
+        ?.collection('favouriteShops')
+        .onSnapshot(snapshot => {
+          setFavouriteShops(
+            snapshot.docs.map(
+              doc =>
+                ({
+                  id: doc.id,
+                  ...doc.data(),
+                }) as (typeof favouriteShops)[number],
+            ),
+          );
+        }),
+    [],
+  );
+
+  return favouriteShops;
 };
 
-export const getBookshopNameById = (id: string, bookshops: any[]) => {
-  const bookshop = bookshops.find(shop => shop.id === id);
-  return bookshop ? bookshop?.name : null;
+export const useUser = () => {
+  const [user, setUser] = useState<UserData | undefined>();
+
+  useEffect(
+    () =>
+      firestore()
+        ?.collection('users')
+        .doc(auth().currentUser?.uid)
+        .onSnapshot(snapshot => {
+          setUser(snapshot.data() as UserData);
+        }),
+    [],
+  );
+
+  return user;
+};
+
+export const useUserBooks = ({ withRefs }: { withRefs?: boolean } = {}) => {
+  const [userBooks, setUserBooks] = useState<
+    UserBook[] | (UserBook & BookResult)[]
+  >([]);
+
+  useEffect(
+    () =>
+      firestore()
+        ?.collection('users')
+        ?.doc(auth().currentUser?.uid)
+        ?.collection('books')
+        .onSnapshot(async snapshot => {
+          setUserBooks(
+            await Promise.all(
+              snapshot.docs
+                .map(book => ({
+                  id: book.id,
+                  ...(book.data() as UserBook),
+                }))
+                .map(async book => ({
+                  ...book,
+                  ...(withRefs
+                    ? ((await book.bookRef.get()).data() as any)
+                    : {}),
+                })),
+            ),
+          );
+        }),
+    [withRefs],
+  );
+
+  return userBooks as (UserBook & BookResult)[];
+};
+
+export const useBooks = ({ ids }: { ids: string[] } = { ids: [] }) => {
+  const [books, setBooks] = useState<BookResult[]>([]);
+
+  useEffect(
+    () =>
+      firestore()
+        ?.collection('books')
+        .where(firestore.FieldPath.documentId(), 'in', ids)
+        .onSnapshot(snapshot => {
+          setBooks(
+            snapshot.docs.map(
+              doc =>
+                ({
+                  id: doc.id,
+                  ...doc.data(),
+                }) as BookResult,
+            ),
+          );
+        }),
+    [ids],
+  );
+
+  return books;
 };
