@@ -1,37 +1,33 @@
+import { makeStyles } from '@rneui/themed';
 import { View } from 'react-native';
 
-import { makeStyles } from '@rneui/themed';
-
-import { BookType } from '../../navigation/AppStack/params';
+import { UserBook } from '../../api/app/types';
+import { BookResult } from '../../api/google-books/search';
 import Book from '../Book';
 
 interface OrderBooksListProps {
-  books: BookType[];
+  books: (BookResult & Pick<UserBook, 'isRead'>)[];
   setBooks: React.Dispatch<React.SetStateAction<any[]>>;
 }
 
 const OrderBooksList = ({ books, setBooks }: OrderBooksListProps) => {
+  const styles = useStyles();
+
   const handleRemoveBook = (bookId: string) => {
-    const updatedBooks = books.filter(book => book.id !== bookId);
-    setBooks(updatedBooks);
+    setBooks(books.filter(book => book.id !== bookId));
   };
 
-  const styles = useStyles();
   return (
     <View style={styles.container}>
-      {books.map(
-        book =>
-          book.isRead === false && (
-            <Book
-              key={book.id}
-              title={book.title}
-              author={book.author}
-              kind="order"
-              isChecked={book.isRead}
-              onChange={() => handleRemoveBook(book.id)}
-            />
-          ),
-      )}
+      {books.map(book => (
+        <Book
+          key={book.id}
+          title={book.volumeInfo.title}
+          author={book.volumeInfo.authors?.join(', ')}
+          kind="order"
+          onChange={() => handleRemoveBook(book.id)}
+        />
+      ))}
     </View>
   );
 };

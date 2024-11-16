@@ -1,64 +1,61 @@
-import { useContext, useEffect, useState } from 'react';
-import { RouteProp, useRoute } from '@react-navigation/native';
-import { View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useTranslation } from 'react-i18next';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
 import firestore from '@react-native-firebase/firestore';
-import RenderHtml from 'react-native-render-html';
-
+import { RouteProp, useRoute } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import { makeStyles } from '@rneui/themed';
+import { useContext, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { View } from 'react-native';
+import RenderHtml from 'react-native-render-html';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { DiscoverNavigatorParamList } from '../../navigation/AppStack/params';
-import { translations } from '../../locales/translations';
+import { useFavouriteShops } from '../../api/app/hooks';
 import { AuthContext } from '../../api/auth/AuthProvider';
-import Text from '../../components/Text';
 import Button from '../../components/Button';
 import GoogleMaps from '../../components/GoogleMaps';
+import Text from '../../components/Text';
+import { translations } from '../../locales/translations';
+import { DiscoverNavigatorParamList } from '../../navigation/AppStack/params';
 
 export interface BookshopPageProps
   extends StackNavigationProp<DiscoverNavigatorParamList, 'Bookshop'> {}
 
 const BookshopScreen = ({ navigation }) => {
-  const [isFav, setIsFav] = useState(false);
-  useEffect(() => {
-    fetchBook();
-  }, []);
-  const fetchBook = async () => {
-    const bookData = await firestore()
-      .collection('users')
-      .doc(userId)
-      .collection('bookstores')
-      .doc(zipcode)
-      .get();
-
-    setIsFav(bookData?.data()?.isFav);
-  };
-
+  const {
+    params: {
+      shop: { id, address, city, name, zipcode, description },
+    },
+  } = useRoute<RouteProp<DiscoverNavigatorParamList, 'Bookshop'>>();
   const { user } = useContext(AuthContext);
-  const userId = user.uid;
-
-  const { params } =
-    useRoute<RouteProp<DiscoverNavigatorParamList, 'Bookshop'>>();
-  const { address, city, name, zipcode, description } = params;
+  const favouriteShops = useFavouriteShops();
+  const isFavourite = useMemo(
+    () => favouriteShops.find(shop => shop.id === id),
+    [favouriteShops, id],
+  );
 
   const styles = useStyles();
   const { t } = useTranslation();
-  const { navigate } = useNavigation<BookshopPageProps>();
 
-  const handleFavourites = async () => {
-    try {
+  const handlePressFavourite = async () => {
+    if (isFavourite) {
       await firestore()
         .collection('users')
-        .doc(userId)
-        .collection('bookstores')
-        .doc(zipcode)
-        .set({ name: name, isFav: !isFav, city: city }, { merge: true });
-      setIsFav(!isFav);
-    } catch (error) {
-      console.log(error);
+        .doc(user.uid)
+        .collection('favouriteShops')
+        .doc(id)
+        .delete();
+
+      return;
     }
+
+    const docCreate = firestore()
+      .collection('users')
+      .doc(user.uid)
+      .collection('favouriteShops')
+      .doc(id);
+
+    await docCreate.set({
+      shopRef: firestore().collection('shops').doc(id),
+    });
   };
 
   const handleBack = () => {
@@ -79,11 +76,11 @@ const BookshopScreen = ({ navigation }) => {
         <Button
           kind="primary"
           text={
-            !isFav
+            !isFavourite
               ? t(translations.discover.add)
               : t(translations.discover.remove)
           }
-          onPress={handleFavourites}
+          onPress={handlePressFavourite}
         />
         <Button
           kind="tertiary"
@@ -95,11 +92,11 @@ const BookshopScreen = ({ navigation }) => {
   );
 };
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   safeAreaView: {
     flex: 1,
     paddingHorizontal: 20,
-    backgroundColor: '#FDF9F6',
+    backgroundColor: theme.colors.white,
   },
   container: { paddingTop: 20, gap: 20 },
 }));

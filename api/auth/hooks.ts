@@ -16,8 +16,8 @@ export const updateUserProfile = async (userProfile: Partial<UserData>) =>
       { merge: true },
     );
 
-export const createUser = (userProfile: Partial<UserData>) => {
-  return firestore()
+export const createUser = (userProfile: Partial<UserData>) =>
+  firestore()
     .collection('users')
     .doc(auth().currentUser?.uid)
     .set(
@@ -28,4 +28,3 @@ export const createUser = (userProfile: Partial<UserData>) => {
       } as UserData,
       { merge: true },
     );
-};

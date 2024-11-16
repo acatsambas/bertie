@@ -1,5 +1,5 @@
 # Google
-json_key_file("./fastlane/bertie-434108-5fd4928195d9.json")
+json_key_file("./fastlane/bertie-74d8c-e01b7dfc401f.json")
 package_name("com.bertieapp.app")
 
 # Apple

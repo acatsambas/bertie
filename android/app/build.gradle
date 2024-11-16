@@ -116,6 +116,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0.5"
+        manifestPlaceholders = [appAuthRedirectScheme: 'com.bertieapp.app']
     }
     signingConfigs {
         debug {

@@ -1,8 +1,8 @@
 import './locales/i18n';
 
 import { ThemeProvider, createTheme } from '@rneui/themed';
-import { AuthProvider } from './api/auth/AuthProvider';
 
+import { AuthProvider } from './api/auth/AuthProvider';
 import { initFirebase } from './api/firebase';
 import Routes from './navigation/Routes';
 import { FontsProvider } from './styles/FontsProvider';

@@ -1,71 +1,63 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { ScrollView, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useTranslation } from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import firestore from '@react-native-firebase/firestore';
-
 import { makeStyles } from '@rneui/themed';
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { ScrollView, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { useUserBooks } from '../../api/app/hooks';
+import BottomMenu from '../../components/BottomMenu';
+import Button from '../../components/Button';
+import OrderBooksList from '../../components/OrderBooksList';
+import Text from '../../components/Text';
 import { translations } from '../../locales/translations';
 import { OrderNavigatorParamList } from '../../navigation/AppStack/params';
-import { AuthContext } from '../../api/auth/AuthProvider';
-import BottomMenu from '../../components/BottomMenu';
-import Text from '../../components/Text';
-import OrderBooksList from '../../components/OrderBooksList';
-import Button from '../../components/Button';
 
 export interface OrderPageProps
   extends StackNavigationProp<OrderNavigatorParamList, 'Order'> {}
 
 const OrderScreen = () => {
-  const [books, setBooks] = useState([]);
   const styles = useStyles();
   const { t } = useTranslation();
   const { navigate } = useNavigation<OrderPageProps>();
-  const { user } = useContext(AuthContext);
-  const userId = user.uid;
+  const books = useUserBooks({ withRefs: true });
+  const [localBooks, setLocalBooks] = useState(books);
+  const [componentIsMounted, setComponentIsMounted] = useState(false);
 
   useEffect(() => {
-    fetchBooks();
-  }, []);
+    if (books.length && componentIsMounted) {
+      setLocalBooks(books.filter(({ isRead }) => !isRead));
+    }
 
-  const fetchBooks = async () => {
-    const userBooksSnapshot = await firestore()
-      .collection('users')
-      .doc(userId)
-      .collection('books')
-      .get();
-    const booksList = userBooksSnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    setBooks(booksList);
-  };
+    setComponentIsMounted(true);
+  }, [books, componentIsMounted]);
 
   const handleNext = () => {
-    navigate('OrderShop', books);
+    navigate('OrderShop', {
+      books: localBooks,
+    });
   };
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <ScrollView contentContainerStyle={styles.container}>
         <Text text={t(translations.order.title)} kind="bigHeader" />
-        {books.length > 0 ? (
-          <Text text={t(translations.order.header)} kind="header" />
+
+        {localBooks.length > 0 ? (
+          <>
+            <Text text={t(translations.order.header)} kind="header" />
+            <OrderBooksList books={localBooks} setBooks={setLocalBooks} />
+            <Text text={t(translations.order.details)} kind="header" />
+          </>
         ) : (
-          <Text text={t(translations.order.headerNoBooks)} kind="header" />
+          <>
+            <Text text={t(translations.order.headerNoBooks)} kind="header" />
+            <Text text={t(translations.order.suggestions)} kind="paragraph" />
+          </>
         )}
-        {books.length > 0 && (
-          <OrderBooksList books={books} setBooks={setBooks} />
-        )}
-        {books.length > 0 ? (
-          <Text text={t(translations.order.details)} kind="header" />
-        ) : (
-          <Text text={t(translations.order.suggestions)} kind="paragraph" />
-        )}
-        {books.length > 0 && (
+
+        {localBooks.length > 0 && (
           <>
             <View>
               <Text text={`\u2022 First Name`} kind="description" />
@@ -88,11 +80,11 @@ const OrderScreen = () => {
   );
 };
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   safeAreaView: {
     flex: 1,
     paddingHorizontal: 20,
-    backgroundColor: '#FDF9F6',
+    backgroundColor: theme.colors.white,
   },
   container: {
     paddingTop: 20,

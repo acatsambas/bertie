@@ -1,8 +1,7 @@
-import { View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-
 import { makeStyles } from '@rneui/themed';
+import { View } from 'react-native';
 
 import { AppNavigatorParamList } from '../../navigation/AppStack/params';
 import { menuItems } from '../../utils/data';
@@ -28,14 +27,14 @@ const BottomMenu = () => {
   );
 };
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   bottomMenu: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
     gap: 60,
     width: '100%',
-    backgroundColor: '#FDF9F6',
+    backgroundColor: theme.colors.white,
     paddingVertical: 25,
   },
 }));

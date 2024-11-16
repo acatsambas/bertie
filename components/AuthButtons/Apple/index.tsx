@@ -1,7 +1,6 @@
-import { useContext } from 'react';
-
 import { makeStyles } from '@rneui/themed';
 import * as AppleAuthentication from 'expo-apple-authentication';
+import { useContext } from 'react';
 
 import { AuthContext } from '../../../api/auth/AuthProvider';
 import { isFirebaseError } from '../../../api/types';
@@ -16,7 +15,7 @@ const AppleSigninButton = () => {
       await appleLogin();
     } catch (error) {
       if (isFirebaseError(error)) {
-        console.log(error);
+        console.error(error);
       }
     }
   };

@@ -1,18 +1,18 @@
-import { useContext, useEffect, useState } from 'react';
-import { View, TouchableOpacity } from 'react-native';
-import { useTranslation } from 'react-i18next';
+import firestore from '@react-native-firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import firestore from '@react-native-firebase/firestore';
-
 import { makeStyles } from '@rneui/themed';
+import { useContext } from 'react';
+import { useTranslation } from 'react-i18next';
+import { TouchableOpacity, View } from 'react-native';
 
-import { LibraryNavigatorParamList } from '../../navigation/AppStack/params';
-import { translations } from '../../locales/translations';
+import { useUserBooks } from '../../api/app/hooks';
 import { AuthContext } from '../../api/auth/AuthProvider';
-import Text from '../Text';
+import { translations } from '../../locales/translations';
+import { LibraryNavigatorParamList } from '../../navigation/AppStack/params';
 import Book from '../Book';
 import Icon from '../Icon';
+import Text from '../Text';
 
 type BookListProps = { kind: 'current' | 'past' };
 
@@ -20,36 +20,15 @@ export interface LibraryPageProps
   extends StackNavigationProp<LibraryNavigatorParamList, 'Library'> {}
 
 const CurrentBooks = ({ kind }: BookListProps) => {
-  const [books, setBooks] = useState([]);
-  useEffect(() => {
-    fetchBooks();
-  }, [books]);
-
-  const fetchBooks = async () => {
-    const userBooksSnapshot = await firestore()
-      .collection('users')
-      .doc(userId)
-      .collection('books')
-      .get();
-
-    const booksList = userBooksSnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    setBooks(booksList);
-  };
   const styles = useStyles();
   const { t } = useTranslation();
   const { navigate } = useNavigation<LibraryPageProps>();
-
   const { user } = useContext(AuthContext);
-  const userId = user.uid;
+  const books = useUserBooks({ withRefs: true });
 
-  const handleBook = (bookName: string, author: string, isMyList: boolean) => {
+  const handleBook = (book: (typeof books)[number]) => {
     navigate('Book', {
-      bookName: bookName,
-      author: author,
-      isMyList: isMyList,
+      book,
     });
   };
 
@@ -57,17 +36,14 @@ const CurrentBooks = ({ kind }: BookListProps) => {
     try {
       await firestore()
         .collection('users')
-        .doc(userId)
+        .doc(user.uid)
         .collection('books')
         .doc(bookId)
-        .set(
-          {
-            isRead: !isRead,
-          },
-          { merge: true },
-        );
+        .update({
+          isRead: !isRead,
+        });
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -102,11 +78,11 @@ const CurrentBooks = ({ kind }: BookListProps) => {
           book.isRead === false && kind === 'current' ? (
             <Book
               key={book.id}
-              title={book.title}
-              author={book.author}
+              title={book.volumeInfo.title}
+              author={book.volumeInfo.authors?.join(', ')}
               kind="library"
               isChecked={book.isRead}
-              onPress={() => handleBook(book.title, book.author, true)}
+              onPress={() => handleBook(book)}
               onChange={() => handleRead(book.id, book.isRead)}
             />
           ) : (
@@ -114,11 +90,11 @@ const CurrentBooks = ({ kind }: BookListProps) => {
             kind === 'past' && (
               <Book
                 key={book.id}
-                title={book.title}
-                author={book.author}
+                title={book.volumeInfo.title}
+                author={book.volumeInfo.authors?.join(', ')}
                 kind="library"
                 isChecked={book.isRead}
-                onPress={() => handleBook(book.title, book.author, true)}
+                onPress={() => handleBook(book)}
                 onChange={() => handleRead(book.id, book.isRead)}
               />
             )

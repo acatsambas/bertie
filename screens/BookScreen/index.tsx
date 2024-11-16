@@ -1,119 +1,70 @@
-import { useContext, useEffect, useState } from 'react';
-import { RouteProp, useRoute } from '@react-navigation/native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useTranslation } from 'react-i18next';
-import { View, ScrollView } from 'react-native';
-import RenderHtml from 'react-native-render-html';
 import firestore from '@react-native-firebase/firestore';
-
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { makeStyles } from '@rneui/themed';
+import React, { useContext } from 'react';
+import { useTranslation } from 'react-i18next';
+import { ScrollView, View } from 'react-native';
+import RenderHtml from 'react-native-render-html';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { useUserBooks } from '../../api/app/hooks';
+import { AuthContext } from '../../api/auth/AuthProvider';
+import Button from '../../components/Button';
+import Text from '../../components/Text';
 import { translations } from '../../locales/translations';
 import { LibraryNavigatorParamList } from '../../navigation/AppStack/params';
-import { AuthContext } from '../../api/auth/AuthProvider';
-import Text from '../../components/Text';
-import Button from '../../components/Button';
 
-const BookScreen = ({ navigation }) => {
-  const [description, setDescription] = useState('');
-  const [myList, setMyList] = useState(false);
-
+const BookScreen = () => {
   const { params } = useRoute<RouteProp<LibraryNavigatorParamList, 'Book'>>();
   const styles = useStyles();
   const { t } = useTranslation();
+  const { goBack } = useNavigation();
+  const userBooks = useUserBooks();
   const { user } = useContext(AuthContext);
-  const userId = user.uid;
-  const { bookName, author, id } = params;
 
-  useEffect(() => {
-    fetchBookData();
-  }, []);
-
-  const fetchData = async () => {
-    const data = await fetch(
-      `https://www.googleapis.com/books/v1/volumes/${id}?key=${process.env.EXPO_PUBLIC_BOOKS_API_KEY}`,
-    );
-    const json = await data.json();
-
-    json?.volumeInfo?.description
-      ? setDescription(json?.volumeInfo?.description)
-      : setDescription("This edition doesn't have a description yet.");
-  };
-
-  const fetchBookData = async () => {
-    const bookData = await firestore()
+  const handlePressBook = async () => {
+    const bookRef = firestore()
       .collection('users')
-      .doc(userId)
+      .doc(user.uid)
       .collection('books')
-      .doc(id)
-      .get();
+      .doc(params.book.id);
 
-    bookData?.data()?.description
-      ? setDescription(bookData.data().description)
-      : fetchData();
-
-    setMyList(bookData.exists);
-  };
-
-  const handleAddBook = async (
-    author: string,
-    id: string,
-    bookName: string,
-    description: string,
-  ) => {
-    await firestore()
-      .collection('users')
-      .doc(userId)
-      .collection('books')
-      .doc(id)
-      .set(
-        {
-          author: author,
-          bookId: id,
-          isRead: false,
-          title: bookName,
-          description: description,
-        },
-        { merge: true },
-      );
-    fetchBookData();
-  };
-
-  const handleRemoveBook = async (id: string) => {
-    await firestore()
-      .collection('users')
-      .doc(userId)
-      .collection('books')
-      .doc(id)
-      .delete();
-    fetchBookData();
-  };
-
-  const handleBack = () => {
-    navigation.goBack();
+    if ((await bookRef.get()).exists) {
+      bookRef.delete();
+    } else {
+      bookRef.set({
+        bookRef: firestore().collection('books').doc(params.book.id),
+      });
+    }
   };
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <ScrollView contentContainerStyle={styles.container}>
         <View>
-          <Text kind="bigHeader" text={bookName} />
-          <Text kind="paragraph" text={author} />
+          <Text kind="bigHeader" text={params.book.volumeInfo.title} />
+          <Text
+            kind="paragraph"
+            text={params.book.volumeInfo.authors?.join(', ')}
+          />
         </View>
-        <RenderHtml source={{ html: description }} contentWidth={0} />
+        <RenderHtml
+          source={{ html: params.book.volumeInfo.description }}
+          contentWidth={0}
+        />
       </ScrollView>
       <View style={styles.buttonContainer}>
-        {!myList ? (
+        {!userBooks.some(book => book.id === params.book.id) ? (
           <>
             <Button
               kind="primary"
               text={t(translations.library.add)}
-              onPress={() => handleAddBook(author, id, bookName, description)}
+              onPress={() => handlePressBook()}
             />
             <Button
               kind="tertiary"
               text={t(translations.library.back)}
-              onPress={handleBack}
+              onPress={() => goBack()}
             />
           </>
         ) : (
@@ -121,12 +72,12 @@ const BookScreen = ({ navigation }) => {
             <Button
               kind="primary"
               text={t(translations.library.back)}
-              onPress={handleBack}
+              onPress={() => goBack()}
             />
             <Button
               kind="tertiary"
               text={t(translations.library.remove)}
-              onPress={() => handleRemoveBook(id)}
+              onPress={() => handlePressBook()}
             />
           </>
         )}
@@ -135,11 +86,11 @@ const BookScreen = ({ navigation }) => {
   );
 };
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   safeAreaView: {
     flex: 1,
     paddingHorizontal: 20,
-    backgroundColor: '#FDF9F6',
+    backgroundColor: theme.colors.white,
   },
   container: { paddingTop: 20, gap: 20 },
   buttonContainer: {

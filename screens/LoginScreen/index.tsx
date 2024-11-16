@@ -1,22 +1,19 @@
-import { useContext, useState } from 'react';
-
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { makeStyles } from '@rneui/themed';
+import { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AuthContext } from '../../api/auth/AuthProvider';
 import { isFirebaseError } from '../../api/types';
-import { translations } from '../../locales/translations';
-import { AuthNavigatorParamList } from '../../navigation/AuthStack/params';
-
-import { makeStyles } from '@rneui/themed';
-
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Logo from '../../components/Logo';
 import Text from '../../components/Text';
+import { translations } from '../../locales/translations';
+import { AuthNavigatorParamList } from '../../navigation/AuthStack/params';
 
 export interface LoginPageProps
   extends StackNavigationProp<AuthNavigatorParamList, 'Login'> {}
@@ -51,9 +48,9 @@ const LoginScreen = () => {
     try {
       await login(email, password);
     } catch (error) {
-      //TODO: handle error
+      // TODO: handle error
       if (isFirebaseError(error)) {
-        console.log('ERROR');
+        console.error(error);
       }
     }
   };
@@ -75,6 +72,7 @@ const LoginScreen = () => {
             textContentType="emailAddress"
             autoCapitalize="none"
             autoCorrect={false}
+            value={email}
           />
           <Input
             placeholder={t(translations.login.password)}
@@ -82,6 +80,7 @@ const LoginScreen = () => {
             icon="password"
             onChangeText={handleInputPassword}
             textContentType="password"
+            value={password}
           />
           <View style={styles.forgot}>
             <Text
@@ -108,12 +107,12 @@ const LoginScreen = () => {
   );
 };
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   safeAreaView: {
     flex: 1,
     gap: 20,
     paddingHorizontal: 20,
-    backgroundColor: '#FDF9F6',
+    backgroundColor: theme.colors.white,
   },
   logo: {
     alignItems: 'center',

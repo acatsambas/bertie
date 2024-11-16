@@ -1,128 +1,68 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { View } from 'react-native';
+import firestore from '@react-native-firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import firestore from '@react-native-firebase/firestore';
+import React, { useContext } from 'react';
+import { View } from 'react-native';
 
-import { LibraryNavigatorParamList } from '../../navigation/AppStack/params';
+import { useUserBooks } from '../../api/app/hooks';
 import { AuthContext } from '../../api/auth/AuthProvider';
+import { BookResult } from '../../api/google-books/search';
+import { LibraryNavigatorParamList } from '../../navigation/AppStack/params';
 import Book from '../Book';
 
-export interface SearchBookProps
-  extends StackNavigationProp<LibraryNavigatorParamList, 'Search'> {}
+export interface SearchBookProps {
+  books: BookResult[];
+}
 
-const SearchBooks = ({ books }) => {
-  const [isSaved, setIsSaved] = useState(false);
-  const [existingBooks, setExistingBooks] = useState([]);
-  const { navigate } = useNavigation<SearchBookProps>();
+const SearchBooks = ({ books }: SearchBookProps) => {
+  const { navigate } =
+    useNavigation<StackNavigationProp<LibraryNavigatorParamList, 'Search'>>();
   const { user } = useContext(AuthContext);
-  const userId = user.uid;
+  const userBooks = useUserBooks();
 
-  useEffect(() => {
-    handleStoredBooks();
-  }, [books]);
-
-  const handleBook = (id: string, title: string, author: string) => {
+  const handlePressBook = (book: BookResult) => {
     navigate('Book', {
-      id: id,
-      bookName: title,
-      author: author,
+      book,
     });
   };
 
-  const handleAddBook = async (
-    id: string,
-    title: string,
-    author: string,
-    isRead: boolean,
-    description: string,
-  ) => {
-    try {
-      !isSaved
-        ? await firestore()
-            .collection('users')
-            .doc(userId)
-            .collection('books')
-            .doc(id)
-            .set(
-              {
-                author: author,
-                bookId: id,
-                isRead: isRead,
-                title: title,
-                description: description,
-              },
-              { merge: true },
-            )
-        : await firestore()
-            .collection('users')
-            .doc(userId)
-            .collection('books')
-            .doc(id)
-            .delete();
-      setIsSaved(!isSaved);
-    } catch (error) {
-      console.log(error);
+  const handlePressAddBook = async (book: BookResult, isUserBook: boolean) => {
+    await firestore().collection('books').doc(book.id).set(book);
+
+    if (isUserBook) {
+      await firestore()
+        .collection('users')
+        .doc(user?.uid)
+        .collection('books')
+        .doc(book.id)
+        .delete();
+    } else {
+      await firestore()
+        .collection('users')
+        .doc(user?.uid)
+        .collection('books')
+        .doc(book.id)
+        .set({ bookRef: firestore().collection('books').doc(book.id) });
     }
-  };
-
-  const handleStoredBooks = async () => {
-    const booksSnapshop = await firestore()
-      ?.collection('users')
-      ?.doc(userId)
-      ?.collection('books')
-      .get();
-
-    const savedBooks = booksSnapshop.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-
-    setExistingBooks(savedBooks);
   };
 
   return (
     <View>
-      {Object?.keys(books || {})?.length !== 0 &&
-        books.map((book: any) => (
+      {books.map(book => {
+        const isUserBook = !!userBooks.find(({ id }) => id === book?.id);
+
+        return (
           <Book
-            key={book?.id}
-            isChecked={existingBooks.find(
-              existingBook => existingBook?.bookId === book?.id,
-            )}
+            key={book.id}
+            isChecked={isUserBook}
             kind="search"
-            title={book?.volumeInfo?.title}
-            author={
-              book?.volumeInfo?.authors?.length > 1
-                ? book.volumeInfo.authors.map(
-                    (author: string, index: number) =>
-                      (index ? ', ' : '') + author,
-                  )
-                : book?.volumeInfo?.authors
-            }
-            onPress={() =>
-              handleBook(
-                book?.id,
-                book?.volumeInfo?.title,
-                book?.volumeInfo?.authors?.length > 1
-                  ? book?.author_name?.map(
-                      (author: string, index: number) =>
-                        (index ? ', ' : '') + author,
-                    )
-                  : book?.volumeInfo?.authors,
-              )
-            }
-            onChange={() =>
-              handleAddBook(
-                book?.id,
-                book?.volumeInfo?.title,
-                book?.volumeInfo?.authors,
-                false,
-                book?.volumeInfo?.description,
-              )
-            }
+            title={book.volumeInfo.title}
+            author={book.volumeInfo.authors?.join?.(', ')}
+            onPress={() => handlePressBook(book)}
+            onChange={() => handlePressAddBook(book, isUserBook)}
           />
-        ))}
+        );
+      })}
     </View>
   );
 };

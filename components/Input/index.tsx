@@ -1,12 +1,13 @@
-import { useState } from 'react';
-import { TextInputProps, View } from 'react-native';
 import { Input as RNEInput } from '@rneui/themed';
-import Icon from '../Icon';
+import { TextInputProps } from 'react-native';
+
+import Icon, { IconProps } from '../Icon';
 
 interface InputProps extends TextInputProps {
   placeholder?: string;
   kind?: string;
-  icon?: string;
+  icon?: IconProps['icon'];
+  value: string;
 }
 
 const Input = ({
@@ -16,28 +17,25 @@ const Input = ({
   onChangeText,
   ...inputProps
 }: InputProps) => {
-  const [inputValue, setInputValue] = useState('');
-
   const handleTextChange = (value: string) => {
-    setInputValue(value);
-    onChangeText && onChangeText(value); // Keep calling parent handler
+    onChangeText?.(value);
   };
 
   const clearText = () => {
-    setInputValue('');
-    onChangeText && onChangeText(''); // Notify parent of the cleared value
+    onChangeText?.('');
   };
 
   return (
     <RNEInput
       {...inputProps}
-      value={inputValue}
       onChangeText={handleTextChange}
       placeholder={placeholder}
       secureTextEntry={kind === 'password' ? true : false}
       leftIcon={icon && <Icon icon={icon} />}
       rightIcon={
-        inputValue.length > 0 ? <Icon icon="x" onPress={clearText} /> : null
+        inputProps.value?.length > 0 ? (
+          <Icon icon="x" onPress={clearText} />
+        ) : null
       }
       inputContainerStyle={{
         backgroundColor: kind === 'search' ? '#FDF9F6' : '#EEE9E4',

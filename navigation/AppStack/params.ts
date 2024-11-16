@@ -1,3 +1,6 @@
+import { Shop, UserBook } from '../../api/app/types';
+import { BookResult } from '../../api/google-books/search';
+
 export type SettingsNavigatorParamList = {
   Settings: undefined;
   ChangeAddress: undefined;
@@ -8,50 +11,34 @@ export type SettingsNavigatorParamList = {
 export type LibraryNavigatorParamList = {
   Library: undefined;
   Book: {
-    bookName?: string;
-    author?: string;
-    isMyList?: boolean;
-    id?: string;
-    description?: string;
+    book: BookResult;
   };
   Search: undefined;
 };
 
-export type BookshopType = {
-  id: string;
-  address: string;
-  city: string;
-  country: string;
-  name: string;
-  zipcode: string;
-  description: string;
-  isFav: boolean;
-};
-
 export type DiscoverNavigatorParamList = {
   Discover: undefined;
-  Bookshop: BookshopType;
+  Bookshop: {
+    shop: Shop;
+  };
 };
 
-export type BookType = {
-  author?: string;
-  bookId?: string;
-  id?: string;
-  isRead?: boolean;
-  description?: string;
-  title?: string;
-};
-
-export type OrderPlaceProps = {
+export type OrderPlacedProps = {
   bookshopName?: string;
+};
+
+export type OrderShopProps = {
+  books: (UserBook & BookResult)[];
 };
 
 export type OrderNavigatorParamList = {
   Order: undefined;
-  OrderShop: BookType[];
+  OrderShop: OrderShopProps;
   AddressScreen: undefined;
-  Bookshop: BookshopType;
-  OrderPlaced: OrderPlaceProps;
+  Bookshop: {
+    shop: Shop;
+  };
+  OrderPlaced: OrderPlacedProps;
 };
 
 export type AppNavigatorParamList = {

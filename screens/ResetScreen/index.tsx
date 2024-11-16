@@ -1,14 +1,13 @@
-import React, { useState } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useTranslation } from 'react-i18next';
-
 import { makeStyles } from '@rneui/themed';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { translations } from '../../locales/translations';
 import { View } from 'react-native';
-import Text from '../../components/Text';
-import Input from '../../components/Input';
 import Button from '../../components/Button';
+import Input from '../../components/Input';
+import Text from '../../components/Text';
+import { translations } from '../../locales/translations';
 
 //TODO: Reset password doesn't work
 
@@ -54,12 +53,14 @@ const ResetScreen = () => {
               placeholder={t(translations.reset.placeholder1)}
               kind="password"
               onChangeText={handlePassword}
+              value={password}
             />
             <Text text={t(translations.reset.newPassword)} kind="paragraph" />
             <Input
               placeholder={t(translations.reset.placeholder2)}
               kind="password"
               onChangeText={handleNewPassword}
+              value={newPassword}
             />
             <Text
               text={t(translations.reset.confirmPassword)}
@@ -69,6 +70,7 @@ const ResetScreen = () => {
               placeholder={t(translations.reset.placeholder2)}
               kind="password"
               onChangeText={handleNewPassword2}
+              value={newPassword2}
             />
             {error && (
               <View style={styles.error}>
@@ -99,11 +101,11 @@ const ResetScreen = () => {
   );
 };
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   safeAreaView: {
     flex: 1,
     paddingHorizontal: 20,
-    backgroundColor: '#FDF9F6',
+    backgroundColor: theme.colors.white,
   },
   container: { paddingTop: 20, gap: 20 },
   error: {

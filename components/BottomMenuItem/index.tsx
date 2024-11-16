@@ -1,6 +1,5 @@
-import { TouchableOpacity } from 'react-native';
-
 import { makeStyles } from '@rneui/themed';
+import { TouchableOpacity } from 'react-native';
 
 import Icon, { IconProps } from '../Icon';
 import Text from '../Text';

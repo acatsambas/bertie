@@ -1,10 +1,10 @@
 import React from 'react';
 import { View } from 'react-native';
 
-//TODO: Google maps
+// TODO: Google maps
 
 const GoogleMaps = () => {
-  return <View></View>;
+  return <View />;
 };
 
 export default GoogleMaps;

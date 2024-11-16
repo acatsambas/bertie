@@ -1,12 +1,9 @@
-import { View, TouchableOpacity } from 'react-native';
-import { CheckBox } from '@rneui/themed';
+import { CheckBox, makeStyles } from '@rneui/themed';
 import { useEffect, useState } from 'react';
-import { TouchableOpacityProps } from 'react-native';
+import { TouchableOpacity, TouchableOpacityProps, View } from 'react-native';
 
-import { makeStyles } from '@rneui/themed';
-
-import Text from '../Text';
 import Icon from '../Icon';
+import Text from '../Text';
 
 interface BookProps extends TouchableOpacityProps {
   author: string;
@@ -51,6 +48,7 @@ const Book = ({
       {kind !== 'order' ? (
         <View style={styles.container}>
           <CheckBox
+            disabled={props.disabled}
             containerStyle={{ backgroundColor: 'transparent' }}
             checked={checked}
             onPress={handlePressCheck}
@@ -67,7 +65,11 @@ const Book = ({
             uncheckedColor={kind === 'search' && 'black'}
             {...props}
           />
-          <TouchableOpacity style={styles.content} onPress={onPress}>
+          <TouchableOpacity
+            style={styles.content}
+            onPress={onPress}
+            disabled={props.disabled}
+          >
             <View style={{ width: '90%' }}>
               <Text
                 text={title}

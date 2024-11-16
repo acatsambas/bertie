@@ -16,8 +16,8 @@ gpg --quiet --batch --yes --symmetric --passphrase="$SECRETS_PASSPHRASE" \
 # gpg --quiet --batch --yes --symmetric --passphrase="$SECRETS_PASSPHRASE" \
 #   --output fastlane/AuthKey_6C5352C8R8.p8.gpg fastlane/AuthKey_6C5352C8R8.p8
 
-# gpg --quiet --batch --yes --symmetric --passphrase="$SECRETS_PASSPHRASE" \
-#   --output fastlane/bertie-434108-5fd4928195d9.json.gpg fastlane/bertie-434108-5fd4928195d9.json
+gpg --quiet --batch --yes --symmetric --passphrase="$SECRETS_PASSPHRASE" \
+  --output fastlane/bertie-74d8c-e01b7dfc401f.json.gpg fastlane/bertie-74d8c-e01b7dfc401f.json
 
 # Env
 

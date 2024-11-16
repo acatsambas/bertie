@@ -1,10 +1,9 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { makeStyles } from '@rneui/themed';
 import { useTranslation } from 'react-i18next';
 import { Linking, Platform, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
-import { makeStyles } from '@rneui/themed';
 
 import AppleSigninButton from '../../components/AuthButtons/Apple';
 import GoogleButton from '../../components/AuthButtons/GoogleButton';
@@ -71,13 +70,13 @@ const WelcomeScreen = () => {
   );
 };
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   safeAreaView: {
     flex: 1,
     gap: 20,
     padding: 20,
     justifyContent: 'flex-start',
-    backgroundColor: '#FDF9F6',
+    backgroundColor: theme.colors.white,
   },
   logo: {
     alignItems: 'center',

@@ -110,10 +110,10 @@
     "place": "Place Order",
     "back": "Back",
     "allDone": "All done!",
-    "sent": "We've sent your order to",
-    "sent2": "via email, copying you in.",
+    "sent": "We've sent your order to {{bookshopName}} via email, copying you in.",
     "relax": "They will get in touch to arrange delivery and payment. You just sit back and read a book in the meantime!",
-    "done": "Done"
+    "done": "Done",
+    "bookshop": "the bookshop"
   },
   "delete": {
     "title": "Delete account",

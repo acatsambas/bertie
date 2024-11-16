@@ -962,7 +962,7 @@ PODS:
   - DoubleConversion (1.1.6)
   - EXConstants (16.0.2):
     - ExpoModulesCore
-  - Expo (51.0.38):
+  - Expo (51.0.39):
     - ExpoModulesCore
   - ExpoAdapterGoogleSignIn (13.1.0):
     - ExpoModulesCore
@@ -1003,7 +1003,7 @@ PODS:
     - Yoga
   - ExpoSystemUI (3.0.7):
     - ExpoModulesCore
-  - EXSplashScreen (0.27.6):
+  - EXSplashScreen (0.27.7):
     - DoubleConversion
     - ExpoModulesCore
     - glog
@@ -2387,7 +2387,7 @@ PODS:
   - RecaptchaInterop (100.0.0)
   - RNAppleAuthentication (2.4.0):
     - React-Core
-  - RNDeviceInfo (13.1.0):
+  - RNDeviceInfo (14.0.0):
     - React-Core
   - RNFBAnalytics (20.5.0):
     - Firebase/AnalyticsWithoutAdIdSupport (= 10.29.0)
@@ -2405,6 +2405,27 @@ PODS:
     - nanopb (< 2.30910.0, >= 2.30908.0)
     - React-Core
     - RNFBApp
+  - RNGestureHandler (2.16.1):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - RNGoogleSignin (13.1.0):
     - GoogleSignIn (~> 7.1)
     - React-Core
@@ -2425,6 +2446,27 @@ PODS:
     - React-NativeModulesApple
     - React-RCTFabric
     - React-RCTImage
+    - React-rendererdebug
+    - React-utils
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
+  - RNVectorIcons (10.2.0):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
     - React-rendererdebug
     - React-utils
     - ReactCommon/turbomodule/bridging
@@ -2509,8 +2551,10 @@ DEPENDENCIES:
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBAuth (from `../node_modules/@react-native-firebase/auth`)"
   - "RNFBFirestore (from `../node_modules/@react-native-firebase/firestore`)"
+  - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - "RNGoogleSignin (from `../node_modules/@react-native-google-signin/google-signin`)"
   - RNScreens (from `../node_modules/react-native-screens`)
+  - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -2690,10 +2734,14 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/auth"
   RNFBFirestore:
     :path: "../node_modules/@react-native-firebase/firestore"
+  RNGestureHandler:
+    :path: "../node_modules/react-native-gesture-handler"
   RNGoogleSignin:
     :path: "../node_modules/@react-native-google-signin/google-signin"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNVectorIcons:
+    :path: "../node_modules/react-native-vector-icons"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -2704,7 +2752,7 @@ SPEC CHECKSUMS:
   BoringSSL-GRPC: 1e2348957acdbcad360b80a264a90799984b2ba6
   DoubleConversion: 76ab83afb40bddeeee456813d9c04f67f78771b5
   EXConstants: 409690fbfd5afea964e5e9d6c4eb2c2b59222c59
-  Expo: 9b6666ef2fedcfc89c5b9be2aa1ce12b81f9e7f5
+  Expo: 8c995afb875c15bf8439af0b20bcb9ed8f90d0bd
   ExpoAdapterGoogleSignIn: da10ae7e7c1d73a10c2facebcdfe5ebea8e073ce
   ExpoAppleAuthentication: 265219fa0ba1110872079f55f56686b9737b0065
   ExpoAsset: 323700f291684f110fb55f0d4022a3362ea9f875
@@ -2713,7 +2761,7 @@ SPEC CHECKSUMS:
   ExpoKeepAwake: 3b8815d9dd1d419ee474df004021c69fdd316d08
   ExpoModulesCore: 1914927fe4a693215b1ed57eb934c15641d4aef7
   ExpoSystemUI: d4f065a016cae6721b324eb659cdee4d4cf0cb26
-  EXSplashScreen: 20d60cb03f05e50c23745bf2dc2573b9b2eb42ec
+  EXSplashScreen: e9758d6c15f77f8f358cb98513f1f9e32eca388c
   FBLazyVector: ac12dc084d1c8ec4cc4d7b3cf1b0ebda6dab85af
   Firebase: cec914dab6fd7b1bd8ab56ea07ce4e03dd251c2d
   FirebaseAnalytics: 23717de130b779aa506e757edb9713d24b6ffeda
@@ -2791,16 +2839,18 @@ SPEC CHECKSUMS:
   ReactCommon: f79ae672224dc1e6c2d932062176883c98eebd57
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
   RNAppleAuthentication: e00c76acb03351f5544373c78fa7f359bef6d5d3
-  RNDeviceInfo: e13b7d68878fba693c9fbb13ca4d56ad57d95917
+  RNDeviceInfo: 6192a9c9167e256803e554038b22b3b2b40163dc
   RNFBAnalytics: 4fcff9d66db74816cf9216be847cb96b03d8ba76
   RNFBApp: 017499cd7ea340963bfac43b4fcb28d2b0b21a09
   RNFBAuth: 97633be48cc4e539d954270a218785d2e3f9fde7
   RNFBFirestore: 5250af3b06d1fe90b75c905d8b29d155e603d040
+  RNGestureHandler: ad030559c93b4fa018c35e84466021a03a71198c
   RNGoogleSignin: 9e68b9bcc3888219357924e32ee563624745647d
   RNScreens: 30249f9331c3b00ae7cb7922e11f58b3ed369c07
+  RNVectorIcons: 3e3d9442edd8b15b0ef3cac19960048380a10399
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   Yoga: 1ab23c1835475da69cf14e211a560e73aab24cb0
 
 PODFILE CHECKSUM: f487f797073894c470a3ea0b0f684d8dde3098e3
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.16.2

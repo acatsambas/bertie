@@ -1,19 +1,18 @@
-import React, { useContext, useState } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useTranslation } from 'react-i18next';
-
 import { makeStyles } from '@rneui/themed';
+import React, { useContext, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AuthContext } from '../../api/auth/AuthProvider';
-import { translations } from '../../locales/translations';
-import { View } from 'react-native';
-import Text from '../../components/Text';
-import Input from '../../components/Input';
 import Button from '../../components/Button';
+import Input from '../../components/Input';
+import Text from '../../components/Text';
+import { translations } from '../../locales/translations';
 
 const DeleteScreen = () => {
   const [isDeleted, setIsDeleted] = useState(false);
-  const [begone, setBegone] = useState('');
+  const [inputValue, setInputValue] = useState('');
   const [error, setError] = useState('');
 
   const styles = useStyles();
@@ -21,13 +20,15 @@ const DeleteScreen = () => {
   const { user } = useContext(AuthContext);
 
   const handleInput = (value: string) => {
-    setBegone(value.toLowerCase());
+    setInputValue(value);
   };
 
   const handleDelete = () => {
-    begone === 'begone!'
-      ? setIsDeleted(true)
-      : setError("You didn't write well the word 'begone!'");
+    if (inputValue === 'begone!') {
+      setIsDeleted(true);
+    } else {
+      setError("You didn't write well the word 'begone!'");
+    }
   };
 
   const handleDone = () => {
@@ -42,7 +43,14 @@ const DeleteScreen = () => {
           <>
             <Text text={t(translations.delete.paragraph1)} kind="paragraph" />
             <Text text={t(translations.delete.paragraph2)} kind="paragraph" />
-            <Input placeholder="begone!" onChangeText={handleInput} />
+            <Input
+              autoCapitalize="none"
+              autoComplete="off"
+              autoCorrect={false}
+              onChangeText={handleInput}
+              placeholder="begone!"
+              value={inputValue}
+            />
             {error && (
               <View style={styles.error}>
                 <Text text={error} kind="paragraph" />
@@ -72,11 +80,11 @@ const DeleteScreen = () => {
   );
 };
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   safeAreaView: {
     flex: 1,
     paddingHorizontal: 20,
-    backgroundColor: '#FDF9F6',
+    backgroundColor: theme.colors.white,
   },
   container: { paddingTop: 20, gap: 20 },
   error: {
