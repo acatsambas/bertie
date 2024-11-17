@@ -2,12 +2,11 @@ import './locales/i18n';
 
 import { ThemeProvider, createTheme } from '@rneui/themed';
 
-import { AuthProvider } from './api/auth/AuthProvider';
 import { initFirebase } from './api/firebase';
+import { AuthProvider } from './api/auth/AuthProvider';
 import Routes from './navigation/Routes';
 import { FontsProvider } from './styles/FontsProvider';
-
-initFirebase();
+import { useEffect, useState } from 'react';
 
 const theme = createTheme({
   lightColors: {
@@ -20,6 +19,19 @@ const theme = createTheme({
 });
 
 const App = () => {
+  const [firebaseInitƒ, setFirebaseInitƒ] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      await initFirebase();
+      setFirebaseInitƒ(true);
+    })();
+  });
+
+  if (!firebaseInitƒ) {
+    return null;
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <AuthProvider>
