@@ -1,19 +1,15 @@
-import { Icon as RNEIcon } from '@rneui/themed';
+import { Icon as RNEIcon, IconProps as RNEIconProps } from '@rneui/themed';
 
-export interface IconProps {
+export interface IconProps extends Omit<RNEIconProps, 'name' | 'type'> {
   icon: keyof typeof iconType;
-  onPress?(): void;
-  color?: string;
 }
 
-const Icon = ({ icon, onPress, color }: IconProps) => {
+const Icon = ({ icon, ...props }: IconProps) => {
   return (
     <RNEIcon
+      {...props}
       type={icon in iconType && iconType[icon].type}
       name={icon in iconType && iconType[icon].name}
-      containerStyle={{}}
-      onPress={onPress}
-      color={color}
     />
   );
 };

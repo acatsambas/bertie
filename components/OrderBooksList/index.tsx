@@ -22,8 +22,8 @@ const OrderBooksList = ({ books, setBooks }: OrderBooksListProps) => {
       {books.map(book => (
         <Book
           key={book.id}
-          title={book.volumeInfo.title}
-          author={book.volumeInfo.authors?.join(', ')}
+          title={book.volumeInfo?.title}
+          author={book.volumeInfo?.authors?.join?.(', ')}
           kind="order"
           onChange={() => handleRemoveBook(book.id)}
         />

@@ -1,4 +1,4 @@
-import { Input as RNEInput } from '@rneui/themed';
+import { Input as RNEInput, useTheme } from '@rneui/themed';
 import { TextInputProps } from 'react-native';
 
 import Icon, { IconProps } from '../Icon';
@@ -17,6 +17,8 @@ const Input = ({
   onChangeText,
   ...inputProps
 }: InputProps) => {
+  const { theme } = useTheme();
+
   const handleTextChange = (value: string) => {
     onChangeText?.(value);
   };
@@ -37,11 +39,13 @@ const Input = ({
           <Icon icon="x" onPress={clearText} />
         ) : null
       }
+      rightIconContainerStyle={{ margin: 0, padding: 0 }}
       inputContainerStyle={{
-        backgroundColor: kind === 'search' ? '#FDF9F6' : '#EEE9E4',
+        backgroundColor:
+          kind === 'search' ? theme.colors.white : theme.colors.grey0,
         borderRadius: 15,
         borderBottomColor: kind !== 'search' ? 'transparent' : 'gray',
-        paddingVertical: 7,
+        paddingVertical: 6,
         paddingLeft: 20,
         paddingRight: 10, // Add padding for the clear icon
         gap: 10,

@@ -27,22 +27,22 @@ const SearchBooks = ({ books }: SearchBookProps) => {
   };
 
   const handlePressAddBook = async (book: BookResult, isUserBook: boolean) => {
-    await firestore().collection('books').doc(book.id).set(book);
+    const bookRef = firestore().collection('books').doc(book.id);
+
+    if (!(await bookRef.get()).exists) {
+      await firestore().collection('books').doc(book.id).set(book);
+    }
+
+    const userBookRef = firestore()
+      .collection('users')
+      .doc(user.uid)
+      .collection('books')
+      .doc(book.id);
 
     if (isUserBook) {
-      await firestore()
-        .collection('users')
-        .doc(user?.uid)
-        .collection('books')
-        .doc(book.id)
-        .delete();
+      userBookRef.delete();
     } else {
-      await firestore()
-        .collection('users')
-        .doc(user?.uid)
-        .collection('books')
-        .doc(book.id)
-        .set({ bookRef: firestore().collection('books').doc(book.id) });
+      userBookRef.set({ bookRef });
     }
   };
 
@@ -56,8 +56,8 @@ const SearchBooks = ({ books }: SearchBookProps) => {
             key={book.id}
             isChecked={isUserBook}
             kind="search"
-            title={book.volumeInfo.title}
-            author={book.volumeInfo.authors?.join?.(', ')}
+            title={book.volumeInfo?.title}
+            author={book.volumeInfo?.authors?.join?.(', ')}
             onPress={() => handlePressBook(book)}
             onChange={() => handlePressAddBook(book, isUserBook)}
           />

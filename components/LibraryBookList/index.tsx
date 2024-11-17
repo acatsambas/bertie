@@ -78,8 +78,8 @@ const CurrentBooks = ({ kind }: BookListProps) => {
           book.isRead === false && kind === 'current' ? (
             <Book
               key={book.id}
-              title={book.volumeInfo.title}
-              author={book.volumeInfo.authors?.join(', ')}
+              title={book.volumeInfo?.title}
+              author={book.volumeInfo?.authors?.join?.(', ')}
               kind="library"
               isChecked={book.isRead}
               onPress={() => handleBook(book)}
@@ -90,8 +90,8 @@ const CurrentBooks = ({ kind }: BookListProps) => {
             kind === 'past' && (
               <Book
                 key={book.id}
-                title={book.volumeInfo.title}
-                author={book.volumeInfo.authors?.join(', ')}
+                title={book.volumeInfo?.title}
+                author={book.volumeInfo?.authors?.join?.(', ')}
                 kind="library"
                 isChecked={book.isRead}
                 onPress={() => handleBook(book)}

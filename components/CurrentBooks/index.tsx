@@ -69,7 +69,7 @@ const CurrentBooks = () => {
             <Book
               key={book.id}
               title={book.volumeInfo?.title}
-              author={book.volumeInfo?.authors?.join(', ')}
+              author={book.volumeInfo?.authors?.join?.(', ')}
               kind="library"
               onPress={() => handleBook(book)}
               onChange={() => handleRead(book.id, book.isRead)}

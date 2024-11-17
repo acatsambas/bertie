@@ -59,8 +59,8 @@ const SearchBooks = () => {
           key={book.id}
           isChecked={userBooks.some(({ id }) => id === book.id)}
           kind="search"
-          title={book.volumeInfo.title}
-          author={book.volumeInfo.authors?.join(', ')}
+          title={book.volumeInfo?.title}
+          author={book.volumeInfo?.authors?.join?.(', ')}
           onPress={() => handleBook(book)}
           onChange={() => handleAddBook(book)}
         />

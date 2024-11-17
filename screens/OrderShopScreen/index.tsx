@@ -59,7 +59,7 @@ const OrderShopScreen = () => {
           text: `Dear ${favouriteShopData.name} team,
 
 ${user.givenName} ${user.familyName} would like to order these books:
-${route.params.books.map(book => `- ${book?.volumeInfo?.title} (${book?.volumeInfo?.authors?.join(', ')})`).join('\n')}
+${route.params.books.map(book => `- ${book?.volumeInfo?.title} (${book?.volumeInfo?.authors?.join?.(', ')})`).join('\n')}
 
 Their address is:
 ${user.address?.firstLine}

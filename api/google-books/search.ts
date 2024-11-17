@@ -1,6 +1,6 @@
 export interface BookResult {
   id: string;
-  volumeInfo: {
+  volumeInfo?: {
     authors?: string[];
     description?: string;
     title: string;

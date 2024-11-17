@@ -23,18 +23,25 @@ const BookScreen = () => {
   const { user } = useContext(AuthContext);
 
   const handlePressBook = async () => {
-    const bookRef = firestore()
+    const bookRef = firestore().collection('books').doc(params.book.id);
+
+    if (!(await bookRef.get()).exists) {
+      await firestore()
+        .collection('books')
+        .doc(params.book.id)
+        .set(params.book);
+    }
+
+    const userBookRef = firestore()
       .collection('users')
       .doc(user.uid)
       .collection('books')
       .doc(params.book.id);
 
-    if ((await bookRef.get()).exists) {
-      bookRef.delete();
+    if ((await userBookRef.get()).exists) {
+      userBookRef.delete();
     } else {
-      bookRef.set({
-        bookRef: firestore().collection('books').doc(params.book.id),
-      });
+      userBookRef.set({ bookRef });
     }
   };
 
@@ -42,14 +49,14 @@ const BookScreen = () => {
     <SafeAreaView style={styles.safeAreaView}>
       <ScrollView contentContainerStyle={styles.container}>
         <View>
-          <Text kind="bigHeader" text={params.book.volumeInfo.title} />
+          <Text kind="bigHeader" text={params.book.volumeInfo?.title} />
           <Text
             kind="paragraph"
-            text={params.book.volumeInfo.authors?.join(', ')}
+            text={params.book.volumeInfo?.authors?.join?.(', ')}
           />
         </View>
         <RenderHtml
-          source={{ html: params.book.volumeInfo.description }}
+          source={{ html: params.book.volumeInfo?.description }}
           contentWidth={0}
         />
       </ScrollView>
