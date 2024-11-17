@@ -6,6 +6,7 @@
   "scripts": {
     "android": "expo run:android",
     "checkTs": "tsc --noEmit",
+    "clean:ios": "sh ./scripts/clean-ios-build.sh",
     "clean": "sh ./scripts/clean.sh",
     "distribute:android": "bundle exec fastlane android distribute",
     "distribute:ios": "USE_FRAMEWORKS=\"static\" bundle exec fastlane ios distribute",

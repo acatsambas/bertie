@@ -4,10 +4,11 @@ echo "🧹 Cleaning..."
 rm -rf node_modules
 
 # iOS
-rm -rf ios/build
 rm -rf ios/Pods
+rm -rf ios/build
 rm -rf .local_derived_data
-# remove .ipa and .app.dSYM.zip
+rm -rf Bertie.ipa
+rm -rf Bertie.app.dSYM.zip
 
 # Android
 rm -rf android/build
