@@ -27,8 +27,8 @@ private_lane :increase_ios_version do
   scheme = "Bertie"
 
   api_key = app_store_connect_api_key(
-    key_id: "6C5352C8R8",
-    key_filepath: "./fastlane/AuthKey_6C5352C8R8.p8",
+    key_id: "MB44GW24AY",
+    key_filepath: "./fastlane/AuthKey_MB44GW24AY.p8",
     issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
     in_house: false # optional but may be required if using match/sigh
   )
@@ -99,8 +99,8 @@ platform :ios do
     cache_folder = File.expand_path("#{ios_derived_data_path}/Build/Intermediates.noindex/ArchiveIntermediates/#{scheme}/BuildProductsPath/#{build_configuration}-iphoneos")
 
     api_key = app_store_connect_api_key(
-      key_id: "6C5352C8R8",
-      key_filepath: "./fastlane/AuthKey_6C5352C8R8.p8",
+      key_id: "MB44GW24AY",
+      key_filepath: "./fastlane/AuthKey_MB44GW24AY.p8",
       issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
       in_house: false # optional but may be required if using match/sigh
     )
@@ -126,8 +126,8 @@ platform :ios do
     cache_folder = File.expand_path("#{ios_derived_data_path}/Build/Intermediates.noindex/ArchiveIntermediates/#{scheme}/BuildProductsPath/#{build_configuration}-iphoneos")
 
     api_key = app_store_connect_api_key(
-      key_id: "6C5352C8R8",
-      key_filepath: "./fastlane/AuthKey_6C5352C8R8.p8",
+      key_id: "MB44GW24AY",
+      key_filepath: "./fastlane/AuthKey_MB44GW24AY.p8",
       issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
       in_house: false # optional but may be required if using match/sigh
     )
@@ -209,6 +209,11 @@ platform :ios do
       api_key: api_key,
       skip_submission: true,
       skip_waiting_for_build_processing: true,
+    )
+
+    increment_build_number(
+      xcodeproj: "./ios/#{scheme}.xcodeproj",
+      build_number: 1
     )
   end
 end

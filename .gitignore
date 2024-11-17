@@ -54,3 +54,8 @@ builds/*
 *.xcarchive
 bertie-434108-5fd4928195d9.json
 bertie-74d8c-e01b7dfc401f.json
+
+# iOS Build
+.local_derived_data
+*.ipa
+*.app.dSYM.zip
