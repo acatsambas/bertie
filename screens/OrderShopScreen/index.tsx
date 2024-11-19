@@ -105,7 +105,7 @@ Bertie`,
           kind="primary"
           text={t(translations.order.place)}
           onPress={handlePlace}
-          disabled={!favouriteShop}
+          disabled={!favouriteShop || !user?.address}
         />
         <Button
           kind="tertiary"
