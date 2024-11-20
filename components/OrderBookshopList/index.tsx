@@ -52,15 +52,15 @@ const OrderBookshopList = ({ kind, shops }: OrderBookshopListProps) => {
     return (
       <View style={styles.container}>
         <Text kind="header" text={t(translations.order.more)} />
-        {/* {!hasAddress && (
+        {!user?.address && (
           <View style={styles.purple}>
             <Text
               kind="paragraph"
               text={t(translations.order.add)}
-              onPress={handleAdd}
+              onPress={() => navigate('AddressScreen')}
             />
           </View>
-        )} */}
+        )}
         {shops.map(shop => (
           <BookShop
             name={shop.name}
