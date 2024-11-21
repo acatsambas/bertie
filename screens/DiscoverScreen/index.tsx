@@ -62,7 +62,7 @@ const DiscoverScreen = () => {
               text={t(translations.discover.booksHeader)}
               kind="paragraph"
             />
-            <DiscoverRecommendedBooks />
+            <DiscoverRecommendedBooks kind="discover" />
           </View>
         )}
       </View>

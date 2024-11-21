@@ -13,6 +13,7 @@ import OrderBooksList from '../../components/OrderBooksList';
 import Text from '../../components/Text';
 import { translations } from '../../locales/translations';
 import { OrderNavigatorParamList } from '../../navigation/AppStack/params';
+import DiscoverRecommendedBooks from '../../components/DiscoverRecommendedBooks';
 
 export interface OrderPageProps
   extends StackNavigationProp<OrderNavigatorParamList, 'Order'> {}
@@ -54,6 +55,7 @@ const OrderScreen = () => {
           <>
             <Text text={t(translations.order.headerNoBooks)} kind="header" />
             <Text text={t(translations.order.suggestions)} kind="paragraph" />
+            <DiscoverRecommendedBooks kind="order" />
           </>
         )}
 

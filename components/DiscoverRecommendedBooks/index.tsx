@@ -7,19 +7,32 @@ import { useBooks, useUserBooks } from '../../api/app/hooks';
 import { AuthContext } from '../../api/auth/AuthProvider';
 import Book from '../Book';
 
-const SearchBooks = () => {
+interface SearchBooksProps {
+  kind?: 'discover' | 'order';
+}
+
+const SearchBooks = ({ kind }: SearchBooksProps) => {
   const { navigate } = useNavigation<any>();
   const { user } = useContext(AuthContext);
   const userBooks = useUserBooks();
   const recommendedIds = useMemo(
-    () => [
-      'MSurBex2xcUC',
-      'Nn-WDwAAQBAJ',
-      'fn20CwAAQBAJ',
-      'n5orAQAAMAAJ',
-      'olyPEAAAQBAJ',
-    ],
-    [],
+    () =>
+      kind === 'discover'
+        ? [
+            'MSurBex2xcUC',
+            'Nn-WDwAAQBAJ',
+            'fn20CwAAQBAJ',
+            'n5orAQAAMAAJ',
+            'olyPEAAAQBAJ',
+          ]
+        : [
+            '2akU-k9xIQ0C',
+            'TEETEQAAQBAJ',
+            '4WcFyY8ZEgkC',
+            'OPy6E5ZhXs0C',
+            '11TmzzQw7p0C',
+          ],
+    [kind],
   );
   const books = useBooks({
     ids: recommendedIds,
