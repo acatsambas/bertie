@@ -136,16 +136,22 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         }
 
         // Create a Firebase credential from the response
-        const { identityToken, nonce } = appleAuthRequestResponse;
+        const { identityToken, nonce, fullName } = appleAuthRequestResponse;
         const appleCredential = auth.AppleAuthProvider.credential(
           identityToken,
           nonce,
         );
 
         // Sign the user in with the credential
-        await auth().signInWithCredential(appleCredential);
+        const userCredential =
+          await auth().signInWithCredential(appleCredential);
 
-        await createUser({});
+        if (userCredential?.additionalUserInfo?.isNewUser && fullName) {
+          await createUser({
+            givenName: fullName?.givenName,
+            familyName: fullName?.familyName,
+          });
+        }
       },
       anonymousLogin: async () => {
         await auth().signInAnonymously();

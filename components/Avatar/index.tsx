@@ -16,7 +16,7 @@ const Avatar = ({ onPress }: AvatarProps) => {
     <RNEAvatar
       title={
         !user.photoURL &&
-        `${userData?.givenName.charAt(0) || ''}${userData?.familyName.charAt(0) || ''}`
+        `${userData?.givenName?.charAt(0) || ''}${userData?.familyName?.charAt(0) || ''}`
       }
       source={user.photoURL && { uri: user.photoURL }}
       rounded
