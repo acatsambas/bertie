@@ -68,11 +68,7 @@ const SearchBookScreen = () => {
 
   const handleToggle = () => {
     setIsTitle(!isTitle);
-    if (isTitle) {
-      setToggleWord('intitle');
-    } else {
-      setToggleWord('inauthor');
-    }
+    setToggleWord(isTitle ? 'intitle' : 'inauthor');
   };
 
   return (
