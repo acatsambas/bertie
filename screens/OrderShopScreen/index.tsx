@@ -52,6 +52,10 @@ const OrderShopScreen = () => {
     await firestore()
       .collection('mail')
       .add({
+        from: {
+          name: 'Bertie',
+          address: 'acatsambas@bertieapp.com',
+        },
         to: [favouriteShopData.email],
         cc: [user.email],
         message: {
