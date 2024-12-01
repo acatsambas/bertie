@@ -18,6 +18,7 @@ export type LibraryNavigatorParamList = {
 
 export type DiscoverNavigatorParamList = {
   Discover: undefined;
+  AddressScreen: undefined;
   Bookshop: {
     shop: Shop;
   };

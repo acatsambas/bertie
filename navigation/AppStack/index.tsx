@@ -93,6 +93,11 @@ const DiscoverNavigator = () => {
         component={BookshopScreen}
         options={{ animation: 'none' }}
       />
+      <DiscoverStack.Screen
+        name="AddressScreen"
+        component={AddressScreen}
+        options={{ animation: 'none' }}
+      />
     </DiscoverStack.Navigator>
   );
 };

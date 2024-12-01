@@ -13,6 +13,7 @@ import DiscoverRecommendedBooks from '../../components/DiscoverRecommendedBooks'
 import Text from '../../components/Text';
 import { translations } from '../../locales/translations';
 import { AppNavigatorParamList } from '../../navigation/AppStack/params';
+import { useUser } from '../../api/app/hooks';
 
 export interface DiscoverScreenProps
   extends StackNavigationProp<AppNavigatorParamList, 'DiscoverNavigator'> {}
@@ -21,6 +22,7 @@ const DiscoverScreen = () => {
   const styles = useStyles();
   const { t } = useTranslation();
   const { navigate } = useNavigation<DiscoverScreenProps>();
+  const user = useUser();
 
   const [index, setIndex] = useState(0);
 
@@ -48,12 +50,15 @@ const DiscoverScreen = () => {
         </Tab>
         {index === 0 ? (
           <View style={styles.bookshopContainer}>
-            <View style={styles.description}>
-              <Text
-                text={t(translations.discover.description)}
-                kind="paragraph"
-              />
-            </View>
+            {!user?.address && (
+              <View style={styles.description}>
+                <Text
+                  text={t(translations.discover.description)}
+                  kind="paragraph"
+                  onPress={() => navigate('AddressScreen')}
+                />
+              </View>
+            )}
             <BookshopsList />
           </View>
         ) : (
