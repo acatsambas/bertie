@@ -1,5 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useTranslation } from 'react-i18next';
+import React from 'react';
 
 import { translations } from '../../locales/translations';
 import AddressScreen from '../../screens/AddressScreen';
@@ -14,6 +15,7 @@ import OrderShopScreen from '../../screens/OrderShopScreen';
 import ResetScreen from '../../screens/ResetScreen';
 import SearchBookScreen from '../../screens/SearchBookScreen';
 import SettingsScreen from '../../screens/SettingsScreen';
+
 import {
   AppNavigatorParamList,
   DiscoverNavigatorParamList,
@@ -22,161 +24,88 @@ import {
   SettingsNavigatorParamList,
 } from './params';
 
-export const AppStack = createNativeStackNavigator<AppNavigatorParamList>();
+const createStack = (
+  Stack: ReturnType<typeof createNativeStackNavigator>,
+  screens: { name: string; component: React.ComponentType<any> }[],
+) => {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false, animation: 'none' }}>
+      {screens.map(({ name, component }, index) => (
+        <Stack.Screen key={index} name={name} component={component} />
+      ))}
+    </Stack.Navigator>
+  );
+};
 
+export const AppStack = createNativeStackNavigator<AppNavigatorParamList>();
 export const SettingsStack =
   createNativeStackNavigator<SettingsNavigatorParamList>();
-
 export const LibraryStack =
   createNativeStackNavigator<LibraryNavigatorParamList>();
-
 export const DiscoverStack =
   createNativeStackNavigator<DiscoverNavigatorParamList>();
-
 export const OrderStack = createNativeStackNavigator<OrderNavigatorParamList>();
 
-const SettingsNavigator = () => {
-  return (
-    <SettingsStack.Navigator
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
-      <SettingsStack.Screen name="Settings" component={SettingsScreen} />
-      <SettingsStack.Screen name="ChangeAddress" component={AddressScreen} />
-      <SettingsStack.Screen name="ResetPassword" component={ResetScreen} />
-      <SettingsStack.Screen name="DeleteAccount" component={DeleteScreen} />
-    </SettingsStack.Navigator>
-  );
-};
+const SettingsNavigator = () =>
+  createStack(SettingsStack, [
+    { name: 'Settings', component: SettingsScreen },
+    { name: 'ChangeAddress', component: AddressScreen },
+    { name: 'ResetPassword', component: ResetScreen },
+    { name: 'DeleteAccount', component: DeleteScreen },
+  ]);
 
-const LibraryNavigator = () => {
-  return (
-    <LibraryStack.Navigator
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
-      <LibraryStack.Screen
-        name="Library"
-        component={LibraryScreen}
-        options={{ animation: 'none' }}
-      />
-      <LibraryStack.Screen
-        name="Book"
-        component={BookScreen}
-        options={{ animation: 'none' }}
-      />
-      <LibraryStack.Screen
-        name="Search"
-        component={SearchBookScreen}
-        options={{ animation: 'none' }}
-      />
-    </LibraryStack.Navigator>
-  );
-};
+const LibraryNavigator = () =>
+  createStack(LibraryStack, [
+    { name: 'Library', component: LibraryScreen },
+    { name: 'Book', component: BookScreen },
+    { name: 'Search', component: SearchBookScreen },
+  ]);
 
-const DiscoverNavigator = () => {
-  return (
-    <DiscoverStack.Navigator
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
-      <DiscoverStack.Screen
-        name="Discover"
-        component={DiscoverScreen}
-        options={{ animation: 'none' }}
-      />
-      <DiscoverStack.Screen
-        name="Bookshop"
-        component={BookshopScreen}
-        options={{ animation: 'none' }}
-      />
-      <DiscoverStack.Screen
-        name="AddressScreen"
-        component={AddressScreen}
-        options={{ animation: 'none' }}
-      />
-    </DiscoverStack.Navigator>
-  );
-};
+const DiscoverNavigator = () =>
+  createStack(DiscoverStack, [
+    { name: 'Discover', component: DiscoverScreen },
+    { name: 'Bookshop', component: BookshopScreen },
+    { name: 'AddressScreen', component: AddressScreen },
+  ]);
 
-const OrderNavigator = () => {
-  return (
-    <OrderStack.Navigator
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
-      <OrderStack.Screen
-        name="Order"
-        component={OrderScreen}
-        options={{ animation: 'none' }}
-      />
-      <OrderStack.Screen
-        name="OrderShop"
-        component={OrderShopScreen}
-        options={{ animation: 'none' }}
-      />
-      <OrderStack.Screen
-        name="OrderPlaced"
-        component={OrderPlacedScreen}
-        options={{ animation: 'none' }}
-      />
-      <OrderStack.Screen
-        name="AddressScreen"
-        component={AddressScreen}
-        options={{ animation: 'none' }}
-      />
-      <OrderStack.Screen
-        name="Bookshop"
-        component={BookshopScreen}
-        options={{ animation: 'none' }}
-      />
-    </OrderStack.Navigator>
-  );
-};
+const OrderNavigator = () =>
+  createStack(OrderStack, [
+    { name: 'Order', component: OrderScreen },
+    { name: 'OrderShop', component: OrderShopScreen },
+    { name: 'OrderPlaced', component: OrderPlacedScreen },
+    { name: 'AddressScreen', component: AddressScreen },
+    { name: 'Bookshop', component: BookshopScreen },
+  ]);
 
-const AppNagivator = () => {
+const AppNavigator = () => {
   const { t } = useTranslation();
 
   return (
-    <AppStack.Navigator screenOptions={{ headerShown: false }}>
+    <AppStack.Navigator
+      screenOptions={{ headerShown: false, animation: 'none' }}
+    >
       <AppStack.Screen
         name="LibraryNavigator"
         component={LibraryNavigator}
-        options={{
-          title: t(translations.library.title),
-          animation: 'none',
-        }}
+        options={{ title: t(translations.library.title) }}
       />
       <AppStack.Screen
         name="DiscoverNavigator"
         component={DiscoverNavigator}
-        options={{
-          title: t(translations.discover.title),
-          animation: 'none',
-        }}
+        options={{ title: t(translations.discover.title) }}
       />
       <AppStack.Screen
         name="OrderNavigator"
         component={OrderNavigator}
-        options={{
-          title: t(translations.order.title),
-          animation: 'none',
-        }}
+        options={{ title: t(translations.order.title) }}
       />
       <AppStack.Screen
         name="SettingsNavigator"
         component={SettingsNavigator}
-        options={{
-          title: t(translations.settings.title),
-          animation: 'none',
-        }}
+        options={{ title: t(translations.settings.title) }}
       />
     </AppStack.Navigator>
   );
 };
 
-export default AppNagivator;
+export default AppNavigator;

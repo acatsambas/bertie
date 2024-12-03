@@ -55,7 +55,9 @@ const DiscoverScreen = () => {
                 <Text
                   text={t(translations.discover.description)}
                   kind="paragraph"
-                  onPress={() => navigate('AddressScreen')}
+                  onPress={() =>
+                    navigate('SettingsNavigator', { screen: 'ChangeAddress' })
+                  }
                 />
               </View>
             )}

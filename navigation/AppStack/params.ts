@@ -1,5 +1,6 @@
 import { Shop, UserBook } from '../../api/app/types';
 import { BookResult } from '../../api/google-books/search';
+import { NavigatorScreenParams } from '@react-navigation/native';
 
 export type SettingsNavigatorParamList = {
   Settings: undefined;
@@ -46,5 +47,5 @@ export type AppNavigatorParamList = {
   DiscoverNavigator: undefined;
   LibraryNavigator: undefined;
   OrderNavigator: undefined;
-  SettingsNavigator: undefined;
+  SettingsNavigator: NavigatorScreenParams<SettingsNavigatorParamList>;
 };
