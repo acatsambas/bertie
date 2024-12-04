@@ -11,6 +11,8 @@ import Text from '../../components/Text';
 import { translations } from '../../locales/translations';
 import { OrderNavigatorParamList } from '../../navigation/AppStack/params';
 import BookShop from '../Bookshop';
+import LoadingState from '../LoadingState/LoadingState';
+import { useEffect, useState } from 'react';
 
 interface OrderBookshopListProps {
   kind: 'favourites' | 'more';
@@ -24,26 +26,37 @@ const OrderBookshopList = ({ kind, shops }: OrderBookshopListProps) => {
   const { t } = useTranslation();
   const { navigate } = useNavigation<OrderPageProps>();
   const user = useUser();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (shops.length > 0) {
+      setIsLoading(false);
+    }
+  }, [shops]);
 
   if (kind === 'favourites') {
     return (
       <View>
         <Text kind="header" text={t(translations.order.favourites)} />
-        {shops.map(shop => (
-          <BookShop
-            name={shop.name}
-            location={shop.city}
-            key={shop.id}
-            onPress={async () => {
-              firestore().collection('users').doc(user.documentId).update({
-                favouriteShop: shop.id,
-              });
-            }}
-            kind={
-              user.favouriteShop === shop.id ? 'favoriteSelected' : 'favorite'
-            }
-          />
-        ))}
+        {isLoading ? (
+          <LoadingState />
+        ) : (
+          shops.map(shop => (
+            <BookShop
+              name={shop.name}
+              location={shop.city}
+              key={shop.id}
+              onPress={async () => {
+                firestore().collection('users').doc(user.documentId).update({
+                  favouriteShop: shop.id,
+                });
+              }}
+              kind={
+                user.favouriteShop === shop.id ? 'favoriteSelected' : 'favorite'
+              }
+            />
+          ))
+        )}
       </View>
     );
   }
@@ -61,15 +74,19 @@ const OrderBookshopList = ({ kind, shops }: OrderBookshopListProps) => {
             />
           </View>
         )}
-        {shops.map(shop => (
-          <BookShop
-            name={shop.name}
-            location={shop.city}
-            key={shop.id}
-            kind="default"
-            onPress={() => navigate('Bookshop', { shop })}
-          />
-        ))}
+        {isLoading ? (
+          <LoadingState />
+        ) : (
+          shops.map(shop => (
+            <BookShop
+              name={shop.name}
+              location={shop.city}
+              key={shop.id}
+              kind="default"
+              onPress={() => navigate('Bookshop', { shop })}
+            />
+          ))
+        )}
       </View>
     );
   }

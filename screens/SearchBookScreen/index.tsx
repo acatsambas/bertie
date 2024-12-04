@@ -8,14 +8,15 @@ import { useTranslation } from 'react-i18next';
 import { Platform, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { translations } from '../../locales/translations';
+import { LibraryNavigatorParamList } from '../../navigation/AppStack/params';
 import { useUser } from '../../api/app/hooks';
 import { BookResult, searchBooks } from '../../api/google-books/search';
 import Icon from '../../components/Icon';
 import Input from '../../components/Input';
 import SearchBooks from '../../components/SearchBooks';
 import Text from '../../components/Text';
-import { translations } from '../../locales/translations';
-import { LibraryNavigatorParamList } from '../../navigation/AppStack/params';
+import LoadingState from '../../components/LoadingState/LoadingState';
 
 export interface SearchBookProps
   extends StackNavigationProp<LibraryNavigatorParamList, 'Search'> {}
@@ -26,6 +27,7 @@ const SearchBookScreen = () => {
   const [toggleWord, setToggleWord] = useState<'intitle' | 'inauthor'>(
     'intitle',
   );
+  const [isLoading, setIsLoading] = useState(false);
   const user = useUser();
   const styles = useStyles();
   const { t } = useTranslation();
@@ -36,9 +38,14 @@ const SearchBookScreen = () => {
   const searchDebounce = useCallback(
     debounce(async value => {
       const searchValue = value.trim();
-
       if (searchValue.length) {
-        searchBooks(searchValue, toggleWord).then(setSearchResults);
+        setIsLoading(true); // Start loading
+        try {
+          const results = await searchBooks(searchValue, toggleWord);
+          setSearchResults(results); // Update search results
+        } finally {
+          setIsLoading(false); // Stop loading regardless of success or error
+        }
 
         if (user.isFirstSearch !== false) {
           await firestore().collection('users').doc(user.documentId).update({
@@ -111,7 +118,7 @@ const SearchBookScreen = () => {
           />
         )}
 
-        <SearchBooks books={searchResults} />
+        {isLoading ? <LoadingState /> : <SearchBooks books={searchResults} />}
       </ScrollView>
     </SafeAreaView>
   );

@@ -2,7 +2,7 @@ import firestore from '@react-native-firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { makeStyles } from '@rneui/themed';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Platform, View } from 'react-native';
 
@@ -12,6 +12,7 @@ import { translations } from '../../locales/translations';
 import { LibraryNavigatorParamList } from '../../navigation/AppStack/params';
 import Book from '../Book';
 import Text from '../Text';
+import LoadingState from '../LoadingState/LoadingState';
 
 export interface LibraryPageProps
   extends StackNavigationProp<LibraryNavigatorParamList, 'Library'> {}
@@ -20,8 +21,15 @@ const PastBooks = () => {
   const styles = useStyles();
   const { t } = useTranslation();
   const { navigate } = useNavigation<LibraryPageProps>();
+  const [isLoading, setIsLoading] = useState(true);
   const { user } = useContext(AuthContext);
   const books = useUserBooks({ withRefs: true });
+
+  useEffect(() => {
+    if (books.length > 0) {
+      setIsLoading(false);
+    }
+  }, [books]);
 
   const handleBook = (book: (typeof books)[number]) => {
     navigate('Book', {
@@ -49,19 +57,23 @@ const PastBooks = () => {
       <Text text={t(translations.library.past)} kind="header" />
 
       <View>
-        {books
-          .filter(({ isRead }) => isRead)
-          .map(book => (
-            <Book
-              key={book.id}
-              title={book.volumeInfo?.title}
-              author={book.volumeInfo?.authors?.join?.(', ')}
-              kind="library"
-              isChecked={book.isRead}
-              onPress={() => handleBook(book)}
-              onChange={() => handleRead(book.id, book.isRead)}
-            />
-          ))}
+        {isLoading ? (
+          <LoadingState />
+        ) : (
+          books
+            .filter(({ isRead }) => isRead)
+            .map(book => (
+              <Book
+                key={book.id}
+                title={book.volumeInfo?.title}
+                author={book.volumeInfo?.authors?.join?.(', ')}
+                kind="library"
+                isChecked={book.isRead}
+                onPress={() => handleBook(book)}
+                onChange={() => handleRead(book.id, book.isRead)}
+              />
+            ))
+        )}
       </View>
     </View>
   );

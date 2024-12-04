@@ -5,14 +5,14 @@ import { makeStyles } from '@rneui/themed';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
 import { useMemo } from 'react';
+
 import { useFavouriteShops, useShops, useUser } from '../../api/app/hooks';
+import { translations } from '../../locales/translations';
+import { OrderNavigatorParamList } from '../../navigation/AppStack/params';
 import Button from '../../components/Button';
 import OrderBookshopList from '../../components/OrderBookshopList';
 import Text from '../../components/Text';
-import { translations } from '../../locales/translations';
-import { OrderNavigatorParamList } from '../../navigation/AppStack/params';
 
 export interface OrderShopScreenProps
   extends StackNavigationProp<OrderNavigatorParamList, 'OrderShop'> {}
