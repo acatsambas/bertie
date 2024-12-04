@@ -47,7 +47,7 @@ const SearchBooks = ({ books }: SearchBookProps) => {
   };
 
   return (
-    <View>
+    <View style={{ gap: 10 }}>
       {books.map(book => {
         const isUserBook = !!userBooks.find(({ id }) => id === book?.id);
 

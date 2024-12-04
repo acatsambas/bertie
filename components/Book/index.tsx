@@ -70,9 +70,9 @@ const Book = ({
             onPress={onPress}
             disabled={props.disabled}
           >
-            <View style={{ width: '90%' }}>
+            <View style={{ width: '90%', gap: 5 }}>
               <Text
-                text={title}
+                text={title.length > 58 ? `${title.slice(0, 58)}...` : title}
                 kind="paragraph"
                 color={checked && kind === 'library' && 'grey'}
               />
@@ -113,6 +113,7 @@ const useStyles = makeStyles(() => ({
     paddingRight: 20,
     flexDirection: 'row',
     minWidth: '100%',
+    alignItems: 'center',
   },
 
   content: {
