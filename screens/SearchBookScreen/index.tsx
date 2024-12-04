@@ -3,7 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { makeStyles, Switch } from '@rneui/themed';
 import { debounce } from 'lodash';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Platform, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -53,6 +53,12 @@ const SearchBookScreen = () => {
     }, 350),
     [toggleWord, user?.documentId, user?.isFirstSearch],
   );
+
+  useEffect(() => {
+    if (searchValue.trim().length) {
+      searchDebounce(searchValue);
+    }
+  }, [toggleWord, searchValue, searchDebounce]);
 
   const handleSearch = useCallback(
     (value: string) => {
