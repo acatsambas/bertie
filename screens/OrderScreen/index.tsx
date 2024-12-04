@@ -42,7 +42,10 @@ const OrderScreen = () => {
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        showsVerticalScrollIndicator={false}
+      >
         <Text text={t(translations.order.title)} kind="bigHeader" />
 
         {localBooks.length > 0 ? (

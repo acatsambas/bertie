@@ -47,7 +47,10 @@ const BookScreen = () => {
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        showsVerticalScrollIndicator={false}
+      >
         <View>
           <Text kind="bigHeader" text={params.book.volumeInfo?.title} />
           <Text
