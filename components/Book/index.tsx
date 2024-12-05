@@ -72,7 +72,7 @@ const Book = ({
           >
             <View style={{ width: '90%', gap: 5 }}>
               <Text
-                text={title.length > 58 ? `${title.slice(0, 58)}...` : title}
+                text={title?.length > 58 ? `${title.slice(0, 58)}...` : title}
                 kind="paragraph"
                 color={checked && kind === 'library' && 'grey'}
               />
@@ -91,7 +91,10 @@ const Book = ({
       ) : (
         <View style={styles.removeBookContainer}>
           <View style={{ width: '80%' }}>
-            <Text text={title} kind="paragraph" />
+            <Text
+              text={title?.length > 58 ? `${title.slice(0, 58)}...` : title}
+              kind="paragraph"
+            />
             <Text text={author} kind="littleText" />
           </View>
           <CheckBox

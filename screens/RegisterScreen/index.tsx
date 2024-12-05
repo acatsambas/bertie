@@ -54,9 +54,9 @@ const RegisterScreen = () => {
     }
   };
 
-  const handleExplore = () => {
-    // TODO: anonymousLogin
-  };
+  // const handleExplore = () => {
+  //   // TODO: anonymousLogin
+  // };
 
   const handlePrivacy = () => {
     Linking.openURL('https://www.bertieapp.com/privacypolicy.html');
@@ -122,11 +122,11 @@ const RegisterScreen = () => {
           text={t(translations.signup.button)}
           onPress={handleRegister}
         />
-        <Button
+        {/* <Button
           kind="tertiary"
           text={t(translations.signup.explore)}
           onPress={handleExplore}
-        />
+        /> */}
       </View>
     </KeyboardAvoidingView>
   );
@@ -141,7 +141,7 @@ const useStyles = makeStyles(theme => ({
   },
   logo: {
     alignItems: 'center',
-    paddingTop: 20,
+    paddingTop: 50,
   },
   container: { paddingTop: 20, gap: 20 },
   error: {
