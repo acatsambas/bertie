@@ -113,7 +113,12 @@
     "sent": "We've sent your order to {{bookshopName}} via email, copying you in.",
     "relax": "They will get in touch to arrange delivery and payment. You just sit back and read a book in the meantime!",
     "done": "Done",
-    "bookshop": "the bookshop"
+    "bookshop": "the bookshop",
+    "emailTitle": "Email required",
+    "email": "You signed up via Apple, so we don’t have your email in our records. We need it to send your order to bookshops, so could you please add it?",
+    "emailPlaceholder": "Type your email",
+    "emailConfirmPh": "And once more for confirmation",
+    "mailError": "The entered email address is invalid or fields does not match."
   },
   "delete": {
     "title": "Delete account",
