@@ -25,7 +25,7 @@ export const createUser = (userProfile: Partial<UserData>) =>
         ...userProfile,
         documentId: auth().currentUser?.uid,
         email: auth().currentUser?.email,
-        order_email: auth().currentUser?.email,
+        contactEmail: auth().currentUser?.email,
       } as UserData,
       { merge: true },
     );

@@ -9,7 +9,7 @@ export function isFirebaseError(error: unknown): error is FirebaseError {
 export interface UserData {
   documentId: string;
   email: string;
-  order_email: string;
+  contactEmail: string;
   familyName: string;
   givenName: string;
   isFirstSearch?: boolean;

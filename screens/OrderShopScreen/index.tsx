@@ -31,8 +31,8 @@ const OrderShopScreen = () => {
   const route = useRoute<RouteProp<OrderNavigatorParamList, 'OrderShop'>>();
   const handlePlace = async () => {
     if (
-      !user?.order_email ||
-      user?.order_email.includes('@privaterelay.appleid.com')
+      !user?.contactEmail ||
+      user?.contactEmail.includes('@privaterelay.appleid.com')
     ) {
       navigate('EmailScreen');
     } else {
@@ -63,7 +63,7 @@ const OrderShopScreen = () => {
             address: 'acatsambas@bertieapp.com',
           },
           to: [favouriteShopData.email],
-          cc: [user.order_email],
+          cc: [user.contactEmail],
           message: {
             subject: 'New Book Order',
             text: `Dear ${favouriteShopData.name} team,
@@ -77,7 +77,7 @@ ${user.address?.secondLine && user.address.secondLine}
 ${user.address?.city && `${user.address.city}, `}${user.address?.postcode}
 ${user.address?.country ? user.address.country : 'United Kingdom'}
 
-Please get in touch with them directly to arrange payment and delivery at ${user.order_email}.
+Please get in touch with them directly to arrange payment and delivery at ${user.contactEmail}.
 
 Thank you,
 Bertie`,
