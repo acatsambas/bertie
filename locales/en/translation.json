@@ -65,7 +65,9 @@
       "city": "City",
       "postcode": "Postcode",
       "country": "Country",
-      "button": "Save"
+      "button": "Save",
+      "validationTitle": "Incomplete Address",
+      "validationMessage": "Be sure that at least the Postcode is filled."
     }
   },
   "discover": {

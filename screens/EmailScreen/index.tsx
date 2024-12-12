@@ -32,11 +32,10 @@ const EmailScreen = ({ navigation }) => {
     const validRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
     if (email === checkEmail && email.match(validRegex)) {
       await firestore().collection('users').doc(user.documentId).update({
-        email,
+        order_email: email,
       });
 
       navigation.goBack();
-      console.log('totu bine');
     } else {
       setError(true);
     }

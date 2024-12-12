@@ -2,7 +2,7 @@ import firestore from '@react-native-firebase/firestore';
 import { makeStyles } from '@rneui/themed';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
+import { Alert, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useUser } from '../../api/app/hooks';
@@ -32,6 +32,14 @@ const AddressScreen = ({ navigation }) => {
   }, [componentMounted, user]);
 
   const handleSave = async () => {
+    if (!address.postcode.trim()) {
+      Alert.alert(
+        t(translations.settings.address.validationTitle),
+        t(translations.settings.address.validationMessage),
+      );
+      return;
+    }
+
     await firestore().collection('users').doc(user.documentId).update({
       address,
     });

@@ -40,6 +40,7 @@ export type OrderNavigatorParamList = {
   Bookshop: {
     shop: Shop;
   };
+  EmailScreen: undefined;
   OrderPlaced: OrderPlacedProps;
 };
 

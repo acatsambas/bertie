@@ -29,58 +29,65 @@ const OrderShopScreen = () => {
   const { t } = useTranslation();
   const { navigate } = useNavigation<OrderShopScreenProps>();
   const route = useRoute<RouteProp<OrderNavigatorParamList, 'OrderShop'>>();
-
   const handlePlace = async () => {
-    await firestore()
-      .collection('orders')
-      .add({
-        userRef: firestore().doc(`users/${user.documentId}`),
-        shopRef: firestore().doc(`shops/${favouriteShop.id}`),
-        booksRef: route.params.books.map(({ id }) =>
-          firestore().doc(`books/${id}`),
-        ),
-        status: 'ordered',
-      });
+    if (
+      !user?.order_email ||
+      user?.order_email.includes('@privaterelay.appleid.com')
+    ) {
+      navigate('EmailScreen');
+    } else {
+      await firestore()
+        .collection('orders')
+        .add({
+          userRef: firestore().doc(`users/${user.documentId}`),
+          shopRef: firestore().doc(`shops/${favouriteShop.id}`),
+          booksRef: route.params.books.map(({ id }) =>
+            firestore().doc(`books/${id}`),
+          ),
+          status: 'ordered',
+        });
 
-    const favouriteShopData = shops.find(shop => shop.id === favouriteShop.id);
+      const favouriteShopData = shops.find(
+        shop => shop.id === favouriteShop.id,
+      );
 
-    if (!favouriteShopData) {
-      return;
-    }
-
-    // TODO: move this to a firebase function
-    await firestore()
-      .collection('mail')
-      .add({
-        from: {
-          name: 'Bertie',
-          address: 'acatsambas@bertieapp.com',
-        },
-        to: [favouriteShopData.email],
-        cc: [user.email],
-        message: {
-          subject: 'New Book Order',
-          text: `Dear ${favouriteShopData.name} team,
+      if (!favouriteShopData) {
+        return;
+      }
+      // TODO: move this to a firebase function
+      await firestore()
+        .collection('mail')
+        .add({
+          from: {
+            name: 'Bertie',
+            address: 'acatsambas@bertieapp.com',
+          },
+          to: [favouriteShopData.email],
+          cc: [user.order_email],
+          message: {
+            subject: 'New Book Order',
+            text: `Dear ${favouriteShopData.name} team,
 
 ${user.givenName} ${user.familyName} would like to order these books:
 ${route.params.books.map(book => `- ${book?.volumeInfo?.title} (${book?.volumeInfo?.authors?.join?.(', ')})`).join('\n')}
 
 Their address is:
-${user.address?.firstLine}
-${user.address?.secondLine}
-${user.address?.city}, ${user.address?.postcode}
-${user.address?.country}
+${user.address?.firstLine && user.address.firstLine}
+${user.address?.secondLine && user.address.secondLine}
+${user.address?.city && `${user.address.city}, `}${user.address?.postcode}
+${user.address?.country ? user.address.country : 'United Kingdom'}
 
-Please get in touch with them directly to arrange payment and delivery at ${user.email}.
+Please get in touch with them directly to arrange payment and delivery at ${user.order_email}.
 
 Thank you,
 Bertie`,
-        },
-      });
+          },
+        });
 
-    navigate('OrderPlaced', {
-      bookshopName: favouriteShopData.name,
-    });
+      navigate('OrderPlaced', {
+        bookshopName: favouriteShopData.name,
+      });
+    }
   };
 
   const handleBack = () => {

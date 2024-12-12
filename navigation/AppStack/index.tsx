@@ -15,6 +15,7 @@ import OrderShopScreen from '../../screens/OrderShopScreen';
 import ResetScreen from '../../screens/ResetScreen';
 import SearchBookScreen from '../../screens/SearchBookScreen';
 import SettingsScreen from '../../screens/SettingsScreen';
+import EmailScreen from '../../screens/EmailScreen';
 
 import {
   AppNavigatorParamList,
@@ -75,6 +76,7 @@ const OrderNavigator = () =>
     { name: 'OrderPlaced', component: OrderPlacedScreen },
     { name: 'AddressScreen', component: AddressScreen },
     { name: 'Bookshop', component: BookshopScreen },
+    { name: 'EmailScreen', component: EmailScreen },
   ]);
 
 const AppNavigator = () => {
