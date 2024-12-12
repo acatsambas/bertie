@@ -38,25 +38,21 @@ const OrderBookshopList = ({ kind, shops }: OrderBookshopListProps) => {
     return (
       <View>
         <Text kind="header" text={t(translations.order.favourites)} />
-        {isLoading ? (
-          <LoadingState />
-        ) : (
-          shops.map(shop => (
-            <BookShop
-              name={shop.name}
-              location={shop.city}
-              key={shop.id}
-              onPress={async () => {
-                firestore().collection('users').doc(user.documentId).update({
-                  favouriteShop: shop.id,
-                });
-              }}
-              kind={
-                user.favouriteShop === shop.id ? 'favoriteSelected' : 'favorite'
-              }
-            />
-          ))
-        )}
+        {shops.map(shop => (
+          <BookShop
+            name={shop.name}
+            location={shop.city}
+            key={shop.id}
+            onPress={async () => {
+              firestore().collection('users').doc(user.documentId).update({
+                favouriteShop: shop.id,
+              });
+            }}
+            kind={
+              user.favouriteShop === shop.id ? 'favoriteSelected' : 'favorite'
+            }
+          />
+        ))}
       </View>
     );
   }
