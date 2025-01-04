@@ -22,20 +22,6 @@ function replaceLastComma(str: string) {
   return str;
 }
 
-// We call this to get the first recommendation - this should be called when a user first goes to the discover books tab
-async function getFirstRecommendation() {
-  try {
-    const response = await client.chat.completions.create({
-      model: 'gpt-4o-mini',
-      messages: messageHistory,
-      max_tokens: 1000,
-    });
-
-    return replaceLastComma(response.choices[0].message.content);
-  } catch (error) {
-    console.error('Error fetching recommendations:', error);
-    return 'ERROR';
-  }
 }
 
 //Function for subsequent recommendations - this should be call when a user responds to the first suggestion
@@ -74,8 +60,7 @@ messageHistory.push(
   },
   {
     role: 'user',
-    content: `Here is a list of books I like: ${userList.join(', ')}. Please respond with the titles of three other books I will like based on those.
-      Only give me the titles, separated by commas.`,
+    content: `Here is a list of books I like: ${userList.join(', ')}. Given these preferences, what other books might I like?`,
   },
 );
 
@@ -87,10 +72,7 @@ async function startExecution() {
         In the meantime, some books we enjoyed recently are the works of Shirley Jackson, Tom Wolfe's essays, and the Rules of Civility. \n
         Let us know if you're after anything particular!`;
   } else {
-    tempMessage =
-      `Hey! Going by the books on your list, we think you might enjoy` +
-      (await getFirstRecommendation()) +
-      `\n  Let us know if you're after a particular genre, or something else.`;
+    tempMessage = (await getFirstRecommendation())
   }
 
   console.log(tempMessage);
