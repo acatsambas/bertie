@@ -22,8 +22,6 @@ function replaceLastComma(str: string) {
   return str;
 }
 
-}
-
 //Function for subsequent recommendations - this should be call when a user responds to the first suggestion
 async function getRecommendation() {
   try {
@@ -72,7 +70,7 @@ async function startExecution() {
         In the meantime, some books we enjoyed recently are the works of Shirley Jackson, Tom Wolfe's essays, and the Rules of Civility. \n
         Let us know if you're after anything particular!`;
   } else {
-    tempMessage = (await getFirstRecommendation())
+    tempMessage = await getRecommendation(); //getFirstRecommendation();
   }
 
   console.log(tempMessage);
