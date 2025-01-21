@@ -13,7 +13,6 @@ import { LibraryNavigatorParamList } from '../../navigation/AppStack/params';
 import Book from '../Book';
 import Icon from '../Icon';
 import Text from '../Text';
-import LoadingState from '../LoadingState/LoadingState';
 
 export interface LibraryPageProps
   extends StackNavigationProp<LibraryNavigatorParamList, 'Library'> {}
