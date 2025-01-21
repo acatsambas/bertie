@@ -6,22 +6,6 @@ const client = new OpenAI({
   organization: process.env.EXPO_PUBLIC_OPENAI_ORG_ID,
 });
 
-// helper function to format text better
-function replaceLastComma(str: string) {
-  const lastCommaIndex = str.lastIndexOf(',');
-
-  // If a comma is found, replace it with 'and'
-  if (lastCommaIndex !== -1) {
-    return (
-      str.substring(0, lastCommaIndex) +
-      ', and' +
-      str.substring(lastCommaIndex + 1)
-    );
-  }
-  // Return the original string if there's no comma
-  return str;
-}
-
 //Function for subsequent recommendations - this should be call when a user responds to the first suggestion
 async function getRecommendation() {
   try {
