@@ -3,17 +3,17 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { makeStyles, Tab } from '@rneui/themed';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
+import { View, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Avatar from '../../components/Avatar';
 import BookshopsList from '../../components/BookshopsList';
 import BottomMenu from '../../components/BottomMenu';
-import DiscoverRecommendedBooks from '../../components/DiscoverRecommendedBooks';
 import Text from '../../components/Text';
 import { translations } from '../../locales/translations';
 import { AppNavigatorParamList } from '../../navigation/AppStack/params';
 import { useUser } from '../../api/app/hooks';
+import Input from '../../components/Input';
 
 export interface DiscoverScreenProps
   extends StackNavigationProp<AppNavigatorParamList, 'DiscoverNavigator'> {}
@@ -25,9 +25,21 @@ const DiscoverScreen = () => {
   const user = useUser();
 
   const [index, setIndex] = useState(0);
+  const [messages, setMessages] = useState([
+    'Hey! Going by the books on your list, we think you might enjoy *Death in the Nile*, *The Corrections*, or *Casino Royale*.',
+    "Let us know if you're after a particular genre, or something else.",
+  ]);
+  const [userInput, setUserInput] = useState('');
 
   const handleAvatarClick = () => {
     navigate('SettingsNavigator');
+  };
+
+  const handleSend = () => {
+    if (userInput.trim()) {
+      setMessages([...messages, userInput]);
+      setUserInput('');
+    }
   };
 
   return (
@@ -64,18 +76,37 @@ const DiscoverScreen = () => {
             <BookshopsList />
           </View>
         ) : (
-          <View style={styles.booksTab}>
-            <Text
-              text={t(translations.discover.booksHeader)}
-              kind="paragraph"
+          <KeyboardAvoidingView
+            style={styles.booksTab}
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          >
+            <ScrollView
+              style={styles.chatContainer}
+              contentContainerStyle={styles.chatContentContainer}
+            >
+              {messages.map((message, index) => (
+                <View
+                  key={index}
+                  style={[
+                    styles.messageBubble,
+                    index % 2 === 0 ? styles.botMessage : styles.userMessage,
+                  ]}
+                >
+                  <Text text={message} kind="paragraph" />
+                </View>
+              ))}
+            </ScrollView>
+            <Input
+              value={userInput}
+              onChangeText={setUserInput}
+              placeholder="Type your response here"
+              returnKeyType="send"
+              onSubmitEditing={handleSend}
             />
-            <DiscoverRecommendedBooks kind="discover" />
-          </View>
+          </KeyboardAvoidingView>
         )}
       </View>
-      <View style={styles.bottomArea}>
-        <BottomMenu />
-      </View>
+      <BottomMenu />
     </SafeAreaView>
   );
 };
@@ -83,38 +114,49 @@ const DiscoverScreen = () => {
 const useStyles = makeStyles(theme => ({
   safeAreaView: {
     flex: 1,
-    paddingHorizontal: 20,
     backgroundColor: theme.colors.white,
-    position: 'relative',
   },
-  container: { paddingTop: 20, gap: 20 },
+  container: { flex: 1 },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-  },
-  tabs: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 10,
   },
   bookshopContainer: {
-    gap: 20,
+    paddingHorizontal: 20,
+    paddingTop: 10,
   },
   description: {
     backgroundColor: '#F3EAFF',
     paddingHorizontal: 15,
     paddingVertical: 10,
-  },
-  bottomArea: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    left: 0,
+    borderRadius: 8,
   },
   booksTab: {
-    gap: 20,
+    flex: 1,
+    paddingHorizontal: 20,
+  },
+  chatContainer: {
+    flex: 1,
+  },
+  chatContentContainer: {
+    paddingVertical: 10,
+  },
+  messageBubble: {
+    padding: 15,
+    marginVertical: 5,
+    borderRadius: 10,
+    maxWidth: '80%',
+  },
+  botMessage: {
+    backgroundColor: '#F8E7E7',
+    alignSelf: 'flex-start',
+  },
+  userMessage: {
+    backgroundColor: '#E7E7E7',
+    alignSelf: 'flex-end',
   },
 }));
 
