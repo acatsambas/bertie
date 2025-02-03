@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Markdown from 'react-native-markdown-display';
 
 import { translations } from '../../locales/translations';
 import { AppNavigatorParamList } from '../../navigation/AppStack/params';
@@ -103,7 +104,16 @@ const DiscoverScreen = () => {
                     index % 2 === 0 ? styles.botMessage : styles.userMessage,
                   ]}
                 >
-                  <Text text={message} kind="paragraph" />
+                  <Markdown
+                    style={{
+                      body: {
+                        fontFamily: 'Commissioner_400Regular',
+                        fontSize: 16,
+                      },
+                    }}
+                  >
+                    {message}
+                  </Markdown>
                 </View>
               ))}
             </ScrollView>
