@@ -1,18 +1,20 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { makeStyles, Tab } from '@rneui/themed';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { translations } from '../../locales/translations';
+import { AppNavigatorParamList } from '../../navigation/AppStack/params';
+import { useUser } from '../../api/app/hooks';
+import { executeGPT } from '../../gpt/discover-books';
 
 import Avatar from '../../components/Avatar';
 import BookshopsList from '../../components/BookshopsList';
 import BottomMenu from '../../components/BottomMenu';
 import Text from '../../components/Text';
-import { translations } from '../../locales/translations';
-import { AppNavigatorParamList } from '../../navigation/AppStack/params';
-import { useUser } from '../../api/app/hooks';
 import Input from '../../components/Input';
 
 export interface DiscoverScreenProps
@@ -25,20 +27,29 @@ const DiscoverScreen = () => {
   const user = useUser();
 
   const [index, setIndex] = useState(0);
-  const [messages, setMessages] = useState([
-    'Hey! Going by the books on your list, we think you might enjoy *Death in the Nile*, *The Corrections*, or *Casino Royale*.',
-    "Let us know if you're after a particular genre, or something else.",
-  ]);
+  const [messages, setMessages] = useState<string[]>([]);
   const [userInput, setUserInput] = useState('');
+
+  useEffect(() => {
+    async function fetchInitialMessage() {
+      const initialMessage = await executeGPT(); // Get first AI response
+      setMessages([initialMessage]);
+    }
+    fetchInitialMessage();
+  }, []);
 
   const handleAvatarClick = () => {
     navigate('SettingsNavigator');
   };
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (userInput.trim()) {
-      setMessages([...messages, userInput]);
+      const userMessage = userInput;
+      setMessages(prevMessages => [...prevMessages, userMessage]); // Show user message
       setUserInput('');
+
+      const botResponse = await executeGPT(userMessage); // Get AI response
+      setMessages(prevMessages => [...prevMessages, botResponse]); // Update UI
     }
   };
 

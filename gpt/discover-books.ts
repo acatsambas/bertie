@@ -15,15 +15,13 @@ async function getRecommendation() {
       max_tokens: 1000,
     });
 
-    messageHistory.push({
-      role: 'assistant',
-      content: response.choices[0].message.content,
-    });
+    const botMessage = response.choices[0].message.content;
+    messageHistory.push({ role: 'assistant', content: botMessage });
 
-    return response.choices[0].message.content;
+    return botMessage;
   } catch (error) {
     console.error('Error fetching recommendations:', error);
-    return 'ERROR';
+    return 'Oops! Something went wrong.';
   }
 }
 
@@ -46,31 +44,20 @@ messageHistory.push(
   },
 );
 
-async function startExecution() {
+export async function executeGPT(userMessage: string | null = null) {
   let tempMessage = '';
 
-  if (userList.length === 0) {
-    tempMessage = `Your reading list is empty. If you add books to it, we can give you recommendations based on your interests. \n 
-        In the meantime, some books we enjoyed recently are the works of Shirley Jackson, Tom Wolfe's essays, and the Rules of Civility. \n
-        Let us know if you're after anything particular!`;
+  if (userMessage) {
+    messageHistory.push({ role: 'user', content: userMessage });
+    tempMessage = await getRecommendation();
   } else {
-    tempMessage = await getRecommendation(); //getFirstRecommendation();
+    tempMessage =
+      userList.length === 0
+        ? 'Your reading list is empty. Add books to get personalized recommendations!'
+        : await getRecommendation();
   }
 
-  console.log(tempMessage);
-
-  messageHistory.push({
-    role: 'assistant',
-    content: tempMessage,
-  });
-
-  //this is dummy data - we should be storing here the user's response
-  messageHistory.push({
-    role: 'user',
-    content: `Actually I'm looking for mystery novels or murder mysteries - but they must be literary, not just vacuous Entertainment.`, //user response goes here
-  });
-  tempMessage = await getRecommendation();
-  console.log(tempMessage);
+  return tempMessage;
 }
 
-startExecution();
+executeGPT();
