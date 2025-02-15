@@ -5,8 +5,8 @@ import {
 import { makeStyles } from '@rneui/themed';
 import { useContext } from 'react';
 
-import { AuthContext } from '../../../api/auth/AuthProvider';
-import { isFirebaseError } from '../../../api/types';
+import { AuthContext } from 'api/auth/AuthProvider';
+import { isFirebaseError } from 'api/types';
 
 /* https://github.com/chelseafarley/expo-google-signin/blob/main/App.js */
 

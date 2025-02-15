@@ -1,7 +1,9 @@
 import { useContext } from 'react';
 
-import { AuthContext } from '../../api/auth/AuthProvider';
-import StyledNavigationContainer from '../../styles/StyledNavigationContainer';
+import { AuthContext } from 'api/auth/AuthProvider';
+
+import StyledNavigationContainer from 'styles/StyledNavigationContainer';
+
 import AppNagivator from '../AppStack';
 import AuthNavigator from '../AuthStack';
 

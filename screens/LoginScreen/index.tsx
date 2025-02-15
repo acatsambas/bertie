@@ -6,14 +6,17 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { AuthContext } from '../../api/auth/AuthProvider';
-import { isFirebaseError } from '../../api/types';
-import Button from '../../components/Button';
-import Input from '../../components/Input';
-import Logo from '../../components/Logo';
-import Text from '../../components/Text';
-import { translations } from '../../locales/translations';
-import { AuthNavigatorParamList } from '../../navigation/AuthStack/params';
+import Button from 'components/Button';
+import Input from 'components/Input';
+import Logo from 'components/Logo';
+import Text from 'components/Text';
+
+import { AuthContext } from 'api/auth/AuthProvider';
+import { isFirebaseError } from 'api/types';
+
+import { AuthNavigatorParamList } from 'navigation/AuthStack/params';
+
+import { translations } from 'locales/translations';
 
 export interface LoginPageProps
   extends StackNavigationProp<AuthNavigatorParamList, 'Login'> {}

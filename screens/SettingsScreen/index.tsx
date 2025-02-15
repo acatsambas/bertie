@@ -7,12 +7,15 @@ import { Linking, View } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { AuthContext } from '../../api/auth/AuthProvider';
-import Button from '../../components/Button';
-import Icon from '../../components/Icon';
-import Text from '../../components/Text';
-import { translations } from '../../locales/translations';
-import { SettingsNavigatorParamList } from '../../navigation/AppStack/params';
+import Button from 'components/Button';
+import Icon from 'components/Icon';
+import Text from 'components/Text';
+
+import { AuthContext } from 'api/auth/AuthProvider';
+
+import { SettingsNavigatorParamList } from 'navigation/AppStack/params';
+
+import { translations } from 'locales/translations';
 
 export interface SettingsPageProps
   extends StackNavigationProp<SettingsNavigatorParamList, 'Settings'> {}

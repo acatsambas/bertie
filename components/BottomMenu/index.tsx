@@ -3,9 +3,11 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { makeStyles } from '@rneui/themed';
 import { View } from 'react-native';
 
-import { AppNavigatorParamList } from '../../navigation/AppStack/params';
-import { menuItems } from '../../utils/data';
-import BottomMenuItem from '../BottomMenuItem';
+import BottomMenuItem from 'components/BottomMenuItem';
+
+import { AppNavigatorParamList } from 'navigation/AppStack/params';
+
+import { menuItems } from 'utils/data';
 
 export interface BottomMenuProps
   extends StackNavigationProp<AppNavigatorParamList, 'LibraryNavigator'> {}

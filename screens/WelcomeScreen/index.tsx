@@ -5,14 +5,16 @@ import { useTranslation } from 'react-i18next';
 import { Linking, Platform, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import AppleSigninButton from '../../components/AuthButtons/Apple';
-import GoogleButton from '../../components/AuthButtons/GoogleButton';
-import Button from '../../components/Button';
-import Illustration from '../../components/Illustration';
-import Logo from '../../components/Logo';
-import Text from '../../components/Text';
-import { translations } from '../../locales/translations';
-import { AuthNavigatorParamList } from '../../navigation/AuthStack/params';
+import AppleSigninButton from 'components/AuthButtons/Apple';
+import GoogleButton from 'components/AuthButtons/GoogleButton';
+import Button from 'components/Button';
+import Illustration from 'components/Illustration';
+import Logo from 'components/Logo';
+import Text from 'components/Text';
+
+import { AuthNavigatorParamList } from 'navigation/AuthStack/params';
+
+import { translations } from 'locales/translations';
 
 export interface WelcomePageProps
   extends StackNavigationProp<AuthNavigatorParamList, 'Welcome'> {}

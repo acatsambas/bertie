@@ -1,5 +1,6 @@
-import { View, ActivityIndicator } from 'react-native';
 import { makeStyles } from '@rneui/themed';
+import { ActivityIndicator, View } from 'react-native';
+
 import Text from '../Text';
 
 const LoadingState = () => {

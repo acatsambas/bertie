@@ -5,10 +5,12 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import Button from '../../components/Button';
-import Text from '../../components/Text';
-import { translations } from '../../locales/translations';
-import { OrderNavigatorParamList } from '../../navigation/AppStack/params';
+import Button from 'components/Button';
+import Text from 'components/Text';
+
+import { OrderNavigatorParamList } from 'navigation/AppStack/params';
+
+import { translations } from 'locales/translations';
 
 const OrderPlacedScreen = () => {
   const styles = useStyles();

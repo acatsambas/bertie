@@ -4,10 +4,12 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useContext } from 'react';
 import { View } from 'react-native';
 
-import { useUserBooks } from '../../api/app/hooks';
-import { AuthContext } from '../../api/auth/AuthProvider';
-import { BookResult } from '../../api/google-books/search';
-import { LibraryNavigatorParamList } from '../../navigation/AppStack/params';
+import { useUserBooks } from 'api/app/hooks';
+import { AuthContext } from 'api/auth/AuthProvider';
+import { BookResult } from 'api/google-books/search';
+
+import { LibraryNavigatorParamList } from 'navigation/AppStack/params';
+
 import Book from '../Book';
 
 export interface SearchBookProps {

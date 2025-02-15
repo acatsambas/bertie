@@ -1,9 +1,10 @@
-import React, { createContext, useEffect, useMemo, useState } from 'react';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import React, { createContext, useEffect, useMemo, useState } from 'react';
+
+import { appleAuth } from 'utils/react-native-apple-authentication';
 
 import { createUser, updateUserProfile } from './hooks';
-import { appleAuth } from '../../utils/react-native-apple-authentication';
 
 GoogleSignin.configure({
   offlineAccess: true,

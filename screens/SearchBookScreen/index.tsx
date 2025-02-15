@@ -1,22 +1,25 @@
 import firestore from '@react-native-firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { makeStyles, Switch } from '@rneui/themed';
+import { Switch, makeStyles } from '@rneui/themed';
 import { debounce } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Platform, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { translations } from '../../locales/translations';
-import { LibraryNavigatorParamList } from '../../navigation/AppStack/params';
-import { useUser } from '../../api/app/hooks';
-import { BookResult, searchBooks } from '../../api/google-books/search';
-import Icon from '../../components/Icon';
-import Input from '../../components/Input';
-import SearchBooks from '../../components/SearchBooks';
-import Text from '../../components/Text';
-import LoadingState from '../../components/LoadingState/LoadingState';
+import Icon from 'components/Icon';
+import Input from 'components/Input';
+import LoadingState from 'components/LoadingState/LoadingState';
+import SearchBooks from 'components/SearchBooks';
+import Text from 'components/Text';
+
+import { useUser } from 'api/app/hooks';
+import { BookResult, searchBooks } from 'api/google-books/search';
+
+import { LibraryNavigatorParamList } from 'navigation/AppStack/params';
+
+import { translations } from 'locales/translations';
 
 export interface SearchBookProps
   extends StackNavigationProp<LibraryNavigatorParamList, 'Search'> {}

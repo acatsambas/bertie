@@ -1,21 +1,22 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { useTranslation } from 'react-i18next';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
-import { translations } from '../../locales/translations';
-import AddressScreen from '../../screens/AddressScreen';
-import BookScreen from '../../screens/BookScreen';
-import BookshopScreen from '../../screens/BookshopScreen';
-import DeleteScreen from '../../screens/DeleteScreen';
-import DiscoverScreen from '../../screens/DiscoverScreen';
-import LibraryScreen from '../../screens/LibraryScreen';
-import OrderPlacedScreen from '../../screens/OrderPlacedScreen';
-import OrderScreen from '../../screens/OrderScreen';
-import OrderShopScreen from '../../screens/OrderShopScreen';
-import ResetScreen from '../../screens/ResetScreen';
-import SearchBookScreen from '../../screens/SearchBookScreen';
-import SettingsScreen from '../../screens/SettingsScreen';
-import EmailScreen from '../../screens/EmailScreen';
+import AddressScreen from 'screens/AddressScreen';
+import BookScreen from 'screens/BookScreen';
+import BookshopScreen from 'screens/BookshopScreen';
+import DeleteScreen from 'screens/DeleteScreen';
+import DiscoverScreen from 'screens/DiscoverScreen';
+import EmailScreen from 'screens/EmailScreen';
+import LibraryScreen from 'screens/LibraryScreen';
+import OrderPlacedScreen from 'screens/OrderPlacedScreen';
+import OrderScreen from 'screens/OrderScreen';
+import OrderShopScreen from 'screens/OrderShopScreen';
+import ResetScreen from 'screens/ResetScreen';
+import SearchBookScreen from 'screens/SearchBookScreen';
+import SettingsScreen from 'screens/SettingsScreen';
+
+import { translations } from 'locales/translations';
 
 import {
   AppNavigatorParamList,

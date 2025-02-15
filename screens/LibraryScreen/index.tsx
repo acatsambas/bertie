@@ -5,13 +5,15 @@ import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import Avatar from '../../components/Avatar';
-import BottomMenu from '../../components/BottomMenu';
-import CurrentBooks from '../../components/CurrentBooks';
-import PastBooks from '../../components/PastBooks';
-import Text from '../../components/Text';
-import { translations } from '../../locales/translations';
-import { AppNavigatorParamList } from '../../navigation/AppStack/params';
+import Avatar from 'components/Avatar';
+import BottomMenu from 'components/BottomMenu';
+import CurrentBooks from 'components/CurrentBooks';
+import PastBooks from 'components/PastBooks';
+import Text from 'components/Text';
+
+import { AppNavigatorParamList } from 'navigation/AppStack/params';
+
+import { translations } from 'locales/translations';
 
 export interface LibraryScreenProps
   extends StackNavigationProp<AppNavigatorParamList, 'LibraryNavigator'> {}
