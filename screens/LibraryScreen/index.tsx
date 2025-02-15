@@ -1,45 +1,50 @@
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
 import { makeStyles } from '@rneui/themed';
-import { useTranslation } from 'react-i18next';
-import { ScrollView, View } from 'react-native';
+import { useContext } from 'react';
+import { SectionList, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import Avatar from 'components/Avatar';
+import Book from 'components/Book';
 import BottomMenu from 'components/BottomMenu';
-import CurrentBooks from 'components/CurrentBooks';
-import PastBooks from 'components/PastBooks';
-import Text from 'components/Text';
 
-import { AppNavigatorParamList } from 'navigation/AppStack/params';
+import { AuthContext } from 'api/auth/AuthProvider';
 
-import { translations } from 'locales/translations';
-
-export interface LibraryScreenProps
-  extends StackNavigationProp<AppNavigatorParamList, 'LibraryNavigator'> {}
+import { ListHeader, SectionHeader } from './components';
+import { useLibrary } from './hooks';
 
 const LibraryScreen = () => {
   const styles = useStyles();
-  const { t } = useTranslation();
-  const { navigate } = useNavigation<LibraryScreenProps>();
-
-  const handleAvatarClick = () => {
-    navigate('SettingsNavigator');
-  };
+  const { user } = useContext(AuthContext);
+  const { books, handleOnPressBook, handleOnRead, handleAddBook } =
+    useLibrary(user);
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <ScrollView
-        contentContainerStyle={styles.container}
+      <SectionList
+        style={styles.list}
+        contentContainerStyle={styles.listContainer}
         showsVerticalScrollIndicator={false}
-      >
-        <View style={styles.header}>
-          <Text text={t(translations.library.title)} kind="bigHeader" />
-          <Avatar onPress={handleAvatarClick} />
-        </View>
-        <CurrentBooks />
-        <PastBooks />
-      </ScrollView>
+        sections={books}
+        stickySectionHeadersEnabled={false}
+        ListHeaderComponent={<ListHeader />}
+        renderSectionHeader={({ section }) => (
+          <SectionHeader
+            title={section.title}
+            id={section.id}
+            handleAddBook={handleAddBook}
+          />
+        )}
+        renderItem={({ item }) => (
+          <Book
+            key={item.id}
+            title={item.volumeInfo?.title}
+            author={item.volumeInfo?.authors?.join?.(', ')}
+            kind="library"
+            isChecked={item.isRead}
+            onPress={() => handleOnPressBook(item)}
+            onChange={() => handleOnRead(item.id, item.isRead)}
+          />
+        )}
+      />
       <View style={styles.bottomArea}>
         <BottomMenu />
       </View>
@@ -52,13 +57,9 @@ const useStyles = makeStyles(theme => ({
     flex: 1,
     paddingHorizontal: 20,
     backgroundColor: theme.colors.white,
-    position: 'relative',
   },
-  container: { paddingTop: 20, gap: 20 },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
+  list: { marginBottom: 40 },
+  listContainer: { paddingTop: 20, gap: 20 },
   bottomArea: {
     flex: 1,
     alignItems: 'center',
