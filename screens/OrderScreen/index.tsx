@@ -6,14 +6,17 @@ import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { useUserBooks } from '../../api/app/hooks';
-import BottomMenu from '../../components/BottomMenu';
-import Button from '../../components/Button';
-import OrderBooksList from '../../components/OrderBooksList';
-import Text from '../../components/Text';
-import { translations } from '../../locales/translations';
-import { OrderNavigatorParamList } from '../../navigation/AppStack/params';
-import DiscoverRecommendedBooks from '../../components/DiscoverRecommendedBooks';
+import BottomMenu from 'components/BottomMenu';
+import Button from 'components/Button';
+import DiscoverRecommendedBooks from 'components/DiscoverRecommendedBooks';
+import OrderBooksList from 'components/OrderBooksList';
+import Text from 'components/Text';
+
+import { useUserBooks } from 'api/app/hooks';
+
+import { OrderNavigatorParamList } from 'navigation/AppStack/params';
+
+import { translations } from 'locales/translations';
 
 export interface OrderPageProps
   extends StackNavigationProp<OrderNavigatorParamList, 'Order'> {}

@@ -2,17 +2,20 @@ import firestore from '@react-native-firebase/firestore';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { makeStyles } from '@rneui/themed';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useMemo } from 'react';
 
-import { useFavouriteShops, useShops, useUser } from '../../api/app/hooks';
-import { translations } from '../../locales/translations';
-import { OrderNavigatorParamList } from '../../navigation/AppStack/params';
-import Button from '../../components/Button';
-import OrderBookshopList from '../../components/OrderBookshopList';
-import Text from '../../components/Text';
+import Button from 'components/Button';
+import OrderBookshopList from 'components/OrderBookshopList';
+import Text from 'components/Text';
+
+import { useFavouriteShops, useShops, useUser } from 'api/app/hooks';
+
+import { OrderNavigatorParamList } from 'navigation/AppStack/params';
+
+import { translations } from 'locales/translations';
 
 export interface OrderShopScreenProps
   extends StackNavigationProp<OrderNavigatorParamList, 'OrderShop'> {}

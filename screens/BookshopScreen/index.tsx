@@ -8,13 +8,16 @@ import { View } from 'react-native';
 import RenderHtml from 'react-native-render-html';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { useFavouriteShops } from '../../api/app/hooks';
-import { AuthContext } from '../../api/auth/AuthProvider';
-import Button from '../../components/Button';
-import GoogleMaps from '../../components/GoogleMaps';
-import Text from '../../components/Text';
-import { translations } from '../../locales/translations';
-import { DiscoverNavigatorParamList } from '../../navigation/AppStack/params';
+import Button from 'components/Button';
+import GoogleMaps from 'components/GoogleMaps';
+import Text from 'components/Text';
+
+import { useFavouriteShops } from 'api/app/hooks';
+import { AuthContext } from 'api/auth/AuthProvider';
+
+import { DiscoverNavigatorParamList } from 'navigation/AppStack/params';
+
+import { translations } from 'locales/translations';
 
 export interface BookshopPageProps
   extends StackNavigationProp<DiscoverNavigatorParamList, 'Bookshop'> {}

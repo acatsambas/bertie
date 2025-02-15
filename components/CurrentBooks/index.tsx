@@ -6,13 +6,16 @@ import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, View } from 'react-native';
 
-import { useUserBooks } from '../../api/app/hooks';
-import { AuthContext } from '../../api/auth/AuthProvider';
-import { translations } from '../../locales/translations';
-import { LibraryNavigatorParamList } from '../../navigation/AppStack/params';
-import Book from '../Book';
-import Icon from '../Icon';
-import Text from '../Text';
+import Book from 'components/Book';
+import Icon from 'components/Icon';
+import Text from 'components/Text';
+
+import { useUserBooks } from 'api/app/hooks';
+import { AuthContext } from 'api/auth/AuthProvider';
+
+import { LibraryNavigatorParamList } from 'navigation/AppStack/params';
+
+import { translations } from 'locales/translations';
 
 export interface LibraryPageProps
   extends StackNavigationProp<LibraryNavigatorParamList, 'Library'> {}

@@ -3,12 +3,13 @@ import { useTranslation } from 'react-i18next';
 import { Platform, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import AppleSigninButton from '../../components/AuthButtons/Apple';
-import GoogleButton from '../../components/AuthButtons/GoogleButton';
-import Button from '../../components/Button';
-import Icon from '../../components/Icon';
-import Text from '../../components/Text';
-import { translations } from '../../locales/translations';
+import AppleSigninButton from 'components/AuthButtons/Apple';
+import GoogleButton from 'components/AuthButtons/GoogleButton';
+import Button from 'components/Button';
+import Icon from 'components/Icon';
+import Text from 'components/Text';
+
+import { translations } from 'locales/translations';
 
 const NoAccountScreen = ({ navigation }) => {
   const styles = useStyles();

@@ -1,12 +1,14 @@
-import './locales/i18n';
-
 import { ThemeProvider, createTheme } from '@rneui/themed';
-
-import { initFirebase } from './api/firebase';
-import { AuthProvider } from './api/auth/AuthProvider';
-import Routes from './navigation/Routes';
-import { FontsProvider } from './styles/FontsProvider';
 import { useEffect, useState } from 'react';
+
+import { AuthProvider } from 'api/auth/AuthProvider';
+import { initFirebase } from 'api/firebase';
+
+import Routes from 'navigation/Routes';
+
+import { FontsProvider } from 'styles/FontsProvider';
+
+import 'locales/i18n';
 
 const theme = createTheme({
   lightColors: {

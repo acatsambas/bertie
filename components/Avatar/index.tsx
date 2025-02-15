@@ -1,8 +1,8 @@
 import { Avatar as RNEAvatar } from '@rneui/themed';
 import React, { useContext } from 'react';
 
-import { useUser } from '../../api/app/hooks';
-import { AuthContext } from '../../api/auth/AuthProvider';
+import { useUser } from 'api/app/hooks';
+import { AuthContext } from 'api/auth/AuthProvider';
 
 interface AvatarProps {
   onPress?(): void;

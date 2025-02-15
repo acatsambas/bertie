@@ -2,17 +2,21 @@ import firestore from '@react-native-firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { makeStyles } from '@rneui/themed';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { useUser } from '../../api/app/hooks';
-import { Shop } from '../../api/app/types';
-import Text from '../../components/Text';
-import { translations } from '../../locales/translations';
-import { OrderNavigatorParamList } from '../../navigation/AppStack/params';
+import Text from 'components/Text';
+
+import { useUser } from 'api/app/hooks';
+import { Shop } from 'api/app/types';
+
+import { OrderNavigatorParamList } from 'navigation/AppStack/params';
+
+import { translations } from 'locales/translations';
+
 import BookShop from '../Bookshop';
 import LoadingState from '../LoadingState/LoadingState';
-import { useEffect, useState } from 'react';
 
 interface OrderBookshopListProps {
   kind: 'favourites' | 'more';

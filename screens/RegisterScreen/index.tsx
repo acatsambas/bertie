@@ -5,12 +5,14 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { KeyboardAvoidingView, Linking, Platform, View } from 'react-native';
 
-import Button from '../../components/Button';
-import Input from '../../components/Input';
-import Logo from '../../components/Logo';
-import Text from '../../components/Text';
-import { translations } from '../../locales/translations';
-import { AuthNavigatorParamList } from '../../navigation/AuthStack/params';
+import Button from 'components/Button';
+import Input from 'components/Input';
+import Logo from 'components/Logo';
+import Text from 'components/Text';
+
+import { AuthNavigatorParamList } from 'navigation/AuthStack/params';
+
+import { translations } from 'locales/translations';
 
 export interface RegisterPageProps
   extends StackNavigationProp<AuthNavigatorParamList, 'Register'> {}

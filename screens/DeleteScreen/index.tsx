@@ -4,11 +4,13 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { AuthContext } from '../../api/auth/AuthProvider';
-import Button from '../../components/Button';
-import Input from '../../components/Input';
-import Text from '../../components/Text';
-import { translations } from '../../locales/translations';
+import Button from 'components/Button';
+import Input from 'components/Input';
+import Text from 'components/Text';
+
+import { AuthContext } from 'api/auth/AuthProvider';
+
+import { translations } from 'locales/translations';
 
 const DeleteScreen = () => {
   const [isDeleted, setIsDeleted] = useState(false);
