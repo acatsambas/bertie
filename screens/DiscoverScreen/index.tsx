@@ -9,7 +9,7 @@ import Markdown from 'react-native-markdown-display';
 
 import { translations } from '../../locales/translations';
 import { AppNavigatorParamList } from '../../navigation/AppStack/params';
-import { useUser } from '../../api/app/hooks';
+import { useUser, useUserBooks } from '../../api/app/hooks';
 import { executeGPT } from '../../gpt/discover-books';
 
 import Avatar from '../../components/Avatar';
@@ -26,18 +26,20 @@ const DiscoverScreen = () => {
   const { t } = useTranslation();
   const { navigate } = useNavigation<DiscoverScreenProps>();
   const user = useUser();
+  const books = useUserBooks({ withRefs: true });
 
   const [index, setIndex] = useState(0);
   const [messages, setMessages] = useState<string[]>([]);
   const [userInput, setUserInput] = useState('');
 
   useEffect(() => {
+    const bookTitles = books.map(book => book.volumeInfo.title);
     async function fetchInitialMessage() {
-      const initialMessage = await executeGPT(); // Get first AI response
+      const initialMessage = await executeGPT(null, bookTitles); // Get first AI response
       setMessages([initialMessage]);
     }
     fetchInitialMessage();
-  }, []);
+  }, [books]);
 
   const handleAvatarClick = () => {
     navigate('SettingsNavigator');

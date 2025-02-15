@@ -6,7 +6,7 @@ const client = new OpenAI({
   organization: process.env.EXPO_PUBLIC_OPENAI_ORG_ID,
 });
 
-//Function for subsequent recommendations - this should be call when a user responds to the first suggestion
+// Function for subsequent recommendations - called when a user responds
 async function getRecommendation() {
   try {
     const response = await client.chat.completions.create({
@@ -25,39 +25,37 @@ async function getRecommendation() {
   }
 }
 
-let userList = [
-  'Infinite Jest',
-  'The Lottery and Other Stories',
-  'Death on the Nile',
-]; //holds the user's list (current + past) - here showing it with dummy data
-let messageHistory = []; // this holds the messages from and to GPT, so it has the history and context
+// Holds the messages from and to GPT, so it has history and context
+let messageHistory = [];
 
-//initialisation
-messageHistory.push(
-  {
-    role: 'system',
-    content: 'You are a helpful assistant.',
-  },
-  {
-    role: 'user',
-    content: `Here is a list of books I like: ${userList.join(', ')}. Given these preferences, what other books might I like?`,
-  },
-);
-
-export async function executeGPT(userMessage: string | null = null) {
+// Function to initialize conversation with books
+export async function executeGPT(
+  userMessage: string | null = null,
+  books: string[] | null = null,
+) {
   let tempMessage = '';
+
+  // If first-time execution (no userMessage), initialize messageHistory
+  if (messageHistory.length === 0 && books.length > 0) {
+    console.log(books);
+    messageHistory.push(
+      { role: 'system', content: 'You are a helpful assistant.' },
+      {
+        role: 'user',
+        content: `Here is a list of books I like: ${books.join(', ')}. Given these preferences, what other books might I like?`,
+      },
+    );
+  }
 
   if (userMessage) {
     messageHistory.push({ role: 'user', content: userMessage });
     tempMessage = await getRecommendation();
   } else {
     tempMessage =
-      userList.length === 0
+      books && books.length === 0
         ? 'Your reading list is empty. Add books to get personalized recommendations!'
         : await getRecommendation();
   }
 
   return tempMessage;
 }
-
-executeGPT();
