@@ -2,8 +2,8 @@ import { makeStyles } from '@rneui/themed';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import { useContext } from 'react';
 
-import { AuthContext } from '../../../api/auth/AuthProvider';
-import { isFirebaseError } from '../../../api/types';
+import { AuthContext } from 'api/auth/AuthProvider';
+import { isFirebaseError } from 'api/types';
 
 const AppleSigninButton = () => {
   const styles = useStyles();

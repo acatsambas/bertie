@@ -5,11 +5,13 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { useUser } from '../../api/app/hooks';
-import Button from '../../components/Button';
-import Input from '../../components/Input';
-import Text from '../../components/Text';
-import { translations } from '../../locales/translations';
+import Button from 'components/Button';
+import Input from 'components/Input';
+import Text from 'components/Text';
+
+import { useUser } from 'api/app/hooks';
+
+import { translations } from 'locales/translations';
 
 const EmailScreen = ({ navigation }) => {
   const styles = useStyles();

@@ -3,7 +3,6 @@ import { initReactI18next } from 'react-i18next';
 import { NativeModules, Platform } from 'react-native';
 
 import en from './en/translation.json';
-
 import { convertLanguageJsonToObject } from './translations';
 
 let deviceLanguage = 'en';

@@ -1,3 +1,19 @@
 {
-  "extends": "expo/tsconfig.base"
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "components/*": ["components/*"],
+      "api/*": ["api/*"],
+      "assets/*": ["assets/*"],
+      "lib/*": ["lib/*"],
+      "gpt/*": ["gpt/*"],
+      "navigation/*": ["navigation/*"],
+      "screens/*": ["screens/*"],
+      "styles/*": ["styles/*"],
+      "utils/*": ["utils/*"],
+      "locales/*": ["locales/*"]
+    }
+  },
+  "exclude": ["node_modules", "babel.config.js", "metro.config.js"]
 }

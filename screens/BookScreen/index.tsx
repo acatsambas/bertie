@@ -7,12 +7,15 @@ import { ScrollView, View } from 'react-native';
 import RenderHtml from 'react-native-render-html';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { useUserBooks } from '../../api/app/hooks';
-import { AuthContext } from '../../api/auth/AuthProvider';
-import Button from '../../components/Button';
-import Text from '../../components/Text';
-import { translations } from '../../locales/translations';
-import { LibraryNavigatorParamList } from '../../navigation/AppStack/params';
+import Button from 'components/Button';
+import Text from 'components/Text';
+
+import { useUserBooks } from 'api/app/hooks';
+import { AuthContext } from 'api/auth/AuthProvider';
+
+import { LibraryNavigatorParamList } from 'navigation/AppStack/params';
+
+import { translations } from 'locales/translations';
 
 const BookScreen = () => {
   const { params } = useRoute<RouteProp<LibraryNavigatorParamList, 'Book'>>();

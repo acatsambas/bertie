@@ -1,9 +1,10 @@
 import { makeStyles } from '@rneui/themed';
 import { View } from 'react-native';
 
-import { UserBook } from '../../api/app/types';
-import { BookResult } from '../../api/google-books/search';
-import Book from '../Book';
+import Book from 'components/Book';
+
+import { UserBook } from 'api/app/types';
+import { BookResult } from 'api/google-books/search';
 
 interface OrderBooksListProps {
   books: (BookResult & Pick<UserBook, 'isRead'>)[];

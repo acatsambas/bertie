@@ -1,6 +1,7 @@
-import { Shop, UserBook } from '../../api/app/types';
-import { BookResult } from '../../api/google-books/search';
 import { NavigatorScreenParams } from '@react-navigation/native';
+
+import { Shop, UserBook } from 'api/app/types';
+import { BookResult } from 'api/google-books/search';
 
 export type SettingsNavigatorParamList = {
   Settings: undefined;

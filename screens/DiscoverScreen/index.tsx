@@ -1,22 +1,25 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { makeStyles, Tab } from '@rneui/themed';
+import { Tab, makeStyles } from '@rneui/themed';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { View, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 import Markdown from 'react-native-markdown-display';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { translations } from '../../locales/translations';
-import { AppNavigatorParamList } from '../../navigation/AppStack/params';
-import { useUser, useUserBooks } from '../../api/app/hooks';
-import { executeGPT } from '../../gpt/discover-books';
+import Avatar from 'components/Avatar';
+import BookshopsList from 'components/BookshopsList';
+import BottomMenu from 'components/BottomMenu';
+import Input from 'components/Input';
+import Text from 'components/Text';
 
-import Avatar from '../../components/Avatar';
-import BookshopsList from '../../components/BookshopsList';
-import BottomMenu from '../../components/BottomMenu';
-import Text from '../../components/Text';
-import Input from '../../components/Input';
+import { useUser, useUserBooks } from 'api/app/hooks';
+
+import { executeGPT } from 'gpt/discover-books';
+
+import { AppNavigatorParamList } from 'navigation/AppStack/params';
+
+import { translations } from 'locales/translations';
 
 export interface DiscoverScreenProps
   extends StackNavigationProp<AppNavigatorParamList, 'DiscoverNavigator'> {}
