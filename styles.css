@@ -18,3 +18,30 @@
             font-family: 'Commissioner';
 
         }
+
+.download_link,
+.waitlist_link {
+  display: inline-block;
+  margin: 10px 0;
+  padding: 10px 20px;
+  font-family: 'Commissioner', sans-serif;
+  font-weight: 600;
+  text-decoration: none;
+  color: #ffffff;
+  background-color: #007aff;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.download_link:hover,
+.waitlist_link:hover {
+  background-color: #005bb5;
+}
+
+.body_text {
+  text-align: center;
+  margin-top: 20px;
+  font-family: 'Commissioner', sans-serif;
+  font-size: 18px;
+}
+
