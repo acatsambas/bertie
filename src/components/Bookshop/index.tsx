@@ -1,8 +1,8 @@
 import { makeStyles } from '@rneui/themed';
 import { TouchableOpacity, TouchableOpacityProps, View } from 'react-native';
 
-import Icon from 'components/Icon';
-import Text from 'components/Text';
+import Icon from '../Icon';
+import Text from '../Text';
 
 interface BookShopProps extends TouchableOpacityProps {
   kind?: 'default' | 'favorite' | 'favoriteSelected';

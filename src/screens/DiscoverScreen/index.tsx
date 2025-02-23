@@ -15,8 +15,7 @@ import Text from 'components/Text';
 
 import { useUser, useUserBooks } from 'api/app/hooks';
 
-import { executeGPT } from 'gpt/discover-books';
-
+// import { executeGPT } from 'gpt/discover-books';
 import { AppNavigatorParamList } from 'navigation/AppStack/params';
 
 import { translations } from 'locales/translations';
@@ -36,12 +35,12 @@ const DiscoverScreen = () => {
   const [userInput, setUserInput] = useState('');
 
   useEffect(() => {
-    const bookTitles = books.map(book => book.volumeInfo.title);
-    async function fetchInitialMessage() {
-      const initialMessage = await executeGPT(null, bookTitles); // Get first AI response
-      setMessages([initialMessage]);
-    }
-    fetchInitialMessage();
+    // const bookTitles = books.map(book => book.volumeInfo.title);
+    // async function fetchInitialMessage() {
+    //   const initialMessage = await executeGPT(null, bookTitles); // Get first AI response
+    //   setMessages([initialMessage]);
+    // }
+    // fetchInitialMessage();
   }, [books]);
 
   const handleAvatarClick = () => {
@@ -49,14 +48,14 @@ const DiscoverScreen = () => {
   };
 
   const handleSend = async () => {
-    if (userInput.trim()) {
-      const userMessage = userInput;
-      setMessages(prevMessages => [...prevMessages, userMessage]); // Show user message
-      setUserInput('');
-
-      const botResponse = await executeGPT(userMessage); // Get AI response
-      setMessages(prevMessages => [...prevMessages, botResponse]); // Update UI
-    }
+    // if (userInput.trim()) {
+    //   const userMessage = userInput;
+    //   setMessages(prevMessages => [...prevMessages, userMessage]); // Show user message
+    //   setUserInput('');
+    //
+    //   const botResponse = await executeGPT(userMessage); // Get AI response
+    //   setMessages(prevMessages => [...prevMessages, botResponse]); // Update UI
+    // }
   };
 
   return (
