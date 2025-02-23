@@ -1,5 +1,4 @@
 import { RouteProp, useRoute } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
 import { makeStyles } from '@rneui/themed';
 import { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -14,16 +13,14 @@ import Text from 'components/Text';
 import { AuthContext } from 'api/auth/AuthProvider';
 import { isFirebaseError } from 'api/types';
 
-import { AuthNavigatorParamList } from 'navigation/AuthStack/params';
+import { Routes } from 'navigation/routes';
+import type { NavigationType } from 'navigation/types';
 
 import { translations } from 'locales/translations';
 
-export interface SetProfilePageProps
-  extends StackNavigationProp<AuthNavigatorParamList, 'SetProfile'> {}
-
 const SetProfileScreen = () => {
   const { params } =
-    useRoute<RouteProp<AuthNavigatorParamList, 'SetProfile'>>();
+    useRoute<RouteProp<NavigationType, typeof Routes.AUTH_04_SET_PROFILE>>();
 
   const [givenName, setGivenName] = useState('');
   const [familyName, setFamilyName] = useState('');

@@ -15,19 +15,23 @@ import Text from 'components/Text';
 import { useFavouriteShops } from 'api/app/hooks';
 import { AuthContext } from 'api/auth/AuthProvider';
 
-import { DiscoverNavigatorParamList } from 'navigation/AppStack/params';
+import { Routes } from 'navigation/routes';
+import { NavigationType } from 'navigation/types';
 
 import { translations } from 'locales/translations';
 
 export interface BookshopPageProps
-  extends StackNavigationProp<DiscoverNavigatorParamList, 'Bookshop'> {}
+  extends StackNavigationProp<
+    NavigationType,
+    typeof Routes.DISCOVER_03_BOOKSHOP
+  > {}
 
 const BookshopScreen = ({ navigation }) => {
   const {
     params: {
       shop: { id, address, city, name, zipcode, description },
     },
-  } = useRoute<RouteProp<DiscoverNavigatorParamList, 'Bookshop'>>();
+  } = useRoute<RouteProp<NavigationType, typeof Routes.DISCOVER_03_BOOKSHOP>>();
   const { user } = useContext(AuthContext);
   const favouriteShops = useFavouriteShops();
   const isFavourite = useMemo(

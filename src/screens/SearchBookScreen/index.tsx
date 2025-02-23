@@ -17,12 +17,16 @@ import Text from 'components/Text';
 import { useUser } from 'api/app/hooks';
 import { BookResult, searchBooks } from 'api/google-books/search';
 
-import { LibraryNavigatorParamList } from 'navigation/AppStack/params';
+import { Routes } from 'navigation/routes';
+import { NavigationType } from 'navigation/types';
 
 import { translations } from 'locales/translations';
 
 export interface SearchBookProps
-  extends StackNavigationProp<LibraryNavigatorParamList, 'Search'> {}
+  extends StackNavigationProp<
+    NavigationType,
+    typeof Routes.LIBRARY_03_SEARCH
+  > {}
 
 const SearchBookScreen = () => {
   const [searchResults, setSearchResults] = useState<BookResult[]>([]);
@@ -79,7 +83,7 @@ const SearchBookScreen = () => {
   );
 
   const handleCloseClick = () => {
-    navigate('Library');
+    navigate(Routes.LIBRARY_01_LIBRARY);
   };
 
   const handleToggle = () => {

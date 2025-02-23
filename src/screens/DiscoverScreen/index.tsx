@@ -7,19 +7,22 @@ import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Avatar from 'components/Avatar';
-import BottomMenu from 'components/BottomMenu';
 import Text from 'components/Text';
 
 import { useUser } from 'api/app/hooks';
 
-import { AppNavigatorParamList } from 'navigation/AppStack/params';
+import { Routes } from 'navigation/routes';
+import { NavigationType } from 'navigation/types';
 
 import { translations } from 'locales/translations';
 
 import { BooksTab, BookshopTab } from './components';
 
 export interface DiscoverScreenProps
-  extends StackNavigationProp<AppNavigatorParamList, 'DiscoverNavigator'> {}
+  extends StackNavigationProp<
+    NavigationType,
+    typeof Routes.DISCOVER_01_DISCOVER
+  > {}
 
 const DiscoverScreen = () => {
   const styles = useStyles();
@@ -29,9 +32,7 @@ const DiscoverScreen = () => {
 
   const [index, setIndex] = useState(0);
 
-  const handleAvatarClick = () => {
-    navigate('SettingsNavigator');
-  };
+  const handleAvatarClick = () => navigate(Routes.APP_02_SETTINGS);
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
@@ -53,7 +54,6 @@ const DiscoverScreen = () => {
         </Tab>
         {index === 0 ? <BookshopTab user={user} /> : <BooksTab />}
       </View>
-      <BottomMenu />
     </SafeAreaView>
   );
 };

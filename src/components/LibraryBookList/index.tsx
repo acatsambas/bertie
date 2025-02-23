@@ -9,7 +9,8 @@ import { TouchableOpacity, View } from 'react-native';
 import { useUserBooks } from 'api/app/hooks';
 import { AuthContext } from 'api/auth/AuthProvider';
 
-import { LibraryNavigatorParamList } from 'navigation/AppStack/params';
+import { Routes } from 'navigation/routes';
+import { NavigationType } from 'navigation/types';
 
 import { translations } from 'locales/translations';
 
@@ -20,7 +21,10 @@ import Text from '../Text';
 type BookListProps = { kind: 'current' | 'past' };
 
 export interface LibraryPageProps
-  extends StackNavigationProp<LibraryNavigatorParamList, 'Library'> {}
+  extends StackNavigationProp<
+    NavigationType,
+    typeof Routes.LIBRARY_01_LIBRARY
+  > {}
 
 const CurrentBooks = ({ kind }: BookListProps) => {
   const styles = useStyles();
@@ -30,7 +34,7 @@ const CurrentBooks = ({ kind }: BookListProps) => {
   const books = useUserBooks({ withRefs: true });
 
   const handleBook = (book: (typeof books)[number]) => {
-    navigate('Book', {
+    navigate(Routes.LIBRARY_02_BOOK, {
       book,
     });
   };
@@ -51,7 +55,7 @@ const CurrentBooks = ({ kind }: BookListProps) => {
   };
 
   const handlePress = () => {
-    navigate('Search');
+    navigate(Routes.LIBRARY_03_SEARCH);
   };
 
   return (

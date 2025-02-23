@@ -14,12 +14,13 @@ import Text from 'components/Text';
 import { AuthContext } from 'api/auth/AuthProvider';
 import { isFirebaseError } from 'api/types';
 
-import { AuthNavigatorParamList } from 'navigation/AuthStack/params';
+import { Routes } from 'navigation/routes';
+import { NavigationType } from 'navigation/types';
 
 import { translations } from 'locales/translations';
 
 export interface LoginPageProps
-  extends StackNavigationProp<AuthNavigatorParamList, 'Login'> {}
+  extends StackNavigationProp<NavigationType, typeof Routes.AUTH_02_LOGIN> {}
 
 const LoginScreen = () => {
   const styles = useStyles();
@@ -40,11 +41,11 @@ const LoginScreen = () => {
   };
 
   const handleSignup = () => {
-    navigate('Register');
+    navigate(Routes.AUTH_03_REGISTER);
   };
 
   const handleForgot = () => {
-    navigate('Forgot');
+    navigate(Routes.AUTH_05_FORGOT);
   };
 
   const handlePressLogin = async () => {

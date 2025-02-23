@@ -13,12 +13,16 @@ import Text from 'components/Text';
 
 import { useFavouriteShops, useShops, useUser } from 'api/app/hooks';
 
-import { OrderNavigatorParamList } from 'navigation/AppStack/params';
+import { Routes } from 'navigation/routes';
+import { NavigationType } from 'navigation/types';
 
 import { translations } from 'locales/translations';
 
 export interface OrderShopScreenProps
-  extends StackNavigationProp<OrderNavigatorParamList, 'OrderShop'> {}
+  extends StackNavigationProp<
+    NavigationType,
+    typeof Routes.ORDER_02_ORDER_SHOP
+  > {}
 
 const OrderShopScreen = () => {
   const user = useUser();
@@ -31,13 +35,14 @@ const OrderShopScreen = () => {
   const styles = useStyles();
   const { t } = useTranslation();
   const { navigate } = useNavigation<OrderShopScreenProps>();
-  const route = useRoute<RouteProp<OrderNavigatorParamList, 'OrderShop'>>();
+  const route =
+    useRoute<RouteProp<NavigationType, typeof Routes.ORDER_02_ORDER_SHOP>>();
   const handlePlace = async () => {
     if (
       !user?.contactEmail ||
       user?.contactEmail.includes('@privaterelay.appleid.com')
     ) {
-      navigate('EmailScreen');
+      navigate(Routes.ORDER_05_EMAIL_SCREEN);
     } else {
       await firestore()
         .collection('orders')
@@ -87,14 +92,14 @@ Bertie`,
           },
         });
 
-      navigate('OrderPlaced', {
+      navigate(Routes.ORDER_06_ORDER_PLACED, {
         bookshopName: favouriteShopData.name,
       });
     }
   };
 
   const handleBack = () => {
-    navigate('Order');
+    navigate(Routes.ORDER_01_ORDER);
   };
 
   return (

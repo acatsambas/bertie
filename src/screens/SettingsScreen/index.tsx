@@ -13,12 +13,16 @@ import Text from 'components/Text';
 
 import { AuthContext } from 'api/auth/AuthProvider';
 
-import { SettingsNavigatorParamList } from 'navigation/AppStack/params';
+import { Routes } from 'navigation/routes';
+import type { NavigationType } from 'navigation/types';
 
 import { translations } from 'locales/translations';
 
 export interface SettingsPageProps
-  extends StackNavigationProp<SettingsNavigatorParamList, 'Settings'> {}
+  extends StackNavigationProp<
+    NavigationType,
+    typeof Routes.SETTINGS_01_SETTINGS
+  > {}
 
 const SettingsScreen = ({ navigation }) => {
   const { navigate } = useNavigation<SettingsPageProps>();
@@ -31,15 +35,15 @@ const SettingsScreen = ({ navigation }) => {
   };
 
   const handleChangeAddress = () => {
-    navigate('ChangeAddress');
+    navigate(Routes.SETTINGS_02_CHANGE_ADDRESS);
   };
 
   const handlePassword = () => {
-    navigate('ResetPassword');
+    navigate(Routes.SETTINGS_03_RESET_PASSWORD);
   };
 
   const handleDelete = () => {
-    navigate('DeleteAccount');
+    navigate(Routes.SETTINGS_04_DELETE_ACCOUNT);
   };
 
   const handleExit = () => {

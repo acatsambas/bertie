@@ -6,6 +6,8 @@ import { StyleSheet, View } from 'react-native';
 import BookshopsList from 'components/BookshopsList';
 import Text from 'components/Text';
 
+import { Routes } from 'navigation/routes';
+
 import { DiscoverScreenProps } from 'screens/DiscoverScreen';
 
 import { translations } from 'locales/translations';
@@ -21,9 +23,7 @@ export const BookshopTab = ({ user }) => {
           <Text
             text={t(translations.discover.description)}
             kind="paragraph"
-            onPress={() =>
-              navigate('SettingsNavigator', { screen: 'ChangeAddress' })
-            }
+            onPress={() => navigate(Routes.SETTINGS_02_CHANGE_ADDRESS)}
           />
         </View>
       )}

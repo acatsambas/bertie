@@ -7,7 +7,8 @@ import { useTranslation } from 'react-i18next';
 
 import { useUserBooks } from 'api/app/hooks';
 
-import { LibraryNavigatorParamList } from 'navigation/AppStack/params';
+import { Routes } from 'navigation/routes';
+import { NavigationType } from 'navigation/types';
 
 import { translations } from 'locales/translations';
 
@@ -17,7 +18,10 @@ export const SECTIONS_IDS = {
 };
 
 interface LibraryPageProps
-  extends StackNavigationProp<LibraryNavigatorParamList, 'Library'> {}
+  extends StackNavigationProp<
+    NavigationType,
+    typeof Routes.LIBRARY_01_LIBRARY
+  > {}
 
 export const useLibrary = (user: FirebaseAuthTypes.User) => {
   const userBooks = useUserBooks({ withRefs: true });
@@ -52,13 +56,13 @@ export const useLibrary = (user: FirebaseAuthTypes.User) => {
   );
 
   const handleOnPressBook = book => {
-    navigate('Book', {
+    navigate(Routes.LIBRARY_02_BOOK, {
       book,
     });
   };
 
   const handleAddBook = () => {
-    navigate('Search');
+    navigate(Routes.LIBRARY_03_SEARCH);
   };
 
   const handleOnRead = async (bookId: string, isRead: boolean) => {

@@ -6,13 +6,17 @@ import { View } from 'react-native';
 import { useShops } from 'api/app/hooks';
 import { Shop } from 'api/app/types';
 
-import { DiscoverNavigatorParamList } from 'navigation/AppStack/params';
+import { Routes } from 'navigation/routes';
+import { NavigationType } from 'navigation/types';
 
 import BookShop from '../Bookshop';
 import LoadingState from '../LoadingState/LoadingState';
 
 export interface DiscoverPageProps
-  extends StackNavigationProp<DiscoverNavigatorParamList, 'Discover'> {}
+  extends StackNavigationProp<
+    NavigationType,
+    typeof Routes.DISCOVER_01_DISCOVER
+  > {}
 
 const BookshopsList = () => {
   const shops = useShops();
@@ -20,7 +24,7 @@ const BookshopsList = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const handlePressShop = (shop: Shop) => {
-    navigate('Bookshop', { shop });
+    navigate(Routes.DISCOVER_03_BOOKSHOP, { shop });
   };
 
   useEffect(() => {
