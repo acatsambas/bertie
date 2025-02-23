@@ -1,6 +1,6 @@
 import { makeStyles } from '@rneui/themed';
 import { useContext } from 'react';
-import { SectionList, View } from 'react-native';
+import { SectionList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Book from 'components/Book';
@@ -45,9 +45,7 @@ const LibraryScreen = () => {
           />
         )}
       />
-      <View style={styles.bottomArea}>
-        <BottomMenu />
-      </View>
+      <BottomMenu />
     </SafeAreaView>
   );
 };
@@ -60,15 +58,6 @@ const useStyles = makeStyles(theme => ({
   },
   list: { marginBottom: 40 },
   listContainer: { paddingTop: 20, gap: 20 },
-  bottomArea: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    left: 0,
-  },
 }));
 
 export default LibraryScreen;
