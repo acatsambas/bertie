@@ -3,13 +3,13 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 
-import BookShop from 'components/Bookshop';
-import LoadingState from 'components/LoadingState/LoadingState';
-
 import { useShops } from 'api/app/hooks';
 import { Shop } from 'api/app/types';
 
 import { DiscoverNavigatorParamList } from 'navigation/AppStack/params';
+
+import BookShop from '../Bookshop';
+import LoadingState from '../LoadingState/LoadingState';
 
 export interface DiscoverPageProps
   extends StackNavigationProp<DiscoverNavigatorParamList, 'Discover'> {}

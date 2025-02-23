@@ -3,10 +3,10 @@ import { useNavigation } from '@react-navigation/native';
 import React, { useContext, useMemo } from 'react';
 import { View } from 'react-native';
 
-import Book from 'components/Book';
-
 import { useBooks, useUserBooks } from 'api/app/hooks';
 import { AuthContext } from 'api/auth/AuthProvider';
+
+import Book from '../Book';
 
 interface SearchBooksProps {
   kind?: 'discover' | 'order';
