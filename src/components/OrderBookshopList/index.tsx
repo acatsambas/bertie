@@ -6,8 +6,6 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import Text from 'components/Text';
-
 import { useUser } from 'api/app/hooks';
 import { Shop } from 'api/app/types';
 
@@ -17,6 +15,7 @@ import { translations } from 'locales/translations';
 
 import BookShop from '../Bookshop';
 import LoadingState from '../LoadingState/LoadingState';
+import Text from '../Text';
 
 interface OrderBookshopListProps {
   kind: 'favourites' | 'more';
