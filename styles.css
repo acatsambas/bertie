@@ -28,14 +28,14 @@
   font-weight: 600;
   text-decoration: none;
   color: #ffffff;
-  background-color: #007aff;
+  background-color: #6E78D7;
   border-radius: 8px;
   transition: background-color 0.3s ease;
 }
 
 .download_link:hover,
 .waitlist_link:hover {
-  background-color: #005bb5;
+  background-color: #6E78D7;
 }
 
 .body_text {
