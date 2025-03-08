@@ -10,12 +10,13 @@ import Input from 'components/Input';
 import Logo from 'components/Logo';
 import Text from 'components/Text';
 
-import { AuthNavigatorParamList } from 'navigation/AuthStack/params';
+import { Routes } from 'navigation/routes';
+import { NavigationType } from 'navigation/types';
 
 import { translations } from 'locales/translations';
 
 export interface RegisterPageProps
-  extends StackNavigationProp<AuthNavigatorParamList, 'Register'> {}
+  extends StackNavigationProp<NavigationType, typeof Routes.AUTH_03_REGISTER> {}
 
 const RegisterScreen = () => {
   const [email, setEmail] = useState('');
@@ -47,7 +48,10 @@ const RegisterScreen = () => {
     const validRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
     if (email.match(validRegex)) {
       if (checkPassword === password) {
-        navigate('SetProfile', { email: email, password: password });
+        navigate(Routes.AUTH_04_SET_PROFILE, {
+          email: email,
+          password: password,
+        });
       } else {
         setPasswordError(true);
       }

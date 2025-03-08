@@ -13,12 +13,14 @@ import Text from 'components/Text';
 import { useUserBooks } from 'api/app/hooks';
 import { AuthContext } from 'api/auth/AuthProvider';
 
-import { LibraryNavigatorParamList } from 'navigation/AppStack/params';
+import { Routes } from 'navigation/routes';
+import { NavigationType } from 'navigation/types';
 
 import { translations } from 'locales/translations';
 
 const BookScreen = () => {
-  const { params } = useRoute<RouteProp<LibraryNavigatorParamList, 'Book'>>();
+  const { params } =
+    useRoute<RouteProp<NavigationType, typeof Routes.LIBRARY_02_BOOK>>();
   const styles = useStyles();
   const { t } = useTranslation();
   const { goBack } = useNavigation();

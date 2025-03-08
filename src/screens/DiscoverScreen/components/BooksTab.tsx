@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -10,37 +10,14 @@ import Markdown from 'react-native-markdown-display';
 
 import Input from 'components/Input';
 
-import { useUserBooks } from 'api/app/hooks';
-
-import { executeGPT } from 'gpt/discover-books';
+import { useBooksTab } from '../hooks/useBooksTab';
 
 export const BooksTab = () => {
-  const books = useUserBooks({ withRefs: true });
-
-  const [userInput, setUserInput] = useState('');
-  const [messages, setMessages] = useState<string[]>([]);
-
-  useEffect(() => {
-    const bookTitles = books.map(book => book.volumeInfo.title);
-    async function fetchInitialMessage() {
-      const initialMessage = '';
-      await executeGPT(null, bookTitles); // Get first AI response
-      setMessages([initialMessage]);
-    }
-    fetchInitialMessage();
-  }, [books]);
-
-  const handleSend = async () => {
-    if (userInput.trim()) {
-      const userMessage = userInput;
-      setMessages(prevMessages => [...prevMessages, userMessage]); // Show user message
-      setUserInput('');
-
-      const botResponse = '';
-      await executeGPT(userMessage); // Get AI response
-      setMessages(prevMessages => [...prevMessages, botResponse]); // Update UI
-    }
-  };
+  const [userInput, setUserInput] = useState<string>('');
+  const { messages, handleSendMessage } = useBooksTab({
+    userInput,
+    cleanInput: () => setUserInput(''),
+  });
 
   return (
     <KeyboardAvoidingView
@@ -72,15 +49,13 @@ export const BooksTab = () => {
           </View>
         ))}
       </ScrollView>
-      <View style={{ marginBottom: 40 }}>
-        <Input
-          value={userInput}
-          onChangeText={setUserInput}
-          placeholder="Type your response here"
-          returnKeyType="send"
-          onSubmitEditing={handleSend}
-        />
-      </View>
+      <Input
+        value={userInput}
+        onChangeText={setUserInput}
+        placeholder="Type your response here"
+        returnKeyType="send"
+        onSubmitEditing={handleSendMessage}
+      />
     </KeyboardAvoidingView>
   );
 };

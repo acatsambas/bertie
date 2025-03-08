@@ -4,7 +4,6 @@ import { SectionList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Book from 'components/Book';
-import BottomMenu from 'components/BottomMenu';
 
 import { AuthContext } from 'api/auth/AuthProvider';
 
@@ -45,7 +44,6 @@ const LibraryScreen = () => {
           />
         )}
       />
-      <BottomMenu />
     </SafeAreaView>
   );
 };
@@ -56,8 +54,8 @@ const useStyles = makeStyles(theme => ({
     paddingHorizontal: 20,
     backgroundColor: theme.colors.white,
   },
-  list: { marginBottom: 40 },
-  listContainer: { paddingTop: 20, gap: 20 },
+  list: { flex: 1 },
+  listContainer: { paddingTop: 20, gap: 10 },
 }));
 
 export default LibraryScreen;

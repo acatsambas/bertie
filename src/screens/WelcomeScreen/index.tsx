@@ -12,21 +12,20 @@ import Illustration from 'components/Illustration';
 import Logo from 'components/Logo';
 import Text from 'components/Text';
 
-import { AuthNavigatorParamList } from 'navigation/AuthStack/params';
+import { Routes } from 'navigation/routes';
+import type { NavigationType } from 'navigation/types';
 
 import { translations } from 'locales/translations';
 
 export interface WelcomePageProps
-  extends StackNavigationProp<AuthNavigatorParamList, 'Welcome'> {}
+  extends StackNavigationProp<NavigationType, typeof Routes.AUTH_01_WELCOME> {}
 
 const WelcomeScreen = () => {
   const styles = useStyles();
   const { navigate } = useNavigation<WelcomePageProps>();
   const { t } = useTranslation();
 
-  const handleLogin = () => {
-    navigate('Login');
-  };
+  const handleLogin = () => navigate(Routes.AUTH_02_LOGIN);
 
   const handlePrivacy = async () => {
     await Linking.openURL('https://www.bertieapp.com/privacypolicy.html');

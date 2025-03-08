@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { AuthProvider } from 'api/auth/AuthProvider';
 import { initFirebase } from 'api/firebase';
 
-import Routes from 'navigation/Routes';
+import RootNavigator from 'navigation/RootNavigator';
 
 import { FontsProvider } from 'styles/FontsProvider';
 
@@ -38,7 +38,7 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <AuthProvider>
         <FontsProvider>
-          <Routes />
+          <RootNavigator />
         </FontsProvider>
       </AuthProvider>
     </ThemeProvider>

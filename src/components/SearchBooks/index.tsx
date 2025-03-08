@@ -8,7 +8,8 @@ import { useUserBooks } from 'api/app/hooks';
 import { AuthContext } from 'api/auth/AuthProvider';
 import { BookResult } from 'api/google-books/search';
 
-import { LibraryNavigatorParamList } from 'navigation/AppStack/params';
+import { Routes } from 'navigation/routes';
+import { NavigationType } from 'navigation/types';
 
 import Book from '../Book';
 
@@ -18,12 +19,14 @@ export interface SearchBookProps {
 
 const SearchBooks = ({ books }: SearchBookProps) => {
   const { navigate } =
-    useNavigation<StackNavigationProp<LibraryNavigatorParamList, 'Search'>>();
+    useNavigation<
+      StackNavigationProp<NavigationType, typeof Routes.LIBRARY_03_SEARCH>
+    >();
   const { user } = useContext(AuthContext);
   const userBooks = useUserBooks();
 
   const handlePressBook = (book: BookResult) => {
-    navigate('Book', {
+    navigate(Routes.LIBRARY_02_BOOK, {
       book,
     });
   };

@@ -13,12 +13,13 @@ import Text from 'components/Text';
 
 import { AuthContext } from 'api/auth/AuthProvider';
 
-import { AuthNavigatorParamList } from 'navigation/AuthStack/params';
+import { Routes } from 'navigation/routes';
+import { NavigationType } from 'navigation/types';
 
 import { translations } from 'locales/translations';
 
 export interface ForgotPageProps
-  extends StackNavigationProp<AuthNavigatorParamList, 'Forgot'> {}
+  extends StackNavigationProp<NavigationType, typeof Routes.AUTH_05_FORGOT> {}
 
 const ForgotScreen = () => {
   const { forgot } = useContext(AuthContext);
@@ -45,7 +46,7 @@ const ForgotScreen = () => {
   };
 
   const handleDone = () => {
-    navigate('Welcome');
+    navigate(Routes.AUTH_01_WELCOME);
   };
 
   return (

@@ -9,7 +9,8 @@ import { View } from 'react-native';
 import { useUser } from 'api/app/hooks';
 import { Shop } from 'api/app/types';
 
-import { OrderNavigatorParamList } from 'navigation/AppStack/params';
+import { Routes } from 'navigation/routes';
+import { NavigationType } from 'navigation/types';
 
 import { translations } from 'locales/translations';
 
@@ -22,7 +23,7 @@ interface OrderBookshopListProps {
   shops?: Shop[];
 }
 export interface OrderPageProps
-  extends StackNavigationProp<OrderNavigatorParamList, 'OrderShop'> {}
+  extends StackNavigationProp<NavigationType, typeof Routes.ORDER_01_ORDER> {}
 
 const OrderBookshopList = ({ kind, shops }: OrderBookshopListProps) => {
   const styles = useStyles();
@@ -69,7 +70,7 @@ const OrderBookshopList = ({ kind, shops }: OrderBookshopListProps) => {
             <Text
               kind="paragraph"
               text={t(translations.order.add)}
-              onPress={() => navigate('AddressScreen')}
+              onPress={() => navigate(Routes.ORDER_03_ADDRESS_SCREEN)}
             />
           </View>
         )}
@@ -82,7 +83,7 @@ const OrderBookshopList = ({ kind, shops }: OrderBookshopListProps) => {
               location={shop.city}
               key={shop.id}
               kind="default"
-              onPress={() => navigate('Bookshop', { shop })}
+              onPress={() => navigate(Routes.ORDER_04_BOOKSHOP, { shop })}
             />
           ))
         )}
