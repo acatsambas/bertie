@@ -17,7 +17,7 @@ const LibraryScreen = () => {
     useLibrary(user);
 
   return (
-    <SafeAreaView style={styles.safeAreaView}>
+    <SafeAreaView edges={['left', 'right', 'top']} style={styles.safeAreaView}>
       <SectionList
         style={styles.list}
         contentContainerStyle={styles.listContainer}

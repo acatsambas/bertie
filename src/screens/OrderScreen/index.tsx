@@ -44,7 +44,7 @@ const OrderScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.safeAreaView}>
+    <SafeAreaView edges={['left', 'right', 'top']} style={styles.safeAreaView}>
       <ScrollView
         contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}
