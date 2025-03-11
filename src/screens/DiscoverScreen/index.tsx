@@ -35,7 +35,7 @@ const DiscoverScreen = () => {
   const handleAvatarClick = () => navigate(Routes.APP_02_SETTINGS);
 
   return (
-    <SafeAreaView style={styles.safeAreaView}>
+    <SafeAreaView edges={['left', 'right', 'top']} style={styles.safeAreaView}>
       <View style={styles.container}>
         <View style={styles.header}>
           <Text text={t(translations.discover.title)} kind="bigHeader" />

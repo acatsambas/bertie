@@ -3141,6 +3141,11 @@
     prompts "^2.4.2"
     semver "^7.5.2"
 
+"@react-native-community/hooks@100.1.0":
+  version "100.1.0"
+  resolved "https://registry.yarnpkg.com/@react-native-community/hooks/-/hooks-100.1.0.tgz#34cfa9e986b84a8babfe667dc3ec497954aef8f1"
+  integrity sha512-aXESGr6WcnwyeIl+SiCLNFpbApzTmupyYzm2OkGjMuwHr42+a3G65xxTxN/xHuNdTVWO0dXbOwyLgEkQ0i/qZg==
+
 "@react-native-firebase/analytics@20.5.0":
   version "20.5.0"
   resolved "https://registry.yarnpkg.com/@react-native-firebase/analytics/-/analytics-20.5.0.tgz#605b52f346da39329cc97b21d66813efdb2642f1"

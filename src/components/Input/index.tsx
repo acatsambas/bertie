@@ -50,6 +50,7 @@ const Input = ({
         paddingRight: 10, // Add padding for the clear icon
         gap: 10,
         borderWidth: kind === 'search' ? 1 : 0,
+        marginTop: 14,
       }}
       inputStyle={{ fontFamily: 'Commissioner_400Regular' }}
     />

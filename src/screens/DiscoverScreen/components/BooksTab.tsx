@@ -7,6 +7,7 @@ import {
   View,
 } from 'react-native';
 import Markdown from 'react-native-markdown-display';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import Input from 'components/Input';
 
@@ -14,6 +15,7 @@ import { useBooksTab } from '../hooks/useBooksTab';
 
 export const BooksTab = () => {
   const [userInput, setUserInput] = useState<string>('');
+  const insets = useSafeAreaInsets();
   const { messages, handleSendMessage } = useBooksTab({
     userInput,
     cleanInput: () => setUserInput(''),
@@ -23,6 +25,7 @@ export const BooksTab = () => {
     <KeyboardAvoidingView
       style={styles.booksTab}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      keyboardVerticalOffset={insets.top}
     >
       <ScrollView
         style={styles.chatContainer}

@@ -23,6 +23,7 @@
     "@expo-google-fonts/goudy-bookletter-1911": "0.2.3",
     "@expo/metro-runtime": "3.2.3",
     "@invertase/react-native-apple-authentication": "2.4.0",
+    "@react-native-community/hooks": "100.1.0",
     "@react-native-firebase/analytics": "20.5.0",
     "@react-native-firebase/app": "20.5.0",
     "@react-native-firebase/app-check": "20.5.0",
