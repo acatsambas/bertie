@@ -1,6 +1,6 @@
 {
   "name": "bertie",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "private": true,
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
