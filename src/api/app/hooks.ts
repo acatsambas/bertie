@@ -1,6 +1,8 @@
 import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
-import { useEffect, useState } from 'react';
+import firestore, {
+  FirebaseFirestoreTypes,
+} from '@react-native-firebase/firestore';
+import { useCallback, useEffect, useState } from 'react';
 
 import { BookResult } from '../google-books/search';
 import { UserData } from '../types';
