@@ -1,6 +1,6 @@
 import { makeStyles } from '@rneui/themed';
 import { useContext } from 'react';
-import { SectionList } from 'react-native';
+import { ActivityIndicator, SectionList, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Book from 'components/Book';
@@ -10,11 +10,17 @@ import { AuthContext } from 'api/auth/AuthProvider';
 import { ListHeader, SectionHeader } from './components';
 import { useLibrary } from './hooks';
 
-const LibraryScreen = () => {
+export const LibraryScreen = () => {
   const styles = useStyles();
   const { user } = useContext(AuthContext);
-  const { books, handleOnPressBook, handleOnRead, handleAddBook } =
-    useLibrary(user);
+  const {
+    books,
+    handleOnPressBook,
+    handleOnRead,
+    handleAddBook,
+    fetchMoreBooks,
+    loading,
+  } = useLibrary(user);
 
   return (
     <SafeAreaView edges={['left', 'right', 'top']} style={styles.safeAreaView}>
@@ -43,6 +49,9 @@ const LibraryScreen = () => {
             onChange={() => handleOnRead(item.id, item.isRead)}
           />
         )}
+        onEndReached={fetchMoreBooks}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={loading ? <ActivityIndicator /> : <View />}
       />
     </SafeAreaView>
   );
@@ -57,5 +66,3 @@ const useStyles = makeStyles(theme => ({
   list: { flex: 1 },
   listContainer: { paddingTop: 20, gap: 10 },
 }));
-
-export default LibraryScreen;

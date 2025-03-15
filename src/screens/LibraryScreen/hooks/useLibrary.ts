@@ -2,7 +2,7 @@ import { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useUserBooks } from 'api/app/hooks';
@@ -24,7 +24,9 @@ interface LibraryPageProps
   > {}
 
 export const useLibrary = (user: FirebaseAuthTypes.User) => {
-  const userBooks = useUserBooks({ withRefs: true });
+  const { userBooks, fetchUserBooks, loading, hasMore } = useUserBooks({
+    withRefs: true,
+  });
   const { t } = useTranslation();
   const { navigate } = useNavigation<LibraryPageProps>();
 
@@ -80,10 +82,18 @@ export const useLibrary = (user: FirebaseAuthTypes.User) => {
     }
   };
 
+  const fetchMoreBooks = useCallback(() => {
+    if (hasMore && !loading) {
+      void fetchUserBooks();
+    }
+  }, [hasMore, loading, fetchUserBooks]);
+
   return {
     books,
     handleOnPressBook,
     handleAddBook,
     handleOnRead,
+    fetchMoreBooks,
+    loading,
   };
 };

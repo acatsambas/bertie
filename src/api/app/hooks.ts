@@ -73,38 +73,71 @@ export const useUser = () => {
   return user;
 };
 
+const SNAPSHOT_LENGTH = 15;
+
 export const useUserBooks = ({ withRefs }: { withRefs?: boolean } = {}) => {
-  const [userBooks, setUserBooks] = useState<
-    UserBook[] | (UserBook & BookResult)[]
-  >([]);
+  const [userBooks, setUserBooks] = useState<(UserBook & BookResult)[]>([]);
+  const [lastDoc, setLastDoc] =
+    useState<FirebaseFirestoreTypes.QueryDocumentSnapshot | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
 
-  useEffect(
-    () =>
-      firestore()
-        ?.collection('users')
-        ?.doc(auth().currentUser?.uid)
-        ?.collection('books')
-        .onSnapshot(async snapshot => {
-          setUserBooks(
-            await Promise.all(
-              snapshot.docs
-                .map(book => ({
-                  id: book.id,
-                  ...(book.data() as UserBook),
-                }))
-                .map(async book => ({
-                  ...book,
-                  ...(withRefs
-                    ? ((await book.bookRef.get()).data() as any)
-                    : {}),
-                })),
-            ),
-          );
+  const fetchUserBooks = useCallback(async () => {
+    if (loading || !hasMore) return;
+
+    setLoading(true);
+    const userId = auth().currentUser?.uid;
+    if (!userId) {
+      setLoading(false);
+      return;
+    }
+
+    try {
+      let query = firestore()
+        .collection('users')
+        .doc(userId)
+        .collection('books')
+        .limit(SNAPSHOT_LENGTH);
+
+      if (lastDoc) {
+        query = query.startAfter(lastDoc);
+      }
+
+      const snapshot = await query.get();
+
+      if (snapshot.empty) {
+        setHasMore(false);
+        setLoading(false);
+        return;
+      }
+
+      const books = await Promise.all(
+        snapshot.docs.map(async book => {
+          const bookData = book.data() as UserBook;
+          if (withRefs && bookData.bookRef) {
+            const refData = (await bookData.bookRef.get()).data() as BookResult;
+            return { ...bookData, ...refData };
+          }
+          return bookData;
         }),
-    [withRefs],
-  );
+      );
 
-  return userBooks as (UserBook & BookResult)[];
+      setUserBooks(prevBooks => [...prevBooks, ...books]);
+      setLastDoc(snapshot.docs[snapshot.docs.length - 1]);
+      setHasMore(snapshot.docs.length === SNAPSHOT_LENGTH);
+    } catch (error) {
+      console.error('Error fetching user books:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [lastDoc, loading, hasMore, withRefs]);
+
+  useEffect(() => {
+    void fetchUserBooks();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return { userBooks, fetchUserBooks, loading, hasMore };
 };
 
 export const useBooks = ({ ids }: { ids: string[] } = { ids: [] }) => {
