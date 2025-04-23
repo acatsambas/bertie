@@ -27,19 +27,19 @@ export const OrderNavigator = () => (
     />
     <OrderStack.Screen
       name={ORDER_ROUTES.ORDER_03_ADDRESS_SCREEN}
-      component={OrderPlacedScreen}
-    />
-    <OrderStack.Screen
-      name={ORDER_ROUTES.ORDER_04_BOOKSHOP}
       component={AddressScreen}
     />
     <OrderStack.Screen
-      name={ORDER_ROUTES.ORDER_05_EMAIL_SCREEN}
+      name={ORDER_ROUTES.ORDER_04_BOOKSHOP}
       component={BookshopScreen}
     />
     <OrderStack.Screen
-      name={ORDER_ROUTES.ORDER_06_ORDER_PLACED}
+      name={ORDER_ROUTES.ORDER_05_EMAIL_SCREEN}
       component={EmailScreen}
+    />
+    <OrderStack.Screen
+      name={ORDER_ROUTES.ORDER_06_ORDER_PLACED}
+      component={OrderPlacedScreen}
     />
   </OrderStack.Navigator>
 );
