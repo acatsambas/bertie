@@ -1,4 +1,9 @@
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import {
+  CommonActions,
+  RouteProp,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import { makeStyles } from '@rneui/themed';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -22,8 +27,14 @@ const OrderPlacedScreen = () => {
   const navigation = useNavigation<any>();
 
   const handlePressDone = () => {
-    navigation.replace('LibraryNavigator', {
-      screen: 'Library',
+    navigation.dispatch(() => {
+      const resetOrderStack = CommonActions.reset({
+        index: 0,
+        routes: [{ name: Routes.ORDER_01_ORDER }],
+      });
+
+      navigation.dispatch(resetOrderStack);
+      navigation.navigate(Routes.LIBRARY_01_LIBRARY);
     });
   };
 

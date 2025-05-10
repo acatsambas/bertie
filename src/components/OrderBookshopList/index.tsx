@@ -38,6 +38,12 @@ const OrderBookshopList = ({ kind, shops }: OrderBookshopListProps) => {
     }
   }, [shops]);
 
+  const onSelectBookshop = async (shop: Shop) => {
+    await firestore().collection('users').doc(user.documentId).update({
+      favouriteShop: shop.id,
+    });
+  };
+
   if (kind === 'favourites') {
     return (
       <View>
@@ -47,11 +53,7 @@ const OrderBookshopList = ({ kind, shops }: OrderBookshopListProps) => {
             name={shop.name}
             location={shop.city}
             key={shop.id}
-            onPress={async () => {
-              firestore().collection('users').doc(user.documentId).update({
-                favouriteShop: shop.id,
-              });
-            }}
+            onPress={() => onSelectBookshop(shop)}
             kind={
               user.favouriteShop === shop.id ? 'favoriteSelected' : 'favorite'
             }
@@ -82,8 +84,10 @@ const OrderBookshopList = ({ kind, shops }: OrderBookshopListProps) => {
               name={shop.name}
               location={shop.city}
               key={shop.id}
-              kind="default"
-              onPress={() => navigate(Routes.ORDER_04_BOOKSHOP, { shop })}
+              kind={
+                user.favouriteShop === shop.id ? 'favoriteSelected' : 'favorite'
+              }
+              onPress={() => onSelectBookshop(shop)}
             />
           ))
         )}
