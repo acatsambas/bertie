@@ -1,7 +1,7 @@
 import firestore from '@react-native-firebase/firestore';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { makeStyles } from '@rneui/themed';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 import RenderHtml from 'react-native-render-html';
@@ -12,12 +12,13 @@ import Text from 'components/Text';
 
 import { useUserBooks } from 'api/app/hooks';
 import { AuthContext } from 'api/auth/AuthProvider';
+import { bookDescription } from 'api/google-books/bookDescription';
 
 import { Routes } from 'navigation/routes';
 import { NavigationType } from 'navigation/types';
 
 import { translations } from 'locales/translations';
-
+//
 const BookScreen = () => {
   const { params } =
     useRoute<RouteProp<NavigationType, typeof Routes.LIBRARY_02_BOOK>>();
@@ -26,6 +27,17 @@ const BookScreen = () => {
   const { goBack } = useNavigation();
   const userBooks = useUserBooks();
   const { user } = useContext(AuthContext);
+
+  const [description, setDescription] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchDescription = async () => {
+      const desc = await bookDescription(params.book.id);
+      setDescription(desc);
+    };
+
+    fetchDescription();
+  }, [params.book.id]);
 
   const handlePressBook = async () => {
     const bookRef = firestore().collection('books').doc(params.book.id);
@@ -63,10 +75,7 @@ const BookScreen = () => {
             text={params.book.volumeInfo?.authors?.join?.(', ')}
           />
         </View>
-        <RenderHtml
-          source={{ html: params.book.volumeInfo?.description }}
-          contentWidth={0}
-        />
+        <RenderHtml source={{ html: description }} contentWidth={0} />
       </ScrollView>
       <View style={styles.buttonContainer}>
         {!userBooks.some(book => book.id === params.book.id) ? (
