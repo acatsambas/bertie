@@ -1,16 +1,15 @@
 import { FirebaseAuthTypes } from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useUserBooks } from 'api/app/hooks';
+import { useToggleBookReadMutation, useUserBooksQuery } from 'api/app/book';
 
 import { Routes } from 'navigation/routes';
 import { NavigationType } from 'navigation/types';
 
-import { translations } from 'locales/translations';
+import { categorizeBooks } from './utils';
 
 export const SECTIONS_IDS = {
   CURRENT: 'CURRENT',
@@ -24,76 +23,31 @@ interface LibraryPageProps
   > {}
 
 export const useLibrary = (user: FirebaseAuthTypes.User) => {
-  const { userBooks, fetchUserBooks, loading, hasMore } = useUserBooks({
+  const { data, fetchNextPage, hasNextPage, isFetching } = useUserBooksQuery({
     withRefs: true,
   });
+  const { mutate: toggleRead } = useToggleBookReadMutation(user.uid);
   const { t } = useTranslation();
   const { navigate } = useNavigation<LibraryPageProps>();
 
-  const books = useMemo(
-    () =>
-      userBooks.reduce(
-        (acc, book) => {
-          if (book.isRead) {
-            acc[1].data.push(book);
-          } else {
-            acc[0].data.push(book);
-          }
-          return acc;
-        },
-        [
-          {
-            id: SECTIONS_IDS.CURRENT,
-            title: t(translations.library.current),
-            data: [],
-          },
-          {
-            id: SECTIONS_IDS.PAST,
-            title: t(translations.library.past),
-            data: [],
-          },
-        ],
-      ),
-    [userBooks, t],
-  );
-
-  const handleOnPressBook = book => {
-    navigate(Routes.LIBRARY_02_BOOK, {
-      book,
-    });
-  };
-
-  const handleAddBook = () => {
-    navigate(Routes.LIBRARY_03_SEARCH);
-  };
-
-  const handleOnRead = async (bookId: string, isRead: boolean) => {
-    try {
-      await firestore()
-        .collection('users')
-        .doc(user.uid)
-        .collection('books')
-        .doc(bookId)
-        .update({
-          isRead: !isRead,
-        });
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const books = useMemo(() => {
+    if (!data) return [];
+    return categorizeBooks(data, t);
+  }, [data, t]);
 
   const fetchMoreBooks = useCallback(() => {
-    if (hasMore && !loading) {
-      void fetchUserBooks();
+    if (hasNextPage && !isFetching) {
+      void fetchNextPage();
     }
-  }, [hasMore, loading, fetchUserBooks]);
+  }, [hasNextPage, isFetching, fetchNextPage]);
 
   return {
     books,
-    handleOnPressBook,
-    handleAddBook,
-    handleOnRead,
+    handleOnPressBook: book => navigate(Routes.LIBRARY_02_BOOK, { book }),
+    handleAddBook: () => navigate(Routes.LIBRARY_03_SEARCH),
+    handleOnRead: async (bookId: string, isRead: boolean) =>
+      toggleRead({ bookId, isRead }),
     fetchMoreBooks,
-    loading,
+    loading: isFetching,
   };
 };
