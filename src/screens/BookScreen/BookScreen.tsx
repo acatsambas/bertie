@@ -9,7 +9,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from 'components/Button';
 import Text from 'components/Text';
 
-import { useAddBookMutation, useUserBooksIdsQuery } from 'api/app/book';
+import {
+  useAddBookToLibraryMutation,
+  useUserBooksIdsQuery,
+} from 'api/app/book';
 import { bookDescription } from 'api/google-books/bookDescription';
 
 import { Routes } from 'navigation/routes';
@@ -24,7 +27,7 @@ export const BookScreen = () => {
   const { t } = useTranslation();
   const { goBack } = useNavigation();
   const { data: userBooksIds = [] } = useUserBooksIdsQuery();
-  const { mutate: addBookToLibrary } = useAddBookMutation();
+  const { mutate: addBookToLibrary } = useAddBookToLibraryMutation();
   const [description, setDescription] = useState<string | null>(null);
 
   const isBookInLibrary = userBooksIds.some(({ id }) => id === params.book.id);

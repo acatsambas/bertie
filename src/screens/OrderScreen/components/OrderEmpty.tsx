@@ -7,7 +7,10 @@ import { View } from 'react-native';
 import Book from 'components/Book';
 import Text from 'components/Text';
 
-import { useAddBookMutation, useUserBooksIdsQuery } from 'api/app/book';
+import {
+  useAddBookToLibraryMutation,
+  useUserBooksIdsQuery,
+} from 'api/app/book';
 import { useBooks } from 'api/app/hooks';
 
 import { translations } from 'locales/translations';
@@ -36,7 +39,7 @@ export const OrderEmpty = ({ kind = 'order' }: OrderEmptyProps) => {
   const styles = useStyles();
   const { navigate } = useNavigation<any>();
   const { data: userBooksIds = [] } = useUserBooksIdsQuery();
-  const { mutate: addBook } = useAddBookMutation();
+  const { mutate: addBook } = useAddBookToLibraryMutation();
 
   const recommendedIds =
     kind === 'discover'

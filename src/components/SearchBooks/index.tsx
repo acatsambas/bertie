@@ -3,7 +3,10 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { View } from 'react-native';
 
-import { useAddBookMutation, useUserBooksIdsQuery } from 'api/app/book';
+import {
+  useAddBookToLibraryMutation,
+  useUserBooksIdsQuery,
+} from 'api/app/book';
 import { BookResult } from 'api/google-books/search';
 
 import { Routes } from 'navigation/routes';
@@ -21,7 +24,7 @@ const SearchBooks = ({ books }: SearchBookProps) => {
       StackNavigationProp<NavigationType, typeof Routes.LIBRARY_03_SEARCH>
     >();
   const { data: userBooksIds = [] } = useUserBooksIdsQuery();
-  const { mutate: addBook } = useAddBookMutation();
+  const { mutate: addBook } = useAddBookToLibraryMutation();
 
   const handlePressBook = (book: BookResult) => {
     navigate(Routes.LIBRARY_02_BOOK, {
