@@ -1,6 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { makeStyles } from '@rneui/themed';
+import { useQueryClient } from '@tanstack/react-query';
 import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Linking, View } from 'react-native';
@@ -30,8 +31,10 @@ const SettingsScreen = ({ navigation }) => {
   const styles = useStyles();
 
   const { logout, user } = useContext(AuthContext);
+  const queryClient = useQueryClient();
   const handleLogout = async () => {
     await logout();
+    queryClient.clear();
   };
 
   const handleChangeAddress = () => {
