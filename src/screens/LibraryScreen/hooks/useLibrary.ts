@@ -26,7 +26,7 @@ export const useLibrary = (user: FirebaseAuthTypes.User) => {
   const { data, fetchNextPage, hasNextPage, isFetching } = useUserBooksQuery({
     withRefs: true,
   });
-  const { mutate: toggleRead } = useToggleBookReadMutation(user.uid);
+  const { mutate: toggleRead } = useToggleBookReadMutation();
   const { t } = useTranslation();
   const { navigate } = useNavigation<LibraryPageProps>();
 
