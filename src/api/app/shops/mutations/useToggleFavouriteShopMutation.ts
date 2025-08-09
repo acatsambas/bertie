@@ -1,6 +1,6 @@
-import auth from "@react-native-firebase/auth";
-import firestore from "@react-native-firebase/firestore";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface ToggleFavouriteShopParams {
   shopId: string;

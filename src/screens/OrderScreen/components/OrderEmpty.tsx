@@ -9,9 +9,9 @@ import Text from 'components/Text';
 
 import {
   useAddBookToLibraryMutation,
+  useBooksQuery,
   useUserBooksIdsQuery,
 } from 'api/app/book';
-import { useBooks } from 'api/app/hooks';
 
 import { translations } from 'locales/translations';
 
@@ -45,7 +45,9 @@ export const OrderEmpty = ({ kind = 'order' }: OrderEmptyProps) => {
     kind === 'discover'
       ? DISCOVER_RECOMMENDED_IDS
       : NON_DISCOVER_RECOMMENDED_IDS;
-  const recommendedBooks = useBooks({ ids: recommendedIds });
+  const { data: recommendedBooks = [] } = useBooksQuery({
+    ids: recommendedIds,
+  });
 
   const navigateToBook = book =>
     navigate('LibraryNavigator', {
