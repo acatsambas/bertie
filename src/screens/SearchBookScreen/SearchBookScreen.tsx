@@ -54,7 +54,7 @@ export const SearchBookScreen = () => {
           setIsLoading(false); // Stop loading regardless of success or error
         }
 
-        if (user && user.isFirstSearch !== false) {
+        if (user && user.isFirstSearch) {
           await firestore().collection('users').doc(user.documentId).update({
             isFirstSearch: false,
           });
