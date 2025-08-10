@@ -14,7 +14,7 @@ import { NavigationType } from 'navigation/types';
 
 import { translations } from 'locales/translations';
 
-import { useOrderShopScreen } from './OrderShopScreen.hooks';
+import { useOrderShopScreen } from './hooks/useOrderShopScreen';
 
 export interface OrderShopScreenProps
   extends StackNavigationProp<
