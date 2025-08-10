@@ -39,6 +39,10 @@ const OrderBookshopList = ({ kind, shops }: OrderBookshopListProps) => {
   }, [shops, isLoadingUser]);
 
   const onSelectBookshop = async (shop: Shop) => {
+    if (!user) {
+      return;
+    }
+
     await firestore().collection('users').doc(user.documentId).update({
       favouriteShop: shop.id,
     });

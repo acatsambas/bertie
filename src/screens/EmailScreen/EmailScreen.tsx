@@ -32,7 +32,7 @@ export const EmailScreen = ({ navigation }) => {
 
   const handleSave = async () => {
     const validRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
-    if (email === checkEmail && email.match(validRegex)) {
+    if (email === checkEmail && email.match(validRegex) && user) {
       await firestore().collection('users').doc(user.documentId).update({
         contactEmail: email,
       });

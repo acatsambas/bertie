@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { useUserBooksQuery } from 'api/app/book';
 
@@ -12,23 +12,24 @@ export const useBooksTab = ({
   cleanInput: () => void;
 }) => {
   const { data } = useUserBooksQuery({ withRefs: true });
-
+  const hasInitialized = useRef(false); // Tracks if the initial message has been set
   const [messages, setMessages] = useState<string[]>([]);
 
   useEffect(() => {
-    if (!data?.pages) return;
+    if (!data?.pages || hasInitialized.current) return;
+
     const bookTitles = data.pages
       .flatMap(page => page.books)
       .map(book => book.volumeInfo.title);
 
     async function fetchInitialMessage() {
+      hasInitialized.current = true;
       const initialMessage = await executeGPT(null, bookTitles); // Get first AI response
       setMessages([initialMessage]);
     }
-    fetchInitialMessage();
-    // Disabling exhaustive-deps here because we want this to run only once on mount and not on every book load. So we save on tokens
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+
+    void fetchInitialMessage();
+  }, [data?.pages]);
 
   const handleSend = async () => {
     if (userInput.trim()) {

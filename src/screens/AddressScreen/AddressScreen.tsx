@@ -27,14 +27,14 @@ export const AddressScreen = ({ navigation }) => {
   const [componentMounted, setComponentMounted] = useState(false);
 
   useEffect(() => {
-    if (user?.address && !componentMounted) {
+    if (user && user?.address && !componentMounted) {
       setAddress(user.address);
       setComponentMounted(true);
     }
   }, [componentMounted, user]);
 
   const handleSave = async () => {
-    if (!address.postcode.trim()) {
+    if (!address.postcode.trim() || !user) {
       Alert.alert(
         t(translations.settings.address.validationTitle),
         t(translations.settings.address.validationMessage),

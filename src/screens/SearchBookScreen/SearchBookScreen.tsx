@@ -1,7 +1,7 @@
 import firestore from '@react-native-firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Switch, makeStyles } from '@rneui/themed';
+import { makeStyles, Switch } from '@rneui/themed';
 import { debounce } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -54,7 +54,7 @@ export const SearchBookScreen = () => {
           setIsLoading(false); // Stop loading regardless of success or error
         }
 
-        if (user.isFirstSearch !== false) {
+        if (user && user.isFirstSearch !== false) {
           await firestore().collection('users').doc(user.documentId).update({
             isFirstSearch: false,
           });
@@ -121,7 +121,7 @@ export const SearchBookScreen = () => {
             />
           </View>
         </View>
-        {user?.isFirstSearch !== false && (
+        {user && user?.isFirstSearch !== false && (
           <Text
             kind="paragraph"
             text={t(translations.library.search.addToList)}
