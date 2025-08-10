@@ -121,7 +121,7 @@ export const SearchBookScreen = () => {
             />
           </View>
         </View>
-        {user && user?.isFirstSearch !== false && (
+        {user?.isFirstSearch !== false && (
           <Text
             kind="paragraph"
             text={t(translations.library.search.addToList)}
