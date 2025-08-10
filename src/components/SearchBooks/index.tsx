@@ -1,11 +1,12 @@
-import firestore from '@react-native-firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useContext } from 'react';
+import React from 'react';
 import { View } from 'react-native';
 
-import { useUserBooks } from 'api/app/hooks';
-import { AuthContext } from 'api/auth/AuthProvider';
+import {
+  useAddBookToLibraryMutation,
+  useUserBooksIdsQuery,
+} from 'api/app/book';
 import { BookResult } from 'api/google-books/search';
 
 import { Routes } from 'navigation/routes';
@@ -22,8 +23,8 @@ const SearchBooks = ({ books }: SearchBookProps) => {
     useNavigation<
       StackNavigationProp<NavigationType, typeof Routes.LIBRARY_03_SEARCH>
     >();
-  const { user } = useContext(AuthContext);
-  const userBooks = useUserBooks();
+  const { data: userBooksIds = [] } = useUserBooksIdsQuery();
+  const { mutate: addBook } = useAddBookToLibraryMutation();
 
   const handlePressBook = (book: BookResult) => {
     navigate(Routes.LIBRARY_02_BOOK, {
@@ -31,31 +32,14 @@ const SearchBooks = ({ books }: SearchBookProps) => {
     });
   };
 
-  const handlePressAddBook = async (book: BookResult, isUserBook: boolean) => {
-    const bookRef = firestore().collection('books').doc(book.id);
-
-    if (!(await bookRef.get()).exists) {
-      await firestore().collection('books').doc(book.id).set(book);
-    }
-
-    const userBookRef = firestore()
-      .collection('users')
-      .doc(user.uid)
-      .collection('books')
-      .doc(book.id);
-
-    if (isUserBook) {
-      userBookRef.delete();
-    } else {
-      userBookRef.set({ bookRef });
-    }
+  const handlePressAddBook = (book: BookResult, isUserBook: boolean) => {
+    addBook({ book, isUserBook });
   };
 
   return (
     <View style={{ gap: 10 }}>
       {books.map(book => {
-        const isUserBook = !!userBooks.find(({ id }) => id === book?.id);
-
+        const isUserBook = userBooksIds.some(({ id }) => id === book?.id);
         return (
           <Book
             key={book.id}

@@ -2,42 +2,14 @@ import firestore from '@react-native-firebase/firestore';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { useMemo } from 'react';
 
-import { useFavouriteShops, useShops, useUser } from 'api/app/hooks';
+import { useFavouriteShopsQuery, useShopsQuery } from 'api/app/shops';
+import { useUserQuery } from 'api/app/user';
 
 import { Routes } from 'navigation/routes';
 import { NavigationType } from 'navigation/types';
 
-import { OrderShopScreenProps } from 'screens/OrderShopScreen/index';
-
-const getOrderMail = ({ selectedShop, user, books }) => ({
-  from: {
-    name: 'Bertie',
-    address: 'acatsambas@bertieapp.com',
-  },
-  to: [selectedShop.email],
-  cc: [user.contactEmail],
-  message: {
-    subject: 'New Book Order',
-    text: `Dear ${selectedShop.name} team,
-
-${user.givenName} ${user.familyName} would like to order these books:
-${books.map(book => `- ${book?.volumeInfo?.title} (${book?.volumeInfo?.authors?.join?.(', ')})`).join('\n')}
-
-Their address is:
-${user.address?.firstLine && user.address.firstLine}
-${user.address?.secondLine && user.address.secondLine}
-${user.address?.city && `${user.address.city}, `}${user.address?.postcode}
-${user.address?.country ? user.address.country : 'United Kingdom'}
-
-Please get in touch with them directly to arrange payment and delivery at ${user.contactEmail}.
-
-Thank you,
-Bertie`,
-  },
-});
-
-const isInvalidEmail = (email?: string) =>
-  !email || email.includes('@privaterelay.appleid.com');
+import { OrderShopScreenProps } from '../OrderShopScreen';
+import { getOrderMail, isInvalidEmail } from './utils';
 
 export const useOrderShopScreen = () => {
   const { navigate } = useNavigation<OrderShopScreenProps>();
@@ -45,9 +17,9 @@ export const useOrderShopScreen = () => {
     useRoute<RouteProp<NavigationType, typeof Routes.ORDER_02_ORDER_SHOP>>();
 
   const books = route.params.books;
-  const user = useUser();
-  const shops = useShops();
-  const favouriteShops = useFavouriteShops();
+  const { data: user } = useUserQuery();
+  const { data: shops = [] } = useShopsQuery();
+  const { data: favouriteShops = [] } = useFavouriteShopsQuery();
 
   const mappedFavouriteShopIds = useMemo(
     () => new Set(favouriteShops.map(({ id }) => id)),

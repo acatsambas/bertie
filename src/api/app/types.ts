@@ -1,6 +1,6 @@
 import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
 
-export interface Shop {
+export type Shop = {
   id: string;
   address: string;
   city: string;
@@ -9,15 +9,17 @@ export interface Shop {
   email: string;
   name: string;
   zipcode: string;
-}
+};
 
-export interface UserShop {
+export type UserShop = {
   id: string;
   shopRef: FirebaseFirestoreTypes.DocumentReference<FirebaseFirestoreTypes.DocumentData>;
-}
+};
 
-export interface UserBook {
+export type UserBook = {
   id: string;
   bookRef: FirebaseFirestoreTypes.DocumentReference<FirebaseFirestoreTypes.DocumentData>;
   isRead?: boolean;
-}
+};
+
+export type UserBookId = Pick<UserBook, 'id'>;

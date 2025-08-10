@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-import { useUserBooks } from 'api/app/hooks';
+import { useUserBooksQuery } from 'api/app/book';
 
 import { executeGPT } from 'gpt/discover-books';
 
@@ -11,18 +11,25 @@ export const useBooksTab = ({
   userInput: string;
   cleanInput: () => void;
 }) => {
-  const books = useUserBooks({ withRefs: true });
-
+  const { data } = useUserBooksQuery({ withRefs: true });
+  const hasInitialized = useRef(false); // Tracks if the initial message has been set
   const [messages, setMessages] = useState<string[]>([]);
 
   useEffect(() => {
-    const bookTitles = books.map(book => book.volumeInfo.title);
+    if (!data?.pages || hasInitialized.current) return;
+
+    const bookTitles = data.pages
+      .flatMap(page => page.books)
+      .map(book => book.volumeInfo.title);
+
     async function fetchInitialMessage() {
+      hasInitialized.current = true;
       const initialMessage = await executeGPT(null, bookTitles); // Get first AI response
       setMessages([initialMessage]);
     }
-    fetchInitialMessage();
-  }, [books]);
+
+    void fetchInitialMessage();
+  }, [data?.pages]);
 
   const handleSend = async () => {
     if (userInput.trim()) {

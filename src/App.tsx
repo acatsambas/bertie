@@ -1,4 +1,5 @@
 import { ThemeProvider, createTheme } from '@rneui/themed';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 
 import { AuthProvider } from 'api/auth/AuthProvider';
@@ -20,17 +21,19 @@ const theme = createTheme({
   mode: 'light',
 });
 
+const queryClient = new QueryClient();
+
 const App = () => {
-  const [firebaseInitƒ, setFirebaseInitƒ] = useState(false);
+  const [firebaseInitialised, setFirebaseInitialised] = useState(false);
 
   useEffect(() => {
     (async () => {
       await initFirebase();
-      setFirebaseInitƒ(true);
+      setFirebaseInitialised(true);
     })();
   });
 
-  if (!firebaseInitƒ) {
+  if (!firebaseInitialised) {
     return null;
   }
 
@@ -38,7 +41,9 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <AuthProvider>
         <FontsProvider>
-          <RootNavigator />
+          <QueryClientProvider client={queryClient}>
+            <RootNavigator />
+          </QueryClientProvider>
         </FontsProvider>
       </AuthProvider>
     </ThemeProvider>

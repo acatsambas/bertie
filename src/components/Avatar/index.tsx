@@ -1,7 +1,7 @@
 import { Avatar as RNEAvatar } from '@rneui/themed';
 import React, { useContext } from 'react';
 
-import { useUser } from 'api/app/hooks';
+import { useUserQuery } from 'api/app/user';
 import { AuthContext } from 'api/auth/AuthProvider';
 
 interface AvatarProps {
@@ -10,7 +10,7 @@ interface AvatarProps {
 
 const Avatar = ({ onPress }: AvatarProps) => {
   const { user } = useContext(AuthContext);
-  const userData = useUser();
+  const { data: userData } = useUserQuery();
 
   return (
     <RNEAvatar

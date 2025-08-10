@@ -3,7 +3,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 
-import { useShops } from 'api/app/hooks';
+import { useShopsQuery } from 'api/app/shops';
 import { Shop } from 'api/app/types';
 
 import { Routes } from 'navigation/routes';
@@ -19,7 +19,7 @@ export interface DiscoverPageProps
   > {}
 
 const BookshopsList = () => {
-  const shops = useShops();
+  const { data: shops = [] } = useShopsQuery();
   const { navigate } = useNavigation<DiscoverPageProps>();
   const [isLoading, setIsLoading] = useState(true);
 
