@@ -10,7 +10,7 @@ interface AvatarProps {
 
 const Avatar = ({ onPress }: AvatarProps) => {
   const { user } = useContext(AuthContext);
-  const { data: userData = {} } = useUserQuery();
+  const { data: userData } = useUserQuery();
 
   return (
     <RNEAvatar
