@@ -2,7 +2,8 @@ import firestore from '@react-native-firebase/firestore';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { useMemo } from 'react';
 
-import { useFavouriteShops, useShops, useUser } from 'api/app/hooks';
+import { useFavouriteShopsQuery, useShopsQuery } from 'api/app/shops';
+import { useUserQuery } from 'api/app/user';
 
 import { Routes } from 'navigation/routes';
 import { NavigationType } from 'navigation/types';
@@ -45,9 +46,9 @@ export const useOrderShopScreen = () => {
     useRoute<RouteProp<NavigationType, typeof Routes.ORDER_02_ORDER_SHOP>>();
 
   const books = route.params.books;
-  const user = useUser();
-  const shops = useShops();
-  const favouriteShops = useFavouriteShops();
+  const { data: user = {} } = useUserQuery();
+  const { data: shops = [] } = useShopsQuery();
+  const { data: favouriteShops = [] } = useFavouriteShopsQuery();
 
   const mappedFavouriteShopIds = useMemo(
     () => new Set(favouriteShops.map(({ id }) => id)),

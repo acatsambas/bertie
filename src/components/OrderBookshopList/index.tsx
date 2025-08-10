@@ -6,8 +6,8 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { useUser } from 'api/app/hooks';
 import { Shop } from 'api/app/types';
+import { useUserQuery } from 'api/app/user';
 
 import { Routes } from 'navigation/routes';
 import { NavigationType } from 'navigation/types';
@@ -29,14 +29,14 @@ const OrderBookshopList = ({ kind, shops }: OrderBookshopListProps) => {
   const styles = useStyles();
   const { t } = useTranslation();
   const { navigate } = useNavigation<OrderPageProps>();
-  const user = useUser();
+  const { data: user, isLoading: isLoadingUser } = useUserQuery();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (shops.length > 0) {
+    if (shops.length > 0 && !isLoadingUser) {
       setIsLoading(false);
     }
-  }, [shops]);
+  }, [shops, isLoadingUser]);
 
   const onSelectBookshop = async (shop: Shop) => {
     await firestore().collection('users').doc(user.documentId).update({
