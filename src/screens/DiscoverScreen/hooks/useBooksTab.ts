@@ -26,6 +26,8 @@ export const useBooksTab = ({
       setMessages([initialMessage]);
     }
     fetchInitialMessage();
+    // Disabling exhaustive-deps here because we want this to run only once on mount and not on every book load. So we save on tokens
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSend = async () => {
