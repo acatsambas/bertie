@@ -11,11 +11,6 @@ import { NavigationType } from 'navigation/types';
 
 import { categorizeBooks } from './utils';
 
-export const SECTIONS_IDS = {
-  CURRENT: 'CURRENT',
-  PAST: 'PAST',
-};
-
 interface LibraryPageProps
   extends StackNavigationProp<
     NavigationType,

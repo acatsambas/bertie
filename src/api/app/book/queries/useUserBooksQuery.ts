@@ -7,7 +7,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { UserBook } from 'api/app/types';
 import { BookResult } from 'api/google-books/search';
 
-const SNAPSHOT_LENGTH = 15;
+const SNAPSHOT_LENGTH = 30;
 
 interface QueryResult {
   books: (UserBook & Partial<BookResult>)[];

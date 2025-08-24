@@ -1,6 +1,6 @@
-import { SECTIONS_IDS } from 'screens/LibraryScreen/hooks/useLibrary';
-
 import { translations } from 'locales/translations';
+
+import { SECTIONS_IDS } from './constants';
 
 export const categorizeBooks = (rawBooks, t) => {
   const allBooks = rawBooks?.pages.flatMap(page => page.books) ?? [];
