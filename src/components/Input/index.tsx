@@ -6,6 +6,7 @@ import Icon, { IconProps } from '../Icon';
 interface InputProps extends TextInputProps {
   placeholder?: string;
   kind?: string;
+  marginTop?: number;
   icon?: IconProps['icon'];
   value: string;
 }
@@ -15,6 +16,7 @@ const Input = ({
   kind,
   icon,
   onChangeText,
+  marginTop = 14,
   ...inputProps
 }: InputProps) => {
   const { theme } = useTheme();
@@ -50,7 +52,7 @@ const Input = ({
         paddingRight: 10, // Add padding for the clear icon
         gap: 10,
         borderWidth: kind === 'search' ? 1 : 0,
-        marginTop: 14,
+        marginTop,
       }}
       inputStyle={{ fontFamily: 'Commissioner_400Regular' }}
     />
