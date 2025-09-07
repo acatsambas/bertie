@@ -78,8 +78,7 @@ const useStyles = makeStyles(theme => ({
   },
   container: {
     paddingTop: 20,
-    paddingBottom: 120,
+    paddingBottom: 20,
     gap: 20,
-    position: 'relative',
   },
 }));

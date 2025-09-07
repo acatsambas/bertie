@@ -1,4 +1,3 @@
-import firestore from '@react-native-firebase/firestore';
 import { makeStyles } from '@rneui/themed';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -9,7 +8,7 @@ import Button from 'components/Button';
 import Input from 'components/Input';
 import Text from 'components/Text';
 
-import { useUserQuery } from 'api/app/user';
+import { useUpdateContactEmailMutation, useUserQuery } from 'api/app/user';
 
 import { translations } from 'locales/translations';
 
@@ -17,6 +16,7 @@ export const EmailScreen = ({ navigation }) => {
   const styles = useStyles();
   const { t } = useTranslation();
   const { data: user } = useUserQuery();
+  const updateContactEmail = useUpdateContactEmailMutation();
   const [email, setEmail] = useState('');
   const [checkEmail, setCheckEmail] = useState('');
   const [error, setError] = useState(false);
@@ -33,9 +33,7 @@ export const EmailScreen = ({ navigation }) => {
   const handleSave = async () => {
     const validRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
     if (email === checkEmail && email.match(validRegex) && user) {
-      await firestore().collection('users').doc(user.documentId).update({
-        contactEmail: email,
-      });
+      await updateContactEmail.mutateAsync({ contactEmail: email });
 
       navigation.goBack();
     } else {
