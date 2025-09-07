@@ -1,7 +1,6 @@
-import firestore from '@react-native-firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { makeStyles, Switch } from '@rneui/themed';
+import { Switch, makeStyles } from '@rneui/themed';
 import { debounce } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -14,7 +13,7 @@ import LoadingState from 'components/LoadingState/LoadingState';
 import SearchBooks from 'components/SearchBooks';
 import Text from 'components/Text';
 
-import { useUserQuery } from 'api/app/user';
+import { useUpdateFirstSearchFlagMutation, useUserQuery } from 'api/app/user';
 import { BookResult, searchBooks } from 'api/google-books/search';
 
 import { Routes } from 'navigation/routes';
@@ -36,6 +35,7 @@ export const SearchBookScreen = () => {
   );
   const [isLoading, setIsLoading] = useState(false);
   const { data: user } = useUserQuery();
+  const updateFirstSearchFlag = useUpdateFirstSearchFlagMutation();
   const styles = useStyles();
   const { t } = useTranslation();
   const { navigate } = useNavigation<SearchBookProps>();
@@ -55,9 +55,7 @@ export const SearchBookScreen = () => {
         }
 
         if (user && user.isFirstSearch) {
-          await firestore().collection('users').doc(user.documentId).update({
-            isFirstSearch: false,
-          });
+          await updateFirstSearchFlag.mutateAsync({ isFirstSearch: false });
         }
 
         return;
@@ -65,7 +63,7 @@ export const SearchBookScreen = () => {
 
       setSearchResults([]);
     }, 350),
-    [toggleWord, user?.documentId, user?.isFirstSearch],
+    [toggleWord, user?.isFirstSearch, updateFirstSearchFlag],
   );
 
   useEffect(() => {
