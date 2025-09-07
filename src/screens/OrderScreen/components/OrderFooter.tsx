@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, View } from 'react-native';
+import { View } from 'react-native';
 
 import Button from 'components/Button';
 import Text from 'components/Text';
@@ -20,13 +20,12 @@ export const OrderFooter = ({
 }: OrderFooterProps) => {
   const { t } = useTranslation();
 
-  if (loading) return <ActivityIndicator />;
-  if (!hasBooks) return null;
+  if (loading || !hasBooks) return null;
 
   return (
-    <>
+    <View style={{ paddingTop: 20, paddingBottom: 20 }}>
       <Text text={t(translations.order.details)} kind="header" />
-      <View>
+      <View style={{ marginBottom: 20 }}>
         <Text text={`\u2022 First Name`} kind="description" />
         <Text text={`\u2022 Last Name`} kind="description" />
         <Text text={`\u2022 Email`} kind="description" />
@@ -37,6 +36,6 @@ export const OrderFooter = ({
         text={t(translations.order.next)}
         onPress={onNext}
       />
-    </>
+    </View>
   );
 };
