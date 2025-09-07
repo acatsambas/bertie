@@ -1,4 +1,3 @@
-import firestore from '@react-native-firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { makeStyles } from '@rneui/themed';
@@ -7,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { Shop } from 'api/app/types';
-import { useUserQuery } from 'api/app/user';
+import { useUpdateFavouriteShopMutation, useUserQuery } from 'api/app/user';
 
 import { Routes } from 'navigation/routes';
 import { NavigationType } from 'navigation/types';
@@ -31,6 +30,7 @@ const OrderBookshopList = ({ kind, shops }: OrderBookshopListProps) => {
   const { navigate } = useNavigation<OrderPageProps>();
   const { data: user, isLoading: isLoadingUser } = useUserQuery();
   const [isLoading, setIsLoading] = useState(true);
+  const updateFavouriteShop = useUpdateFavouriteShopMutation();
 
   useEffect(() => {
     if (shops.length > 0 && !isLoadingUser) {
@@ -43,14 +43,12 @@ const OrderBookshopList = ({ kind, shops }: OrderBookshopListProps) => {
       return;
     }
 
-    await firestore().collection('users').doc(user.documentId).update({
-      favouriteShop: shop.id,
-    });
+    await updateFavouriteShop.mutateAsync({ shopId: shop.id });
   };
 
   if (kind === 'favourites') {
     return (
-      <View>
+      <View style={styles.container}>
         <Text kind="header" text={t(translations.order.favourites)} />
         {shops.map(shop => (
           <BookShop
@@ -71,8 +69,8 @@ const OrderBookshopList = ({ kind, shops }: OrderBookshopListProps) => {
     return (
       <View style={styles.container}>
         <Text kind="header" text={t(translations.order.more)} />
-        {!user?.address && (
-          <View style={styles.purple}>
+        {user?.address && (
+          <View style={styles.addressCTA}>
             <Text
               kind="paragraph"
               text={t(translations.order.add)}
@@ -101,11 +99,14 @@ const OrderBookshopList = ({ kind, shops }: OrderBookshopListProps) => {
 };
 
 const useStyles = makeStyles(() => ({
-  container: { gap: 20 },
-  purple: {
+  container: { gap: 16 },
+  header: { marginBottom: 16 },
+  addressCTA: {
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: '#8839f5',
     backgroundColor: '#F3EAFF',
-    paddingHorizontal: 15,
-    paddingVertical: 10,
+    padding: 16,
   },
 }));
 
