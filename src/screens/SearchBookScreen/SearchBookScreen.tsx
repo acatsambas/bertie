@@ -50,20 +50,22 @@ export const SearchBookScreen = () => {
         try {
           const results = await searchBooks(searchValue, toggleWord);
           setSearchResults(results); // Update search results
+
+          // Update first search flag only if search was successful
+          if (user && user.isFirstSearch) {
+            await updateFirstSearchFlag.mutateAsync({ isFirstSearch: false });
+          }
+        } catch (error) {
+          console.error('Search error:', error);
         } finally {
           setIsLoading(false); // Stop loading regardless of success or error
         }
-
-        if (user && user.isFirstSearch) {
-          await updateFirstSearchFlag.mutateAsync({ isFirstSearch: false });
-        }
-
         return;
       }
 
       setSearchResults([]);
     }, 350),
-    [toggleWord, user?.isFirstSearch, updateFirstSearchFlag],
+    [toggleWord],
   );
 
   useEffect(() => {

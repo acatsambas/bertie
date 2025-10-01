@@ -15,11 +15,14 @@ export const searchBooks = async (
     `https://www.googleapis.com/books/v1/volumes?q=${toggleWord}:${query}&fields=items/volumeInfo/title,items/id,items/volumeInfo/description,items/volumeInfo/authors&orderBy=relevance&maxResults=40&key=${process.env.EXPO_PUBLIC_BOOKS_API_KEY}`,
   );
 
-  const json = (await response.json()).items as BookResult[];
+  if (!response.ok) {
+    throw new Error(`API request failed with status ${response.status}`);
+  }
 
-  return (
-    json?.filter?.(
-      (book, index, self) => index === self.findIndex(b => b.id === book.id),
-    ) || []
+  const data = await response.json();
+  const items = (data.items as BookResult[]) || [];
+
+  return items.filter(
+    (book, index, self) => index === self.findIndex(b => b.id === book.id),
   );
 };
