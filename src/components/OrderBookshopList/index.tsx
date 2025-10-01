@@ -69,7 +69,7 @@ const OrderBookshopList = ({ kind, shops }: OrderBookshopListProps) => {
     return (
       <View style={styles.container}>
         <Text kind="header" text={t(translations.order.more)} />
-        {user?.address && (
+        {!user?.address && (
           <View style={styles.addressCTA}>
             <Text
               kind="paragraph"
