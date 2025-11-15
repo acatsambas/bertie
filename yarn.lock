@@ -2874,6 +2874,13 @@
   resolved "https://registry.yarnpkg.com/@jsamr/react-native-li/-/react-native-li-2.3.1.tgz#12a5b5f6e3971cec77b96bee58104eed0ae9314a"
   integrity sha512-Qbo4NEj48SQ4k8FZJHFE2fgZDKTWaUGmVxcIQh3msg5JezLdTMMHuRRDYctfdHI6L0FZGObmEv3haWbIvmol8w==
 
+"@legendapp/list@2.0.15":
+  version "2.0.15"
+  resolved "https://registry.yarnpkg.com/@legendapp/list/-/list-2.0.15.tgz#54488d97ecee1eb0fb7f0883ad726533882cbddc"
+  integrity sha512-t39c6TGWOzV8Ec7SxyKKT15+FQTyBgjvbKFnRzT2CUQP8o43Zets6qt1gVULImE7VXTTqNhRe+3FzHmF3EVB5g==
+  dependencies:
+    use-sync-external-store "^1.5.0"
+
 "@native-html/css-processor@1.11.0":
   version "1.11.0"
   resolved "https://registry.yarnpkg.com/@native-html/css-processor/-/css-processor-1.11.0.tgz#27d02e5123b0849f4986d44060ba3f235a15f552"
@@ -10565,6 +10572,11 @@ use-latest-callback@^0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/use-latest-callback/-/use-latest-callback-0.2.1.tgz#4d4e6a9e4817b13142834850dcfa8d24ca4569cf"
   integrity sha512-QWlq8Is8BGWBf883QOEQP5HWYX/kMI+JTbJ5rdtvJLmXTIh9XoHIO3PQcmQl8BU44VKxow1kbQUHa6mQSMALDQ==
+
+use-sync-external-store@^1.5.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/use-sync-external-store/-/use-sync-external-store-1.6.0.tgz#b174bfa65cb2b526732d9f2ac0a408027876f32d"
+  integrity sha512-Pp6GSwGP/NrPIrxVFAIkOQeyw8lFenOHijQWkUTrDvrF4ALqylP2C/KCkeS9dpUM3KvYRQhna5vt7IL95+ZQ9w==
 
 util-deprecate@^1.0.1, util-deprecate@~1.0.1:
   version "1.0.2"

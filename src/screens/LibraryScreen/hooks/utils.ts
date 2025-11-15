@@ -2,9 +2,29 @@ import { translations } from 'locales/translations';
 
 import { SECTIONS_IDS } from './constants';
 
-export const categorizeBooks = (rawBooks, t) => {
+type SectionHeaderItem = {
+  type: 'section-header';
+  id: string;
+  title: string;
+};
+
+type BookItem = {
+  type: 'book';
+  id: string;
+  isRead?: boolean;
+  volumeInfo?: {
+    title?: string;
+    authors?: string[];
+  };
+  [key: string]: any;
+};
+
+export type LibraryListItem = SectionHeaderItem | BookItem;
+
+export const categorizeBooks = (rawBooks, t): LibraryListItem[] => {
   const allBooks = rawBooks?.pages.flatMap(page => page.books) ?? [];
-  return allBooks.reduce(
+
+  const sections = allBooks.reduce(
     (acc, book) => {
       if (book.isRead) {
         acc[1].data.push(book);
@@ -26,4 +46,23 @@ export const categorizeBooks = (rawBooks, t) => {
       },
     ],
   );
+
+  const flattened: LibraryListItem[] = [];
+
+  sections.forEach(section => {
+    flattened.push({
+      type: 'section-header',
+      id: section.id,
+      title: section.title,
+    });
+
+    section.data.forEach(book => {
+      flattened.push({
+        type: 'book',
+        ...book,
+      });
+    });
+  });
+
+  return flattened;
 };

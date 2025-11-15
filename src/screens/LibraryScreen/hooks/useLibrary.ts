@@ -9,7 +9,7 @@ import { useToggleBookReadMutation, useUserBooksQuery } from 'api/app/book';
 import { Routes } from 'navigation/routes';
 import { NavigationType } from 'navigation/types';
 
-import { categorizeBooks } from './utils';
+import { LibraryListItem, categorizeBooks } from './utils';
 
 interface LibraryPageProps
   extends StackNavigationProp<
