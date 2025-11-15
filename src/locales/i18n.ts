@@ -7,9 +7,26 @@ import { convertLanguageJsonToObject } from './translations';
 
 let deviceLanguage = 'en';
 if (Platform.OS === 'ios') {
-  deviceLanguage =
-    NativeModules.SettingsManager.settings.AppleLocale ||
-    NativeModules.SettingsManager.settings.AppleLanguages[0];
+  try {
+    const settingsManager = NativeModules.SettingsManager;
+    if (settingsManager?.settings) {
+      deviceLanguage =
+        settingsManager.settings.AppleLocale ||
+        settingsManager.settings.AppleLanguages?.[0] ||
+        'en';
+    } else {
+      // Fallback to Intl API if SettingsManager is not available (new architecture)
+      deviceLanguage = Intl.DateTimeFormat().resolvedOptions().locale || 'en';
+    }
+  } catch (error) {
+    // SettingsManager might not be available with new architecture
+    // Fallback to Intl API
+    try {
+      deviceLanguage = Intl.DateTimeFormat().resolvedOptions().locale || 'en';
+    } catch (intlError) {
+      console.warn('Failed to get iOS locale:', error);
+    }
+  }
 } else if (Platform.OS === 'web') {
   deviceLanguage = navigator.language;
 } else {
