@@ -1,45 +1,127 @@
-import { firebase as analyticsFirebase } from '@react-native-firebase/analytics';
-import appCheck from '@react-native-firebase/app-check';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  Analytics,
+  getAnalytics,
+  setAnalyticsCollectionEnabled,
+} from 'firebase/analytics';
+import { FirebaseApp, getApps, initializeApp } from 'firebase/app';
+import {
+  Auth,
+  getAuth,
+  // @ts-expect-error - getReactNativePersistence is not typed
+  getReactNativePersistence,
+  initializeAuth,
+} from 'firebase/auth';
+import {
+  Firestore,
+  enableIndexedDbPersistence,
+  getFirestore,
+} from 'firebase/firestore';
+import { Platform } from 'react-native';
+import 'react-native-get-random-values';
 
-const initAnalytics = async () => {
-  await analyticsFirebase
-    .analytics()
-    .setAnalyticsCollectionEnabled(process.env.NODE_ENV === 'production');
+const firebaseConfig = {
+  apiKey: Platform.select({
+    ios: process.env.EXPO_PUBLIC_FIREBASE_API_KEY_IOS,
+    android: process.env.EXPO_PUBLIC_FIREBASE_API_KEY_ANDROID,
+    default: process.env.EXPO_PUBLIC_FIREBASE_API_KEY_IOS,
+  }),
+  authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: Platform.select({
+    ios: process.env.EXPO_PUBLIC_FIREBASE_APP_ID_IOS,
+    android: process.env.EXPO_PUBLIC_FIREBASE_APP_ID_ANDROID,
+    default: process.env.EXPO_PUBLIC_FIREBASE_APP_ID_IOS,
+  }),
 };
 
-export const initAppCheck = async () => {
-  const rnfbProvider = appCheck().newReactNativeFirebaseAppCheckProvider();
-  rnfbProvider.configure({
-    android: {
-      provider: __DEV__ ? 'debug' : 'playIntegrity',
-      debugToken: process.env.EXPO_PUBLIC_APP_CHECK_ANDROID_DEBUG_TOKEN,
-    },
-    apple: {
-      provider: __DEV__ ? 'debug' : 'appAttestWithDeviceCheckFallback',
-      debugToken: process.env.EXPO_PUBLIC_APP_CHECK_APPLE_DEBUG_TOKEN,
-    },
-    web: {
-      provider: __DEV__ ? 'debug' : 'reCaptchaV3',
-      siteKey: process.env.EXPO_PUBLIC_APP_CHECK_WEB_SITE_KEY,
-    },
-  });
-  await appCheck().initializeAppCheck({
-    provider: rnfbProvider,
-    isTokenAutoRefreshEnabled: true,
-  });
+let app: FirebaseApp;
+if (getApps().length === 0) {
+  app = initializeApp(firebaseConfig);
+} else {
+  app = getApps()[0];
+}
 
+let auth: Auth;
+if (Platform.OS === 'web') {
+  auth = getAuth(app);
+} else {
   try {
-    const { token } = await appCheck().getToken(true);
-
-    if (token.length > 0) {
-      console.log('AppCheck verification passed');
+    auth = initializeAuth(app, {
+      persistence: getReactNativePersistence(AsyncStorage),
+    });
+  } catch (error: any) {
+    if (error.code === 'auth/already-initialized') {
+      auth = getAuth(app);
+    } else {
+      console.warn(
+        'Failed to initialize auth with AsyncStorage persistence, using default:',
+        error,
+      );
+      auth = getAuth(app);
     }
-  } catch {
-    console.log('AppCheck verification failed');
+  }
+}
+
+export { auth };
+export const db: Firestore = getFirestore(app);
+
+let analytics: Analytics | null = null;
+try {
+  if (Platform.OS === 'web') {
+    analytics = getAnalytics(app);
+  }
+} catch (error) {
+  console.warn('Firebase Analytics initialization failed:', error);
+}
+
+const initFirestorePersistence = async () => {
+  if (Platform.OS === 'web') {
+    try {
+      await enableIndexedDbPersistence(db);
+      console.log('Firestore persistence enabled (web)');
+    } catch (error: any) {
+      if (error.code === 'failed-precondition') {
+        console.warn('Firestore persistence failed: Multiple tabs open');
+      } else if (error.code === 'unimplemented') {
+        console.warn('Firestore persistence not supported on this platform');
+      } else {
+        console.warn('Firestore persistence error:', error);
+      }
+    }
+  } else {
+    console.log('Firestore persistence enabled (React Native - automatic)');
+  }
+};
+
+const initAnalytics = async () => {
+  if (analytics) {
+    try {
+      await setAnalyticsCollectionEnabled(
+        analytics,
+        process.env.NODE_ENV === 'production',
+      );
+      console.log(
+        'Analytics collection enabled:',
+        process.env.NODE_ENV === 'production',
+      );
+    } catch (error) {
+      console.warn('Failed to set analytics collection enabled:', error);
+    }
   }
 };
 
 export const initFirebase = async () => {
-  await initAppCheck();
-  await initAnalytics();
+  try {
+    await initFirestorePersistence();
+    await initAnalytics();
+    console.log('Firebase initialized successfully');
+  } catch (error) {
+    console.error('Firebase initialization error:', error);
+    throw error;
+  }
 };
+
+export { app };

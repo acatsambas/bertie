@@ -1,6 +1,6 @@
-import { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { User } from 'firebase/auth';
 import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -9,7 +9,7 @@ import { useToggleBookReadMutation, useUserBooksQuery } from 'api/app/book';
 import { Routes } from 'navigation/routes';
 import { NavigationType } from 'navigation/types';
 
-import { categorizeBooks } from './utils';
+import { LibraryListItem, categorizeBooks } from './utils';
 
 interface LibraryPageProps
   extends StackNavigationProp<
@@ -17,7 +17,7 @@ interface LibraryPageProps
     typeof Routes.LIBRARY_01_LIBRARY
   > {}
 
-export const useLibrary = (user: FirebaseAuthTypes.User) => {
+export const useLibrary = (user: User) => {
   const { data, fetchNextPage, hasNextPage, isFetching } = useUserBooksQuery({
     withRefs: true,
   });

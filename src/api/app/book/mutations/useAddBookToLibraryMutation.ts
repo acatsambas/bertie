@@ -1,13 +1,13 @@
-import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { deleteDoc, doc, getDoc, setDoc } from 'firebase/firestore';
 
 import { UserBookId } from 'api/app/types';
+import { auth, db } from 'api/firebase';
 import { BookResult } from 'api/google-books/search';
 
 export const useAddBookToLibraryMutation = () => {
   const queryClient = useQueryClient();
-  const userId = auth().currentUser?.uid;
+  const userId = auth.currentUser?.uid;
 
   return useMutation({
     mutationFn: async ({
@@ -17,22 +17,23 @@ export const useAddBookToLibraryMutation = () => {
       book: BookResult;
       isUserBook: boolean;
     }) => {
-      const bookRef = firestore().collection('books').doc(book.id);
+      if (!userId) throw new Error('User not authenticated');
 
-      if (!isUserBook && !(await bookRef.get()).exists) {
-        await firestore().collection('books').doc(book.id).set(book);
+      const bookRef = doc(db, 'books', book.id);
+
+      if (!isUserBook) {
+        const bookDoc = await getDoc(bookRef);
+        if (!bookDoc.exists()) {
+          await setDoc(bookRef, book);
+        }
       }
 
-      const userBookRef = firestore()
-        .collection('users')
-        .doc(userId)
-        .collection('books')
-        .doc(book.id);
+      const userBookRef = doc(db, 'users', userId, 'books', book.id);
 
       if (isUserBook) {
-        await userBookRef.delete();
+        await deleteDoc(userBookRef);
       } else {
-        await userBookRef.set({ bookRef });
+        await setDoc(userBookRef, { bookRef });
       }
     },
     onMutate: async ({ book, isUserBook }) => {

@@ -31,7 +31,7 @@ const App = () => {
       await initFirebase();
       setFirebaseInitialised(true);
     })();
-  });
+  }, []);
 
   if (!firebaseInitialised) {
     return null;

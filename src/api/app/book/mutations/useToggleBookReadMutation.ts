@@ -1,10 +1,11 @@
-import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { doc, updateDoc } from 'firebase/firestore';
+
+import { auth, db } from 'api/firebase';
 
 export const useToggleBookReadMutation = () => {
   const queryClient = useQueryClient();
-  const userId = auth().currentUser?.uid;
+  const userId = auth.currentUser?.uid;
 
   return useMutation({
     mutationFn: async ({
@@ -14,29 +15,24 @@ export const useToggleBookReadMutation = () => {
       bookId: string;
       isRead: boolean;
     }) => {
-      await firestore()
-        .collection('users')
-        .doc(userId)
-        .collection('books')
-        .doc(bookId)
-        .update({
-          isRead: !isRead,
-        });
+      if (!userId) throw new Error('User not authenticated');
+
+      await updateDoc(doc(db, 'users', userId, 'books', bookId), {
+        isRead: !isRead,
+      });
     },
     onMutate: async ({ bookId, isRead }) => {
-      // Cancel outgoing refetches
       await queryClient.cancelQueries({ queryKey: ['userBooks'] });
 
-      // Snapshot the previous value
       const previousData = queryClient.getQueriesData({
         queryKey: ['userBooks'],
       });
 
       // Optimistically update the cache
       queryClient.setQueriesData({ queryKey: ['userBooks'] }, (old: any) => {
-        const pages = old.pages.map(page => ({
+        const pages = old.pages.map((page: any) => ({
           ...page,
-          books: page.books.map(book =>
+          books: page.books.map((book: any) =>
             book.id === bookId ? { ...book, isRead: !isRead } : book,
           ),
         }));

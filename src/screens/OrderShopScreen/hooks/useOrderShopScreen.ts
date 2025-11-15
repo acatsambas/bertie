@@ -1,9 +1,10 @@
-import firestore from '@react-native-firebase/firestore';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { addDoc, collection, doc } from 'firebase/firestore';
 import { useMemo } from 'react';
 
 import { useFavouriteShopsQuery, useShopsQuery } from 'api/app/shops';
 import { useUserQuery } from 'api/app/user';
+import { db } from 'api/firebase';
 
 import { Routes } from 'navigation/routes';
 import { NavigationType } from 'navigation/types';
@@ -37,19 +38,21 @@ export const useOrderShopScreen = () => {
   );
 
   const placeOrder = async () => {
+    if (!user) return;
+
     if (isInvalidEmail(user?.contactEmail)) {
       navigate(Routes.ORDER_05_EMAIL_SCREEN);
       return;
     }
 
-    await firestore()
-      .collection('orders')
-      .add({
-        userRef: firestore().doc(`users/${user.documentId}`),
-        shopRef: firestore().doc(`shops/${favouriteShop.id}`),
-        booksRef: books.map(({ id }) => firestore().doc(`books/${id}`)),
-        status: 'ordered',
-      });
+    if (!favouriteShop) return;
+
+    await addDoc(collection(db, 'orders'), {
+      userRef: doc(db, 'users', user.documentId),
+      shopRef: doc(db, 'shops', favouriteShop.id),
+      booksRef: books.map(({ id }) => doc(db, 'books', id)),
+      status: 'ordered',
+    });
 
     const selectedShop = shops.find(shop => shop.id === favouriteShop.id);
 
@@ -57,9 +60,10 @@ export const useOrderShopScreen = () => {
       return;
     }
 
-    await firestore()
-      .collection('mail')
-      .add(getOrderMail({ user, selectedShop, books }));
+    await addDoc(
+      collection(db, 'mail'),
+      getOrderMail({ user, selectedShop, books }),
+    );
 
     navigate(Routes.ORDER_06_ORDER_PLACED, {
       bookshopName: selectedShop.name,
