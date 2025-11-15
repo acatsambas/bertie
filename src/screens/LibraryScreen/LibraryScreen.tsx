@@ -30,24 +30,24 @@ export const LibraryScreen = () => {
 
   const renderItem = ({ item }: LegendListRenderItemProps<LibraryListItem>) => {
     if (item.type === 'section-header') {
-      return (
-        <SectionHeader
+  return (
+          <SectionHeader
           title={item.title}
           id={item.id}
-          handleAddBook={handleAddBook}
-        />
+            handleAddBook={handleAddBook}
+          />
       );
     }
 
     return (
-      <Book
-        title={item.volumeInfo?.title}
-        author={item.volumeInfo?.authors?.join?.(', ')}
-        kind="library"
-        isChecked={item.isRead}
-        onPress={() => handleOnPressBook(item)}
-        onChange={() => handleOnRead(item.id, item.isRead)}
-      />
+          <Book
+            title={item.volumeInfo?.title}
+            author={item.volumeInfo?.authors?.join?.(', ')}
+            kind="library"
+            isChecked={item.isRead}
+            onPress={() => handleOnPressBook(item)}
+            onChange={() => handleOnRead(item.id, item.isRead)}
+          />
     );
   };
 
