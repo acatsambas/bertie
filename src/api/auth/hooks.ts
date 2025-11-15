@@ -1,31 +1,35 @@
-import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
+import { doc, setDoc } from 'firebase/firestore';
 
+import { auth, db } from '../firebase';
 import { UserData } from '../types';
 
-export const updateUserProfile = async (userProfile: Partial<UserData>) =>
-  firestore()
-    .collection('users')
-    .doc(auth().currentUser?.uid)
-    .set(
-      {
-        ...userProfile,
-        documentId: auth().currentUser?.uid,
-        email: auth().currentUser?.email,
-      },
-      { merge: true },
-    );
+export const updateUserProfile = async (userProfile: Partial<UserData>) => {
+  const currentUser = auth.currentUser;
+  if (!currentUser?.uid) return;
 
-export const createUser = (userProfile: Partial<UserData>) =>
-  firestore()
-    .collection('users')
-    .doc(auth().currentUser?.uid)
-    .set(
-      {
-        ...userProfile,
-        documentId: auth().currentUser?.uid,
-        email: auth().currentUser?.email,
-        contactEmail: auth().currentUser?.email,
-      } as UserData,
-      { merge: true },
-    );
+  await setDoc(
+    doc(db, 'users', currentUser.uid),
+    {
+      ...userProfile,
+      documentId: currentUser.uid,
+      email: currentUser.email,
+    },
+    { merge: true },
+  );
+};
+
+export const createUser = (userProfile: Partial<UserData>) => {
+  const currentUser = auth.currentUser;
+  if (!currentUser?.uid) return Promise.resolve();
+
+  return setDoc(
+    doc(db, 'users', currentUser.uid),
+    {
+      ...userProfile,
+      documentId: currentUser.uid,
+      email: currentUser.email,
+      contactEmail: currentUser.email,
+    } as UserData,
+    { merge: true },
+  );
+};
