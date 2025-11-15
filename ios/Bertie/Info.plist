@@ -39,11 +39,15 @@
 	<string>1</string>
 	<key>GIDConfiguration</key>
 	<string>246694758886-fdlc1sll0odcmqi0hh6a8ha7m8nnh43a.apps.googleusercontent.com</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>12.0</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
+		<false/>
+		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
 	<key>RCTNewArchEnabled</key>
@@ -52,7 +56,7 @@
 	<string>SplashScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
-		<string>armv7</string>
+		<string>arm64</string>
 	</array>
 	<key>UIRequiresFullScreen</key>
 	<false/>
