@@ -14,6 +14,7 @@ export const SettingsStack =
 
 export const SettingsNavigator = () => (
   <SettingsStack.Navigator
+    id={undefined}
     screenOptions={{ headerShown: false, animation: 'none' }}
   >
     <SettingsStack.Screen

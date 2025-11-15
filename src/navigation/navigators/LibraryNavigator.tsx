@@ -13,6 +13,7 @@ export const LibraryStack =
 
 export const LibraryNavigator = () => (
   <LibraryStack.Navigator
+    id={undefined}
     screenOptions={{ headerShown: false, animation: 'none' }}
   >
     <LibraryStack.Screen

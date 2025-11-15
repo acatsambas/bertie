@@ -130,18 +130,22 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           googleCredential,
         );
 
-        const profile = userCredential.additionalUserInfo?.profile as
-          | {
-              given_name?: string;
-              family_name?: string;
-            }
-          | undefined;
+        const user = userCredential.user;
+        const isNewUser =
+          user.metadata.creationTime === user.metadata.lastSignInTime;
 
-        if (profile?.given_name || profile?.family_name) {
-          await createUser({
-            givenName: profile.given_name,
-            familyName: profile.family_name,
-          });
+        if (isNewUser) {
+          const displayName = user.displayName;
+          const nameParts = displayName?.split(' ') || [];
+          const givenName = nameParts[0] || '';
+          const familyName = nameParts.slice(1).join(' ') || '';
+
+          if (givenName || familyName) {
+            await createUser({
+              givenName,
+              familyName,
+            });
+          }
         }
       },
       appleLogin: async () => {
@@ -170,7 +174,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           appleCredential,
         );
 
-        if (userCredential.additionalUserInfo?.isNewUser && fullName) {
+        const user = userCredential.user;
+        const isNewUser =
+          user.metadata.creationTime === user.metadata.lastSignInTime;
+
+        if (isNewUser && fullName) {
           await createUser({
             givenName: fullName?.givenName,
             familyName: fullName?.familyName,

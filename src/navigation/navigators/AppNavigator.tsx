@@ -17,6 +17,7 @@ const AppNavigator = () => {
 
   return (
     <AppStack.Navigator
+      id={undefined}
       screenOptions={{ headerShown: false, animation: 'none' }}
     >
       <AppStack.Screen

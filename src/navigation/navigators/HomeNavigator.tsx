@@ -13,6 +13,7 @@ export const HomeBottomTab = createBottomTabNavigator<HomeNavigatorParamList>();
 
 export const HomeNavigator = () => (
   <HomeBottomTab.Navigator
+    id={undefined}
     screenOptions={{ headerShown: false }}
     tabBar={() => <BottomMenu />}
   >
