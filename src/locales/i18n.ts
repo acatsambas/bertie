@@ -51,12 +51,11 @@ export const i18n = i18next
     cacheUserLanguage: Function.prototype,
   })
   .init({
-    returnNull: false,
     resources: translationsJson,
     fallbackLng: 'en',
     debug: process.env.NODE_ENV !== 'production',
     interpolation: {
       escapeValue: false, // not needed for react as it escapes by default
     },
-    compatibilityJSON: 'v3',
+    compatibilityJSON: 'v4',
   });

@@ -15,10 +15,12 @@ async function getRecommendation() {
       max_tokens: 1000,
     });
 
-    const botMessage = response.choices[0].message.content;
-    messageHistory.push({ role: 'assistant', content: botMessage });
+    const botMessage = response.choices[0]?.message?.content;
+    if (botMessage) {
+      messageHistory.push({ role: 'assistant', content: botMessage });
+    }
 
-    return botMessage;
+    return botMessage || 'Sorry, I could not generate a response.';
   } catch (error) {
     console.error('Error fetching recommendations:', error);
     return 'Oops! Something went wrong.';
@@ -36,7 +38,7 @@ export async function executeGPT(
   let tempMessage = '';
 
   // If first-time execution (no userMessage), initialize messageHistory
-  if (messageHistory.length === 0 && books.length > 0) {
+  if (messageHistory.length === 0 && books && books.length > 0) {
     console.log(books);
     messageHistory.push(
       { role: 'system', content: 'You are a helpful assistant.' },
