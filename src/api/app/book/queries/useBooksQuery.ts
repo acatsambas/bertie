@@ -1,6 +1,13 @@
-import firestore from '@react-native-firebase/firestore';
 import { useQuery } from '@tanstack/react-query';
+import {
+  collection,
+  documentId,
+  getDocs,
+  query,
+  where,
+} from 'firebase/firestore';
 
+import { db } from 'api/firebase';
 import { BookResult } from 'api/google-books/search';
 
 export const useBooksQuery = ({ ids }: { ids: string[] } = { ids: [] }) => {
@@ -9,10 +16,8 @@ export const useBooksQuery = ({ ids }: { ids: string[] } = { ids: [] }) => {
     queryFn: async () => {
       if (!ids.length) return [];
 
-      const snapshot = await firestore()
-        .collection('books')
-        .where(firestore.FieldPath.documentId(), 'in', ids)
-        .get();
+      const q = query(collection(db, 'books'), where(documentId(), 'in', ids));
+      const snapshot = await getDocs(q);
 
       return snapshot.docs.map(
         doc =>
@@ -23,7 +28,7 @@ export const useBooksQuery = ({ ids }: { ids: string[] } = { ids: [] }) => {
       );
     },
     enabled: ids.length > 0,
-    staleTime: 5 * 60 * 1000,
-    gcTime: 30 * 60 * 1000,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 30 * 60 * 1000, // 30 minutes
   });
 };
