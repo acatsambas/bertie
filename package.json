@@ -24,7 +24,7 @@
     "@expo/metro-runtime": "3.2.3",
     "@invertase/react-native-apple-authentication": "2.4.0",
     "@legendapp/list": "2.0.15",
-    "@react-native-async-storage/async-storage": "^1.23.1",
+    "@react-native-async-storage/async-storage": "2.2.0",
     "@react-native-community/hooks": "100.1.0",
     "@react-native-google-signin/google-signin": "13.1.0",
     "@react-navigation/bottom-tabs": "6.6.1",

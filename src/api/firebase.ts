@@ -1,10 +1,17 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   Analytics,
   getAnalytics,
   setAnalyticsCollectionEnabled,
 } from 'firebase/analytics';
 import { FirebaseApp, getApps, initializeApp } from 'firebase/app';
-import { Auth, getAuth } from 'firebase/auth';
+import {
+  Auth,
+  getAuth,
+  // @ts-expect-error - getReactNativePersistence is not typed
+  getReactNativePersistence,
+  initializeAuth,
+} from 'firebase/auth';
 import {
   Firestore,
   enableIndexedDbPersistence,
@@ -37,7 +44,28 @@ if (getApps().length === 0) {
   app = getApps()[0];
 }
 
-export const auth: Auth = getAuth(app);
+let auth: Auth;
+if (Platform.OS === 'web') {
+  auth = getAuth(app);
+} else {
+  try {
+    auth = initializeAuth(app, {
+      persistence: getReactNativePersistence(AsyncStorage),
+    });
+  } catch (error: any) {
+    if (error.code === 'auth/already-initialized') {
+      auth = getAuth(app);
+    } else {
+      console.warn(
+        'Failed to initialize auth with AsyncStorage persistence, using default:',
+        error,
+      );
+      auth = getAuth(app);
+    }
+  }
+}
+
+export { auth };
 export const db: Firestore = getFirestore(app);
 
 let analytics: Analytics | null = null;
