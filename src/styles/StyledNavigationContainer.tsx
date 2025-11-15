@@ -10,6 +10,7 @@ const StyledNavigationContainer = ({ children }) => {
     <>
       <StatusBar style="auto" />
       <NavigationContainer
+        navigationInChildEnabled
         theme={{
           dark: false,
           colors: {
@@ -19,6 +20,24 @@ const StyledNavigationContainer = ({ children }) => {
             notification: theme.colors.warning,
             primary: theme.colors.primary,
             text: theme.colors.secondary,
+          },
+          fonts: {
+            regular: {
+              fontFamily: 'System',
+              fontWeight: '400' as const,
+            },
+            medium: {
+              fontFamily: 'System',
+              fontWeight: '500' as const,
+            },
+            bold: {
+              fontFamily: 'System',
+              fontWeight: '700' as const,
+            },
+            heavy: {
+              fontFamily: 'System',
+              fontWeight: '900' as const,
+            },
           },
         }}
       >

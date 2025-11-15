@@ -14,6 +14,7 @@ export const Stack = createNativeStackNavigator<AuthNavigatorParamList>();
 const AuthNavigator = () => {
   return (
     <Stack.Navigator
+      id={undefined}
       screenOptions={{
         headerShadowVisible: false,
         headerTitle: '',

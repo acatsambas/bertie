@@ -15,6 +15,7 @@ export const OrderStack = createNativeStackNavigator<OrderNavigatorParamList>();
 
 export const OrderNavigator = () => (
   <OrderStack.Navigator
+    id={undefined}
     screenOptions={{ headerShown: false, animation: 'none' }}
   >
     <OrderStack.Screen
