@@ -1,6 +1,4 @@
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import {
-  GoogleAuthProvider,
   OAuthProvider,
   User,
   createUserWithEmailAndPassword,
@@ -18,12 +16,6 @@ import { appleAuth } from 'utils/react-native-apple-authentication';
 
 import { auth } from '../firebase';
 import { createUser, updateUserProfile } from './hooks';
-
-// Configure GoogleSignin for native platforms
-GoogleSignin.configure({
-  offlineAccess: true,
-  webClientId: process.env.EXPO_PUBLIC_ANDROID_BERTIE_WEB_CLIENT_ID,
-});
 
 export const AuthContext = createContext<{
   user: User | null;
@@ -113,41 +105,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         await sendPasswordResetEmail(auth, email);
       },
       googleLogin: async () => {
-        await GoogleSignin.hasPlayServices({
-          showPlayServicesUpdateDialog: true,
-        });
-
-        const {
-          data: { idToken },
-        } = await GoogleSignin.signIn();
-
-        if (!idToken) {
-          throw new Error('Google Sign-In failed - no ID token returned');
-        }
-
-        const googleCredential = GoogleAuthProvider.credential(idToken);
-        const userCredential = await signInWithCredential(
-          auth,
-          googleCredential,
+        throw new Error(
+          'Google Sign-In is not available on web. Please use email/password authentication.',
         );
-
-        const user = userCredential.user;
-        const isNewUser =
-          user.metadata.creationTime === user.metadata.lastSignInTime;
-
-        if (isNewUser) {
-          const displayName = user.displayName;
-          const nameParts = displayName?.split(' ') || [];
-          const givenName = nameParts[0] || '';
-          const familyName = nameParts.slice(1).join(' ') || '';
-
-          if (givenName || familyName) {
-            await createUser({
-              givenName,
-              familyName,
-            });
-          }
-        }
       },
       appleLogin: async () => {
         if (!appleAuth.isSupported) {

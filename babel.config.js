@@ -8,12 +8,16 @@ module.exports = function (api) {
         {
           root: ['./src'],
           extensions: [
+            '.web.ts',
+            '.web.tsx',
             '.ios.ts',
+            '.ios.tsx',
             '.android.ts',
-            '.js',
-            '.jsx',
+            '.android.tsx',
             '.ts',
             '.tsx',
+            '.js',
+            '.jsx',
             '.json',
           ],
           alias: {

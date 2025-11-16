@@ -1,5 +1,6 @@
 import OpenAI from 'openai';
 
+// Initialize OpenAI client for native platforms
 const client = new OpenAI({
   apiKey: process.env.EXPO_PUBLIC_OPENAI_API_KEY,
   project: process.env.EXPO_PUBLIC_OPENAI_PROJECT_ID,

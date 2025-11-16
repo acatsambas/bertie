@@ -28,8 +28,14 @@ const App = () => {
 
   useEffect(() => {
     (async () => {
-      await initFirebase();
-      setFirebaseInitialised(true);
+      try {
+        await initFirebase();
+      } catch (error) {
+        console.error('Firebase initialization error:', error);
+        // Continue rendering even if Firebase initialization fails
+      } finally {
+        setFirebaseInitialised(true);
+      }
     })();
   }, []);
 
