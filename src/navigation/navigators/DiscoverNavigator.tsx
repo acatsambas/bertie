@@ -13,6 +13,7 @@ export const DiscoverStack =
 
 export const DiscoverNavigator = () => (
   <DiscoverStack.Navigator
+    id={undefined}
     screenOptions={{ headerShown: false, animation: 'none' }}
   >
     <DiscoverStack.Screen

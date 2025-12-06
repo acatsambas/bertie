@@ -1,9 +1,22 @@
-import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import {
+  GoogleAuthProvider,
+  OAuthProvider,
+  User,
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  sendPasswordResetEmail,
+  signInAnonymously,
+  signInWithCredential,
+  signInWithEmailAndPassword,
+  signOut,
+  updateProfile,
+} from 'firebase/auth';
 import React, { createContext, useEffect, useMemo, useState } from 'react';
 
 import { appleAuth } from 'utils/react-native-apple-authentication';
 
+import { auth } from '../firebase';
 import { createUser, updateUserProfile } from './hooks';
 
 GoogleSignin.configure({
@@ -12,17 +25,17 @@ GoogleSignin.configure({
 });
 
 export const AuthContext = createContext<{
-  user: FirebaseAuthTypes.User | null;
+  user: User | null;
   login: (email: string, password: string) => Promise<void>;
   register: (
     email: string,
     password: string,
     givenName: string,
     familyName: string,
-    updates?: FirebaseAuthTypes.UpdateProfile,
+    updates?: { displayName?: string; photoURL?: string },
   ) => Promise<void>;
   update: (
-    updates: FirebaseAuthTypes.UpdateProfile,
+    updates: { displayName?: string; photoURL?: string },
     givenName?: string,
     familyName?: string,
   ) => Promise<void>;
@@ -30,6 +43,7 @@ export const AuthContext = createContext<{
   forgot: (email: string) => Promise<void>;
   googleLogin: () => Promise<void>;
   appleLogin: () => Promise<void>;
+  anonymousLogin: () => Promise<void>;
 }>(undefined as any);
 
 export interface AuthProviderProps {
@@ -37,19 +51,10 @@ export interface AuthProviderProps {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const unsubscribe = auth().onUserChanged(authUser => {
-      // called each time the user changes
-      setUser(authUser);
-    });
-    return unsubscribe;
-  }, []);
-
-  useEffect(() => {
-    const unsubscribe = auth().onAuthStateChanged(authUser => {
-      // get the current signed-in user
+    const unsubscribe = onAuthStateChanged(auth, authUser => {
       setUser(authUser);
     });
 
@@ -60,24 +65,30 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     () => ({
       user,
       login: async (email: string, password: string) => {
-        await auth().signInWithEmailAndPassword(email, password);
+        await signInWithEmailAndPassword(auth, email, password);
       },
       register: async (
         email: string,
         password: string,
         givenName: string,
         familyName: string,
-        updates?: FirebaseAuthTypes.UpdateProfile,
+        updates?: { displayName?: string; photoURL?: string },
       ) => {
-        const { user: authUser } = await auth().createUserWithEmailAndPassword(
+        const userCredential = await createUserWithEmailAndPassword(
+          auth,
           email,
           password,
         );
-        updates && (await authUser.updateProfile(updates));
+        const authUser = userCredential.user;
+
+        if (updates) {
+          await updateProfile(authUser, updates);
+        }
+
         await createUser({ givenName, familyName });
       },
       update: async (
-        updates: FirebaseAuthTypes.UpdateProfile,
+        updates: { displayName?: string; photoURL?: string },
         givenName?: string,
         familyName?: string,
       ) => {
@@ -86,68 +97,88 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         if (givenName) nameUpdates.givenName = givenName;
         if (familyName) nameUpdates.familyName = familyName;
 
-        const profileUpdates = updates;
+        const profileUpdates = { ...updates };
         if (displayName) profileUpdates.displayName = displayName;
 
-        await auth().currentUser?.updateProfile(profileUpdates);
-        await updateUserProfile(nameUpdates);
+        if (auth.currentUser) {
+          await updateProfile(auth.currentUser, profileUpdates);
+          await updateUserProfile(nameUpdates);
+        }
       },
       logout: async () => {
-        await auth().signOut();
+        await signOut(auth);
       },
       forgot: async (email: string) => {
-        await auth().sendPasswordResetEmail(email);
+        await sendPasswordResetEmail(auth, email);
       },
       googleLogin: async () => {
-        // Check if your device supports Google Play
         await GoogleSignin.hasPlayServices({
           showPlayServicesUpdateDialog: true,
         });
 
-        // Get the users ID token
         const {
           data: { idToken },
         } = await GoogleSignin.signIn();
 
-        // Create a Google credential with the token
-        const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+        if (!idToken) {
+          throw new Error('Google Sign-In failed - no ID token returned');
+        }
 
-        // Sign-in the user with the credential
-        const authUser = await auth().signInWithCredential(googleCredential);
+        const googleCredential = GoogleAuthProvider.credential(idToken);
+        const userCredential = await signInWithCredential(
+          auth,
+          googleCredential,
+        );
 
-        await createUser({
-          givenName: authUser.additionalUserInfo?.profile?.given_name!,
-          familyName: authUser.additionalUserInfo?.profile?.family_name!,
-        });
+        const user = userCredential.user;
+        const isNewUser =
+          user.metadata.creationTime === user.metadata.lastSignInTime;
+
+        if (isNewUser) {
+          const displayName = user.displayName;
+          const nameParts = displayName?.split(' ') || [];
+          const givenName = nameParts[0] || '';
+          const familyName = nameParts.slice(1).join(' ') || '';
+
+          if (givenName || familyName) {
+            await createUser({
+              givenName,
+              familyName,
+            });
+          }
+        }
       },
       appleLogin: async () => {
         if (!appleAuth.isSupported) {
           throw new Error('Apple Sign-In failed - platform unavailable');
         }
 
-        // Start the sign-in request
         const appleAuthRequestResponse = await appleAuth.performRequest({
           requestedOperation: appleAuth.Operation.LOGIN,
           requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
         });
 
-        // Ensure Apple returned a user identityToken
         if (!appleAuthRequestResponse.identityToken) {
           throw new Error('Apple Sign-In failed - no identify token returned');
         }
 
-        // Create a Firebase credential from the response
         const { identityToken, nonce, fullName } = appleAuthRequestResponse;
-        const appleCredential = auth.AppleAuthProvider.credential(
-          identityToken,
-          nonce,
+        const provider = new OAuthProvider('apple.com');
+        const appleCredential = provider.credential({
+          idToken: identityToken,
+          rawNonce: nonce,
+        });
+
+        const userCredential = await signInWithCredential(
+          auth,
+          appleCredential,
         );
 
-        // Sign the user in with the credential
-        const userCredential =
-          await auth().signInWithCredential(appleCredential);
+        const user = userCredential.user;
+        const isNewUser =
+          user.metadata.creationTime === user.metadata.lastSignInTime;
 
-        if (userCredential?.additionalUserInfo?.isNewUser && fullName) {
+        if (isNewUser && fullName) {
           await createUser({
             givenName: fullName?.givenName,
             familyName: fullName?.familyName,
@@ -155,8 +186,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         }
       },
       anonymousLogin: async () => {
-        await auth().signInAnonymously();
-
+        await signInAnonymously(auth);
         await createUser({});
       },
     }),

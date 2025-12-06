@@ -1,6 +1,7 @@
-import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { doc, updateDoc } from 'firebase/firestore';
+
+import { auth, db } from 'api/firebase';
 
 interface UpdateContactEmailParams {
   contactEmail: string;
@@ -11,17 +12,16 @@ export const useUpdateContactEmailMutation = () => {
 
   return useMutation({
     mutationFn: async ({ contactEmail }: UpdateContactEmailParams) => {
-      const userId = auth().currentUser?.uid;
+      const userId = auth.currentUser?.uid;
       if (!userId) throw new Error('User not authenticated');
 
-      await firestore().collection('users').doc(userId).update({
+      await updateDoc(doc(db, 'users', userId), {
         contactEmail,
       });
 
       return { contactEmail };
     },
     onSuccess: () => {
-      // Invalidate the user query to trigger a refetch
       queryClient.invalidateQueries({
         queryKey: ['user'],
       });

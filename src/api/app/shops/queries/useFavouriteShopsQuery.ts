@@ -1,21 +1,19 @@
-import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
 import { useQuery } from '@tanstack/react-query';
+import { collection, getDocs } from 'firebase/firestore';
 
 import { UserShop } from 'api/app/types';
+import { auth, db } from 'api/firebase';
 
 export const useFavouriteShopsQuery = () => {
   return useQuery<UserShop[]>({
     queryKey: ['favouriteShops'],
     queryFn: async () => {
-      const userId = auth().currentUser?.uid;
+      const userId = auth.currentUser?.uid;
       if (!userId) return [];
 
-      const snapshot = await firestore()
-        .collection('users')
-        .doc(userId)
-        .collection('favouriteShops')
-        .get();
+      const snapshot = await getDocs(
+        collection(db, 'users', userId, 'favouriteShops'),
+      );
 
       return snapshot.docs.map(
         doc =>
@@ -25,7 +23,7 @@ export const useFavouriteShopsQuery = () => {
           }) as UserShop,
       );
     },
-    enabled: !!auth().currentUser?.uid,
+    enabled: !!auth.currentUser?.uid,
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 30 * 60 * 1000, // 30 minutes
   });

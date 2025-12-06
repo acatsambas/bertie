@@ -1,4 +1,4 @@
-import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
+import { DocumentData, DocumentReference } from 'firebase/firestore';
 
 export type Shop = {
   id: string;
@@ -13,12 +13,12 @@ export type Shop = {
 
 export type UserShop = {
   id: string;
-  shopRef: FirebaseFirestoreTypes.DocumentReference<FirebaseFirestoreTypes.DocumentData>;
+  shopRef: DocumentReference<DocumentData>;
 };
 
 export type UserBook = {
   id: string;
-  bookRef: FirebaseFirestoreTypes.DocumentReference<FirebaseFirestoreTypes.DocumentData>;
+  bookRef: DocumentReference<DocumentData>;
   isRead?: boolean;
 };
 

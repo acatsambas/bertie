@@ -1,6 +1,6 @@
-import { ReactNativeFirebase } from '@react-native-firebase/app';
+import { FirebaseError as FirebaseJSError } from 'firebase/app';
 
-export type FirebaseError = ReactNativeFirebase.NativeFirebaseError;
+export type FirebaseError = FirebaseJSError;
 
 export function isFirebaseError(error: unknown): error is FirebaseError {
   return error && typeof error === 'object' && 'code' in error;
@@ -15,7 +15,6 @@ export interface UserData {
   isFirstSearch?: boolean;
   favouriteShop?: string;
   address?: {
-    // TODO: make those required...
     firstLine?: string;
     secondLine?: string;
     city?: string;
