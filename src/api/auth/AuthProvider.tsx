@@ -21,7 +21,7 @@ import { createUser, updateUserProfile } from './hooks';
 
 GoogleSignin.configure({
   offlineAccess: true,
-  webClientId: process.env.EXPO_PUBLIC_ANDROID_BERTIE_WEB_CLIENT_ID,
+  webClientId: process.env.EXPO_PUBLIC_GOOGLE_OAUTH_WEB_CLIENT_ID,
 });
 
 export const AuthContext = createContext<{
