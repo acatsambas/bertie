@@ -15,16 +15,14 @@
     "ios": {
       "bundleIdentifier": "com.bertieapp.app",
       "supportsTablet": true,
-      "usesAppleSignIn": true,
-      "googleServicesFile": "./GoogleService-Info.plist"
+      "usesAppleSignIn": true
     },
     "android": {
       "package": "com.bertieapp.app",
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      },
-      "googleServicesFile": "./google-services.json"
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
