@@ -59,8 +59,17 @@ platform :android do
   lane :distribute do
     increase_android_version
 
+    # Generate codegen artifacts for all modules to avoid CMake errors
+    # Using pattern to match all modules with codegen tasks
     gradle(
-      task: "clean bundleRelease",
+      task: "generateCodegenArtifactsFromSchema",
+      project_dir: "./android",
+      print_command: false
+    )
+
+    # Build release bundle (skip clean to avoid CMake configuration errors during clean)
+    gradle(
+      task: "bundleRelease",
       project_dir: "./android",
       print_command: false,
       properties: {
