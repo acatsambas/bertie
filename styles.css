@@ -1,0 +1,61 @@
+        body, html {
+            height: 100%;
+            margin: 200;
+            background-color: #FDF9F6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: 'Goudy Bookletter 1911', serif;
+        }
+        .header_text {
+                font-size: 64px;
+                padding-top: 10px;
+                padding-bottom: 10px;
+
+        }
+        .body_text {
+            font-size: 32px; /* Adjust if needed */
+            font-family: 'Commissioner';
+
+        }
+
+      .screenshots {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin: 20px 0;
+      }
+
+      .screenshots img {
+        width: 200px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+
+.download_link,
+.waitlist_link {
+  display: inline-block;
+  margin: 10px 0;
+  padding: 10px 20px;
+  font-family: 'Commissioner', sans-serif;
+  font-weight: 600;
+  text-decoration: none;
+  color: #ffffff;
+  background-color: #6E78D7;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.download_link:hover,
+.waitlist_link:hover {
+  background-color: #6E78D7;
+}
+
+.body_text {
+  text-align: center;
+  margin-top: 20px;
+  font-family: 'Commissioner', sans-serif;
+  font-size: 18px;
+}
+
