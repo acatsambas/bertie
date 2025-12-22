@@ -4,7 +4,7 @@ import { makeStyles } from '@rneui/themed';
 import { useQueryClient } from '@tanstack/react-query';
 import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Linking, View } from 'react-native';
+import { Linking, Platform, View } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -97,12 +97,14 @@ const SettingsScreen = ({ navigation }) => {
           text={t(translations.settings.signout)}
           onPress={handleLogout}
         />
-        <Text
-          kind="paragraph"
-          text={t(translations.settings.version, {
-            version: `${DeviceInfo.getVersion()} (${DeviceInfo.getBuildNumber()})`,
-          })}
-        />
+        {Platform.OS !== 'web' && (
+          <Text
+            kind="paragraph"
+            text={t(translations.settings.version, {
+              version: `${DeviceInfo.getVersion()} (${DeviceInfo.getBuildNumber()})`,
+            })}
+          />
+        )}
       </View>
     </SafeAreaView>
   );
