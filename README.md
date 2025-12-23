@@ -57,3 +57,15 @@ yarn distribute:ios
 ```
 
 Then go to [AppStore Connect](https://appstoreconnect.apple.com/teams/4fb753c2-1efd-4088-8a92-34f52e5c54da/apps/6738319713/testflight/groups/624bf819-59a9-440f-b066-d7203d011481/builds) Internal Testing Builds and complete the **Missing Compliance** step by selecting no encryption.
+
+#### Web
+
+##### Local Web Build Testing
+
+To test the web build locally before deploying:
+
+```sh
+yarn build:web
+# Serve the web-build directory with a static server
+npx serve web-build
+```
