@@ -1,13 +1,5 @@
 #!/bin/sh
 
-# Firebase
-
-gpg --quiet --batch --yes --decrypt --passphrase="$SECRETS_PASSPHRASE" \
-  --output android/app/google-services.json android/app/google-services.json.gpg
-
-gpg --quiet --batch --yes --decrypt --passphrase="$SECRETS_PASSPHRASE" \
-  --output ios/bertie/GoogleService-Info.plist ios/bertie/GoogleService-Info.plist.gpg
-
 # Signing Keys
 
 gpg --quiet --batch --yes --decrypt --passphrase="$SECRETS_PASSPHRASE" \

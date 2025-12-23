@@ -1,6 +1,6 @@
 {
   "name": "bertie",
-  "version": "1.3.1",
+  "version": "1.4.0",
   "private": true,
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
@@ -16,7 +16,8 @@
     "pod-install": "cd ios && bundle install && USE_FRAMEWORKS=\"static\" bundle exec pod install --repo-update",
     "prettify": "prettier --write .",
     "start": "expo start",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "build:web": "expo export -p web && cp -r public/* web-build/ 2>/dev/null || true"
   },
   "dependencies": {
     "@expo-google-fonts/commissioner": "^0.4.1",

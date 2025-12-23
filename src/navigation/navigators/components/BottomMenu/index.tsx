@@ -45,7 +45,8 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'space-between',
     backgroundColor: theme.colors.white,
     paddingTop: 12,
-    paddingBottom: Platform.OS === 'android' ? 12 : 0,
+    paddingBottom:
+      Platform.OS === 'android' ? 12 : Platform.OS === 'web' ? 20 : 0,
     paddingHorizontal: 52,
   },
 }));

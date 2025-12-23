@@ -1,13 +1,28 @@
 import OpenAI from 'openai';
+import { Platform } from 'react-native';
 
-const client = new OpenAI({
-  apiKey: process.env.EXPO_PUBLIC_OPENAI_API_KEY,
-  project: process.env.EXPO_PUBLIC_OPENAI_PROJECT_ID,
-  organization: process.env.EXPO_PUBLIC_OPENAI_ORG_ID,
-});
+// Initialize OpenAI client only on native platforms
+let client: OpenAI | null = null;
+
+if (Platform.OS !== 'web') {
+  client = new OpenAI({
+    apiKey: process.env.EXPO_PUBLIC_OPENAI_API_KEY,
+    project: process.env.EXPO_PUBLIC_OPENAI_PROJECT_ID,
+    organization: process.env.EXPO_PUBLIC_OPENAI_ORG_ID,
+  });
+}
+
+// App Store deep links
+const APP_STORE_IOS_URL = 'https://apps.apple.com/app/id6738319713';
+const PLAY_STORE_ANDROID_URL =
+  'https://play.google.com/store/apps/details?id=com.bertieapp.app';
 
 // Function for subsequent recommendations - called when a user responds
 async function getRecommendation() {
+  if (!client) {
+    throw new Error('OpenAI client not initialized');
+  }
+
   try {
     const response = await client.chat.completions.create({
       model: 'gpt-4o-mini',
@@ -28,13 +43,25 @@ async function getRecommendation() {
 }
 
 // Holds the messages from and to GPT, so it has history and context
-let messageHistory = [];
+let messageHistory: {
+  role: 'system' | 'user' | 'assistant';
+  content: string;
+}[] = [];
 
 // Function to initialize conversation with books
 export async function executeGPT(
   userMessage: string | null = null,
   books: string[] | null = null,
 ) {
+  if (Platform.OS === 'web') {
+    return `AI book recommendations are only available on the mobile Bertie app.\n\nDownload Bertie:\n\n📱 [iOS App Store](${APP_STORE_IOS_URL})\n\n🤖 [Android Play Store](${PLAY_STORE_ANDROID_URL})`;
+  }
+
+  // Ensure client is initialized on native platforms
+  if (!client) {
+    return 'AI recommendations are not available.';
+  }
+
   let tempMessage = '';
 
   // If first-time execution (no userMessage), initialize messageHistory

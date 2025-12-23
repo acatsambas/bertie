@@ -52,13 +52,15 @@ export const BooksTab = () => {
           </View>
         ))}
       </ScrollView>
-      <Input
-        value={userInput}
-        onChangeText={setUserInput}
-        placeholder="Type your response here"
-        returnKeyType="send"
-        onSubmitEditing={handleSendMessage}
-      />
+      {Platform.OS !== 'web' && (
+        <Input
+          value={userInput}
+          onChangeText={setUserInput}
+          placeholder="Type your response here"
+          returnKeyType="send"
+          onSubmitEditing={handleSendMessage}
+        />
+      )}
     </KeyboardAvoidingView>
   );
 };
