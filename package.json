@@ -17,7 +17,7 @@
     "prettify": "prettier --write .",
     "start": "expo start",
     "web": "expo start --web",
-    "build:web": "expo export -p web && cp -r public/* web-build/ 2>/dev/null || true"
+    "build:web": "expo export -p web && cp -r public/* dist/ 2>/dev/null || true"
   },
   "dependencies": {
     "@expo-google-fonts/commissioner": "^0.4.1",
