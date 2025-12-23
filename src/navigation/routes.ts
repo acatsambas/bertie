@@ -10,13 +10,13 @@ export const HOME_ROUTES = {
 } as const;
 
 export const LIBRARY_ROUTES = {
-  LIBRARY_01_LIBRARY: 'library',
+  LIBRARY_01_LIBRARY: 'library-homer',
   LIBRARY_02_BOOK: 'book',
   LIBRARY_03_SEARCH: 'search',
 } as const;
 
 export const ORDER_ROUTES = {
-  ORDER_01_ORDER: 'order',
+  ORDER_01_ORDER: 'order-home',
   ORDER_02_ORDER_SHOP: 'shop',
   ORDER_03_ADDRESS_SCREEN: 'order-address',
   ORDER_04_BOOKSHOP: 'order-bookshop',
@@ -25,7 +25,7 @@ export const ORDER_ROUTES = {
 } as const;
 
 export const DISCOVER_ROUTES = {
-  DISCOVER_01_DISCOVER: 'discover',
+  DISCOVER_01_DISCOVER: 'discover-home',
   DISCOVER_02_ADDRESS: 'discover-address',
   DISCOVER_03_BOOKSHOP: 'discover-bookshop',
 } as const;

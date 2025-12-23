@@ -37,27 +37,29 @@ const WelcomeScreen = () => {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.topContent}>
-          <View style={styles.logo}>
-            <Logo />
-          </View>
-          <View style={styles.container}>
-            <Text kind="header" text={t(translations.welcome.title)} />
-            <View style={styles.welcomeMessage}>
-              <Text kind="paragraph" text={t(translations.welcome.purpose)} />
-              <View>
-                <Text kind="paragraph" text={t(translations.welcome.agree)} />
-                <Text
-                  kind="button"
-                  text={t(translations.welcome.terms)}
-                  onPress={handlePrivacy}
-                />
-              </View>
+        <View style={styles.logo}>
+          <Logo />
+        </View>
+
+        <View style={styles.container}>
+          <Text kind="header" text={t(translations.welcome.title)} />
+
+          <View style={styles.welcomeMessage}>
+            <Text kind="paragraph" text={t(translations.welcome.purpose)} />
+
+            <View>
+              <Text kind="paragraph" text={t(translations.welcome.agree)} />
+              <Text
+                kind="button"
+                text={t(translations.welcome.terms)}
+                onPress={handlePrivacy}
+              />
             </View>
           </View>
-        </View>
-        <View style={styles.illustrationContainer}>
-          <Illustration name="welcome" />
+
+          <View style={styles.illustrationContainer}>
+            <Illustration name="welcome" />
+          </View>
         </View>
       </ScrollView>
 
@@ -77,16 +79,14 @@ const WelcomeScreen = () => {
 const useStyles = makeStyles(theme => ({
   safeAreaView: {
     flex: 1,
+    gap: 20,
     paddingHorizontal: 20,
     backgroundColor: theme.colors.white,
   },
   scrollContent: {
     flexGrow: 1,
-    minHeight: '100%',
-  },
-  topContent: {
-    paddingTop: 20,
     gap: 20,
+    paddingTop: 20,
   },
   logo: {
     alignItems: 'center',
@@ -100,14 +100,12 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'flex-start',
   },
   illustrationContainer: {
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
-    minHeight: Platform.OS === 'web' ? 300 : 200,
-    paddingVertical: Platform.OS === 'web' ? 40 : 20,
   },
   bottomArea: {
+    flex: 1,
     justifyContent: 'flex-end',
     marginBottom: Platform.OS === 'web' ? 20 : 20,
     gap: 5,
