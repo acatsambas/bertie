@@ -2,7 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { makeStyles } from '@rneui/themed';
 import { useTranslation } from 'react-i18next';
-import { Linking, Platform, View } from 'react-native';
+import { Linking, Platform, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import AppleSigninButton from 'components/AuthButtons/Apple';
@@ -33,39 +33,42 @@ const WelcomeScreen = () => {
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <View style={styles.logo}>
-        <Logo />
-      </View>
-
-      <View style={styles.container}>
-        <Text kind="header" text={t(translations.welcome.title)} />
-
-        <View style={styles.welcomeMessage}>
-          <Text kind="paragraph" text={t(translations.welcome.purpose)} />
-
-          <View>
-            <Text kind="paragraph" text={t(translations.welcome.agree)} />
-            <Text
-              kind="button"
-              text={t(translations.welcome.terms)}
-              onPress={handlePrivacy}
-            />
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.topContent}>
+          <View style={styles.logo}>
+            <Logo />
+          </View>
+          <View style={styles.container}>
+            <Text kind="header" text={t(translations.welcome.title)} />
+            <View style={styles.welcomeMessage}>
+              <Text kind="paragraph" text={t(translations.welcome.purpose)} />
+              <View>
+                <Text kind="paragraph" text={t(translations.welcome.agree)} />
+                <Text
+                  kind="button"
+                  text={t(translations.welcome.terms)}
+                  onPress={handlePrivacy}
+                />
+              </View>
+            </View>
           </View>
         </View>
-
-        <Illustration name="welcome" />
-
-        <View style={styles.buttons}>
-          <Button
-            kind="primary"
-            text={t(translations.welcome.email)}
-            onPress={handleLogin}
-          />
-
-          <GoogleButton />
-
-          {Platform.OS === 'ios' && <AppleSigninButton />}
+        <View style={styles.illustrationContainer}>
+          <Illustration name="welcome" />
         </View>
+      </ScrollView>
+
+      <View style={styles.bottomArea}>
+        <Button
+          kind="primary"
+          text={t(translations.welcome.email)}
+          onPress={handleLogin}
+        />
+        <GoogleButton />
+        {Platform.OS === 'ios' && <AppleSigninButton />}
       </View>
     </SafeAreaView>
   );
@@ -74,29 +77,41 @@ const WelcomeScreen = () => {
 const useStyles = makeStyles(theme => ({
   safeAreaView: {
     flex: 1,
-    gap: 20,
-    padding: 20,
-    justifyContent: 'flex-start',
+    paddingHorizontal: 20,
     backgroundColor: theme.colors.white,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    minHeight: '100%',
+  },
+  topContent: {
+    paddingTop: 20,
+    gap: 20,
   },
   logo: {
     alignItems: 'center',
   },
   container: {
-    flex: 1,
     gap: 20,
     width: '100%',
   },
   welcomeMessage: {
-    flex: 1,
     gap: 20,
     alignItems: 'flex-start',
   },
-  buttons: {
+  illustrationContainer: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    width: '100%',
+    minHeight: Platform.OS === 'web' ? 300 : 200,
+    paddingVertical: Platform.OS === 'web' ? 40 : 20,
+  },
+  bottomArea: {
+    justifyContent: 'flex-end',
+    marginBottom: Platform.OS === 'web' ? 20 : 20,
     gap: 5,
+    alignItems: 'center',
   },
 }));
 

@@ -19,6 +19,7 @@ const Illustration = ({ name }: IllustrationProps) => {
     <Image
       style={styles.illustration}
       source={illustrations[name] || illustrations.default}
+      resizeMode="contain"
     />
   );
 };
