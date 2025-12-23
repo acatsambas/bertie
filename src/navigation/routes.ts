@@ -5,6 +5,7 @@ import type {
   HomeNavigatorParamList,
   LibraryNavigatorParamList,
   OrderNavigatorParamList,
+  RootNavigatorParamList,
   SettingsNavigatorParamList,
 } from './types';
 
@@ -67,6 +68,16 @@ export const SETTINGS_ROUTES: {
   SETTINGS_04_DELETE_ACCOUNT: 'SETTINGS_04_DELETE_ACCOUNT',
 };
 
+export const ROOT_ROUTES: {
+  [key in keyof RootNavigatorParamList]: key;
+} = {
+  ROOT_01_AUTH: 'ROOT_01_AUTH',
+  ROOT_02_APP: 'ROOT_02_APP',
+  ROOT_03_DATA_REQUEST: 'ROOT_03_DATA_REQUEST',
+  ROOT_04_SUPPORT: 'ROOT_04_SUPPORT',
+  ROOT_05_PRIVACY_POLICY: 'ROOT_05_PRIVACY_POLICY',
+};
+
 export const Routes = {
   ...AUTH_ROUTES,
   ...SETTINGS_ROUTES,
@@ -75,4 +86,5 @@ export const Routes = {
   ...LIBRARY_ROUTES,
   ...APP_ROUTES,
   ...HOME_ROUTES,
+  ...ROOT_ROUTES,
 };

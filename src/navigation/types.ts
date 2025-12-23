@@ -60,10 +60,19 @@ export type SettingsNavigatorParamList = {
   SETTINGS_04_DELETE_ACCOUNT: undefined;
 };
 
+export type RootNavigatorParamList = {
+  ROOT_01_AUTH: NavigatorScreenParams<AuthNavigatorParamList>;
+  ROOT_02_APP: NavigatorScreenParams<AppNavigatorParamList>;
+  ROOT_03_DATA_REQUEST: undefined;
+  ROOT_04_SUPPORT: undefined;
+  ROOT_05_PRIVACY_POLICY: undefined;
+};
+
 export type NavigationType = HomeNavigatorParamList &
   LibraryNavigatorParamList &
   OrderNavigatorParamList &
   DiscoverNavigatorParamList &
   AuthNavigatorParamList &
   AppNavigatorParamList &
-  SettingsNavigatorParamList;
+  SettingsNavigatorParamList &
+  RootNavigatorParamList;

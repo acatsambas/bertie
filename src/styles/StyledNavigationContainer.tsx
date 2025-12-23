@@ -3,6 +3,8 @@ import { useTheme } from '@rneui/themed';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 
+import { linking } from 'navigation/linking';
+
 const StyledNavigationContainer = ({ children }) => {
   const { theme } = useTheme();
 
@@ -11,6 +13,7 @@ const StyledNavigationContainer = ({ children }) => {
       <StatusBar style="auto" />
       <NavigationContainer
         navigationInChildEnabled
+        linking={linking}
         theme={{
           dark: false,
           colors: {

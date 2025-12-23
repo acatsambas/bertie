@@ -25,7 +25,15 @@
       }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./src/assets/favicon.png",
+      "name": "Bertie",
+      "shortName": "Bertie",
+      "lang": "en",
+      "scope": "/",
+      "themeColor": "#565EAF",
+      "backgroundColor": "#FDF9F6",
+      "display": "standalone",
+      "orientation": "portrait"
     },
     "plugins": [
       "expo-font",
