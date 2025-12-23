@@ -1,82 +1,57 @@
-import type {
-  AppNavigatorParamList,
-  AuthNavigatorParamList,
-  DiscoverNavigatorParamList,
-  HomeNavigatorParamList,
-  LibraryNavigatorParamList,
-  OrderNavigatorParamList,
-  RootNavigatorParamList,
-  SettingsNavigatorParamList,
-} from './types';
+export const APP_ROUTES = {
+  APP_01_HOME: 'home',
+  APP_02_SETTINGS: 'settings',
+} as const;
 
-export const APP_ROUTES: {
-  [key in keyof AppNavigatorParamList]: key;
-} = {
-  APP_01_HOME: 'APP_01_HOME',
-  APP_02_SETTINGS: 'APP_02_SETTINGS',
-};
+export const HOME_ROUTES = {
+  HOME_01_LIBRARY: 'library',
+  HOME_02_DISCOVER: 'discover',
+  HOME_03_ORDER: 'order',
+} as const;
 
-export const HOME_ROUTES: {
-  [key in keyof HomeNavigatorParamList]: key;
-} = {
-  HOME_01_LIBRARY: 'HOME_01_LIBRARY',
-  HOME_02_DISCOVER: 'HOME_02_DISCOVER',
-  HOME_03_ORDER: 'HOME_03_ORDER',
-};
+export const LIBRARY_ROUTES = {
+  LIBRARY_01_LIBRARY: 'library',
+  LIBRARY_02_BOOK: 'book',
+  LIBRARY_03_SEARCH: 'search',
+} as const;
 
-export const LIBRARY_ROUTES: {
-  [key in keyof LibraryNavigatorParamList]: key;
-} = {
-  LIBRARY_01_LIBRARY: 'LIBRARY_01_LIBRARY',
-  LIBRARY_02_BOOK: 'LIBRARY_02_BOOK',
-  LIBRARY_03_SEARCH: 'LIBRARY_03_SEARCH',
-};
+export const ORDER_ROUTES = {
+  ORDER_01_ORDER: 'order',
+  ORDER_02_ORDER_SHOP: 'shop',
+  ORDER_03_ADDRESS_SCREEN: 'order-address',
+  ORDER_04_BOOKSHOP: 'order-bookshop',
+  ORDER_05_EMAIL_SCREEN: 'email',
+  ORDER_06_ORDER_PLACED: 'placed',
+} as const;
 
-export const ORDER_ROUTES: {
-  [key in keyof OrderNavigatorParamList]: key;
-} = {
-  ORDER_01_ORDER: 'ORDER_01_ORDER',
-  ORDER_02_ORDER_SHOP: 'ORDER_02_ORDER_SHOP',
-  ORDER_03_ADDRESS_SCREEN: 'ORDER_03_ADDRESS_SCREEN',
-  ORDER_04_BOOKSHOP: 'ORDER_04_BOOKSHOP',
-  ORDER_05_EMAIL_SCREEN: 'ORDER_05_EMAIL_SCREEN',
-  ORDER_06_ORDER_PLACED: 'ORDER_06_ORDER_PLACED',
-};
+export const DISCOVER_ROUTES = {
+  DISCOVER_01_DISCOVER: 'discover',
+  DISCOVER_02_ADDRESS: 'discover-address',
+  DISCOVER_03_BOOKSHOP: 'discover-bookshop',
+} as const;
 
-export const DISCOVER_ROUTES: {
-  [key in keyof DiscoverNavigatorParamList]: key;
-} = {
-  DISCOVER_01_DISCOVER: 'DISCOVER_01_DISCOVER',
-  DISCOVER_02_ADDRESS: 'DISCOVER_02_ADDRESS',
-  DISCOVER_03_BOOKSHOP: 'DISCOVER_03_BOOKSHOP',
-};
+export const AUTH_ROUTES = {
+  AUTH_01_WELCOME: 'welcome',
+  AUTH_02_LOGIN: 'login',
+  AUTH_03_REGISTER: 'register',
+  AUTH_04_SET_PROFILE: 'set-profile',
+  AUTH_05_FORGOT: 'forgot',
+} as const;
 
-export const AUTH_ROUTES: { [key in keyof AuthNavigatorParamList]: key } = {
-  AUTH_01_WELCOME: 'AUTH_01_WELCOME',
-  AUTH_02_LOGIN: 'AUTH_02_LOGIN',
-  AUTH_03_REGISTER: 'AUTH_03_REGISTER',
-  AUTH_04_SET_PROFILE: 'AUTH_04_SET_PROFILE',
-  AUTH_05_FORGOT: 'AUTH_05_FORGOT',
-};
+export const SETTINGS_ROUTES = {
+  SETTINGS_01_SETTINGS: 'settings',
+  SETTINGS_02_CHANGE_ADDRESS: 'change-address',
+  SETTINGS_03_RESET_PASSWORD: 'reset-password',
+  SETTINGS_04_DELETE_ACCOUNT: 'delete-account',
+} as const;
 
-export const SETTINGS_ROUTES: {
-  [key in keyof SettingsNavigatorParamList]: key;
-} = {
-  SETTINGS_01_SETTINGS: 'SETTINGS_01_SETTINGS',
-  SETTINGS_02_CHANGE_ADDRESS: 'SETTINGS_02_CHANGE_ADDRESS',
-  SETTINGS_03_RESET_PASSWORD: 'SETTINGS_03_RESET_PASSWORD',
-  SETTINGS_04_DELETE_ACCOUNT: 'SETTINGS_04_DELETE_ACCOUNT',
-};
-
-export const ROOT_ROUTES: {
-  [key in keyof RootNavigatorParamList]: key;
-} = {
-  ROOT_01_AUTH: 'ROOT_01_AUTH',
-  ROOT_02_APP: 'ROOT_02_APP',
-  ROOT_03_DATA_REQUEST: 'ROOT_03_DATA_REQUEST',
-  ROOT_04_SUPPORT: 'ROOT_04_SUPPORT',
-  ROOT_05_PRIVACY_POLICY: 'ROOT_05_PRIVACY_POLICY',
-};
+export const ROOT_ROUTES = {
+  ROOT_01_AUTH: 'auth',
+  ROOT_02_APP: 'app',
+  ROOT_03_DATA_REQUEST: 'data_request',
+  ROOT_04_SUPPORT: 'support',
+  ROOT_05_PRIVACY_POLICY: 'privacypolicy',
+} as const;
 
 export const Routes = {
   ...AUTH_ROUTES,

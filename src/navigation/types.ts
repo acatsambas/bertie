@@ -3,69 +3,71 @@ import { NavigatorScreenParams } from '@react-navigation/native';
 import { Shop, UserBook } from 'api/app/types';
 import { BookResult } from 'api/google-books/search';
 
+import { Routes } from './routes';
+
 export type AppNavigatorParamList = {
-  APP_01_HOME: undefined;
-  APP_02_SETTINGS: NavigatorScreenParams<SettingsNavigatorParamList>;
+  [Routes.APP_01_HOME]: undefined;
+  [Routes.APP_02_SETTINGS]: NavigatorScreenParams<SettingsNavigatorParamList>;
 };
 
 export type AuthNavigatorParamList = {
-  AUTH_01_WELCOME: undefined;
-  AUTH_02_LOGIN: undefined;
-  AUTH_03_REGISTER: undefined;
-  AUTH_04_SET_PROFILE: { email: string; password: string };
-  AUTH_05_FORGOT: undefined;
+  [Routes.AUTH_01_WELCOME]: undefined;
+  [Routes.AUTH_02_LOGIN]: undefined;
+  [Routes.AUTH_03_REGISTER]: undefined;
+  [Routes.AUTH_04_SET_PROFILE]: { email: string; password: string };
+  [Routes.AUTH_05_FORGOT]: undefined;
 };
 
 export type HomeNavigatorParamList = {
-  HOME_01_LIBRARY: undefined;
-  HOME_02_DISCOVER: undefined;
-  HOME_03_ORDER: undefined;
+  [Routes.HOME_01_LIBRARY]: undefined;
+  [Routes.HOME_02_DISCOVER]: undefined;
+  [Routes.HOME_03_ORDER]: undefined;
 };
 
 export type LibraryNavigatorParamList = {
-  LIBRARY_01_LIBRARY: undefined;
-  LIBRARY_02_BOOK: {
+  [Routes.LIBRARY_01_LIBRARY]: undefined;
+  [Routes.LIBRARY_02_BOOK]: {
     book: BookResult;
   };
-  LIBRARY_03_SEARCH: undefined;
+  [Routes.LIBRARY_03_SEARCH]: undefined;
 };
 
 export type OrderNavigatorParamList = {
-  ORDER_01_ORDER: undefined;
-  ORDER_02_ORDER_SHOP: {
+  [Routes.ORDER_01_ORDER]: undefined;
+  [Routes.ORDER_02_ORDER_SHOP]: {
     books: (UserBook & BookResult)[];
   };
-  ORDER_03_ADDRESS_SCREEN: undefined;
-  ORDER_04_BOOKSHOP: {
+  [Routes.ORDER_03_ADDRESS_SCREEN]: undefined;
+  [Routes.ORDER_04_BOOKSHOP]: {
     shop: Shop;
   };
-  ORDER_05_EMAIL_SCREEN: undefined;
-  ORDER_06_ORDER_PLACED: {
+  [Routes.ORDER_05_EMAIL_SCREEN]: undefined;
+  [Routes.ORDER_06_ORDER_PLACED]: {
     bookshopName?: string;
   };
 };
 
 export type DiscoverNavigatorParamList = {
-  DISCOVER_01_DISCOVER: undefined;
-  DISCOVER_02_ADDRESS: undefined;
-  DISCOVER_03_BOOKSHOP: {
+  [Routes.DISCOVER_01_DISCOVER]: undefined;
+  [Routes.DISCOVER_02_ADDRESS]: undefined;
+  [Routes.DISCOVER_03_BOOKSHOP]: {
     shop: Shop;
   };
 };
 
 export type SettingsNavigatorParamList = {
-  SETTINGS_01_SETTINGS: undefined;
-  SETTINGS_02_CHANGE_ADDRESS: undefined;
-  SETTINGS_03_RESET_PASSWORD: undefined;
-  SETTINGS_04_DELETE_ACCOUNT: undefined;
+  [Routes.SETTINGS_01_SETTINGS]: undefined;
+  [Routes.SETTINGS_02_CHANGE_ADDRESS]: undefined;
+  [Routes.SETTINGS_03_RESET_PASSWORD]: undefined;
+  [Routes.SETTINGS_04_DELETE_ACCOUNT]: undefined;
 };
 
 export type RootNavigatorParamList = {
-  ROOT_01_AUTH: NavigatorScreenParams<AuthNavigatorParamList>;
-  ROOT_02_APP: NavigatorScreenParams<AppNavigatorParamList>;
-  ROOT_03_DATA_REQUEST: undefined;
-  ROOT_04_SUPPORT: undefined;
-  ROOT_05_PRIVACY_POLICY: undefined;
+  [Routes.ROOT_01_AUTH]: NavigatorScreenParams<AuthNavigatorParamList>;
+  [Routes.ROOT_02_APP]: NavigatorScreenParams<AppNavigatorParamList>;
+  [Routes.ROOT_03_DATA_REQUEST]: undefined;
+  [Routes.ROOT_04_SUPPORT]: undefined;
+  [Routes.ROOT_05_PRIVACY_POLICY]: undefined;
 };
 
 export type NavigationType = HomeNavigatorParamList &
