@@ -66,6 +66,6 @@ To test the web build locally before deploying:
 
 ```sh
 yarn build:web
-# Serve the web-build directory with a static server
+
 npx serve web-build
 ```
