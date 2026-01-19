@@ -68,7 +68,6 @@ const useStyles = makeStyles(theme => ({
   bottomArea: {
     backgroundColor: theme.colors.white,
     flex: 1,
-    alignItems: 'center',
     justifyContent: 'flex-end',
     paddingVertical: 20,
     gap: 20,
