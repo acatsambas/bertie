@@ -103,6 +103,5 @@ const useStyles = makeStyles(theme => ({
     padding: 20,
     gap: 20,
     flexDirection: 'column',
-    alignItems: 'center',
   },
 }));
