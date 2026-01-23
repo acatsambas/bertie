@@ -37,20 +37,6 @@ export const PWAProvider: React.FC<{ children: React.ReactNode }> = ({
 
     console.log('[PWA] Initializing PWA install handler on web platform');
 
-    // Register service worker for PWA installability
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker
-        .register('/sw.js')
-        .then(registration => {
-          console.log('[PWA] Service Worker registered:', registration.scope);
-        })
-        .catch(error => {
-          console.error('[PWA] Service Worker registration failed:', error);
-        });
-    } else {
-      console.log('[PWA] Service Worker not supported');
-    }
-
     // Check if running in standalone mode (already installed)
     const isStandalone =
       window.matchMedia('(display-mode: standalone)').matches ||
@@ -63,26 +49,47 @@ export const PWAProvider: React.FC<{ children: React.ReactNode }> = ({
       return;
     }
 
-    // Detect iOS
+    // Detect mobile device (iOS or Android)
+    const isMobile =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent,
+      );
+
+    // Detect iOS specifically
     const detectedIOS =
       /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
 
     if (detectedIOS) {
       console.log('[PWA] iOS detected - will show manual install instructions');
-      // iOS doesn't support beforeinstallprompt, but we can still show instructions
       setIsIOS(true);
+    }
+
+    // On mobile, always allow showing the install prompt
+    if (isMobile) {
+      console.log('[PWA] Mobile device detected - enabling install prompt');
       setIsInstallable(true);
     }
 
+    // Register service worker for PWA installability
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .register('/sw.js')
+        .then(registration => {
+          console.log('[PWA] Service Worker registered:', registration.scope);
+        })
+        .catch(error => {
+          console.error('[PWA] Service Worker registration failed:', error);
+        });
+    }
+
+    // Listen for beforeinstallprompt (Chrome/Edge on Android)
     const handler = (e: Event) => {
       e.preventDefault();
       console.log('[PWA] beforeinstallprompt event fired!');
       setDeferredPrompt(e as BeforeInstallPromptEvent);
-      setIsInstallable(true);
     };
 
     window.addEventListener('beforeinstallprompt', handler);
-    console.log('[PWA] Added beforeinstallprompt event listener');
 
     // Also listen for app installed event
     window.addEventListener('appinstalled', () => {
@@ -135,6 +142,7 @@ export const PWAProvider: React.FC<{ children: React.ReactNode }> = ({
         onClose={handleClose}
         onInstall={handleInstall}
         isIOS={isIOS}
+        hasDeferredPrompt={!!deferredPrompt}
       />
     </PWAContext.Provider>
   );

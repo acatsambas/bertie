@@ -14,9 +14,16 @@ interface Props {
   onClose: () => void;
   onInstall: () => void;
   isIOS?: boolean;
+  hasDeferredPrompt?: boolean;
 }
 
-const PWAInstallModal = ({ isVisible, onClose, onInstall, isIOS }: Props) => {
+const PWAInstallModal = ({
+  isVisible,
+  onClose,
+  onInstall,
+  isIOS,
+  hasDeferredPrompt,
+}: Props) => {
   const styles = useStyles();
   const { t } = useTranslation();
 
@@ -29,10 +36,23 @@ const PWAInstallModal = ({ isVisible, onClose, onInstall, isIOS }: Props) => {
     'Tap the share button in Safari, then tap "Add to Home Screen"',
   );
 
+  const androidManualInstructions = t(
+    'pwa.androidInstructions',
+    'Tap the menu (⋮) in Chrome, then tap "Add to Home screen"',
+  );
+
   const defaultInstructions = t(
     'pwa.installBody',
     'Install Bertie on your home screen for quick and easy access when you need it.',
   );
+
+  // Determine which instructions to show
+  const showManualInstructions = isIOS || !hasDeferredPrompt;
+  const instructionText = isIOS
+    ? iosInstructions
+    : hasDeferredPrompt
+      ? defaultInstructions
+      : androidManualInstructions;
 
   return (
     <Modal
@@ -45,14 +65,10 @@ const PWAInstallModal = ({ isVisible, onClose, onInstall, isIOS }: Props) => {
         <View style={styles.modalView}>
           <Image source={icon} style={styles.icon} />
           <Text kind="header" text={t('pwa.installTitle', 'Install Bertie')} />
-          <Text
-            kind="paragraph"
-            text={isIOS ? iosInstructions : defaultInstructions}
-            style={styles.text}
-          />
+          <Text kind="paragraph" text={instructionText} style={styles.text} />
 
           <View style={styles.buttonContainer}>
-            {isIOS ? (
+            {showManualInstructions ? (
               <Button
                 kind="primary"
                 text={t('common.gotIt', 'Got it!')}
