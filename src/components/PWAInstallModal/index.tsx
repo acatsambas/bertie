@@ -13,15 +13,26 @@ interface Props {
   isVisible: boolean;
   onClose: () => void;
   onInstall: () => void;
+  isIOS?: boolean;
 }
 
-const PWAInstallModal = ({ isVisible, onClose, onInstall }: Props) => {
+const PWAInstallModal = ({ isVisible, onClose, onInstall, isIOS }: Props) => {
   const styles = useStyles();
   const { t } = useTranslation();
 
   if (Platform.OS !== 'web') {
     return null;
   }
+
+  const iosInstructions = t(
+    'pwa.iosInstructions',
+    'Tap the share button in Safari, then tap "Add to Home Screen"',
+  );
+
+  const defaultInstructions = t(
+    'pwa.installBody',
+    'Install Bertie on your home screen for quick and easy access when you need it.',
+  );
 
   return (
     <Modal
@@ -36,24 +47,31 @@ const PWAInstallModal = ({ isVisible, onClose, onInstall }: Props) => {
           <Text kind="header" text={t('pwa.installTitle', 'Install Bertie')} />
           <Text
             kind="paragraph"
-            text={t(
-              'pwa.installBody',
-              'Install Bertie on your home screen for quick and easy access when you need it.',
-            )}
+            text={isIOS ? iosInstructions : defaultInstructions}
             style={styles.text}
           />
 
           <View style={styles.buttonContainer}>
-            <Button
-              kind="primary"
-              text={t('pwa.installButton', 'Install')}
-              onPress={onInstall}
-            />
-            <Button
-              kind="tertiary"
-              text={t('common.maybeLater', 'Maybe later')}
-              onPress={onClose}
-            />
+            {isIOS ? (
+              <Button
+                kind="primary"
+                text={t('common.gotIt', 'Got it!')}
+                onPress={onClose}
+              />
+            ) : (
+              <>
+                <Button
+                  kind="primary"
+                  text={t('pwa.installButton', 'Install')}
+                  onPress={onInstall}
+                />
+                <Button
+                  kind="tertiary"
+                  text={t('common.maybeLater', 'Maybe later')}
+                  onPress={onClose}
+                />
+              </>
+            )}
           </View>
         </View>
       </View>

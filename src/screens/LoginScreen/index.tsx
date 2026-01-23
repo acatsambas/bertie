@@ -20,7 +20,7 @@ import { NavigationType } from 'navigation/types';
 import { translations } from 'locales/translations';
 
 export interface LoginPageProps
-  extends StackNavigationProp<NavigationType, typeof Routes.AUTH_02_LOGIN> { }
+  extends StackNavigationProp<NavigationType, typeof Routes.AUTH_02_LOGIN> {}
 
 const LoginScreen = () => {
   const styles = useStyles();

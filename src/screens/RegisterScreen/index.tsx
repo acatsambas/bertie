@@ -16,7 +16,7 @@ import { NavigationType } from 'navigation/types';
 import { translations } from 'locales/translations';
 
 export interface RegisterPageProps
-  extends StackNavigationProp<NavigationType, typeof Routes.AUTH_03_REGISTER> { }
+  extends StackNavigationProp<NavigationType, typeof Routes.AUTH_03_REGISTER> {}
 
 const RegisterScreen = () => {
   const [email, setEmail] = useState('');

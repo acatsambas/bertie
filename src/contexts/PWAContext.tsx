@@ -28,20 +28,54 @@ export const PWAProvider: React.FC<{ children: React.ReactNode }> = ({
     useState<BeforeInstallPromptEvent | null>(null);
   const [isInstallable, setIsInstallable] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isIOS, setIsIOS] = useState(false);
 
   useEffect(() => {
     if (Platform.OS !== 'web') {
       return;
     }
 
+    console.log('[PWA] Initializing PWA install handler on web platform');
+
+    // Check if running in standalone mode (already installed)
+    const isStandalone =
+      window.matchMedia('(display-mode: standalone)').matches ||
+      (window.navigator as any).standalone === true;
+
+    if (isStandalone) {
+      console.log(
+        '[PWA] App is already installed (running in standalone mode)',
+      );
+      return;
+    }
+
+    // Detect iOS
+    const detectedIOS =
+      /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+
+    if (detectedIOS) {
+      console.log('[PWA] iOS detected - will show manual install instructions');
+      // iOS doesn't support beforeinstallprompt, but we can still show instructions
+      setIsIOS(true);
+      setIsInstallable(true);
+    }
+
     const handler = (e: Event) => {
       e.preventDefault();
+      console.log('[PWA] beforeinstallprompt event fired!');
       setDeferredPrompt(e as BeforeInstallPromptEvent);
       setIsInstallable(true);
-      console.log('beforeinstallprompt fired');
     };
 
     window.addEventListener('beforeinstallprompt', handler);
+    console.log('[PWA] Added beforeinstallprompt event listener');
+
+    // Also listen for app installed event
+    window.addEventListener('appinstalled', () => {
+      console.log('[PWA] App was installed!');
+      setDeferredPrompt(null);
+      setIsInstallable(false);
+    });
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handler);
@@ -49,10 +83,15 @@ export const PWAProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   const showInstallPrompt = useCallback(() => {
-    if (isInstallable && deferredPrompt) {
+    console.log('[PWA] showInstallPrompt called', {
+      isInstallable,
+      hasDeferredPrompt: !!deferredPrompt,
+      isIOS,
+    });
+    if (isInstallable) {
       setIsModalVisible(true);
     }
-  }, [isInstallable, deferredPrompt]);
+  }, [isInstallable, deferredPrompt, isIOS]);
 
   const handleInstall = async () => {
     setIsModalVisible(false);
@@ -81,6 +120,7 @@ export const PWAProvider: React.FC<{ children: React.ReactNode }> = ({
         isVisible={isModalVisible}
         onClose={handleClose}
         onInstall={handleInstall}
+        isIOS={isIOS}
       />
     </PWAContext.Provider>
   );
