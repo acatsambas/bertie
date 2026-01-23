@@ -1,6 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { makeStyles } from '@rneui/themed';
+import { usePWAInstall } from 'hooks/usePWAInstall';
 import { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
@@ -9,6 +10,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from 'components/Button';
 import Input from 'components/Input';
 import Logo from 'components/Logo';
+import PWAInstallModal from 'components/PWAInstallModal';
 import Text from 'components/Text';
 
 import { AuthContext } from 'api/auth/AuthProvider';
@@ -48,11 +50,16 @@ const LoginScreen = () => {
     navigate(Routes.AUTH_05_FORGOT);
   };
 
+  const { isInstallable, promptInstall } = usePWAInstall();
+  const [showPwaInstall, setShowPwaInstall] = useState(false);
+
   const handlePressLogin = async () => {
     try {
       await login(email, password);
+      if (isInstallable) {
+        setShowPwaInstall(true);
+      }
     } catch (error) {
-      // TODO: handle error
       if (isFirebaseError(error)) {
         console.error(error);
       }
@@ -107,6 +114,14 @@ const LoginScreen = () => {
           onPress={handleSignup}
         />
       </View>
+      <PWAInstallModal
+        isVisible={showPwaInstall}
+        onClose={() => setShowPwaInstall(false)}
+        onInstall={() => {
+          setShowPwaInstall(false);
+          promptInstall();
+        }}
+      />
     </SafeAreaView>
   );
 };

@@ -33,7 +33,8 @@
       "themeColor": "#565EAF",
       "backgroundColor": "#FDF9F6",
       "display": "standalone",
-      "orientation": "portrait"
+      "orientation": "portrait",
+      "startUrl": "/"
     },
     "plugins": [
       "expo-font",
