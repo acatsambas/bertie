@@ -37,6 +37,24 @@ export const PWAProvider: React.FC<{ children: React.ReactNode }> = ({
 
     console.log('[PWA] Initializing PWA install handler on web platform');
 
+    // Inject manifest link if not already present
+    if (!document.querySelector('link[rel="manifest"]')) {
+      const manifestLink = document.createElement('link');
+      manifestLink.rel = 'manifest';
+      manifestLink.href = '/manifest.json';
+      document.head.appendChild(manifestLink);
+      console.log('[PWA] Injected manifest link');
+    }
+
+    // Inject apple-touch-icon if not already present
+    if (!document.querySelector('link[rel="apple-touch-icon"]')) {
+      const appleIcon = document.createElement('link');
+      appleIcon.rel = 'apple-touch-icon';
+      appleIcon.href = '/icon-192.png';
+      document.head.appendChild(appleIcon);
+      console.log('[PWA] Injected apple-touch-icon');
+    }
+
     // Check if user has already dismissed the prompt
     const hasSeenPrompt = localStorage.getItem('pwa-prompt-dismissed');
     if (hasSeenPrompt) {
