@@ -1,6 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { makeStyles } from '@rneui/themed';
+import { usePWA } from 'contexts/PWAContext';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { KeyboardAvoidingView, Linking, Platform, View } from 'react-native';
@@ -16,7 +17,7 @@ import { NavigationType } from 'navigation/types';
 import { translations } from 'locales/translations';
 
 export interface RegisterPageProps
-  extends StackNavigationProp<NavigationType, typeof Routes.AUTH_03_REGISTER> { }
+  extends StackNavigationProp<NavigationType, typeof Routes.AUTH_03_REGISTER> {}
 
 const RegisterScreen = () => {
   const [email, setEmail] = useState('');
