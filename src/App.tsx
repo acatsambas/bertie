@@ -1,5 +1,6 @@
 import { ThemeProvider, createTheme } from '@rneui/themed';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { PWAProvider } from 'contexts/PWAContext';
 import { useEffect, useState } from 'react';
 
 import { AuthProvider } from 'api/auth/AuthProvider';
@@ -40,11 +41,13 @@ const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <AuthProvider>
-        <FontsProvider>
-          <QueryClientProvider client={queryClient}>
-            <RootNavigator />
-          </QueryClientProvider>
-        </FontsProvider>
+        <PWAProvider>
+          <FontsProvider>
+            <QueryClientProvider client={queryClient}>
+              <RootNavigator />
+            </QueryClientProvider>
+          </FontsProvider>
+        </PWAProvider>
       </AuthProvider>
     </ThemeProvider>
   );
