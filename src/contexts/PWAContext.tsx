@@ -37,6 +37,13 @@ export const PWAProvider: React.FC<{ children: React.ReactNode }> = ({
 
     console.log('[PWA] Initializing PWA install handler on web platform');
 
+    // Check if user has already dismissed the prompt
+    const hasSeenPrompt = localStorage.getItem('pwa-prompt-dismissed');
+    if (hasSeenPrompt) {
+      console.log('[PWA] User has already dismissed the prompt');
+      return;
+    }
+
     // Check if running in standalone mode (already installed)
     const isStandalone =
       window.matchMedia('(display-mode: standalone)').matches ||
@@ -132,6 +139,10 @@ export const PWAProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const handleClose = () => {
     setIsModalVisible(false);
+    // Remember that user has seen/dismissed the prompt
+    if (Platform.OS === 'web') {
+      localStorage.setItem('pwa-prompt-dismissed', 'true');
+    }
   };
 
   return (
