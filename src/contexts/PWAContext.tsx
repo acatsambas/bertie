@@ -37,6 +37,20 @@ export const PWAProvider: React.FC<{ children: React.ReactNode }> = ({
 
     console.log('[PWA] Initializing PWA install handler on web platform');
 
+    // Register service worker for PWA installability
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .register('/sw.js')
+        .then(registration => {
+          console.log('[PWA] Service Worker registered:', registration.scope);
+        })
+        .catch(error => {
+          console.error('[PWA] Service Worker registration failed:', error);
+        });
+    } else {
+      console.log('[PWA] Service Worker not supported');
+    }
+
     // Check if running in standalone mode (already installed)
     const isStandalone =
       window.matchMedia('(display-mode: standalone)').matches ||
