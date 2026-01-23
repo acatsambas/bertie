@@ -1,5 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { useContext } from 'react';
+import { usePWA } from 'contexts/PWAContext';
+import { useContext, useEffect, useRef } from 'react';
 
 import { AuthContext } from 'api/auth/AuthProvider';
 
@@ -18,7 +19,23 @@ const RootStack = createNativeStackNavigator<RootNavigatorParamList>();
 
 const RootNavigator = () => {
   const { user } = useContext(AuthContext);
+  const { showInstallPrompt } = usePWA();
+  const previousUserRef = useRef(user);
 
+  // Trigger PWA prompt when user becomes authenticated (manual or auto-login)
+  useEffect(() => {
+    const wasLoggedOut = !previousUserRef.current;
+    const isNowLoggedIn = !!user;
+
+    if (wasLoggedOut && isNowLoggedIn) {
+      // Small delay to let the app settle after login
+      setTimeout(() => {
+        showInstallPrompt();
+      }, 500);
+    }
+
+    previousUserRef.current = user;
+  }, [user, showInstallPrompt]);
   return (
     <StyledNavigationContainer>
       <RootStack.Navigator

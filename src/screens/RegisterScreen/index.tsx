@@ -1,7 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { makeStyles } from '@rneui/themed';
-import { usePWA } from 'contexts/PWAContext';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { KeyboardAvoidingView, Linking, Platform, View } from 'react-native';
@@ -17,7 +16,7 @@ import { NavigationType } from 'navigation/types';
 import { translations } from 'locales/translations';
 
 export interface RegisterPageProps
-  extends StackNavigationProp<NavigationType, typeof Routes.AUTH_03_REGISTER> {}
+  extends StackNavigationProp<NavigationType, typeof Routes.AUTH_03_REGISTER> { }
 
 const RegisterScreen = () => {
   const [email, setEmail] = useState('');
@@ -45,8 +44,6 @@ const RegisterScreen = () => {
     setPasswordError(false);
   };
 
-  const { showInstallPrompt } = usePWA();
-
   const handleRegister = () => {
     const validRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
     if (email.match(validRegex)) {
@@ -55,8 +52,6 @@ const RegisterScreen = () => {
           email: email,
           password: password,
         });
-
-        showInstallPrompt();
       } else {
         setPasswordError(true);
       }

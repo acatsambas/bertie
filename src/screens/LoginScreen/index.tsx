@@ -1,7 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { makeStyles } from '@rneui/themed';
-import { usePWA } from 'contexts/PWAContext';
 import { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
@@ -21,7 +20,7 @@ import { NavigationType } from 'navigation/types';
 import { translations } from 'locales/translations';
 
 export interface LoginPageProps
-  extends StackNavigationProp<NavigationType, typeof Routes.AUTH_02_LOGIN> {}
+  extends StackNavigationProp<NavigationType, typeof Routes.AUTH_02_LOGIN> { }
 
 const LoginScreen = () => {
   const styles = useStyles();
@@ -49,12 +48,9 @@ const LoginScreen = () => {
     navigate(Routes.AUTH_05_FORGOT);
   };
 
-  const { showInstallPrompt } = usePWA();
-
   const handlePressLogin = async () => {
     try {
       await login(email, password);
-      showInstallPrompt();
     } catch (error) {
       if (isFirebaseError(error)) {
         console.error(error);
