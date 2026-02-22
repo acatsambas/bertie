@@ -25,7 +25,7 @@ export const BookScreen = () => {
     useRoute<RouteProp<NavigationType, typeof Routes.LIBRARY_02_BOOK>>();
   const styles = useStyles();
   const { t } = useTranslation();
-  const { goBack } = useNavigation();
+  const navigation = useNavigation<any>();
   const { data: userBooksIds = [] } = useUserBooksIdsQuery();
   const { mutate: addBookToLibrary } = useAddBookToLibraryMutation();
   const [description, setDescription] = useState<string | null>(null);
@@ -43,6 +43,13 @@ export const BookScreen = () => {
 
   const handlePressBook = () =>
     addBookToLibrary({ book: params.book, isUserBook: isBookInLibrary });
+
+  const handleOrderNow = () => {
+    navigation.navigate(Routes.HOME_03_ORDER, {
+      screen: Routes.ORDER_00_ADD_BOOKS,
+      params: { initialBook: params.book },
+    });
+  };
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
@@ -69,16 +76,26 @@ export const BookScreen = () => {
             />
             <Button
               kind="tertiary"
+              text={t(translations.library.orderNow)}
+              onPress={handleOrderNow}
+            />
+            <Button
+              kind="tertiary"
               text={t(translations.library.back)}
-              onPress={() => goBack()}
+              onPress={() => navigation.goBack()}
             />
           </>
         ) : (
           <>
             <Button
               kind="primary"
+              text={t(translations.library.orderNow)}
+              onPress={handleOrderNow}
+            />
+            <Button
+              kind="tertiary"
               text={t(translations.library.back)}
-              onPress={() => goBack()}
+              onPress={() => navigation.goBack()}
             />
             <Button
               kind="tertiary"

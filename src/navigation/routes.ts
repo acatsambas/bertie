@@ -16,6 +16,7 @@ export const LIBRARY_ROUTES = {
 } as const;
 
 export const ORDER_ROUTES = {
+  ORDER_00_ADD_BOOKS: 'order-add-books',
   ORDER_01_ORDER: 'order-home',
   ORDER_02_ORDER_SHOP: 'shop',
   ORDER_03_ADDRESS_SCREEN: 'order-address',

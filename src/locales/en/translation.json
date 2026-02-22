@@ -90,6 +90,7 @@
     "add": "Add to list",
     "remove": "Remove from list",
     "back": "Back",
+    "orderNow": "Order now",
     "search": {
       "title": "Search for books",
       "placeholder": "What are you looking for today?",
@@ -111,6 +112,8 @@
     "add": "Add your address to see bookshops near you!",
     "place": "Place Order",
     "back": "Back",
+    "addMoreTitle": "Add more books?",
+    "addMoreDescription": "Want to add any more books from your list to this order?",
     "allDone": "All done!",
     "sent": "We've sent your order to {{bookshopName}} via email, copying you in.",
     "relax": "They will get in touch to arrange delivery and payment. You just sit back and read a book in the meantime!",

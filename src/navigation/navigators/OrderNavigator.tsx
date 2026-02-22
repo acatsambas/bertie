@@ -4,6 +4,7 @@ import React from 'react';
 import { ORDER_ROUTES } from 'navigation/routes';
 import type { OrderNavigatorParamList } from 'navigation/types';
 
+import AddBooksToOrderScreen from 'screens/AddBooksToOrderScreen';
 import AddressScreen from 'screens/AddressScreen';
 import BookshopScreen from 'screens/BookshopScreen';
 import EmailScreen from 'screens/EmailScreen';
@@ -16,8 +17,13 @@ export const OrderStack = createNativeStackNavigator<OrderNavigatorParamList>();
 export const OrderNavigator = () => (
   <OrderStack.Navigator
     id={undefined}
+    initialRouteName={ORDER_ROUTES.ORDER_01_ORDER}
     screenOptions={{ headerShown: false, animation: 'none' }}
   >
+    <OrderStack.Screen
+      name={ORDER_ROUTES.ORDER_00_ADD_BOOKS}
+      component={AddBooksToOrderScreen}
+    />
     <OrderStack.Screen
       name={ORDER_ROUTES.ORDER_01_ORDER}
       component={OrderScreen}

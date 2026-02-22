@@ -33,6 +33,9 @@ export type LibraryNavigatorParamList = {
 };
 
 export type OrderNavigatorParamList = {
+  [Routes.ORDER_00_ADD_BOOKS]: {
+    initialBook: BookResult;
+  };
   [Routes.ORDER_01_ORDER]: undefined;
   [Routes.ORDER_02_ORDER_SHOP]: {
     books: (UserBook & BookResult)[];
