@@ -1,12 +1,11 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { makeStyles } from '@rneui/themed';
+import { CheckBox, makeStyles, useTheme } from '@rneui/themed';
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, FlatList, View } from 'react-native';
+import { FlatList, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import Book from 'components/Book';
 import Button from 'components/Button';
 import Text from 'components/Text';
 
@@ -16,6 +15,52 @@ import { NavigationType } from 'navigation/types';
 import { translations } from 'locales/translations';
 
 import { useAddBooksToOrder } from './hooks/useAddBooksToOrder';
+
+const BookSelectItem = ({
+    title,
+    author,
+    isSelected,
+    onToggle,
+}: {
+    title?: string;
+    author?: string;
+    isSelected: boolean;
+    onToggle?: () => void;
+}) => {
+    const styles = useStyles();
+    const { theme } = useTheme();
+
+    return (
+        <TouchableOpacity
+            style={[
+                styles.bookCard,
+                isSelected && { borderColor: theme.colors.primary, borderWidth: 2 },
+            ]}
+            onPress={onToggle}
+            activeOpacity={onToggle ? 0.7 : 1}
+            disabled={!onToggle}
+        >
+            <View style={styles.bookInfo}>
+                <Text
+                    text={title?.length > 50 ? `${title.slice(0, 50)}...` : title || ''}
+                    kind="paragraph"
+                />
+                <Text text={author || ''} kind="littleText" />
+            </View>
+            {onToggle && (
+                <CheckBox
+                    checked={isSelected}
+                    onPress={onToggle}
+                    iconType="material-community"
+                    checkedIcon="checkbox-outline"
+                    uncheckedIcon="checkbox-blank-outline"
+                    checkedColor={theme.colors.primary}
+                    containerStyle={{ backgroundColor: 'transparent', padding: 0 }}
+                />
+            )}
+        </TouchableOpacity>
+    );
+};
 
 export const AddBooksToOrderScreen = () => {
     const styles = useStyles();
@@ -53,6 +98,7 @@ export const AddBooksToOrderScreen = () => {
         <SafeAreaView edges={['left', 'right', 'top']} style={styles.safeAreaView}>
             <FlatList
                 data={otherBooks}
+                keyExtractor={item => item.id}
                 contentContainerStyle={styles.container}
                 showsVerticalScrollIndicator={false}
                 ListHeaderComponent={
@@ -65,24 +111,25 @@ export const AddBooksToOrderScreen = () => {
                             text={t(translations.order.addMoreDescription)}
                             kind="paragraph"
                         />
-                        <View style={styles.initialBookContainer}>
-                            <Book
-                                title={initialBook.volumeInfo?.title}
-                                author={initialBook.volumeInfo?.authors?.join?.(', ')}
-                                kind="order"
-                                isChecked={false}
-                            />
+                        <View style={styles.sectionLabel}>
+                            <Text text="In your order" kind="description" />
+                        </View>
+                        <BookSelectItem
+                            title={initialBook.volumeInfo?.title}
+                            author={initialBook.volumeInfo?.authors?.join?.(', ')}
+                            isSelected
+                        />
+                        <View style={styles.sectionLabel}>
+                            <Text text="Also in your list" kind="description" />
                         </View>
                     </View>
                 }
                 renderItem={({ item }) => (
-                    <Book
-                        key={item.id}
+                    <BookSelectItem
                         title={item.volumeInfo?.title}
                         author={item.volumeInfo?.authors?.join?.(', ')}
-                        kind="order"
-                        isChecked={!selectedIds.has(item.id)}
-                        onChange={() => toggleBook(item.id)}
+                        isSelected={selectedIds.has(item.id)}
+                        onToggle={() => toggleBook(item.id)}
                     />
                 )}
                 onEndReached={fetchMoreBooks}
@@ -108,14 +155,31 @@ const useStyles = makeStyles(theme => ({
     container: {
         paddingTop: 20,
         paddingBottom: 120,
-        gap: 20,
+        gap: 12,
     },
     headerContainer: {
-        gap: 10,
+        gap: 8,
+        marginBottom: 4,
     },
-    initialBookContainer: {
-        opacity: 0.6,
-        marginTop: 10,
+    sectionLabel: {
+        marginTop: 12,
+        marginBottom: 4,
+    },
+    bookCard: {
+        backgroundColor: '#F8EBDD',
+        borderRadius: 12,
+        paddingHorizontal: 16,
+        paddingVertical: 14,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        borderWidth: 2,
+        borderColor: 'transparent',
+    },
+    bookInfo: {
+        flex: 1,
+        gap: 4,
+        marginRight: 8,
     },
     bottomArea: {
         backgroundColor: theme.colors.white,
