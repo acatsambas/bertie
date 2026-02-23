@@ -9,6 +9,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Button from 'components/Button';
 import GoogleMaps from 'components/GoogleMaps';
+import Icon from 'components/Icon';
 import Text from 'components/Text';
 
 import {
@@ -25,7 +26,7 @@ export interface BookshopPageProps
   extends StackNavigationProp<
     NavigationType,
     typeof Routes.DISCOVER_03_BOOKSHOP
-  > {}
+  > { }
 
 export const BookshopScreen = ({ navigation }) => {
   const {
@@ -54,6 +55,9 @@ export const BookshopScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
+      <View style={styles.backHeader}>
+        <Icon icon="back" onPress={handleBack} />
+      </View>
       <View style={styles.container}>
         <GoogleMaps />
         <View>
@@ -72,11 +76,6 @@ export const BookshopScreen = ({ navigation }) => {
           }
           onPress={handlePressFavourite}
         />
-        <Button
-          kind="tertiary"
-          text={t(translations.discover.back)}
-          onPress={handleBack}
-        />
       </View>
     </SafeAreaView>
   );
@@ -88,5 +87,11 @@ const useStyles = makeStyles(theme => ({
     paddingHorizontal: 20,
     backgroundColor: theme.colors.white,
   },
-  container: { paddingTop: 20, gap: 20 },
+  container: { paddingTop: 10, gap: 20 },
+  backHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingTop: 10,
+    paddingBottom: 5,
+  },
 }));

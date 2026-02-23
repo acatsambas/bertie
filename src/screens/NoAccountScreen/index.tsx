@@ -19,14 +19,14 @@ const NoAccountScreen = ({ navigation }) => {
     navigation.goBack();
   };
 
-  const handleLogin = () => {};
+  const handleLogin = () => { };
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <View style={styles.container}>
         <View style={styles.top}>
+          <Icon icon="back" onPress={handleBack} />
           <Text kind="bigHeader" text={t(translations.noAccount.title)} />
-          <Icon icon="left" onPress={handleBack} />
         </View>
         <Text kind="paragraph" text={t(translations.noAccount.paragraph)} />
         <View style={styles.buttons}>
@@ -53,9 +53,8 @@ const useStyles = makeStyles(theme => ({
   container: { paddingTop: 20, gap: 20 },
   top: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingRight: 20,
+    gap: 8,
   },
   buttons: {
     gap: 20,

@@ -5,6 +5,7 @@ import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Button from 'components/Button';
+import Icon from 'components/Icon';
 import Input from 'components/Input';
 import Text from 'components/Text';
 
@@ -43,6 +44,9 @@ export const EmailScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
+      <View style={styles.backHeader}>
+        <Icon icon="back" onPress={() => navigation.goBack()} />
+      </View>
       <View style={styles.container}>
         <Text text={t(translations.order.emailTitle)} kind="header" />
         <Text text={t(translations.order.email)} kind="paragraph" />
@@ -83,7 +87,13 @@ const useStyles = makeStyles(theme => ({
     paddingHorizontal: 20,
     backgroundColor: theme.colors.white,
   },
-  container: { paddingTop: 20, gap: 20 },
+  container: { gap: 20 },
+  backHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingTop: 10,
+    paddingBottom: 5,
+  },
   error: {
     backgroundColor: '#FDEDED',
     paddingHorizontal: 20,

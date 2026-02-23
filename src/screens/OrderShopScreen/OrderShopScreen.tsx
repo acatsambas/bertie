@@ -6,6 +6,7 @@ import { ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Button from 'components/Button';
+import Icon from 'components/Icon';
 import OrderBookshopList from 'components/OrderBookshopList';
 import Text from 'components/Text';
 
@@ -20,16 +21,19 @@ export interface OrderShopScreenProps
   extends StackNavigationProp<
     NavigationType,
     typeof Routes.ORDER_02_ORDER_SHOP
-  > {}
+  > { }
 
 export const OrderShopScreen = () => {
   const { t } = useTranslation();
   const { bookshops, placeOrder, canPlaceOrder } = useOrderShopScreen();
   const styles = useStyles();
-  const { navigate } = useNavigation<OrderShopScreenProps>();
+  const { navigate, goBack } = useNavigation<OrderShopScreenProps>();
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
+      <View style={styles.backHeader}>
+        <Icon icon="back" onPress={() => goBack()} />
+      </View>
       <ScrollView
         contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}
@@ -47,11 +51,6 @@ export const OrderShopScreen = () => {
           onPress={placeOrder}
           disabled={canPlaceOrder}
         />
-        <Button
-          kind="tertiary"
-          text={t(translations.order.back)}
-          onPress={() => navigate(Routes.ORDER_01_ORDER)}
-        />
       </View>
     </SafeAreaView>
   );
@@ -64,7 +63,13 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.colors.white,
     position: 'relative',
   },
-  container: { paddingTop: 20, gap: 20, paddingBottom: 150 },
+  container: { paddingTop: 10, gap: 20, paddingBottom: 150 },
+  backHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingTop: 10,
+    paddingBottom: 5,
+  },
   bottomArea: {
     backgroundColor: theme.colors.white,
     flex: 1,

@@ -23,7 +23,7 @@ export interface SettingsPageProps
   extends StackNavigationProp<
     NavigationType,
     typeof Routes.SETTINGS_01_SETTINGS
-  > {}
+  > { }
 
 const SettingsScreen = ({ navigation }) => {
   const { navigate } = useNavigation<SettingsPageProps>();
@@ -57,8 +57,8 @@ const SettingsScreen = ({ navigation }) => {
     <SafeAreaView style={styles.safeAreaView}>
       <View style={styles.container}>
         <View style={styles.header}>
+          <Icon icon="back" onPress={handleExit} />
           <Text kind="bigHeader" text={t(translations.settings.title)} />
-          <Icon icon="x" onPress={handleExit} />
         </View>
         <Button
           kind="secondary"
@@ -118,10 +118,9 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.colors.white,
   },
   header: {
-    display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    gap: 8,
   },
   container: { paddingTop: 20, gap: 20 },
   buttonsArea: { gap: 10, marginTop: 20 },

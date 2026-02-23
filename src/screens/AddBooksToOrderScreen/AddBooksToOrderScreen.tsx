@@ -7,6 +7,7 @@ import { FlatList, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Button from 'components/Button';
+import Icon from 'components/Icon';
 import Text from 'components/Text';
 
 import { Routes } from 'navigation/routes';
@@ -65,7 +66,7 @@ const BookSelectItem = ({
 export const AddBooksToOrderScreen = () => {
     const styles = useStyles();
     const { t } = useTranslation();
-    const { navigate } =
+    const { navigate, goBack } =
         useNavigation<
             StackNavigationProp<NavigationType, typeof Routes.ORDER_00_ADD_BOOKS>
         >();
@@ -96,6 +97,9 @@ export const AddBooksToOrderScreen = () => {
 
     return (
         <SafeAreaView edges={['left', 'right', 'top']} style={styles.safeAreaView}>
+            <View style={styles.backHeader}>
+                <Icon icon="back" onPress={() => goBack()} />
+            </View>
             <FlatList
                 data={otherBooks}
                 keyExtractor={item => item.id}
@@ -153,9 +157,15 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: theme.colors.white,
     },
     container: {
-        paddingTop: 20,
+        paddingTop: 10,
         paddingBottom: 120,
         gap: 12,
+    },
+    backHeader: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingTop: 10,
+        paddingBottom: 5,
     },
     headerContainer: {
         gap: 8,

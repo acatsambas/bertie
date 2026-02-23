@@ -5,6 +5,7 @@ import { Alert, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Button from 'components/Button';
+import Icon from 'components/Icon';
 import Input from 'components/Input';
 import Text from 'components/Text';
 
@@ -49,6 +50,9 @@ export const AddressScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
+      <View style={styles.backHeader}>
+        <Icon icon="back" onPress={() => navigation.goBack()} />
+      </View>
       <ScrollView contentContainerStyle={styles.container}>
         <Text text={t(translations.settings.address.title)} kind="header" />
         <Text
@@ -104,6 +108,12 @@ const useStyles = makeStyles(theme => ({
     paddingHorizontal: 20,
     backgroundColor: theme.colors.white,
   },
-  container: { paddingTop: 16, gap: 8 },
+  container: { paddingTop: 8, gap: 8 },
+  backHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingTop: 10,
+    paddingBottom: 5,
+  },
   bottomArea: { position: 'relative', marginBottom: 20 },
 }));
