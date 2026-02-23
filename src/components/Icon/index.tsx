@@ -63,6 +63,10 @@ const iconType = {
     type: 'material-community',
     name: 'arrow-u-left-top',
   },
+  back: {
+    type: 'material-community',
+    name: 'chevron-left',
+  },
 };
 
 export default Icon;

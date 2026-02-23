@@ -7,6 +7,7 @@ import RenderHtml from 'react-native-render-html';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Button from 'components/Button';
+import Icon from 'components/Icon';
 import Text from 'components/Text';
 
 import {
@@ -53,6 +54,9 @@ export const BookScreen = () => {
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
+      <View style={styles.backHeader}>
+        <Icon icon="back" onPress={() => navigation.goBack()} />
+      </View>
       <ScrollView
         contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}
@@ -79,11 +83,6 @@ export const BookScreen = () => {
               text={t(translations.library.orderNow)}
               onPress={handleOrderNow}
             />
-            <Button
-              kind="tertiary"
-              text={t(translations.library.back)}
-              onPress={() => navigation.goBack()}
-            />
           </>
         ) : (
           <>
@@ -91,11 +90,6 @@ export const BookScreen = () => {
               kind="primary"
               text={t(translations.library.orderNow)}
               onPress={handleOrderNow}
-            />
-            <Button
-              kind="tertiary"
-              text={t(translations.library.back)}
-              onPress={() => navigation.goBack()}
             />
             <Button
               kind="tertiary"
@@ -115,7 +109,13 @@ const useStyles = makeStyles(theme => ({
     paddingHorizontal: 20,
     backgroundColor: theme.colors.white,
   },
-  container: { paddingTop: 20, gap: 20 },
+  backHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingTop: 10,
+    paddingBottom: 5,
+  },
+  container: { paddingTop: 10, gap: 20 },
   buttonContainer: {
     padding: 20,
     gap: 20,

@@ -25,7 +25,7 @@ export interface SearchBookProps
   extends StackNavigationProp<
     NavigationType,
     typeof Routes.LIBRARY_03_SEARCH
-  > {}
+  > { }
 
 export const SearchBookScreen = () => {
   const [searchResults, setSearchResults] = useState<BookResult[]>([]);
@@ -98,8 +98,8 @@ export const SearchBookScreen = () => {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.header}>
+          <Icon icon="back" onPress={handleCloseClick} />
           <Text text={t(translations.library.search.title)} kind="bigHeader" />
-          <Icon icon="left" onPress={handleCloseClick} />
         </View>
         <View style={styles.search}>
           <Input
@@ -148,9 +148,8 @@ const useStyles = makeStyles(theme => ({
   },
   header: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingRight: 20,
+    gap: 8,
   },
   search: { alignItems: 'flex-start' },
   toggle: { flexDirection: 'row', alignItems: 'center', gap: 20 },
