@@ -65,7 +65,7 @@ const iconType = {
   },
   back: {
     type: 'material-community',
-    name: 'chevron-left',
+    name: 'arrow-left',
   },
 };
 
