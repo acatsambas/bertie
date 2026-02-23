@@ -5,7 +5,8 @@
     "purpose": "We help readers create reading lists and order books from independent bookshops.",
     "agree": "By logging in, you agree to our",
     "terms": "Terms of Service & Privacy Policy",
-    "email": "Continue with email"
+    "email": "Continue with email",
+    "explore": "Explore without an account"
   },
   "login": {
     "title": "Login",
@@ -144,5 +145,12 @@
     "button": "Save",
     "allDone": "All done! Your password has been updated.",
     "done": "Done"
+  },
+  "authGate": {
+    "title": "Create an account",
+    "description": "Sign up to unlock this feature.",
+    "bookLimit": "You've reached the limit of 3 books. Sign up to add more!",
+    "signUp": "Sign up",
+    "cancel": "Not now"
   }
 }

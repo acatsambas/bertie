@@ -16,6 +16,8 @@ import {
 } from 'api/app/book';
 import { bookDescription } from 'api/google-books/bookDescription';
 
+import { useAuthGate } from 'hooks/useAuthGate';
+
 import { Routes } from 'navigation/routes';
 import { NavigationType } from 'navigation/types';
 
@@ -29,6 +31,7 @@ export const BookScreen = () => {
   const navigation = useNavigation<any>();
   const { data: userBooksIds = [] } = useUserBooksIdsQuery();
   const { mutate: addBookToLibrary } = useAddBookToLibraryMutation();
+  const { isGuest, requireAuth } = useAuthGate();
   const [description, setDescription] = useState<string | null>(null);
 
   const isBookInLibrary = userBooksIds.some(({ id }) => id === params.book.id);
@@ -42,10 +45,18 @@ export const BookScreen = () => {
     void fetchDescription();
   }, [params.book.id]);
 
-  const handlePressBook = () =>
+  const handlePressBook = () => {
+    // Gate: guests can't add more than 3 books
+    if (!isBookInLibrary && isGuest && userBooksIds.length >= 3) {
+      requireAuth(t(translations.authGate.bookLimit));
+      return;
+    }
     addBookToLibrary({ book: params.book, isUserBook: isBookInLibrary });
+  };
 
   const handleOrderNow = () => {
+    // Gate: guests can't order
+    if (requireAuth()) return;
     navigation.navigate(Routes.HOME_03_ORDER, {
       screen: Routes.ORDER_00_ADD_BOOKS,
       params: { initialBook: params.book },

@@ -7,6 +7,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Book from 'components/Book';
 
+import { useAuthGate } from 'hooks/useAuthGate';
+
 import { Routes } from 'navigation/routes';
 import { NavigationType } from 'navigation/types';
 
@@ -14,7 +16,7 @@ import { OrderEmpty, OrderFooter, OrderHeader } from './components/';
 import { useOrderList } from './hooks/useOrderList';
 
 export interface OrderPageProps
-  extends StackNavigationProp<NavigationType, typeof Routes.ORDER_01_ORDER> {}
+  extends StackNavigationProp<NavigationType, typeof Routes.ORDER_01_ORDER> { }
 
 export const OrderScreen = () => {
   const styles = useStyles();
@@ -22,8 +24,10 @@ export const OrderScreen = () => {
   const { unreadBooks, fetchMoreBooks, loading, refetch, removeFromOrder } =
     useOrderList();
   const [refreshing, setRefreshing] = useState(false);
+  const { requireAuth } = useAuthGate();
 
   const handleNext = () => {
+    if (requireAuth()) return;
     navigate(Routes.ORDER_02_ORDER_SHOP, {
       books: unreadBooks,
     });

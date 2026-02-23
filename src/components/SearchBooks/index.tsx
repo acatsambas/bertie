@@ -1,6 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import {
@@ -11,6 +12,10 @@ import { BookResult } from 'api/google-books/search';
 
 import { Routes } from 'navigation/routes';
 import { NavigationType } from 'navigation/types';
+
+import { useAuthGate } from 'hooks/useAuthGate';
+
+import { translations } from 'locales/translations';
 
 import Book from '../Book';
 
@@ -25,6 +30,8 @@ const SearchBooks = ({ books }: SearchBookProps) => {
     >();
   const { data: userBooksIds = [] } = useUserBooksIdsQuery();
   const { mutate: addBook } = useAddBookToLibraryMutation();
+  const { isGuest, requireAuth } = useAuthGate();
+  const { t } = useTranslation();
 
   const handlePressBook = (book: BookResult) => {
     navigate(Routes.LIBRARY_02_BOOK, {
@@ -33,6 +40,11 @@ const SearchBooks = ({ books }: SearchBookProps) => {
   };
 
   const handlePressAddBook = (book: BookResult, isUserBook: boolean) => {
+    // Gate: guests can't add more than 3 books
+    if (!isUserBook && isGuest && userBooksIds.length >= 3) {
+      requireAuth(t(translations.authGate.bookLimit));
+      return;
+    }
     addBook({ book, isUserBook });
   };
 
