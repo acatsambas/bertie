@@ -1,5 +1,4 @@
-import { useContext, useCallback } from 'react';
-import { Alert } from 'react-native';
+import { useContext, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { AuthContext } from 'api/auth/AuthProvider';
@@ -11,9 +10,12 @@ import { translations } from 'locales/translations';
  *
  * Returns:
  * - `isGuest`: true if the current user is signed in anonymously
- * - `requireAuth(message?)`: shows an alert prompting the user to sign up.
- *   If they accept, signs them out so RootNavigator shows the auth flow.
- *   Returns `true` if the user is a guest (action was blocked), `false` otherwise.
+ * - `requireAuth(message?)`: shows a sign-up modal. Returns true if the
+ *   user is a guest (action was blocked), false otherwise.
+ * - `gateVisible`: whether the auth gate modal is visible
+ * - `gateMessage`: the message to show in the modal
+ * - `dismissGate()`: close the modal
+ * - `confirmGate()`: sign up (logs out, redirecting to auth flow)
  */
 export const useAuthGate = () => {
     const { user, logout } = useContext(AuthContext);
@@ -21,28 +23,37 @@ export const useAuthGate = () => {
 
     const isGuest = !!user?.isAnonymous;
 
+    const [gateVisible, setGateVisible] = useState(false);
+    const [gateMessage, setGateMessage] = useState('');
+
     const requireAuth = useCallback(
         (message?: string): boolean => {
             if (!isGuest) return false;
 
-            Alert.alert(
-                t(translations.authGate.title),
+            setGateMessage(
                 message || t(translations.authGate.description),
-                [
-                    { text: t(translations.authGate.cancel), style: 'cancel' },
-                    {
-                        text: t(translations.authGate.signUp),
-                        onPress: () => {
-                            void logout();
-                        },
-                    },
-                ],
             );
-
+            setGateVisible(true);
             return true;
         },
-        [isGuest, logout, t],
+        [isGuest, t],
     );
 
-    return { isGuest, requireAuth };
+    const dismissGate = useCallback(() => {
+        setGateVisible(false);
+    }, []);
+
+    const confirmGate = useCallback(() => {
+        setGateVisible(false);
+        void logout();
+    }, [logout]);
+
+    return {
+        isGuest,
+        requireAuth,
+        gateVisible,
+        gateMessage,
+        dismissGate,
+        confirmGate,
+    };
 };

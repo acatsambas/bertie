@@ -6,6 +6,7 @@ import { FlatList, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Book from 'components/Book';
+import AuthGateModal from 'components/AuthGateModal';
 
 import { useAuthGate } from 'hooks/useAuthGate';
 
@@ -24,7 +25,7 @@ export const OrderScreen = () => {
   const { unreadBooks, fetchMoreBooks, loading, refetch, removeFromOrder } =
     useOrderList();
   const [refreshing, setRefreshing] = useState(false);
-  const { requireAuth } = useAuthGate();
+  const { requireAuth, gateVisible, gateMessage, dismissGate, confirmGate } = useAuthGate();
 
   const handleNext = () => {
     if (requireAuth()) return;
@@ -69,6 +70,12 @@ export const OrderScreen = () => {
         )}
         onEndReached={fetchMoreBooks}
         onEndReachedThreshold={0.5}
+      />
+      <AuthGateModal
+        visible={gateVisible}
+        message={gateMessage}
+        onDismiss={dismissGate}
+        onSignUp={confirmGate}
       />
     </SafeAreaView>
   );

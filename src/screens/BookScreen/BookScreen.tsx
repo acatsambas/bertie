@@ -9,6 +9,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
 import Text from 'components/Text';
+import AuthGateModal from 'components/AuthGateModal';
 
 import {
   useAddBookToLibraryMutation,
@@ -31,7 +32,7 @@ export const BookScreen = () => {
   const navigation = useNavigation<any>();
   const { data: userBooksIds = [] } = useUserBooksIdsQuery();
   const { mutate: addBookToLibrary } = useAddBookToLibraryMutation();
-  const { isGuest, requireAuth } = useAuthGate();
+  const { isGuest, requireAuth, gateVisible, gateMessage, dismissGate, confirmGate } = useAuthGate();
   const [description, setDescription] = useState<string | null>(null);
 
   const isBookInLibrary = userBooksIds.some(({ id }) => id === params.book.id);
@@ -110,6 +111,12 @@ export const BookScreen = () => {
           </>
         )}
       </View>
+      <AuthGateModal
+        visible={gateVisible}
+        message={gateMessage}
+        onDismiss={dismissGate}
+        onSignUp={confirmGate}
+      />
     </SafeAreaView>
   );
 };

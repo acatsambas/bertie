@@ -17,6 +17,7 @@ import { useAuthGate } from 'hooks/useAuthGate';
 
 import { translations } from 'locales/translations';
 
+import AuthGateModal from '../AuthGateModal';
 import Book from '../Book';
 
 export interface SearchBookProps {
@@ -30,7 +31,7 @@ const SearchBooks = ({ books }: SearchBookProps) => {
     >();
   const { data: userBooksIds = [] } = useUserBooksIdsQuery();
   const { mutate: addBook } = useAddBookToLibraryMutation();
-  const { isGuest, requireAuth } = useAuthGate();
+  const { isGuest, requireAuth, gateVisible, gateMessage, dismissGate, confirmGate } = useAuthGate();
   const { t } = useTranslation();
 
   const handlePressBook = (book: BookResult) => {
@@ -49,22 +50,30 @@ const SearchBooks = ({ books }: SearchBookProps) => {
   };
 
   return (
-    <View style={{ gap: 10 }}>
-      {books.map(book => {
-        const isUserBook = userBooksIds.some(({ id }) => id === book?.id);
-        return (
-          <Book
-            key={book.id}
-            isChecked={isUserBook}
-            kind="search"
-            title={book.volumeInfo?.title}
-            author={book.volumeInfo?.authors?.join?.(', ')}
-            onPress={() => handlePressBook(book)}
-            onChange={() => handlePressAddBook(book, isUserBook)}
-          />
-        );
-      })}
-    </View>
+    <>
+      <View style={{ gap: 10 }}>
+        {books.map(book => {
+          const isUserBook = userBooksIds.some(({ id }) => id === book?.id);
+          return (
+            <Book
+              key={book.id}
+              isChecked={isUserBook}
+              kind="search"
+              title={book.volumeInfo?.title}
+              author={book.volumeInfo?.authors?.join?.(', ')}
+              onPress={() => handlePressBook(book)}
+              onChange={() => handlePressAddBook(book, isUserBook)}
+            />
+          );
+        })}
+      </View>
+      <AuthGateModal
+        visible={gateVisible}
+        message={gateMessage}
+        onDismiss={dismissGate}
+        onSignUp={confirmGate}
+      />
+    </>
   );
 };
 
