@@ -124,7 +124,7 @@ const useStyles = makeStyles(theme => ({
   },
   container: { paddingTop: 20, gap: 20 },
   buttonsArea: { gap: 10, marginTop: 20 },
-  bottomArea: { flex: 1, alignItems: 'center', gap: 20 },
+  bottomArea: { flex: 1, justifyContent: 'flex-end', gap: 20 },
 }));
 
 export default SettingsScreen;

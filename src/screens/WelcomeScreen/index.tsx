@@ -124,9 +124,8 @@ const useStyles = makeStyles(theme => ({
   bottomArea: {
     flex: 1,
     justifyContent: 'flex-end',
-    marginBottom: Platform.OS === 'web' ? 20 : 20,
-    gap: 5,
-    alignItems: 'center',
+    marginBottom: 20,
+    gap: 10,
   },
 }));
 

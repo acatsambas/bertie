@@ -70,7 +70,6 @@ const useStyles = makeStyles(theme => ({
   container: { paddingTop: 20, gap: 20 },
   bottomArea: {
     flex: 1,
-    alignItems: 'center',
     justifyContent: 'flex-end',
     marginBottom: 20,
   },

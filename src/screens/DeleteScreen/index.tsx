@@ -96,7 +96,6 @@ const useStyles = makeStyles(theme => ({
   },
   bottomArea: {
     flex: 1,
-    alignItems: 'center',
     justifyContent: 'flex-end',
     marginBottom: 20,
   },
