@@ -1,32 +1,37 @@
 import { Text as RNEText, useTheme } from '@rneui/themed';
+import { StyleProp, TextStyle } from 'react-native';
 
 interface TextProps {
   kind:
-    | 'bigHeader'
-    | 'header'
-    | 'paragraph'
-    | 'description'
-    | 'littleText'
-    | 'button';
+  | 'bigHeader'
+  | 'header'
+  | 'paragraph'
+  | 'description'
+  | 'littleText'
+  | 'button';
   text: string;
   onPress?(): void;
   color?: string;
+  style?: StyleProp<TextStyle>;
 }
 
-const Text = ({ kind, text, onPress, color }: TextProps) => {
+const Text = ({ kind, text, onPress, color, style }: TextProps) => {
   const { theme } = useTheme();
 
   return (
     <RNEText
-      style={{
-        fontFamily: kind in textKind && textKind[kind].fontFamily,
-        fontSize: kind in textKind && textKind[kind].size,
-        color: color
-          ? color
-          : kind === 'button'
-            ? theme.colors.primary
-            : theme.colors.secondary,
-      }}
+      style={[
+        {
+          fontFamily: kind in textKind && textKind[kind].fontFamily,
+          fontSize: kind in textKind && textKind[kind].size,
+          color: color
+            ? color
+            : kind === 'button'
+              ? theme.colors.primary
+              : theme.colors.secondary,
+        },
+        style,
+      ]}
       onPress={onPress}
     >
       {text}
@@ -44,3 +49,4 @@ const textKind = {
 };
 
 export default Text;
+

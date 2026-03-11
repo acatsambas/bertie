@@ -98,6 +98,18 @@
       "toggle": "Toggle to search by author",
       "toggle2": "Toggle to search by title",
       "addToList": "Tap on the plus sign to add a book to your list"
+    },
+    "rating": {
+      "rate": "Rate",
+      "sheetTitle": "Rate this book",
+      "option1": "Reading this hurt my soul",
+      "option2": "This is OK to pass the time",
+      "option3": "This is an outstanding book in its genre",
+      "option4": "This is essential reading; everyone must read this book at least once.",
+      "median1": "Most readers say this hurt their soul",
+      "median2": "Most readers say this is OK to pass the time",
+      "median3": "Most readers say this is outstanding",
+      "median4": "Most readers say everyone must read this once in their lifetime."
     }
   },
   "order": {

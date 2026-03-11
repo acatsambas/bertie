@@ -10,11 +10,16 @@ import Button from 'components/Button';
 import Icon from 'components/Icon';
 import Text from 'components/Text';
 import AuthGateModal from 'components/AuthGateModal';
+import RatingBottomSheet from 'components/RatingBottomSheet';
 
 import {
   useAddBookToLibraryMutation,
+  useRateBookMutation,
   useUserBooksIdsQuery,
+  useBookRatingsQuery,
+  useUserBookRatingQuery,
 } from 'api/app/book';
+import { RatingValue } from 'api/app/book/mutations/useRateBookMutation';
 import { bookDescription } from 'api/google-books/bookDescription';
 
 import { useAuthGate } from 'hooks/useAuthGate';
@@ -24,6 +29,23 @@ import { NavigationType } from 'navigation/types';
 
 import { translations } from 'locales/translations';
 
+const medianKeys: Record<RatingValue, string> = {
+  1: translations.library.rating.median1,
+  2: translations.library.rating.median2,
+  3: translations.library.rating.median3,
+  4: translations.library.rating.median4,
+};
+
+const computeMedian = (values: RatingValue[]): RatingValue | null => {
+  if (values.length === 0) return null;
+  const sorted = [...values].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  if (sorted.length % 2 === 0) {
+    return Math.round((sorted[mid - 1] + sorted[mid]) / 2) as RatingValue;
+  }
+  return sorted[mid];
+};
+
 export const BookScreen = () => {
   const { params } =
     useRoute<RouteProp<NavigationType, typeof Routes.LIBRARY_02_BOOK>>();
@@ -32,10 +54,15 @@ export const BookScreen = () => {
   const navigation = useNavigation<any>();
   const { data: userBooksIds = [] } = useUserBooksIdsQuery();
   const { mutate: addBookToLibrary } = useAddBookToLibraryMutation();
+  const { mutate: rateBook } = useRateBookMutation();
+  const { data: ratings = [] } = useBookRatingsQuery(params.book.id);
+  const { data: userRating = null } = useUserBookRatingQuery(params.book.id);
   const { isGuest, requireAuth, gateVisible, gateMessage, dismissGate, confirmGate } = useAuthGate();
   const [description, setDescription] = useState<string | null>(null);
+  const [ratingSheetVisible, setRatingSheetVisible] = useState(false);
 
   const isBookInLibrary = userBooksIds.some(({ id }) => id === params.book.id);
+  const medianRating = computeMedian(ratings);
 
   useEffect(() => {
     const fetchDescription = async () => {
@@ -64,6 +91,11 @@ export const BookScreen = () => {
     });
   };
 
+  const handleRate = (rating: RatingValue) => {
+    rateBook({ bookId: params.book.id, rating });
+    setRatingSheetVisible(false);
+  };
+
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <View style={styles.backHeader}>
@@ -79,38 +111,61 @@ export const BookScreen = () => {
             kind="paragraph"
             text={params.book.volumeInfo?.authors?.join?.(', ')}
           />
+          {medianRating != null && (
+            <Text
+              kind="description"
+              text={t(medianKeys[medianRating])}
+              style={styles.medianRating}
+            />
+          )}
         </View>
         <RenderHtml source={{ html: description }} contentWidth={0} />
       </ScrollView>
       <View style={styles.buttonContainer}>
         {!isBookInLibrary ? (
-          <>
-            <Button
-              kind="primary"
-              text={t(translations.library.add)}
-              onPress={() => handlePressBook()}
-            />
-            <Button
-              kind="tertiary"
-              text={t(translations.library.orderNow)}
-              onPress={handleOrderNow}
-            />
-          </>
+          <Button
+            kind="primary"
+            text={t(translations.library.add)}
+            onPress={() => handlePressBook()}
+          />
         ) : (
-          <>
-            <Button
-              kind="primary"
-              text={t(translations.library.orderNow)}
-              onPress={handleOrderNow}
-            />
+          <Button
+            kind="primary"
+            text={t(translations.library.orderNow)}
+            onPress={handleOrderNow}
+          />
+        )}
+        <View style={styles.secondaryRow}>
+          <View style={styles.halfButton}>
             <Button
               kind="tertiary"
-              text={t(translations.library.remove)}
-              onPress={() => handlePressBook()}
+              text={t(translations.library.rating.rate)}
+              onPress={() => setRatingSheetVisible(true)}
             />
-          </>
-        )}
+          </View>
+          <View style={styles.halfButton}>
+            {!isBookInLibrary ? (
+              <Button
+                kind="tertiary"
+                text={t(translations.library.orderNow)}
+                onPress={handleOrderNow}
+              />
+            ) : (
+              <Button
+                kind="tertiary"
+                text={t(translations.library.remove)}
+                onPress={() => handlePressBook()}
+              />
+            )}
+          </View>
+        </View>
       </View>
+      <RatingBottomSheet
+        visible={ratingSheetVisible}
+        currentRating={userRating}
+        onRate={handleRate}
+        onClose={() => setRatingSheetVisible(false)}
+      />
       <AuthGateModal
         visible={gateVisible}
         message={gateMessage}
@@ -134,9 +189,20 @@ const useStyles = makeStyles(theme => ({
     paddingBottom: 5,
   },
   container: { paddingTop: 10, gap: 20 },
+  medianRating: {
+    fontStyle: 'italic',
+    marginTop: 4,
+  },
   buttonContainer: {
     padding: 20,
-    gap: 20,
+    gap: 12,
     flexDirection: 'column',
+  },
+  secondaryRow: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  halfButton: {
+    flex: 1,
   },
 }));
