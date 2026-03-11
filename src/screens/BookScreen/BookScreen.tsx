@@ -136,27 +136,31 @@ export const BookScreen = () => {
           />
         )}
         <View style={styles.secondaryRow}>
-          <Button
-            kind="tertiary"
-            text={t(translations.library.rating.rate)}
-            onPress={() => setRatingSheetVisible(true)}
-            containerStyle={styles.halfButton}
-          />
-          {!isBookInLibrary ? (
+          <View style={styles.halfButton}>
             <Button
               kind="tertiary"
-              text={t(translations.library.orderNow)}
-              onPress={handleOrderNow}
-              containerStyle={styles.halfButton}
+              text={t(translations.library.rating.rate)}
+              onPress={() => setRatingSheetVisible(true)}
+              containerStyle={styles.fillHeight}
             />
-          ) : (
-            <Button
-              kind="tertiary"
-              text={t(translations.library.remove)}
-              onPress={() => handlePressBook()}
-              containerStyle={styles.halfButton}
-            />
-          )}
+          </View>
+          <View style={styles.halfButton}>
+            {!isBookInLibrary ? (
+              <Button
+                kind="tertiary"
+                text={t(translations.library.orderNow)}
+                onPress={handleOrderNow}
+                containerStyle={styles.fillHeight}
+              />
+            ) : (
+              <Button
+                kind="tertiary"
+                text={t(translations.library.remove)}
+                onPress={() => handlePressBook()}
+                containerStyle={styles.fillHeight}
+              />
+            )}
+          </View>
         </View>
       </View>
       <RatingBottomSheet
@@ -199,9 +203,13 @@ const useStyles = makeStyles(theme => ({
   },
   secondaryRow: {
     flexDirection: 'row',
+    alignItems: 'stretch',
     gap: 10,
   },
   halfButton: {
+    flex: 1,
+  },
+  fillHeight: {
     flex: 1,
   },
 }));
