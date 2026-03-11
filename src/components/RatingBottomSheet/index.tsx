@@ -15,13 +15,6 @@ interface RatingBottomSheetProps {
     onClose: () => void;
 }
 
-const options: { value: RatingValue; labelKey: string }[] = [
-    { value: 1, labelKey: translations.library.rating.option1 },
-    { value: 2, labelKey: translations.library.rating.option2 },
-    { value: 3, labelKey: translations.library.rating.option3 },
-    { value: 4, labelKey: translations.library.rating.option4 },
-];
-
 const RatingBottomSheet = ({
     visible,
     currentRating,
@@ -31,6 +24,13 @@ const RatingBottomSheet = ({
     const styles = useStyles();
     const { theme } = useTheme();
     const { t } = useTranslation();
+
+    const options: { value: RatingValue; labelKey: string }[] = [
+        { value: 1, labelKey: translations.library.rating.option1 },
+        { value: 2, labelKey: translations.library.rating.option2 },
+        { value: 3, labelKey: translations.library.rating.option3 },
+        { value: 4, labelKey: translations.library.rating.option4 },
+    ];
 
     return (
         <Modal

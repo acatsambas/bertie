@@ -29,13 +29,6 @@ import { NavigationType } from 'navigation/types';
 
 import { translations } from 'locales/translations';
 
-const medianKeys: Record<RatingValue, string> = {
-  1: translations.library.rating.median1,
-  2: translations.library.rating.median2,
-  3: translations.library.rating.median3,
-  4: translations.library.rating.median4,
-};
-
 const computeMedian = (values: RatingValue[]): RatingValue | null => {
   if (values.length === 0) return null;
   const sorted = [...values].sort((a, b) => a - b);
@@ -63,6 +56,13 @@ export const BookScreen = () => {
 
   const isBookInLibrary = userBooksIds.some(({ id }) => id === params.book.id);
   const medianRating = computeMedian(ratings);
+
+  const medianKeys: Record<RatingValue, string> = {
+    1: translations.library.rating.median1,
+    2: translations.library.rating.median2,
+    3: translations.library.rating.median3,
+    4: translations.library.rating.median4,
+  };
 
   useEffect(() => {
     const fetchDescription = async () => {
