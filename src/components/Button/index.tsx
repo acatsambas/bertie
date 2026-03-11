@@ -1,4 +1,5 @@
 import { Button as RNEButton, useTheme } from '@rneui/themed';
+import { StyleProp, ViewStyle } from 'react-native';
 
 import Icon, { IconProps } from '../Icon';
 
@@ -8,16 +9,19 @@ interface ButtonProps {
   kind?: 'primary' | 'secondary' | 'tertiary';
   onPress?(): void;
   text?: string;
+  containerStyle?: StyleProp<ViewStyle>;
 }
 
-const Button = ({ text, onPress, kind, icon, disabled }: ButtonProps) => {
+const Button = ({ text, onPress, kind, icon, disabled, containerStyle }: ButtonProps) => {
   const { theme } = useTheme();
 
   return (
     <RNEButton
       onPress={onPress}
       disabled={disabled}
+      containerStyle={containerStyle}
       buttonStyle={{
+        flex: 1,
         justifyContent: kind === 'secondary' ? 'flex-start' : 'center',
         borderRadius: 15,
         backgroundColor:

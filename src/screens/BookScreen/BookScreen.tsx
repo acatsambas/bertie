@@ -136,28 +136,27 @@ export const BookScreen = () => {
           />
         )}
         <View style={styles.secondaryRow}>
-          <View style={styles.halfButton}>
+          <Button
+            kind="tertiary"
+            text={t(translations.library.rating.rate)}
+            onPress={() => setRatingSheetVisible(true)}
+            containerStyle={styles.halfButton}
+          />
+          {!isBookInLibrary ? (
             <Button
               kind="tertiary"
-              text={t(translations.library.rating.rate)}
-              onPress={() => setRatingSheetVisible(true)}
+              text={t(translations.library.orderNow)}
+              onPress={handleOrderNow}
+              containerStyle={styles.halfButton}
             />
-          </View>
-          <View style={styles.halfButton}>
-            {!isBookInLibrary ? (
-              <Button
-                kind="tertiary"
-                text={t(translations.library.orderNow)}
-                onPress={handleOrderNow}
-              />
-            ) : (
-              <Button
-                kind="tertiary"
-                text={t(translations.library.remove)}
-                onPress={() => handlePressBook()}
-              />
-            )}
-          </View>
+          ) : (
+            <Button
+              kind="tertiary"
+              text={t(translations.library.remove)}
+              onPress={() => handlePressBook()}
+              containerStyle={styles.halfButton}
+            />
+          )}
         </View>
       </View>
       <RatingBottomSheet
