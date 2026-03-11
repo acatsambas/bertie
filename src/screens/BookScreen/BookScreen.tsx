@@ -2,7 +2,7 @@ import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { makeStyles } from '@rneui/themed';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, View } from 'react-native';
+import { Pressable, ScrollView, View } from 'react-native';
 import RenderHtml from 'react-native-render-html';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -136,31 +136,21 @@ export const BookScreen = () => {
           />
         )}
         <View style={styles.secondaryRow}>
-          <View style={styles.halfButton}>
-            <Button
-              kind="tertiary"
-              text={t(translations.library.rating.rate)}
-              onPress={() => setRatingSheetVisible(true)}
-              containerStyle={styles.fillHeight}
+          <Pressable
+            style={styles.secondaryButton}
+            onPress={() => setRatingSheetVisible(true)}
+          >
+            <Text kind="paragraph" text={t(translations.library.rating.rate)} />
+          </Pressable>
+          <Pressable
+            style={styles.secondaryButton}
+            onPress={!isBookInLibrary ? handleOrderNow : () => handlePressBook()}
+          >
+            <Text
+              kind="paragraph"
+              text={t(!isBookInLibrary ? translations.library.orderNow : translations.library.remove)}
             />
-          </View>
-          <View style={styles.halfButton}>
-            {!isBookInLibrary ? (
-              <Button
-                kind="tertiary"
-                text={t(translations.library.orderNow)}
-                onPress={handleOrderNow}
-                containerStyle={styles.fillHeight}
-              />
-            ) : (
-              <Button
-                kind="tertiary"
-                text={t(translations.library.remove)}
-                onPress={() => handlePressBook()}
-                containerStyle={styles.fillHeight}
-              />
-            )}
-          </View>
+          </Pressable>
         </View>
       </View>
       <RatingBottomSheet
@@ -206,10 +196,14 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'stretch',
     gap: 10,
   },
-  halfButton: {
+  secondaryButton: {
     flex: 1,
-  },
-  fillHeight: {
-    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: theme.colors.secondary,
+    paddingVertical: 13,
+    paddingHorizontal: 20,
   },
 }));
