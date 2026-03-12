@@ -2,6 +2,7 @@ import { ThemeProvider, createTheme } from '@rneui/themed';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { PWAProvider } from 'contexts/PWAContext';
 import { useEffect, useState } from 'react';
+import { Platform, View } from 'react-native';
 
 import { AuthProvider } from 'api/auth/AuthProvider';
 import { initFirebase } from 'api/firebase';
@@ -38,7 +39,7 @@ const App = () => {
     return null;
   }
 
-  return (
+  const content = (
     <ThemeProvider theme={theme}>
       <AuthProvider>
         <PWAProvider>
@@ -51,6 +52,19 @@ const App = () => {
       </AuthProvider>
     </ThemeProvider>
   );
+
+  if (Platform.OS === 'web') {
+    return (
+      <View style={{ flex: 1, alignItems: 'center' }}>
+        <View style={{ flex: 1, width: '70%', maxWidth: 1200 }}>
+          {content}
+        </View>
+      </View>
+    );
+  }
+
+  return content;
 };
 
 export default App;
+
