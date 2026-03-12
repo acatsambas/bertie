@@ -22,7 +22,7 @@ export interface DiscoverScreenProps
   extends StackNavigationProp<
     NavigationType,
     typeof Routes.DISCOVER_01_DISCOVER
-  > {}
+  > { }
 
 export const DiscoverScreen = () => {
   const styles = useStyles();
@@ -49,10 +49,10 @@ export const DiscoverScreen = () => {
             fontSize: 24,
           }}
         >
-          <Tab.Item>{t(translations.discover.bookshops)}</Tab.Item>
           <Tab.Item>{t(translations.discover.books)}</Tab.Item>
+          <Tab.Item>{t(translations.discover.bookshops)}</Tab.Item>
         </Tab>
-        {index === 0 ? <BookshopTab user={user} /> : <BooksTab />}
+        {index === 0 ? <BooksTab /> : <BookshopTab user={user} />}
       </View>
     </SafeAreaView>
   );
