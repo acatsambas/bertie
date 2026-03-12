@@ -92,7 +92,7 @@ export const BookScreen = () => {
   };
 
   const handleRate = (rating: RatingValue) => {
-    rateBook({ bookId: params.book.id, rating });
+    rateBook({ bookId: params.book.id, rating, book: params.book });
     setTimeout(() => setRatingSheetVisible(false), 500);
   };
 
