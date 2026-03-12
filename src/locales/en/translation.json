@@ -80,7 +80,8 @@
     "add": "Add to Favourites",
     "remove": "Remove from Favourites",
     "back": "Back",
-    "booksHeader": "Coming soon: your personal, AI-powered literary advisor. In the meantime, you can explore some of our own favourites!"
+    "booksHeader": "Looking for your next read? Here are some books our readers say everyone must read at least once in their lifetime.",
+    "noBooksYet": "No essential reads yet. Be the first to rate a book!"
   },
   "library": {
     "title": "My list",

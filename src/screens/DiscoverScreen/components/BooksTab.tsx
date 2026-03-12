@@ -1,93 +1,64 @@
-import React, { useState } from 'react';
-import {
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  View,
-} from 'react-native';
-import Markdown from 'react-native-markdown-display';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import React from 'react';
+import { ScrollView, View } from 'react-native';
+import { makeStyles } from '@rneui/themed';
+import { useTranslation } from 'react-i18next';
 
-import Input from 'components/Input';
+import Text from 'components/Text';
+import SearchBooks from 'components/SearchBooks';
+import LoadingState from 'components/LoadingState/LoadingState';
 
-import { useBooksTab } from '../hooks/useBooksTab';
+import { useEssentialBooksQuery, useBooksQuery } from 'api/app/book';
+
+import { translations } from 'locales/translations';
 
 export const BooksTab = () => {
-  const [userInput, setUserInput] = useState<string>('');
-  const insets = useSafeAreaInsets();
-  const { messages, handleSendMessage } = useBooksTab({
-    userInput,
-    cleanInput: () => setUserInput(''),
+  const styles = useStyles();
+  const { t } = useTranslation();
+  const { data: essentialBookIds = [], isLoading: isLoadingIds } =
+    useEssentialBooksQuery();
+  const { data: books = [], isLoading: isLoadingBooks } = useBooksQuery({
+    ids: essentialBookIds,
   });
 
+  const isLoading = isLoadingIds || isLoadingBooks;
+
   return (
-    <KeyboardAvoidingView
-      style={styles.booksTab}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      keyboardVerticalOffset={insets.top}
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.content}
+      showsVerticalScrollIndicator={false}
     >
-      <ScrollView
-        style={styles.chatContainer}
-        contentContainerStyle={styles.chatContentContainer}
-      >
-        {messages.map((message, index) => (
-          <View
-            key={index}
-            style={[
-              styles.messageBubble,
-              index % 2 === 0 ? styles.botMessage : styles.userMessage,
-            ]}
-          >
-            <Markdown
-              style={{
-                body: {
-                  fontFamily: 'Commissioner_400Regular',
-                  fontSize: 16,
-                },
-              }}
-            >
-              {message}
-            </Markdown>
-          </View>
-        ))}
-      </ScrollView>
-      {Platform.OS !== 'web' && (
-        <Input
-          value={userInput}
-          onChangeText={setUserInput}
-          placeholder="Type your response here"
-          returnKeyType="send"
-          onSubmitEditing={handleSendMessage}
-        />
+      <Text
+        kind="paragraph"
+        text={t(translations.discover.booksHeader)}
+      />
+      {isLoading ? (
+        <LoadingState />
+      ) : books.length > 0 ? (
+        <SearchBooks books={books} />
+      ) : (
+        <View style={styles.emptyState}>
+          <Text
+            kind="description"
+            text="No essential reads yet. Be the first to rate a book!"
+          />
+        </View>
       )}
-    </KeyboardAvoidingView>
+    </ScrollView>
   );
 };
 
-const styles = StyleSheet.create({
-  booksTab: {
+const useStyles = makeStyles(() => ({
+  container: {
     flex: 1,
     paddingHorizontal: 20,
   },
-  chatContainer: {
-    flex: 1,
+  content: {
+    paddingVertical: 20,
+    gap: 20,
   },
-  chatContentContainer: {
-    paddingVertical: 10,
+  emptyState: {
+    alignItems: 'center',
+    paddingTop: 20,
   },
-  messageBubble: {
-    padding: 15,
-    marginVertical: 5,
-    borderRadius: 10,
-    maxWidth: '80%',
-  },
-  botMessage: {
-    backgroundColor: '#F8E7E7',
-    alignSelf: 'flex-start',
-  },
-  userMessage: {
-    backgroundColor: '#E7E7E7',
-    alignSelf: 'flex-end',
-  },
-});
+}));
