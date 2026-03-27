@@ -67,6 +67,10 @@ const iconType = {
     type: 'material-community',
     name: 'arrow-left',
   },
+  info: {
+    type: 'material-community',
+    name: 'information-outline',
+  },
 };
 
 export default Icon;

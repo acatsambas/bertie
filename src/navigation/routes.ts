@@ -29,6 +29,7 @@ export const DISCOVER_ROUTES = {
   DISCOVER_01_DISCOVER: 'discover-home',
   DISCOVER_02_ADDRESS: 'discover-address',
   DISCOVER_03_BOOKSHOP: 'discover-bookshop',
+  DISCOVER_04_CHAT: 'discover-chat',
 } as const;
 
 export const AUTH_ROUTES = {

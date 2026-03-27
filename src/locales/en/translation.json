@@ -165,5 +165,33 @@
     "bookLimit": "You've reached the limit of 3 books. Sign up to add more!",
     "signUp": "Sign up",
     "cancel": "Not now"
+  },
+  "penpals": {
+    "tab": "Penpals",
+    "sendDM": "Send mystery DM",
+    "noConversations": "No conversations yet. Send a mystery DM to get started!",
+    "noUsers": "No penpals available right now. Try again later.",
+    "mysteryPenpal": "Mystery penpal",
+    "sendError": "Something went wrong. Please try again.",
+    "info": {
+      "title": "How Penpals works",
+      "line1": "Send anonymous messages to a randomly chosen reader.",
+      "line2": "You'll never know who you're chatting with — and they won't know you either.",
+      "line3": "Everyone uses a nickname instead of their real name.",
+      "line4": "Why not pick a name from your favourite book?",
+      "close": "Got it!"
+    },
+    "nickname": {
+      "title": "Choose your penpal name",
+      "placeholder": "Enter a nickname",
+      "helper": "Pick a name from a literary character you love!",
+      "continue": "Continue",
+      "tooShort": "Nickname must be at least 2 characters",
+      "tooLong": "Nickname must be 30 characters or fewer"
+    },
+    "chat": {
+      "placeholder": "Write a message...",
+      "send": "Send"
+    }
   }
 }

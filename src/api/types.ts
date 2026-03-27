@@ -14,6 +14,7 @@ export interface UserData {
   givenName: string;
   isFirstSearch?: boolean;
   favouriteShop?: string;
+  nickname?: string;
   address?: {
     firstLine?: string;
     secondLine?: string;
