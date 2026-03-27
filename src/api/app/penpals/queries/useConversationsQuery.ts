@@ -2,7 +2,6 @@ import { useQuery } from '@tanstack/react-query';
 import {
     collection,
     getDocs,
-    orderBy,
     query,
     where,
 } from 'firebase/firestore';
@@ -21,17 +20,26 @@ export const useConversationsQuery = () => {
             const q = query(
                 collection(db, 'conversations'),
                 where('participants', 'array-contains', userId),
-                orderBy('lastMessageAt', 'desc'),
             );
             const snapshot = await getDocs(q);
 
-            return snapshot.docs.map(doc => ({
+            const conversations = snapshot.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data(),
             })) as Conversation[];
+
+            // Sort by most recent message, client-side
+            conversations.sort((a, b) => {
+                const aTime = a.lastMessageAt?.seconds ?? 0;
+                const bTime = b.lastMessageAt?.seconds ?? 0;
+                return bTime - aTime;
+            });
+
+            return conversations;
         },
         enabled: !!userId,
-        staleTime: 30 * 1000,
+        refetchOnMount: 'always',
+        staleTime: 10 * 1000,
         gcTime: 5 * 60 * 1000,
     });
 };
