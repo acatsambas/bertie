@@ -22,7 +22,7 @@ export interface OrderPageProps
 export const OrderScreen = () => {
   const styles = useStyles();
   const { navigate } = useNavigation<OrderPageProps>();
-  const { unreadBooks, fetchMoreBooks, loading, refetch, removeFromOrder } =
+  const { unreadBooks, selectedBooks, orderList, fetchMoreBooks, loading, refetch, toggleOrder } =
     useOrderList();
   const [refreshing, setRefreshing] = useState(false);
   const { requireAuth, gateVisible, gateMessage, dismissGate, confirmGate } = useAuthGate();
@@ -30,7 +30,7 @@ export const OrderScreen = () => {
   const handleNext = () => {
     if (requireAuth()) return;
     navigate(Routes.ORDER_02_ORDER_SHOP, {
-      books: unreadBooks,
+      books: selectedBooks,
     });
   };
 
@@ -54,7 +54,7 @@ export const OrderScreen = () => {
         ListFooterComponent={
           <OrderFooter
             loading={loading}
-            hasBooks={unreadBooks.length > 0}
+            hasBooks={selectedBooks.length > 0}
             onNext={handleNext}
           />
         }
@@ -64,8 +64,8 @@ export const OrderScreen = () => {
             title={item.volumeInfo?.title}
             author={item.volumeInfo?.authors?.join?.(', ')}
             kind="order"
-            isChecked={item.isRead}
-            onChange={() => removeFromOrder(item.id)}
+            isChecked={orderList.includes(item.id)}
+            onChange={() => toggleOrder(item.id)}
           />
         )}
         onEndReached={fetchMoreBooks}

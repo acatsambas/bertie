@@ -9,29 +9,23 @@ export const useOrderList = () => {
       withRefs: true,
     });
 
-  // Update orderList when new pages are loaded
-  useEffect(() => {
-    if (data?.pages) {
-      const newBookIds = data.pages
-        .flatMap(page => page.books)
-        .filter(book => !book.isRead)
-        .map(book => book.id);
-
-      setOrderList(prev => {
-        const uniqueIds = new Set([...prev, ...newBookIds]);
-        return Array.from(uniqueIds);
-      });
-    }
-  }, [data?.pages]);
-
   const unreadBooks = useMemo(() => {
     if (!data?.pages) return [];
     const allBooks = data.pages.flatMap(page => page.books);
-    return allBooks.filter(book => !book.isRead && orderList.includes(book.id));
-  }, [data?.pages, orderList]);
+    return allBooks.filter(book => !book.isRead);
+  }, [data?.pages]);
 
-  const removeFromOrder = useCallback((bookId: string) => {
-    setOrderList(prev => prev.filter(id => id !== bookId));
+  const selectedBooks = useMemo(() => {
+    return unreadBooks.filter(book => orderList.includes(book.id));
+  }, [unreadBooks, orderList]);
+
+  const toggleOrder = useCallback((bookId: string) => {
+    setOrderList(prev => {
+      if (prev.includes(bookId)) {
+        return prev.filter(id => id !== bookId);
+      }
+      return [...prev, bookId];
+    });
   }, []);
 
   const fetchMoreBooks = useCallback(() => {
@@ -46,9 +40,11 @@ export const useOrderList = () => {
 
   return {
     unreadBooks,
+    selectedBooks,
+    orderList,
     fetchMoreBooks,
     loading: isFetching,
     refetch: handleRefetch,
-    removeFromOrder,
+    toggleOrder,
   };
 };
