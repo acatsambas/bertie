@@ -115,7 +115,7 @@
   },
   "order": {
     "title": "Order",
-    "header": "You're buying...",
+    "header": "Which books do you want to order?",
     "headerNoBooks": "Uh oh. There are no books in your list. Add some to get started!",
     "suggestions": "Here are some of our own favourites - just tap on the plus sign to add them to your list, and refresh this page to order.",
     "details": "...and we'll share these details with the bookshops for you:",
