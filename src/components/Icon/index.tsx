@@ -73,7 +73,7 @@ const iconType = {
   },
   dotsHorizontal: {
     type: 'material-community',
-    name: 'dots-horizontal',
+    name: 'dots-vertical',
   },
 };
 

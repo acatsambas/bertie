@@ -167,11 +167,18 @@ export const BookScreen = () => {
             />
           </>
         ) : (
-          <Button
-            kind="primary"
-            text={t(translations.library.rating.rate)}
-            onPress={() => setRatingSheetVisible(true)}
-          />
+          <>
+            <Button
+              kind="primary"
+              text={t(translations.library.rating.rate)}
+              onPress={() => setRatingSheetVisible(true)}
+            />
+            <Button
+              kind="tertiary"
+              text={t(translations.library.orderNow)}
+              onPress={handleOrderNow}
+            />
+          </>
         )}
       </View>
 
