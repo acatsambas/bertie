@@ -1,8 +1,8 @@
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import { makeStyles } from '@rneui/themed';
-import React, { useEffect, useState } from 'react';
+import { makeStyles, useTheme } from '@rneui/themed';
+import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Pressable, ScrollView, View } from 'react-native';
+import { Modal, ScrollView, TouchableOpacity, View } from 'react-native';
 import RenderHtml from 'react-native-render-html';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -43,6 +43,7 @@ export const BookScreen = () => {
   const { params } =
     useRoute<RouteProp<NavigationType, typeof Routes.LIBRARY_02_BOOK>>();
   const styles = useStyles();
+  const { theme } = useTheme();
   const { t } = useTranslation();
   const navigation = useNavigation<any>();
   const { data: userBooksIds = [] } = useUserBooksIdsQuery();
@@ -53,6 +54,9 @@ export const BookScreen = () => {
   const { isGuest, requireAuth, gateVisible, gateMessage, dismissGate, confirmGate } = useAuthGate();
   const [description, setDescription] = useState<string | null>(null);
   const [ratingSheetVisible, setRatingSheetVisible] = useState(false);
+  const [menuVisible, setMenuVisible] = useState(false);
+  const [menuPosition, setMenuPosition] = useState({ top: 0, right: 0 });
+  const menuAnchorRef = useRef<View>(null);
 
   const isBookInLibrary = userBooksIds.some(({ id }) => id === params.book.id);
   const medianRating = computeMedian(ratings);
@@ -73,7 +77,7 @@ export const BookScreen = () => {
     void fetchDescription();
   }, [params.book.id]);
 
-  const handlePressBook = () => {
+  const handleAddOrRemove = () => {
     // Gate: guests can't add more than 3 books
     if (!isBookInLibrary && isGuest && userBooksIds.length >= 3) {
       requireAuth(t(translations.authGate.bookLimit));
@@ -96,6 +100,23 @@ export const BookScreen = () => {
     setTimeout(() => setRatingSheetVisible(false), 500);
   };
 
+  const openMenu = () => {
+    menuAnchorRef.current?.measureInWindow((x, y, width, height) => {
+      setMenuPosition({ top: y + height + 4, right: 20 });
+      setMenuVisible(true);
+    });
+  };
+
+  const handleMenuRate = () => {
+    setMenuVisible(false);
+    setRatingSheetVisible(true);
+  };
+
+  const handleMenuRemove = () => {
+    setMenuVisible(false);
+    handleAddOrRemove();
+  };
+
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <View style={styles.backHeader}>
@@ -105,54 +126,81 @@ export const BookScreen = () => {
         contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}
       >
-        <View>
-          <Text kind="bigHeader" text={params.book.volumeInfo?.title} />
-          <Text
-            kind="paragraph"
-            text={params.book.volumeInfo?.authors?.join?.(', ')}
-          />
-          {medianRating != null && (
+        <View style={styles.titleRow}>
+          <View style={styles.titleText}>
+            <Text kind="bigHeader" text={params.book.volumeInfo?.title} />
             <Text
-              kind="description"
-              text={t(medianKeys[medianRating])}
-              style={styles.medianRating}
+              kind="paragraph"
+              text={params.book.volumeInfo?.authors?.join?.(', ')}
             />
-          )}
+            {medianRating != null && (
+              <Text
+                kind="description"
+                text={t(medianKeys[medianRating])}
+                style={styles.medianRating}
+              />
+            )}
+          </View>
+          <View ref={menuAnchorRef} collapsable={false}>
+            <TouchableOpacity
+              onPress={openMenu}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
+              <Icon icon="dotsHorizontal" color={theme.colors.black} />
+            </TouchableOpacity>
+          </View>
         </View>
         <RenderHtml source={{ html: description }} contentWidth={0} />
       </ScrollView>
       <View style={styles.buttonContainer}>
         {!isBookInLibrary ? (
-          <Button
-            kind="primary"
-            text={t(translations.library.add)}
-            onPress={() => handlePressBook()}
-          />
+          <>
+            <Button
+              kind="primary"
+              text={t(translations.library.add)}
+              onPress={handleAddOrRemove}
+            />
+            <Button
+              kind="tertiary"
+              text={t(translations.library.orderNow)}
+              onPress={handleOrderNow}
+            />
+          </>
         ) : (
           <Button
             kind="primary"
-            text={t(translations.library.orderNow)}
-            onPress={handleOrderNow}
+            text={t(translations.library.rating.rate)}
+            onPress={() => setRatingSheetVisible(true)}
           />
         )}
-        <View style={styles.secondaryRow}>
-          <Pressable
-            style={styles.secondaryButton}
-            onPress={() => setRatingSheetVisible(true)}
-          >
-            <Text kind="paragraph" text={t(translations.library.rating.rate)} />
-          </Pressable>
-          <Pressable
-            style={styles.secondaryButton}
-            onPress={!isBookInLibrary ? handleOrderNow : () => handlePressBook()}
-          >
-            <Text
-              kind="paragraph"
-              text={t(!isBookInLibrary ? translations.library.orderNow : translations.library.remove)}
-            />
-          </Pressable>
-        </View>
       </View>
+
+      {/* Overflow menu */}
+      <Modal
+        visible={menuVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setMenuVisible(false)}
+      >
+        <TouchableOpacity
+          style={styles.menuOverlay}
+          activeOpacity={1}
+          onPress={() => setMenuVisible(false)}
+        >
+          <View style={[styles.menuCard, { top: menuPosition.top, right: menuPosition.right }]}>
+            {!isBookInLibrary ? (
+              <TouchableOpacity style={styles.menuItem} onPress={handleMenuRate}>
+                <Text kind="paragraph" text={t(translations.library.rating.rate)} />
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity style={styles.menuItem} onPress={handleMenuRemove}>
+                <Text kind="paragraph" text={t(translations.library.remove)} />
+              </TouchableOpacity>
+            )}
+          </View>
+        </TouchableOpacity>
+      </Modal>
+
       <RatingBottomSheet
         visible={ratingSheetVisible}
         currentRating={userRating}
@@ -182,6 +230,15 @@ const useStyles = makeStyles(theme => ({
     paddingBottom: 5,
   },
   container: { paddingTop: 10, gap: 20 },
+  titleRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+  },
+  titleText: {
+    flex: 1,
+    marginRight: 12,
+  },
   medianRating: {
     fontStyle: 'italic',
     marginTop: 4,
@@ -191,19 +248,26 @@ const useStyles = makeStyles(theme => ({
     gap: 12,
     flexDirection: 'column',
   },
-  secondaryRow: {
-    flexDirection: 'row',
-    alignItems: 'stretch',
-    gap: 10,
-  },
-  secondaryButton: {
+  menuOverlay: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 15,
-    borderWidth: 1,
-    borderColor: theme.colors.secondary,
-    paddingVertical: 13,
-    paddingHorizontal: 20,
+  },
+  menuCard: {
+    position: 'absolute',
+    backgroundColor: theme.colors.white,
+    borderRadius: 12,
+    paddingVertical: 4,
+    paddingHorizontal: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 5,
+    minWidth: 180,
+  },
+  menuItem: {
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
   },
 }));
+

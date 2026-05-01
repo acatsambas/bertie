@@ -71,6 +71,10 @@ const iconType = {
     type: 'material-community',
     name: 'information-outline',
   },
+  dotsHorizontal: {
+    type: 'material-community',
+    name: 'dots-horizontal',
+  },
 };
 
 export default Icon;
