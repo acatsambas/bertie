@@ -240,7 +240,7 @@ const useStyles = makeStyles(theme => ({
   titleRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    alignItems: 'center',
   },
   titleText: {
     flex: 1,
