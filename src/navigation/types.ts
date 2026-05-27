@@ -56,10 +56,6 @@ export type DiscoverNavigatorParamList = {
   [Routes.DISCOVER_03_BOOKSHOP]: {
     shop: Shop;
   };
-  [Routes.DISCOVER_04_CHAT]: {
-    conversationId: string;
-    recipientName: string;
-  };
 };
 
 export type SettingsNavigatorParamList = {

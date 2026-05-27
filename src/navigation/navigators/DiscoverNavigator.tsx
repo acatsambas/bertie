@@ -6,7 +6,7 @@ import type { DiscoverNavigatorParamList } from 'navigation/types';
 
 import AddressScreen from 'screens/AddressScreen';
 import BookshopScreen from 'screens/BookshopScreen';
-import { ChatScreen } from 'screens/ChatScreen';
+
 import DiscoverScreen from 'screens/DiscoverScreen';
 
 export const DiscoverStack =
@@ -29,9 +29,6 @@ export const DiscoverNavigator = () => (
       name={DISCOVER_ROUTES.DISCOVER_03_BOOKSHOP}
       component={BookshopScreen}
     />
-    <DiscoverStack.Screen
-      name={DISCOVER_ROUTES.DISCOVER_04_CHAT}
-      component={ChatScreen}
-    />
+
   </DiscoverStack.Navigator>
 );
