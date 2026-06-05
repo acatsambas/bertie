@@ -150,7 +150,9 @@ export const BookScreen = () => {
             </TouchableOpacity>
           </View>
         </View>
-        <RenderHtml source={{ html: description }} contentWidth={0} />
+        {description != null && (
+          <RenderHtml source={{ html: description }} contentWidth={0} />
+        )}
       </ScrollView>
       <View style={styles.buttonContainer}>
         {!isBookInLibrary ? (
