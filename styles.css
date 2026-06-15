@@ -1,21 +1,25 @@
 body,
 html {
   height: 100%;
-  margin: 200;
+  margin: 0;
   background-color: #fdf9f6;
   display: flex;
   flex-direction: column;
   align-items: center;
   font-family: 'Goudy Bookletter 1911', serif;
 }
+
 .header_text {
   font-size: 64px;
   padding-top: 10px;
   padding-bottom: 10px;
 }
+
 .body_text {
-  font-size: 32px; /* Adjust if needed */
-  font-family: 'Commissioner';
+  text-align: center;
+  margin-top: 20px;
+  font-family: 'Commissioner', sans-serif;
+  font-size: 18px;
 }
 
 .screenshots {
@@ -47,12 +51,25 @@ html {
 
 .download_link:hover,
 .waitlist_link:hover {
-  background-color: #6e78d7;
+  background-color: #565eaf;
 }
 
-.body_text {
-  text-align: center;
+.contact-btn {
+  display: inline-block;
   margin-top: 20px;
+  padding: 10px 20px;
   font-family: 'Commissioner', sans-serif;
-  font-size: 18px;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  color: #ffffff;
+  background-color: #6e78d7;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.contact-btn:hover {
+  background-color: #565eaf;
 }

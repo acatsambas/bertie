@@ -1,7 +1,35 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
-    <title>Bertie</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bertie — Track Your Reading &amp; Order from Independent Bookshops</title>
+    <meta
+      name="description"
+      content="Bertie helps readers track their reading, discover books, and order from independent bookshops. Download on iOS or join the Android waitlist."
+    />
+    <link rel="canonical" href="https://bertieapp.com/about.html" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Bertie — Track Your Reading &amp; Order from Independent Bookshops" />
+    <meta
+      property="og:description"
+      content="Bertie helps readers track their reading, discover books, and order from independent bookshops. Download on iOS or join the Android waitlist."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://bertieapp.com/about.html" />
+    <meta property="og:image" content="https://bertieapp.com/bertie_logo.png" />
+    <meta property="og:site_name" content="Bertie" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Bertie — Track Your Reading &amp; Order from Independent Bookshops" />
+    <meta
+      name="twitter:description"
+      content="Bertie helps readers track their reading, discover books, and order from independent bookshops. Download on iOS or join the Android waitlist."
+    />
+    <meta name="twitter:image" content="https://bertieapp.com/bertie_logo.png" />
+
     <link rel="icon" type="image/png" href="/bertie_logo.png" />
     <link
       href="https://fonts.googleapis.com/css2?family=Goudy+Bookletter+1911&display=swap"
@@ -12,6 +40,25 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Bertie",
+      "description": "Bertie helps readers track their reading, discover books, and order from independent bookshops.",
+      "applicationCategory": "LifestyleApplication",
+      "operatingSystem": "iOS",
+      "url": "https://bertieapp.com",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
     <script>
       window.va =
         window.va ||
@@ -22,24 +69,28 @@
     <script defer src="/_vercel/insights/script.js"></script>
   </head>
   <body>
-    <div class="header_text">Bertie</div>
-    <div class="body_text">
-      <div class="description">
+    <header>
+      <h1 class="header_text">Bertie</h1>
+    </header>
+
+    <main class="body_text">
+      <p class="description">
         Bertie helps readers track their reading, discover books, and order from
         independent bookshops.
-      </div>
+      </p>
       <br />
 
       <div class="screenshots">
-        <img src="screenshots/My_list.jpeg" alt="Reading list" />
-        <img src="screenshots/Download.jpeg" alt="Discover" />
-        <img src="screenshots/Order.jpeg" alt="Order" />
+        <img src="screenshots/My_list.jpeg" alt="Bertie reading list screen" />
+        <img src="screenshots/Download.jpeg" alt="Bertie book discovery screen" />
+        <img src="screenshots/Order.jpeg" alt="Bertie order from independent bookshops screen" />
       </div>
       <br />
 
       <a
         href="https://apps.apple.com/us/app/bertie/id6738319713"
         target="_blank"
+        rel="noopener noreferrer"
         class="download_link"
         >Download on the Apple Store</a
       >
@@ -53,9 +104,10 @@
       <a
         href="https://logos.substack.com/p/say-hello-to-bertie"
         target="_blank"
+        rel="noopener noreferrer"
         class="download_link"
         >About Bertie</a
       >
-    </div>
+    </main>
   </body>
 </html>

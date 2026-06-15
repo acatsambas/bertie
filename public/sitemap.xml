@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://bertieapp.com/about.html</loc>
+    <lastmod>2026-06-15</lastmod>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://bertieapp.com/support.html</loc>
+    <lastmod>2026-06-15</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://bertieapp.com/data_request.html</loc>
+    <lastmod>2026-06-15</lastmod>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://bertieapp.com/privacypolicy.html</loc>
+    <lastmod>2026-06-15</lastmod>
+    <priority>0.3</priority>
+  </url>
+</urlset>
