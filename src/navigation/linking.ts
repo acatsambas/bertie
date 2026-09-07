@@ -37,7 +37,10 @@ export const linking: LinkingOptions<RootNavigatorParamList> = {
           [APP_ROUTES.APP_01_HOME]: {
             screens: {
               [HOME_ROUTES.HOME_01_LIBRARY]: {
-                screens: toLinkingScreens(LIBRARY_ROUTES),
+                screens: {
+                  ...toLinkingScreens(LIBRARY_ROUTES),
+                  [LIBRARY_ROUTES.LIBRARY_02_BOOK]: 'book/:bookId',
+                },
               },
               [HOME_ROUTES.HOME_02_DISCOVER]: {
                 screens: toLinkingScreens(DISCOVER_ROUTES),

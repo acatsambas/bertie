@@ -38,7 +38,7 @@ export const useLibrary = (user: User) => {
 
   return {
     books,
-    handleOnPressBook: book => navigate(Routes.LIBRARY_02_BOOK, { book }),
+    handleOnPressBook: book => navigate(Routes.LIBRARY_02_BOOK, { bookId: book.id }),
     handleAddBook: () => navigate(Routes.LIBRARY_03_SEARCH),
     handleOnRead: async (bookId: string, isRead: boolean) =>
       toggleRead({ bookId, isRead }),

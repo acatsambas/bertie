@@ -27,7 +27,7 @@ export type HomeNavigatorParamList = {
 export type LibraryNavigatorParamList = {
   [Routes.LIBRARY_01_LIBRARY]: undefined;
   [Routes.LIBRARY_02_BOOK]: {
-    book: BookResult;
+    bookId: string;
   };
   [Routes.LIBRARY_03_SEARCH]: undefined;
 };

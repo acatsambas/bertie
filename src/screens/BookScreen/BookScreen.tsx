@@ -2,7 +2,13 @@ import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { makeStyles, useTheme } from '@rneui/themed';
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Modal, ScrollView, TouchableOpacity, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Modal,
+  ScrollView,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import RenderHtml from 'react-native-render-html';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -21,6 +27,7 @@ import {
 } from 'api/app/book';
 import { RatingValue } from 'api/app/book/mutations/useRateBookMutation';
 import { bookDescription } from 'api/google-books/bookDescription';
+import { useBookQuery } from 'api/google-books/useBookQuery';
 
 import { useAuthGate } from 'hooks/useAuthGate';
 
@@ -42,6 +49,7 @@ const computeMedian = (values: RatingValue[]): RatingValue | null => {
 export const BookScreen = () => {
   const { params } =
     useRoute<RouteProp<NavigationType, typeof Routes.LIBRARY_02_BOOK>>();
+  const { data: book, isLoading: isBookLoading } = useBookQuery(params.bookId);
   const styles = useStyles();
   const { theme } = useTheme();
   const { t } = useTranslation();
@@ -49,8 +57,8 @@ export const BookScreen = () => {
   const { data: userBooksIds = [] } = useUserBooksIdsQuery();
   const { mutate: addBookToLibrary } = useAddBookToLibraryMutation();
   const { mutate: rateBook } = useRateBookMutation();
-  const { data: ratings = [] } = useBookRatingsQuery(params.book.id);
-  const { data: userRating = null } = useUserBookRatingQuery(params.book.id);
+  const { data: ratings = [] } = useBookRatingsQuery(params.bookId);
+  const { data: userRating = null } = useUserBookRatingQuery(params.bookId);
   const { isGuest, requireAuth, gateVisible, gateMessage, dismissGate, confirmGate } = useAuthGate();
   const [description, setDescription] = useState<string | null>(null);
   const [ratingSheetVisible, setRatingSheetVisible] = useState(false);
@@ -58,7 +66,7 @@ export const BookScreen = () => {
   const [menuPosition, setMenuPosition] = useState({ top: 0, right: 0 });
   const menuAnchorRef = useRef<View>(null);
 
-  const isBookInLibrary = userBooksIds.some(({ id }) => id === params.book.id);
+  const isBookInLibrary = userBooksIds.some(({ id }) => id === params.bookId);
   const medianRating = computeMedian(ratings);
 
   const medianKeys: Record<RatingValue, string> = {
@@ -70,33 +78,36 @@ export const BookScreen = () => {
 
   useEffect(() => {
     const fetchDescription = async () => {
-      const desc = await bookDescription(params.book.id);
+      const desc = await bookDescription(params.bookId);
       setDescription(desc);
     };
 
     void fetchDescription();
-  }, [params.book.id]);
+  }, [params.bookId]);
 
   const handleAddOrRemove = () => {
+    if (!book) return;
     // Gate: guests can't add more than 3 books
     if (!isBookInLibrary && isGuest && userBooksIds.length >= 3) {
       requireAuth(t(translations.authGate.bookLimit));
       return;
     }
-    addBookToLibrary({ book: params.book, isUserBook: isBookInLibrary });
+    addBookToLibrary({ book, isUserBook: isBookInLibrary });
   };
 
   const handleOrderNow = () => {
+    if (!book) return;
     // Gate: guests can't order
     if (requireAuth()) return;
     navigation.navigate(Routes.HOME_03_ORDER, {
       screen: Routes.ORDER_00_ADD_BOOKS,
-      params: { initialBook: params.book },
+      params: { initialBook: book },
     });
   };
 
   const handleRate = (rating: RatingValue) => {
-    rateBook({ bookId: params.book.id, rating, book: params.book });
+    if (!book) return;
+    rateBook({ bookId: params.bookId, rating, book });
     setTimeout(() => setRatingSheetVisible(false), 500);
   };
 
@@ -117,6 +128,19 @@ export const BookScreen = () => {
     handleAddOrRemove();
   };
 
+  if (isBookLoading || !book) {
+    return (
+      <SafeAreaView style={styles.safeAreaView}>
+        <View style={styles.backHeader}>
+          <Icon icon="back" onPress={() => navigation.goBack()} />
+        </View>
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={theme.colors.primary} />
+        </View>
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <View style={styles.backHeader}>
@@ -128,10 +152,10 @@ export const BookScreen = () => {
       >
         <View style={styles.titleRow}>
           <View style={styles.titleText}>
-            <Text kind="bigHeader" text={params.book.volumeInfo?.title} />
+            <Text kind="bigHeader" text={book.volumeInfo?.title} />
             <Text
               kind="paragraph"
-              text={params.book.volumeInfo?.authors?.join?.(', ')}
+              text={book.volumeInfo?.authors?.join?.(', ')}
             />
             {medianRating != null && (
               <Text
@@ -239,6 +263,11 @@ const useStyles = makeStyles(theme => ({
     paddingBottom: 5,
   },
   container: { paddingTop: 10, gap: 20 },
+  loadingContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   titleRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',

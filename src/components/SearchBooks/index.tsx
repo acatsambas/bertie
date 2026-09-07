@@ -36,7 +36,7 @@ const SearchBooks = ({ books }: SearchBookProps) => {
 
   const handlePressBook = (book: BookResult) => {
     navigate(Routes.LIBRARY_02_BOOK, {
-      book,
+      bookId: book.id,
     });
   };
 
