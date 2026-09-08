@@ -25,6 +25,16 @@ import type { RootNavigatorParamList } from './types';
 
 const RootStack = createNativeStackNavigator<RootNavigatorParamList>();
 
+// Capture the book deep link URL at module load time, before React Navigation
+// overwrites window.location.pathname when it can't match an auth screen.
+let pendingBookId: string | null = null;
+if (Platform.OS === 'web') {
+  const match = window.location.pathname.match(/^\/book\/(.+)$/);
+  if (match) {
+    pendingBookId = match[1];
+  }
+}
+
 const RootNavigator = () => {
   const { user } = useContext(AuthContext);
   const { showInstallPrompt } = usePWA();
@@ -42,31 +52,29 @@ const RootNavigator = () => {
       }, 500);
 
       // Handle pending book deep link on web
-      if (Platform.OS === 'web') {
-        const match = window.location.pathname.match(/^\/book\/(.+)$/);
-        if (match) {
-          const bookId = match[1];
-          // Delay to let the app navigator mount before navigating
-          setTimeout(() => {
-            if (navigationRef.isReady()) {
-              navigationRef.dispatch(
-                CommonActions.navigate({
-                  name: ROOT_ROUTES.ROOT_02_APP,
+      if (pendingBookId) {
+        const bookId = pendingBookId;
+        pendingBookId = null; // Clear so it doesn't re-trigger on re-login
+        // Delay to let the app navigator mount before navigating
+        setTimeout(() => {
+          if (navigationRef.isReady()) {
+            navigationRef.dispatch(
+              CommonActions.navigate({
+                name: ROOT_ROUTES.ROOT_02_APP,
+                params: {
+                  screen: APP_ROUTES.APP_01_HOME,
                   params: {
-                    screen: APP_ROUTES.APP_01_HOME,
+                    screen: HOME_ROUTES.HOME_01_LIBRARY,
                     params: {
-                      screen: HOME_ROUTES.HOME_01_LIBRARY,
-                      params: {
-                        screen: LIBRARY_ROUTES.LIBRARY_02_BOOK,
-                        params: { bookId },
-                      },
+                      screen: LIBRARY_ROUTES.LIBRARY_02_BOOK,
+                      params: { bookId },
                     },
                   },
-                }),
-              );
-            }
-          }, 600);
-        }
+                },
+              }),
+            );
+          }
+        }, 600);
       }
     }
 
