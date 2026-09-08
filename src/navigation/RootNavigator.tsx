@@ -40,10 +40,6 @@ const RootNavigator = () => {
   const { showInstallPrompt } = usePWA();
   const previousUserRef = useRef(user);
 
-  if (authLoading) {
-    return null;
-  }
-
   // Trigger PWA prompt when user becomes authenticated (manual or auto-login)
   useEffect(() => {
     const wasLoggedOut = !previousUserRef.current;
@@ -84,6 +80,11 @@ const RootNavigator = () => {
 
     previousUserRef.current = user;
   }, [user, showInstallPrompt]);
+
+  if (authLoading) {
+    return null;
+  }
+
   return (
     <StyledNavigationContainer>
       <RootStack.Navigator
