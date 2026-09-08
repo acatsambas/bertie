@@ -4,6 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 
 import { linking } from 'navigation/linking';
+import { navigationRef } from 'navigation/navigationRef';
 
 const StyledNavigationContainer = ({ children }) => {
   const { theme } = useTheme();
@@ -12,6 +13,7 @@ const StyledNavigationContainer = ({ children }) => {
     <>
       <StatusBar style="auto" />
       <NavigationContainer
+        ref={navigationRef}
         navigationInChildEnabled
         linking={linking}
         theme={{

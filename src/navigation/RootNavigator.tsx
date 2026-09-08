@@ -1,6 +1,8 @@
+import { CommonActions } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { usePWA } from 'contexts/PWAContext';
 import { useContext, useEffect, useRef } from 'react';
+import { Platform } from 'react-native';
 
 import { AuthContext } from 'api/auth/AuthProvider';
 
@@ -12,7 +14,13 @@ import StyledNavigationContainer from 'styles/StyledNavigationContainer';
 
 import AppNavigator from './navigators/AppNavigator';
 import AuthNavigator from './navigators/AuthNavigator';
-import { ROOT_ROUTES } from './routes';
+import { navigationRef } from './navigationRef';
+import {
+  APP_ROUTES,
+  HOME_ROUTES,
+  LIBRARY_ROUTES,
+  ROOT_ROUTES,
+} from './routes';
 import type { RootNavigatorParamList } from './types';
 
 const RootStack = createNativeStackNavigator<RootNavigatorParamList>();
@@ -32,6 +40,34 @@ const RootNavigator = () => {
       setTimeout(() => {
         showInstallPrompt();
       }, 500);
+
+      // Handle pending book deep link on web
+      if (Platform.OS === 'web') {
+        const match = window.location.pathname.match(/^\/book\/(.+)$/);
+        if (match) {
+          const bookId = match[1];
+          // Delay to let the app navigator mount before navigating
+          setTimeout(() => {
+            if (navigationRef.isReady()) {
+              navigationRef.dispatch(
+                CommonActions.navigate({
+                  name: ROOT_ROUTES.ROOT_02_APP,
+                  params: {
+                    screen: APP_ROUTES.APP_01_HOME,
+                    params: {
+                      screen: HOME_ROUTES.HOME_01_LIBRARY,
+                      params: {
+                        screen: LIBRARY_ROUTES.LIBRARY_02_BOOK,
+                        params: { bookId },
+                      },
+                    },
+                  },
+                }),
+              );
+            }
+          }, 600);
+        }
+      }
     }
 
     previousUserRef.current = user;
