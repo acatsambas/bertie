@@ -36,9 +36,13 @@ if (Platform.OS === 'web') {
 }
 
 const RootNavigator = () => {
-  const { user } = useContext(AuthContext);
+  const { user, authLoading } = useContext(AuthContext);
   const { showInstallPrompt } = usePWA();
   const previousUserRef = useRef(user);
+
+  if (authLoading) {
+    return null;
+  }
 
   // Trigger PWA prompt when user becomes authenticated (manual or auto-login)
   useEffect(() => {

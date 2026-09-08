@@ -26,6 +26,7 @@ GoogleSignin.configure({
 
 export const AuthContext = createContext<{
   user: User | null;
+  authLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (
     email: string,
@@ -52,10 +53,12 @@ export interface AuthProviderProps {
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
+  const [authLoading, setAuthLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, authUser => {
       setUser(authUser);
+      setAuthLoading(false);
     });
 
     return unsubscribe;
@@ -64,6 +67,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const value = useMemo(
     () => ({
       user,
+      authLoading,
       login: async (email: string, password: string) => {
         await signInWithEmailAndPassword(auth, email, password);
       },
@@ -190,7 +194,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         await createUser({});
       },
     }),
-    [user],
+    [user, authLoading],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
