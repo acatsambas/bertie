@@ -1,11 +1,10 @@
-import { CommonActions } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { usePWA } from 'contexts/PWAContext';
 import { useContext, useEffect, useRef } from 'react';
-import { Platform } from 'react-native';
 
 import { AuthContext } from 'api/auth/AuthProvider';
 
+import BookScreen from 'screens/BookScreen';
 import DataRequestScreen from 'screens/DataRequestScreen';
 import PrivacyPolicyScreen from 'screens/PrivacyPolicyScreen';
 import SupportScreen from 'screens/SupportScreen';
@@ -14,26 +13,10 @@ import StyledNavigationContainer from 'styles/StyledNavigationContainer';
 
 import AppNavigator from './navigators/AppNavigator';
 import AuthNavigator from './navigators/AuthNavigator';
-import { navigationRef } from './navigationRef';
-import {
-  APP_ROUTES,
-  HOME_ROUTES,
-  LIBRARY_ROUTES,
-  ROOT_ROUTES,
-} from './routes';
+import { ROOT_ROUTES } from './routes';
 import type { RootNavigatorParamList } from './types';
 
 const RootStack = createNativeStackNavigator<RootNavigatorParamList>();
-
-// Capture the book deep link URL at module load time, before React Navigation
-// overwrites window.location.pathname when it can't match an auth screen.
-let pendingBookId: string | null = null;
-if (Platform.OS === 'web') {
-  const match = window.location.pathname.match(/^\/book\/(.+)$/);
-  if (match) {
-    pendingBookId = match[1];
-  }
-}
 
 const RootNavigator = () => {
   const { user, authLoading } = useContext(AuthContext);
@@ -50,32 +33,6 @@ const RootNavigator = () => {
       setTimeout(() => {
         showInstallPrompt();
       }, 500);
-
-      // Handle pending book deep link on web
-      if (pendingBookId) {
-        const bookId = pendingBookId;
-        pendingBookId = null; // Clear so it doesn't re-trigger on re-login
-        // Delay to let the app navigator mount before navigating
-        setTimeout(() => {
-          if (navigationRef.isReady()) {
-            navigationRef.dispatch(
-              CommonActions.navigate({
-                name: ROOT_ROUTES.ROOT_02_APP,
-                params: {
-                  screen: APP_ROUTES.APP_01_HOME,
-                  params: {
-                    screen: HOME_ROUTES.HOME_01_LIBRARY,
-                    params: {
-                      screen: LIBRARY_ROUTES.LIBRARY_02_BOOK,
-                      params: { bookId },
-                    },
-                  },
-                },
-              }),
-            );
-          }
-        }, 600);
-      }
     }
 
     previousUserRef.current = user;
@@ -107,7 +64,12 @@ const RootNavigator = () => {
             options={{ title: 'Auth' }}
           />
         )}
-        {/* Public routes defined last so they don't interfere with default routing */}
+        {/* Public routes — always accessible regardless of auth state */}
+        <RootStack.Screen
+          name={ROOT_ROUTES.ROOT_06_BOOK}
+          component={BookScreen}
+          options={{ title: 'Book' }}
+        />
         <RootStack.Screen
           name={ROOT_ROUTES.ROOT_03_DATA_REQUEST}
           component={DataRequestScreen}

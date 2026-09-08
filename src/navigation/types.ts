@@ -71,6 +71,7 @@ export type RootNavigatorParamList = {
   [Routes.ROOT_03_DATA_REQUEST]: undefined;
   [Routes.ROOT_04_SUPPORT]: undefined;
   [Routes.ROOT_05_PRIVACY_POLICY]: undefined;
+  [Routes.ROOT_06_BOOK]: { bookId: string };
 };
 
 export type NavigationType = HomeNavigatorParamList &

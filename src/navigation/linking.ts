@@ -37,10 +37,7 @@ export const linking: LinkingOptions<RootNavigatorParamList> = {
           [APP_ROUTES.APP_01_HOME]: {
             screens: {
               [HOME_ROUTES.HOME_01_LIBRARY]: {
-                screens: {
-                  ...toLinkingScreens(LIBRARY_ROUTES),
-                  [LIBRARY_ROUTES.LIBRARY_02_BOOK]: 'book/:bookId',
-                },
+                screens: toLinkingScreens(LIBRARY_ROUTES),
               },
               [HOME_ROUTES.HOME_02_DISCOVER]: {
                 screens: toLinkingScreens(DISCOVER_ROUTES),
@@ -58,6 +55,7 @@ export const linking: LinkingOptions<RootNavigatorParamList> = {
       [ROOT_ROUTES.ROOT_03_DATA_REQUEST]: ROOT_ROUTES.ROOT_03_DATA_REQUEST,
       [ROOT_ROUTES.ROOT_04_SUPPORT]: ROOT_ROUTES.ROOT_04_SUPPORT,
       [ROOT_ROUTES.ROOT_05_PRIVACY_POLICY]: ROOT_ROUTES.ROOT_05_PRIVACY_POLICY,
+      [ROOT_ROUTES.ROOT_06_BOOK]: 'book/:bookId',
     },
   },
   enabled: Platform.OS === 'web',

@@ -52,6 +52,7 @@ export const ROOT_ROUTES = {
   ROOT_03_DATA_REQUEST: 'data_request',
   ROOT_04_SUPPORT: 'support',
   ROOT_05_PRIVACY_POLICY: 'privacypolicy',
+  ROOT_06_BOOK: 'root-book',
 } as const;
 
 export const Routes = {

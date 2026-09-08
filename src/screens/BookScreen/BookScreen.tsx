@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
   Modal,
+  Platform,
   ScrollView,
   TouchableOpacity,
   View,
@@ -48,7 +49,7 @@ const computeMedian = (values: RatingValue[]): RatingValue | null => {
 
 export const BookScreen = () => {
   const { params } =
-    useRoute<RouteProp<NavigationType, typeof Routes.LIBRARY_02_BOOK>>();
+    useRoute<RouteProp<{ route: { bookId: string } }, 'route'>>();
   const { data: book, isLoading: isBookLoading } = useBookQuery(params.bookId);
   const styles = useStyles();
   const { theme } = useTheme();
@@ -84,6 +85,18 @@ export const BookScreen = () => {
 
     void fetchDescription();
   }, [params.bookId]);
+
+  // Update browser tab title when book data loads
+  useEffect(() => {
+    if (book?.volumeInfo?.title && Platform.OS === 'web') {
+      document.title = `${book.volumeInfo.title} — Bertie`;
+    }
+    return () => {
+      if (Platform.OS === 'web') {
+        document.title = 'Bertie';
+      }
+    };
+  }, [book?.volumeInfo?.title]);
 
   const handleAddOrRemove = () => {
     if (!book) return;
