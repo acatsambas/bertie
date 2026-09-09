@@ -2,6 +2,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { deleteDoc, doc, setDoc } from 'firebase/firestore';
 
 import { auth, db } from 'api/firebase';
+import { useGuest } from 'api/guest/GuestProvider';
+import { setGuestFavouriteShop } from 'api/guest/guestStore';
 
 interface ToggleFavouriteShopParams {
   shopId: string;
@@ -10,9 +12,15 @@ interface ToggleFavouriteShopParams {
 
 export const useToggleFavouriteShopMutation = () => {
   const queryClient = useQueryClient();
+  const { isGuest } = useGuest();
 
   return useMutation({
     mutationFn: async ({ shopId, isFavourite }: ToggleFavouriteShopParams) => {
+      if (isGuest) {
+        await setGuestFavouriteShop(shopId, isFavourite);
+        return { shopId, isFavourite: !isFavourite };
+      }
+
       const userId = auth.currentUser?.uid;
       if (!userId) throw new Error('User not authenticated');
 

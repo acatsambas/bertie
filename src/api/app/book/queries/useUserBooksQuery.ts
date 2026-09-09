@@ -12,6 +12,8 @@ import {
 
 import { UserBook } from 'api/app/types';
 import { auth, db } from 'api/firebase';
+import { useGuest } from 'api/guest/GuestProvider';
+import { readGuestData } from 'api/guest/guestStore';
 import { BookResult } from 'api/google-books/search';
 
 const SNAPSHOT_LENGTH = 30;
@@ -24,9 +26,26 @@ interface QueryResult {
 export const useUserBooksQuery = ({
   withRefs,
 }: { withRefs?: boolean } = {}) => {
+  const { isGuest } = useGuest();
+
   return useInfiniteQuery<QueryResult>({
-    queryKey: ['userBooks', withRefs],
+    queryKey: ['userBooks', withRefs, isGuest],
     queryFn: async ({ pageParam }) => {
+      if (isGuest) {
+        // A guest is capped at three books, so there is nothing to paginate
+        // and the book payload is already stored alongside the entry — no
+        // `bookRef` hydration needed.
+        const { books } = await readGuestData();
+        return {
+          books: Object.entries(books).map(([id, { book, isRead }]) => ({
+            id,
+            isRead,
+            ...book,
+          })) as QueryResult['books'],
+          lastDoc: null,
+        };
+      }
+
       const userId = auth.currentUser?.uid;
       if (!userId) return { books: [], lastDoc: null };
 

@@ -2,9 +2,12 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { doc, updateDoc } from 'firebase/firestore';
 
 import { auth, db } from 'api/firebase';
+import { useGuest } from 'api/guest/GuestProvider';
+import { setGuestBookRead } from 'api/guest/guestStore';
 
 export const useToggleBookReadMutation = () => {
   const queryClient = useQueryClient();
+  const { isGuest } = useGuest();
   const userId = auth.currentUser?.uid;
 
   return useMutation({
@@ -15,6 +18,11 @@ export const useToggleBookReadMutation = () => {
       bookId: string;
       isRead: boolean;
     }) => {
+      if (isGuest) {
+        await setGuestBookRead(bookId, !isRead);
+        return;
+      }
+
       if (!userId) throw new Error('User not authenticated');
 
       await updateDoc(doc(db, 'users', userId, 'books', bookId), {

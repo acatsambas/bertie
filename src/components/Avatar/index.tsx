@@ -15,10 +15,10 @@ const Avatar = ({ onPress }: AvatarProps) => {
   return (
     <RNEAvatar
       title={
-        !user.photoURL &&
+        !user?.photoURL &&
         `${userData?.givenName?.charAt(0) || ''}${userData?.familyName?.charAt(0) || ''}`
       }
-      source={user.photoURL && { uri: user.photoURL }}
+      source={user?.photoURL ? { uri: user.photoURL } : undefined}
       rounded
       size={44}
       containerStyle={{ backgroundColor: '#6E78D7' }}

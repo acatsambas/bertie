@@ -4,6 +4,7 @@ import { PWAProvider } from 'contexts/PWAContext';
 import { useEffect, useState } from 'react';
 
 import { AuthProvider } from 'api/auth/AuthProvider';
+import { GuestProvider } from 'api/guest/GuestProvider';
 import { initFirebase } from 'api/firebase';
 
 import RootNavigator from 'navigation/RootNavigator';
@@ -44,7 +45,9 @@ const App = () => {
         <PWAProvider>
           <FontsProvider>
             <QueryClientProvider client={queryClient}>
-              <RootNavigator />
+              <GuestProvider>
+                <RootNavigator />
+              </GuestProvider>
             </QueryClientProvider>
           </FontsProvider>
         </PWAProvider>

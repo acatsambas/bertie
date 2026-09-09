@@ -6,7 +6,6 @@ import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
   sendPasswordResetEmail,
-  signInAnonymously,
   signInWithCredential,
   signInWithEmailAndPassword,
   signOut,
@@ -44,7 +43,6 @@ export const AuthContext = createContext<{
   forgot: (email: string) => Promise<void>;
   googleLogin: () => Promise<void>;
   appleLogin: () => Promise<void>;
-  anonymousLogin: () => Promise<void>;
 }>(undefined as any);
 
 export interface AuthProviderProps {
@@ -188,10 +186,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             familyName: fullName?.familyName,
           });
         }
-      },
-      anonymousLogin: async () => {
-        await signInAnonymously(auth);
-        await createUser({});
       },
     }),
     [user, authLoading],

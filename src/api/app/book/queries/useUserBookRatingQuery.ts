@@ -2,14 +2,21 @@ import { useQuery } from '@tanstack/react-query';
 import { doc, getDoc } from 'firebase/firestore';
 
 import { auth, db } from 'api/firebase';
+import { useGuest } from 'api/guest/GuestProvider';
+import { readGuestData } from 'api/guest/guestStore';
 import { RatingValue } from 'api/app/book/mutations/useRateBookMutation';
 
 export const useUserBookRatingQuery = (bookId: string) => {
+    const { isGuest } = useGuest();
     const userId = auth.currentUser?.uid;
 
     return useQuery<RatingValue | null>({
-        queryKey: ['userBookRating', bookId],
+        queryKey: ['userBookRating', bookId, isGuest],
         queryFn: async () => {
+            if (isGuest) {
+                return (await readGuestData()).ratings[bookId] ?? null;
+            }
+
             if (!userId) return null;
 
             const ratingRef = doc(db, 'ratings', `${bookId}_${userId}`);
@@ -19,7 +26,7 @@ export const useUserBookRatingQuery = (bookId: string) => {
 
             return ratingDoc.data().rating as RatingValue;
         },
-        enabled: !!bookId && !!userId,
+        enabled: !!bookId && (isGuest || !!userId),
         staleTime: 5 * 60 * 1000,
         gcTime: 30 * 60 * 1000,
     });

@@ -3,11 +3,20 @@ import { collection, getDocs } from 'firebase/firestore';
 
 import { UserBookId } from 'api/app/types';
 import { auth, db } from 'api/firebase';
+import { useGuest } from 'api/guest/GuestProvider';
+import { readGuestData } from 'api/guest/guestStore';
 
 export const useUserBooksIdsQuery = () => {
+  const { isGuest } = useGuest();
+
   return useQuery<UserBookId[]>({
-    queryKey: ['userBooksIds'],
+    queryKey: ['userBooksIds', isGuest],
     queryFn: async () => {
+      if (isGuest) {
+        const { books } = await readGuestData();
+        return Object.keys(books).map(id => ({ id }));
+      }
+
       const userId = auth.currentUser?.uid;
       if (!userId) return [];
 

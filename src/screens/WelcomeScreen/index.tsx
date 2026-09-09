@@ -1,7 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { makeStyles } from '@rneui/themed';
-import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Linking, Platform, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -13,7 +12,7 @@ import Illustration from 'components/Illustration';
 import Logo from 'components/Logo';
 import Text from 'components/Text';
 
-import { AuthContext } from 'api/auth/AuthProvider';
+import { useGuest } from 'api/guest/GuestProvider';
 
 import { Routes } from 'navigation/routes';
 import type { NavigationType } from 'navigation/types';
@@ -27,16 +26,12 @@ const WelcomeScreen = () => {
   const styles = useStyles();
   const { navigate } = useNavigation<WelcomePageProps>();
   const { t } = useTranslation();
-  const { anonymousLogin } = useContext(AuthContext);
+  const { enterGuestMode } = useGuest();
 
   const handleLogin = () => navigate(Routes.AUTH_02_LOGIN);
 
   const handleExplore = async () => {
-    try {
-      await anonymousLogin();
-    } catch (error) {
-      console.error('Anonymous login failed:', error);
-    }
+    await enterGuestMode();
   };
 
   const handlePrivacy = async () => {

@@ -2,12 +2,15 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 import { auth, db } from 'api/firebase';
+import { useGuest } from 'api/guest/GuestProvider';
+import { setGuestRating } from 'api/guest/guestStore';
 import { BookResult } from 'api/google-books/search';
 
 export type RatingValue = 1 | 2 | 3 | 4;
 
 export const useRateBookMutation = () => {
     const queryClient = useQueryClient();
+    const { isGuest } = useGuest();
     const userId = auth.currentUser?.uid;
 
     return useMutation({
@@ -20,6 +23,13 @@ export const useRateBookMutation = () => {
             rating: RatingValue;
             book?: BookResult;
         }) => {
+            if (isGuest) {
+                // Kept local until they have an account: a throwaway session
+                // should not move the median every visitor sees.
+                await setGuestRating(bookId, rating);
+                return;
+            }
+
             if (!userId) throw new Error('User not authenticated');
 
             // Ensure the book exists in the books collection

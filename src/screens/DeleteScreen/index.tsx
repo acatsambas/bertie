@@ -34,7 +34,7 @@ const DeleteScreen = () => {
   };
 
   const handleDone = () => {
-    user.delete();
+    void user?.delete();
   };
 
   return (

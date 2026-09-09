@@ -3,10 +3,13 @@ import { deleteDoc, doc, getDoc, setDoc } from 'firebase/firestore';
 
 import { UserBookId } from 'api/app/types';
 import { auth, db } from 'api/firebase';
+import { useGuest } from 'api/guest/GuestProvider';
+import { setGuestBook } from 'api/guest/guestStore';
 import { BookResult } from 'api/google-books/search';
 
 export const useAddBookToLibraryMutation = () => {
   const queryClient = useQueryClient();
+  const { isGuest } = useGuest();
   const userId = auth.currentUser?.uid;
 
   return useMutation({
@@ -17,6 +20,11 @@ export const useAddBookToLibraryMutation = () => {
       book: BookResult;
       isUserBook: boolean;
     }) => {
+      if (isGuest) {
+        await setGuestBook(book, isUserBook);
+        return;
+      }
+
       if (!userId) throw new Error('User not authenticated');
 
       const bookRef = doc(db, 'books', book.id);

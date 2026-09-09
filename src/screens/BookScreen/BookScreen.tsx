@@ -147,7 +147,8 @@ export const BookScreen = () => {
   // through is gone too. Send them into their library instead, and hide the
   // arrow entirely while there is still no app to go back to.
   const canGoBack = navigation.canGoBack();
-  const showBack = canGoBack || !!user;
+  const inApp = !!user || isGuest;
+  const showBack = canGoBack || inApp;
 
   const handleBack = () => {
     if (canGoBack) {
@@ -300,7 +301,7 @@ export const BookScreen = () => {
       {/* This screen sits outside the tab navigator, so it renders the tab
           bar itself — but only for signed-in users, since a logged-out
           visitor arriving via a shared link has nowhere to tab to. */}
-      {user && <BottomMenu />}
+      {inApp && <BottomMenu />}
     </SafeAreaView>
   );
 };

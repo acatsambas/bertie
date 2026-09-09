@@ -3,6 +3,7 @@ import { usePWA } from 'contexts/PWAContext';
 import { useContext, useEffect, useRef } from 'react';
 
 import { AuthContext } from 'api/auth/AuthProvider';
+import { useGuest } from 'api/guest/GuestProvider';
 
 import BookScreen from 'screens/BookScreen';
 import DataRequestScreen from 'screens/DataRequestScreen';
@@ -20,6 +21,9 @@ const RootStack = createNativeStackNavigator<RootNavigatorParamList>();
 
 const RootNavigator = () => {
   const { user, authLoading } = useContext(AuthContext);
+  const { isGuest, guestLoading } = useGuest();
+  // Guests browse the app with no Firebase user at all
+  const inApp = !!user || isGuest;
   const { showInstallPrompt } = usePWA();
   const previousUserRef = useRef(user);
 
@@ -38,7 +42,7 @@ const RootNavigator = () => {
     previousUserRef.current = user;
   }, [user, showInstallPrompt]);
 
-  if (authLoading) {
+  if (authLoading || guestLoading) {
     return null;
   }
 
@@ -47,11 +51,11 @@ const RootNavigator = () => {
       <RootStack.Navigator
         id={undefined}
         initialRouteName={
-          user ? ROOT_ROUTES.ROOT_02_APP : ROOT_ROUTES.ROOT_01_AUTH
+          inApp ? ROOT_ROUTES.ROOT_02_APP : ROOT_ROUTES.ROOT_01_AUTH
         }
         screenOptions={{ headerShown: false, animation: 'none' }}
       >
-        {user ? (
+        {inApp ? (
           <RootStack.Screen
             name={ROOT_ROUTES.ROOT_02_APP}
             component={AppNavigator}

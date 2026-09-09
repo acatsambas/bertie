@@ -13,6 +13,7 @@ import Icon from 'components/Icon';
 import Text from 'components/Text';
 
 import { AuthContext } from 'api/auth/AuthProvider';
+import { useGuest } from 'api/guest/GuestProvider';
 
 import { Routes } from 'navigation/routes';
 import type { NavigationType } from 'navigation/types';
@@ -31,9 +32,15 @@ const SettingsScreen = ({ navigation }) => {
   const styles = useStyles();
 
   const { logout, user } = useContext(AuthContext);
+  const { isGuest, exitGuestMode } = useGuest();
   const queryClient = useQueryClient();
   const handleLogout = async () => {
-    await logout();
+    // A guest has no session to sign out of, just the local flag.
+    if (isGuest) {
+      await exitGuestMode();
+    } else {
+      await logout();
+    }
     queryClient.clear();
   };
 
@@ -75,7 +82,7 @@ const SettingsScreen = ({ navigation }) => {
             text={t(translations.settings.changeAddress)}
             icon="address"
           />
-          {user.providerData[0].providerId === 'password' && (
+          {user?.providerData?.[0]?.providerId === 'password' && (
             <Button
               kind="secondary"
               onPress={handlePassword}
@@ -83,12 +90,14 @@ const SettingsScreen = ({ navigation }) => {
               icon="password"
             />
           )}
-          <Button
-            kind="secondary"
-            onPress={handleDelete}
-            text={t(translations.settings.delete)}
-            icon="delete"
-          />
+          {!isGuest && (
+            <Button
+              kind="secondary"
+              onPress={handleDelete}
+              text={t(translations.settings.delete)}
+              icon="delete"
+            />
+          )}
         </View>
       </View>
       <View style={styles.bottomArea}>

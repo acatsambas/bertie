@@ -3,6 +3,7 @@ import { useContext, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { AuthContext } from 'api/auth/AuthProvider';
+import { useGuest } from 'api/guest/GuestProvider';
 
 import { Routes } from 'navigation/routes';
 
@@ -11,12 +12,12 @@ import { translations } from 'locales/translations';
 /**
  * Hook to gate features behind a real account.
  *
- * Two kinds of visitor need gating: guests (signed in anonymously via
- * "Explore without an account") and logged-out visitors, who reach the
- * public book screen through a shared /book/:bookId link.
+ * Two kinds of visitor need gating: guests, who tapped "Explore without an
+ * account" and whose data lives in local storage, and logged-out visitors,
+ * who reach the public book screen through a shared /book/:bookId link.
  *
  * Returns:
- * - `isGuest`: true if the current user is signed in anonymously
+ * - `isGuest`: true if they are exploring without an account
  * - `isLoggedOut`: true if there is no user at all
  * - `requireAuth(message?)`: shows a sign-up modal. Returns true if the
  *   user needs an account (action was blocked), false otherwise.
@@ -26,12 +27,13 @@ import { translations } from 'locales/translations';
  * - `confirmGate()`: send the visitor into the account creation flow
  */
 export const useAuthGate = () => {
-    const { user, logout } = useContext(AuthContext);
+    const { user } = useContext(AuthContext);
+    const { isGuest, exitGuestMode } = useGuest();
     const { t } = useTranslation();
     const navigation = useNavigation<any>();
 
-    const isGuest = !!user?.isAnonymous;
-    const isLoggedOut = !user;
+    // Someone browsing a shared book link is neither signed in nor a guest.
+    const isLoggedOut = !user && !isGuest;
     const needsAccount = isGuest || isLoggedOut;
 
     const [gateVisible, setGateVisible] = useState(false);
@@ -69,10 +71,11 @@ export const useAuthGate = () => {
             return;
         }
 
-        // Guests are already signed in anonymously; signing out is what drops
-        // them back into the auth flow.
-        void logout();
-    }, [isLoggedOut, logout, navigation]);
+        // Guests have no Firebase session to end — leaving guest mode is what
+        // swaps the app navigator back for the auth flow. Their local books
+        // stay put and are migrated once they finish creating an account.
+        void exitGuestMode();
+    }, [isLoggedOut, exitGuestMode, navigation]);
 
     return {
         isGuest,
