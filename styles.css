@@ -35,8 +35,7 @@ html {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.download_link,
-.waitlist_link {
+.download_link {
   display: inline-block;
   margin: 10px 0;
   padding: 10px 20px;
@@ -49,8 +48,7 @@ html {
   transition: background-color 0.3s ease;
 }
 
-.download_link:hover,
-.waitlist_link:hover {
+.download_link:hover {
   background-color: #565eaf;
 }
 
