@@ -16,6 +16,16 @@ const StyledNavigationContainer = ({ children }) => {
         ref={navigationRef}
         navigationInChildEnabled
         linking={linking}
+        // React Navigation's own web title-sync walks to the deepest focused
+        // screen and uses only *that* screen's own options.title, not any
+        // ancestor's — so titles set higher up (e.g. AppNavigator's "My list"
+        // for the whole Home tab) never actually reach the tab, and every
+        // leaf screen here (LibraryScreen, DiscoverScreen, ...) sets none of
+        // its own. Disabling it leaves the correct static "Bertie" from
+        // public/index.html in place for all of them. BookScreen is
+        // unaffected — it already sets document.title itself and restores it
+        // to 'Bertie' on unmount, independent of this setting.
+        documentTitle={{ enabled: false }}
         theme={{
           dark: false,
           colors: {
