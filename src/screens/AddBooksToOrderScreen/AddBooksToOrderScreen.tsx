@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { CheckBox, makeStyles, useTheme } from '@rneui/themed';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FlatList, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -66,7 +66,7 @@ const BookSelectItem = ({
 export const AddBooksToOrderScreen = () => {
     const styles = useStyles();
     const { t } = useTranslation();
-    const { navigate, goBack } =
+    const { navigate, replace, goBack } =
         useNavigation<
             StackNavigationProp<NavigationType, typeof Routes.ORDER_00_ADD_BOOKS>
         >();
@@ -88,12 +88,21 @@ export const AddBooksToOrderScreen = () => {
         });
     };
 
-    // If the user has no other books in their list, skip straight to bookshop picker
+    // With nothing to choose between, this screen has nothing to show, so skip
+    // to the bookshop picker. It has to `replace` rather than `navigate`:
+    // pushing would leave an empty screen in the stack that Back returns to,
+    // and leave this component mounted underneath the rest of the order flow,
+    // where a later refetch of the book list would re-run this effect and yank
+    // the user back to the picker from wherever they had got to. The ref keeps
+    // it to one attempt even before the replace unmounts us.
+    const hasSkipped = useRef(false);
+
     useEffect(() => {
-        if (!loading && !hasOtherBooks) {
-            handleNext();
-        }
-    }, [loading, hasOtherBooks]);
+        if (loading || hasOtherBooks || hasSkipped.current) return;
+
+        hasSkipped.current = true;
+        replace(Routes.ORDER_02_ORDER_SHOP, { books: selectedBooks });
+    }, [loading, hasOtherBooks, selectedBooks, replace]);
 
     return (
         <SafeAreaView edges={['left', 'right', 'top']} style={styles.safeAreaView}>
