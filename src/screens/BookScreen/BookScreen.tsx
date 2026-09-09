@@ -35,7 +35,6 @@ import { useAuthGate } from 'hooks/useAuthGate';
 
 import BottomMenu from 'navigation/navigators/components/BottomMenu';
 import { Routes } from 'navigation/routes';
-import { NavigationType } from 'navigation/types';
 
 import { translations } from 'locales/translations';
 
@@ -63,7 +62,7 @@ export const BookScreen = () => {
   const { mutate: rateBook } = useRateBookMutation();
   const { data: ratings = [] } = useBookRatingsQuery(params.bookId);
   const { data: userRating = null } = useUserBookRatingQuery(params.bookId);
-  const { isGuest, requireAuth, gateVisible, gateMessage, dismissGate, confirmGate } = useAuthGate();
+  const { isGuest, isLoggedOut, requireAuth, gateVisible, gateMessage, dismissGate, confirmGate } = useAuthGate();
   const [description, setDescription] = useState<string | null>(null);
   const [ratingSheetVisible, setRatingSheetVisible] = useState(false);
   const [menuVisible, setMenuVisible] = useState(false);
@@ -101,8 +100,15 @@ export const BookScreen = () => {
     };
   }, [book?.volumeInfo?.title]);
 
+  // Logged-out visitors arrive here through a shared link. They can read the
+  // page, but every action below writes to their library, so it needs an
+  // account. Guests are already signed in and keep their existing allowances.
+  const requireAccount = (message: string) =>
+    isLoggedOut && requireAuth(message);
+
   const handleAddOrRemove = () => {
     if (!book) return;
+    if (requireAccount(t(translations.authGate.addBook))) return;
     // Gate: guests can't add more than 3 books
     if (!isBookInLibrary && isGuest && userBooksIds.length >= 3) {
       requireAuth(t(translations.authGate.bookLimit));
@@ -113,8 +119,8 @@ export const BookScreen = () => {
 
   const handleOrderNow = () => {
     if (!book) return;
-    // Gate: guests can't order
-    if (requireAuth()) return;
+    // Gate: ordering needs a real account, for guests and logged-out alike
+    if (requireAuth(t(translations.authGate.order))) return;
     // The book screen lives at the root, outside the tab tree, so the
     // order screen has to be addressed through the full nesting path.
     navigation.navigate(Routes.ROOT_02_APP, {
@@ -131,8 +137,27 @@ export const BookScreen = () => {
 
   const handleRate = (rating: RatingValue) => {
     if (!book) return;
+    if (requireAccount(t(translations.authGate.rate))) return;
     rateBook({ bookId: params.bookId, rating, book });
     setTimeout(() => setRatingSheetVisible(false), 500);
+  };
+
+  // A visitor who arrived straight from a shared link has nothing beneath this
+  // screen to pop back to — and after signing up, the auth screen they came
+  // through is gone too. Send them into their library instead, and hide the
+  // arrow entirely while there is still no app to go back to.
+  const canGoBack = navigation.canGoBack();
+  const showBack = canGoBack || !!user;
+
+  const handleBack = () => {
+    if (canGoBack) {
+      navigation.goBack();
+      return;
+    }
+    navigation.navigate(Routes.ROOT_02_APP, {
+      screen: Routes.APP_01_HOME,
+      params: { screen: Routes.HOME_01_LIBRARY },
+    });
   };
 
   const openMenu = () => {
@@ -144,6 +169,7 @@ export const BookScreen = () => {
 
   const handleMenuRate = () => {
     setMenuVisible(false);
+    if (requireAccount(t(translations.authGate.rate))) return;
     setRatingSheetVisible(true);
   };
 
@@ -156,7 +182,7 @@ export const BookScreen = () => {
     return (
       <SafeAreaView style={styles.safeAreaView}>
         <View style={styles.backHeader}>
-          <Icon icon="back" onPress={() => navigation.goBack()} />
+          {showBack && <Icon icon="back" onPress={handleBack} />}
         </View>
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={theme.colors.primary} />
@@ -168,7 +194,7 @@ export const BookScreen = () => {
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <View style={styles.backHeader}>
-        <Icon icon="back" onPress={() => navigation.goBack()} />
+        {showBack && <Icon icon="back" onPress={handleBack} />}
       </View>
       <ScrollView
         contentContainerStyle={styles.container}

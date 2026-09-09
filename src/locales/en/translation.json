@@ -163,6 +163,9 @@
     "title": "Create an account",
     "description": "Sign up to unlock this feature.",
     "bookLimit": "You've reached the limit of 3 books. Sign up to add more!",
+    "addBook": "You need an account to save books to your list.",
+    "order": "You need an account to order books.",
+    "rate": "You need an account to rate books.",
     "signUp": "Sign up",
     "cancel": "Not now"
   }
