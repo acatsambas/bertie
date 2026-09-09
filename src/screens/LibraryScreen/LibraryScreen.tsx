@@ -115,9 +115,9 @@ const useStyles = makeStyles(theme => ({
     flex: 1,
     backgroundColor: theme.colors.white,
   },
-  container: { flex: 1, paddingHorizontal: 20 },
+  container: { flex: 1 },
   list: { flex: 1 },
-  listContainer: { paddingTop: 20, gap: 10 },
+  listContainer: { paddingTop: 20, paddingHorizontal: 20, gap: 10 },
   empty: {
     paddingTop: 20,
     textAlign: 'center',

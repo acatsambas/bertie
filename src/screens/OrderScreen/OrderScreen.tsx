@@ -43,8 +43,11 @@ const useStyles = makeStyles(theme => ({
     flex: 1,
     backgroundColor: theme.colors.white,
   },
-  container: { flex: 1, paddingHorizontal: 20 },
+  // No horizontal padding here, matching Discover: the Tab bar below spans
+  // edge to edge, and the header and each tab supply their own gutter.
+  container: { flex: 1 },
   header: {
+    paddingHorizontal: 20,
     paddingTop: 20,
     paddingBottom: 10,
   },

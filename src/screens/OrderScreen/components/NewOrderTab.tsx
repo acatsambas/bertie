@@ -93,7 +93,10 @@ export const NewOrderTab = () => {
 
 const useStyles = makeStyles(() => ({
   list: { flex: 1 },
+  // Now that the screen container carries no horizontal padding of its own
+  // (matching Discover), this list supplies its own gutter.
   container: {
+    paddingHorizontal: 20,
     paddingTop: 20,
     paddingBottom: 20,
     gap: 20,

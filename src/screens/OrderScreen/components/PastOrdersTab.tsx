@@ -97,7 +97,12 @@ export const PastOrdersTab = () => {
 
 const useStyles = makeStyles(() => ({
   list: { flex: 1 },
+  // Now that the screen container carries no horizontal padding of its own
+  // (matching Discover), this list supplies its own gutter. `centred` below
+  // already had one — it renders outside the FlatList for the loading and
+  // empty states.
   container: {
+    paddingHorizontal: 20,
     paddingTop: 20,
     paddingBottom: 20,
     gap: 12,

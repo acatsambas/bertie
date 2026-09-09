@@ -38,8 +38,12 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    // Matches the header spacing on the Discover and Order tabs, now that
-    // this sits above the tab bar instead of scrolling as a list header.
+    // Matches the header on Discover: the screen container carries no
+    // horizontal padding of its own (so the Tab bar below spans edge to
+    // edge), so this supplies its own gutter along with the top/bottom
+    // spacing it needs now that it sits fixed above the tab bar rather
+    // than scrolling as a list header.
+    paddingHorizontal: 20,
     paddingTop: 20,
     paddingBottom: 10,
   },
