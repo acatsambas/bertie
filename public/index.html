@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="%LANG_ISO_CODE%">
+  <head>
+    <meta charset="utf-8" />
+    <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>%WEB_TITLE%</title>
+
+    <!--
+      This overrides Expo's own default web/index.html template (the officially
+      supported way to do so — Expo checks public/index.html before falling
+      back to its built-in one). The default has no Open Graph or Twitter Card
+      tags at all, which is why pasting bertieapp.com into WhatsApp/iMessage/etc
+      produced no image and no description — there was nothing for the link
+      preview crawler to read. %LANG_ISO_CODE% and %WEB_TITLE% above are Expo's
+      own placeholders (from app.json's web.lang / web.name) and still get
+      substituted normally; everything below is new.
+
+      Copy matches about.html's existing Open Graph tags for consistency across
+      the site. og-image.png is the app icon's line-art book stack, recomposed
+      onto a properly-proportioned 1200x630 canvas in the app's own background
+      color — the source logo is a 5000x5000 square, which platforms crop
+      unpredictably if served as-is.
+    -->
+    <meta name="description" content="Bertie helps readers track their reading, discover books, and order from independent bookshops. Download on iOS or join the Android waitlist." />
+    <link rel="canonical" href="https://www.bertieapp.com" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Bertie — Track Your Reading &amp; Order from Independent Bookshops" />
+    <meta property="og:description" content="Bertie helps readers track their reading, discover books, and order from independent bookshops. Download on iOS or join the Android waitlist." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.bertieapp.com" />
+    <meta property="og:image" content="https://www.bertieapp.com/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="Bertie" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Bertie — Track Your Reading &amp; Order from Independent Bookshops" />
+    <meta name="twitter:description" content="Bertie helps readers track their reading, discover books, and order from independent bookshops. Download on iOS or join the Android waitlist." />
+    <meta name="twitter:image" content="https://www.bertieapp.com/og-image.png" />
+
+    <!-- The `react-native-web` recommended style reset: https://necolas.github.io/react-native-web/docs/setup/#root-element -->
+    <style id="expo-reset">
+      /* These styles make the body full-height */
+      html,
+      body {
+        height: 100%;
+      }
+      /* These styles disable body scrolling if you are using <ScrollView> */
+      body {
+        overflow: hidden;
+      }
+      /* These styles make the root element full-height */
+      #root {
+        display: flex;
+        height: 100%;
+        flex: 1;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Use static rendering with Expo Router to support running without JavaScript. -->
+    <noscript>
+      You need to enable JavaScript to run this app.
+    </noscript>
+    <!-- The root element for your Expo app. -->
+    <div id="root"></div>
+  </body>
+</html>
