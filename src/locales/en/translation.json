@@ -87,6 +87,8 @@
     "title": "My list",
     "current": "Current",
     "past": "Past",
+    "emptyCurrent": "Nothing on the go right now. Add a book to get started!",
+    "emptyPast": "No finished books yet. Tick one off your current list and it'll appear here.",
     "searchTitle": "Search for a book",
     "book": "Book",
     "add": "Add to list",

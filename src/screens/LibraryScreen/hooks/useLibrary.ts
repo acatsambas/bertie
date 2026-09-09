@@ -1,15 +1,13 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { User } from 'firebase/auth';
 import { useCallback, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
 
 import { useToggleBookReadMutation, useUserBooksQuery } from 'api/app/book';
 
 import { Routes } from 'navigation/routes';
 import { NavigationType } from 'navigation/types';
 
-import { LibraryListItem, categorizeBooks } from './utils';
+import { categorizeBooks } from './utils';
 
 interface LibraryPageProps
   extends StackNavigationProp<
@@ -17,18 +15,14 @@ interface LibraryPageProps
     typeof Routes.LIBRARY_01_LIBRARY
   > {}
 
-export const useLibrary = (user: User) => {
+export const useLibrary = () => {
   const { data, fetchNextPage, hasNextPage, isFetching } = useUserBooksQuery({
     withRefs: true,
   });
   const { mutate: toggleRead } = useToggleBookReadMutation();
-  const { t } = useTranslation();
   const { navigate } = useNavigation<LibraryPageProps>();
 
-  const books = useMemo(() => {
-    if (!data) return [];
-    return categorizeBooks(data, t);
-  }, [data, t]);
+  const { current, past } = useMemo(() => categorizeBooks(data), [data]);
 
   const fetchMoreBooks = useCallback(() => {
     if (hasNextPage && !isFetching) {
@@ -37,12 +31,15 @@ export const useLibrary = (user: User) => {
   }, [hasNextPage, isFetching, fetchNextPage]);
 
   return {
-    books,
-    handleOnPressBook: book => navigate(Routes.ROOT_06_BOOK, { bookId: book.id }),
+    currentBooks: current,
+    pastBooks: past,
+    handleOnPressBook: book =>
+      navigate(Routes.ROOT_06_BOOK, { bookId: book.id }),
     handleAddBook: () => navigate(Routes.LIBRARY_03_SEARCH),
     handleOnRead: async (bookId: string, isRead: boolean) =>
       toggleRead({ bookId, isRead }),
     fetchMoreBooks,
+    hasNextPage,
     loading: isFetching,
   };
 };

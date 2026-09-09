@@ -1,15 +1,4 @@
-import { translations } from 'locales/translations';
-
-import { SECTIONS_IDS } from './constants';
-
-type SectionHeaderItem = {
-  type: 'section-header';
-  id: string;
-  title: string;
-};
-
-type BookItem = {
-  type: 'book';
+export type LibraryBook = {
   id: string;
   isRead?: boolean;
   volumeInfo?: {
@@ -19,50 +8,23 @@ type BookItem = {
   [key: string]: any;
 };
 
-export type LibraryListItem = SectionHeaderItem | BookItem;
+export type CategorisedBooks = {
+  current: LibraryBook[];
+  past: LibraryBook[];
+};
 
-export const categorizeBooks = (rawBooks, t): LibraryListItem[] => {
-  const allBooks = rawBooks?.pages.flatMap(page => page.books) ?? [];
+/**
+ * Split the library into what someone is reading now and what they have
+ * finished. These used to be two sections of one long list; they are now two
+ * tabs, so the shape is a pair of lists rather than a flattened array with
+ * section headers interleaved.
+ */
+export const categorizeBooks = (rawBooks): CategorisedBooks => {
+  const allBooks: LibraryBook[] =
+    rawBooks?.pages?.flatMap(page => page.books) ?? [];
 
-  const sections = allBooks.reduce(
-    (acc, book) => {
-      if (book.isRead) {
-        acc[1].data.push(book);
-      } else {
-        acc[0].data.push(book);
-      }
-      return acc;
-    },
-    [
-      {
-        id: SECTIONS_IDS.CURRENT,
-        title: t(translations.library.current),
-        data: [],
-      },
-      {
-        id: SECTIONS_IDS.PAST,
-        title: t(translations.library.past),
-        data: [],
-      },
-    ],
-  );
-
-  const flattened: LibraryListItem[] = [];
-
-  sections.forEach(section => {
-    flattened.push({
-      type: 'section-header',
-      id: section.id,
-      title: section.title,
-    });
-
-    section.data.forEach(book => {
-      flattened.push({
-        type: 'book',
-        ...book,
-      });
-    });
-  });
-
-  return flattened;
+  return {
+    current: allBooks.filter(book => !book.isRead),
+    past: allBooks.filter(book => book.isRead),
+  };
 };
