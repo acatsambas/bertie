@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { collection, getDocs } from 'firebase/firestore';
 
+import { bookQueryKeys } from 'api/app/book/queryKeys';
 import { UserBookId } from 'api/app/types';
 import { auth, db } from 'api/firebase';
 import { useGuest } from 'api/guest/GuestProvider';
@@ -10,7 +11,7 @@ export const useUserBooksIdsQuery = () => {
   const { isGuest } = useGuest();
 
   return useQuery<UserBookId[]>({
-    queryKey: ['userBooksIds', isGuest],
+    queryKey: bookQueryKeys.userBooksIds(isGuest),
     queryFn: async () => {
       if (isGuest) {
         const { books } = await readGuestData();

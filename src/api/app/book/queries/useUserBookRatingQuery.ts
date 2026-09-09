@@ -5,13 +5,14 @@ import { auth, db } from 'api/firebase';
 import { useGuest } from 'api/guest/GuestProvider';
 import { readGuestData } from 'api/guest/guestStore';
 import { RatingValue } from 'api/app/book/mutations/useRateBookMutation';
+import { bookQueryKeys } from 'api/app/book/queryKeys';
 
 export const useUserBookRatingQuery = (bookId: string) => {
     const { isGuest } = useGuest();
     const userId = auth.currentUser?.uid;
 
     return useQuery<RatingValue | null>({
-        queryKey: ['userBookRating', bookId, isGuest],
+        queryKey: bookQueryKeys.userBookRating(bookId, isGuest),
         queryFn: async () => {
             if (isGuest) {
                 return (await readGuestData()).ratings[bookId] ?? null;

@@ -4,6 +4,7 @@ import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { auth, db } from 'api/firebase';
 import { useGuest } from 'api/guest/GuestProvider';
 import { setGuestRating } from 'api/guest/guestStore';
+import { bookQueryKeys } from 'api/app/book/queryKeys';
 import { BookResult } from 'api/google-books/search';
 
 export type RatingValue = 1 | 2 | 3 | 4;
@@ -50,35 +51,40 @@ export const useRateBookMutation = () => {
             });
             await queryClient.cancelQueries({ queryKey: ['bookRatings', bookId] });
 
-            const previousUserRating = queryClient.getQueryData([
-                'userBookRating',
-                bookId,
-            ]);
+            const previousUserRating =
+                queryClient.getQueryData<RatingValue | null>(
+                    bookQueryKeys.userBookRating(bookId, isGuest),
+                );
             const previousBookRatings = queryClient.getQueryData([
                 'bookRatings',
                 bookId,
             ]);
 
-            queryClient.setQueryData(['userBookRating', bookId], rating);
-
             queryClient.setQueryData(
-                ['bookRatings', bookId],
-                (old: RatingValue[] = []) => {
-                    if (previousUserRating != null) {
-                        return old.map(r =>
-                            r === previousUserRating ? rating : r,
-                        );
-                    }
-                    return [...old, rating];
-                },
+                bookQueryKeys.userBookRating(bookId, isGuest),
+                rating,
             );
+
+            if (!isGuest) {
+                queryClient.setQueryData(
+                    ['bookRatings', bookId],
+                    (old: RatingValue[] = []) => {
+                        if (previousUserRating != null) {
+                            return old.map(r =>
+                                r === previousUserRating ? rating : r,
+                            );
+                        }
+                        return [...old, rating];
+                    },
+                );
+            }
 
             return { previousUserRating, previousBookRatings };
         },
         onError: (_, { bookId }, context) => {
             if (context?.previousUserRating !== undefined) {
                 queryClient.setQueryData(
-                    ['userBookRating', bookId],
+                    bookQueryKeys.userBookRating(bookId, isGuest),
                     context.previousUserRating,
                 );
             }

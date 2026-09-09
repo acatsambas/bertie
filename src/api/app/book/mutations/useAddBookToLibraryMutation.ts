@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { deleteDoc, doc, getDoc, setDoc } from 'firebase/firestore';
 
+import { bookQueryKeys } from 'api/app/book/queryKeys';
 import { UserBookId } from 'api/app/types';
 import { auth, db } from 'api/firebase';
 import { useGuest } from 'api/guest/GuestProvider';
@@ -45,10 +46,13 @@ export const useAddBookToLibraryMutation = () => {
       }
     },
     onMutate: async ({ book, isUserBook }) => {
-      await queryClient.cancelQueries({ queryKey: ['userBooksIds'] });
-      const previousData = queryClient.getQueryData(['userBooksIds']);
+      const key = bookQueryKeys.userBooksIds(isGuest);
 
-      queryClient.setQueryData(['userBooksIds'], (old: UserBookId[] = []) => {
+      // cancelQueries matches on prefix, so the bare key covers both variants
+      await queryClient.cancelQueries({ queryKey: ['userBooksIds'] });
+      const previousData = queryClient.getQueryData<UserBookId[]>(key);
+
+      queryClient.setQueryData(key, (old: UserBookId[] = []) => {
         if (isUserBook) {
           return old.filter(item => item.id !== book.id);
         }
@@ -59,7 +63,10 @@ export const useAddBookToLibraryMutation = () => {
     },
     onError: (_, __, context) => {
       if (context?.previousData) {
-        queryClient.setQueryData(['userBooksIds'], context.previousData);
+        queryClient.setQueryData(
+          bookQueryKeys.userBooksIds(isGuest),
+          context.previousData,
+        );
       }
     },
     onSettled: () => {
