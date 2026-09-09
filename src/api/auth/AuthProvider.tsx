@@ -16,7 +16,7 @@ import React, { createContext, useEffect, useMemo, useState } from 'react';
 import { appleAuth } from 'utils/react-native-apple-authentication';
 
 import { auth } from '../firebase';
-import { createUser, updateUserProfile } from './hooks';
+import { createUser, ensureUserDocument, updateUserProfile } from './hooks';
 
 GoogleSignin.configure({
   offlineAccess: true,
@@ -132,23 +132,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           googleCredential,
         );
 
-        const user = userCredential.user;
-        const isNewUser =
-          user.metadata.creationTime === user.metadata.lastSignInTime;
+        const nameParts = userCredential.user.displayName?.split(' ') ?? [];
 
-        if (isNewUser) {
-          const displayName = user.displayName;
-          const nameParts = displayName?.split(' ') || [];
-          const givenName = nameParts[0] || '';
-          const familyName = nameParts.slice(1).join(' ') || '';
-
-          if (givenName || familyName) {
-            await createUser({
-              givenName,
-              familyName,
-            });
-          }
-        }
+        // Runs on every Google sign-in: the document is only written when it
+        // is missing, so this creates it for accounts with no displayName and
+        // repairs any that were skipped before, while leaving healthy
+        // profiles — and any contactEmail the user has changed — untouched.
+        await ensureUserDocument({
+          givenName: nameParts[0] || '',
+          familyName: nameParts.slice(1).join(' '),
+        });
       },
       appleLogin: async () => {
         if (!appleAuth.isSupported) {
@@ -171,21 +164,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           rawNonce: nonce,
         });
 
-        const userCredential = await signInWithCredential(
-          auth,
-          appleCredential,
-        );
+        await signInWithCredential(auth, appleCredential);
 
-        const user = userCredential.user;
-        const isNewUser =
-          user.metadata.creationTime === user.metadata.lastSignInTime;
-
-        if (isNewUser && fullName) {
-          await createUser({
-            givenName: fullName?.givenName,
-            familyName: fullName?.familyName,
-          });
-        }
+        // Apple only returns fullName on the very first authorization for the
+        // app, so a user who re-registers arrives nameless. Write the document
+        // regardless and fill the name in when Apple does give us one.
+        await ensureUserDocument({
+          givenName: fullName?.givenName ?? '',
+          familyName: fullName?.familyName ?? '',
+        });
       },
     }),
     [user, authLoading],
