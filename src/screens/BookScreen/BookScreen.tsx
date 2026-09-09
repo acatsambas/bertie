@@ -1,6 +1,6 @@
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { makeStyles, useTheme } from '@rneui/themed';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
@@ -27,11 +27,13 @@ import {
   useUserBookRatingQuery,
 } from 'api/app/book';
 import { RatingValue } from 'api/app/book/mutations/useRateBookMutation';
+import { AuthContext } from 'api/auth/AuthProvider';
 import { bookDescription } from 'api/google-books/bookDescription';
 import { useBookQuery } from 'api/google-books/useBookQuery';
 
 import { useAuthGate } from 'hooks/useAuthGate';
 
+import BottomMenu from 'navigation/navigators/components/BottomMenu';
 import { Routes } from 'navigation/routes';
 import { NavigationType } from 'navigation/types';
 
@@ -55,6 +57,7 @@ export const BookScreen = () => {
   const { theme } = useTheme();
   const { t } = useTranslation();
   const navigation = useNavigation<any>();
+  const { user } = useContext(AuthContext);
   const { data: userBooksIds = [] } = useUserBooksIdsQuery();
   const { mutate: addBookToLibrary } = useAddBookToLibraryMutation();
   const { mutate: rateBook } = useRateBookMutation();
@@ -112,9 +115,17 @@ export const BookScreen = () => {
     if (!book) return;
     // Gate: guests can't order
     if (requireAuth()) return;
-    navigation.navigate(Routes.HOME_03_ORDER, {
-      screen: Routes.ORDER_00_ADD_BOOKS,
-      params: { initialBook: book },
+    // The book screen lives at the root, outside the tab tree, so the
+    // order screen has to be addressed through the full nesting path.
+    navigation.navigate(Routes.ROOT_02_APP, {
+      screen: Routes.APP_01_HOME,
+      params: {
+        screen: Routes.HOME_03_ORDER,
+        params: {
+          screen: Routes.ORDER_00_ADD_BOOKS,
+          params: { initialBook: book },
+        },
+      },
     });
   };
 
@@ -259,6 +270,11 @@ export const BookScreen = () => {
         onDismiss={dismissGate}
         onSignUp={confirmGate}
       />
+
+      {/* This screen sits outside the tab navigator, so it renders the tab
+          bar itself — but only for signed-in users, since a logged-out
+          visitor arriving via a shared link has nowhere to tab to. */}
+      {user && <BottomMenu />}
     </SafeAreaView>
   );
 };

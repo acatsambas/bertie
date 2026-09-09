@@ -11,7 +11,6 @@ export const HOME_ROUTES = {
 
 export const LIBRARY_ROUTES = {
   LIBRARY_01_LIBRARY: 'library-homer',
-  LIBRARY_02_BOOK: 'book',
   LIBRARY_03_SEARCH: 'search',
 } as const;
 

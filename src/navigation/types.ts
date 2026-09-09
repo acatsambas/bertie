@@ -6,7 +6,7 @@ import { BookResult } from 'api/google-books/search';
 import { Routes } from './routes';
 
 export type AppNavigatorParamList = {
-  [Routes.APP_01_HOME]: undefined;
+  [Routes.APP_01_HOME]: NavigatorScreenParams<HomeNavigatorParamList>;
   [Routes.APP_02_SETTINGS]: NavigatorScreenParams<SettingsNavigatorParamList>;
 };
 
@@ -19,16 +19,13 @@ export type AuthNavigatorParamList = {
 };
 
 export type HomeNavigatorParamList = {
-  [Routes.HOME_01_LIBRARY]: undefined;
-  [Routes.HOME_02_DISCOVER]: undefined;
-  [Routes.HOME_03_ORDER]: undefined;
+  [Routes.HOME_01_LIBRARY]: NavigatorScreenParams<LibraryNavigatorParamList>;
+  [Routes.HOME_02_DISCOVER]: NavigatorScreenParams<DiscoverNavigatorParamList>;
+  [Routes.HOME_03_ORDER]: NavigatorScreenParams<OrderNavigatorParamList>;
 };
 
 export type LibraryNavigatorParamList = {
   [Routes.LIBRARY_01_LIBRARY]: undefined;
-  [Routes.LIBRARY_02_BOOK]: {
-    bookId: string;
-  };
   [Routes.LIBRARY_03_SEARCH]: undefined;
 };
 

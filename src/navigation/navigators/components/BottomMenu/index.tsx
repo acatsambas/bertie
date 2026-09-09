@@ -7,12 +7,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import BottomMenuItem from 'components/BottomMenuItem';
 
-import type { HomeNavigatorParamList } from 'navigation/types';
+import { Routes } from 'navigation/routes';
+import type { NavigationType } from 'navigation/types';
 
 import { menuItems } from './data';
 
-export interface BottomMenuProps
-  extends StackNavigationProp<HomeNavigatorParamList> {}
+export interface BottomMenuProps extends StackNavigationProp<NavigationType> {}
 
 const BottomMenu = () => {
   const { navigate } = useNavigation<BottomMenuProps>();
@@ -30,7 +30,14 @@ const BottomMenu = () => {
           key={menu.title}
           icon={menu.icon}
           title={menu.title}
-          onPress={() => navigate(menu.screen)}
+          onPress={() =>
+            // Addressed from the root so this works both as the tab bar and
+            // from the root-level book screen, which sits outside the tabs.
+            navigate(Routes.ROOT_02_APP, {
+              screen: Routes.APP_01_HOME,
+              params: { screen: menu.screen },
+            })
+          }
         />
       ))}
     </SafeAreaView>

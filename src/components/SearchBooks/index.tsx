@@ -35,7 +35,7 @@ const SearchBooks = ({ books }: SearchBookProps) => {
   const { t } = useTranslation();
 
   const handlePressBook = (book: BookResult) => {
-    navigate(Routes.LIBRARY_02_BOOK, {
+    navigate(Routes.ROOT_06_BOOK, {
       bookId: book.id,
     });
   };

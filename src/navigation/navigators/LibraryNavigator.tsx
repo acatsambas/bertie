@@ -4,7 +4,6 @@ import React from 'react';
 import { LIBRARY_ROUTES } from 'navigation/routes';
 import type { LibraryNavigatorParamList } from 'navigation/types';
 
-import BookScreen from 'screens/BookScreen';
 import LibraryScreen from 'screens/LibraryScreen';
 import SearchBookScreen from 'screens/SearchBookScreen';
 
@@ -19,10 +18,6 @@ export const LibraryNavigator = () => (
     <LibraryStack.Screen
       name={LIBRARY_ROUTES.LIBRARY_01_LIBRARY}
       component={LibraryScreen}
-    />
-    <LibraryStack.Screen
-      name={LIBRARY_ROUTES.LIBRARY_02_BOOK}
-      component={BookScreen}
     />
     <LibraryStack.Screen
       name={LIBRARY_ROUTES.LIBRARY_03_SEARCH}
