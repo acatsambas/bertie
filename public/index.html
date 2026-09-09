@@ -22,18 +22,21 @@
       copy would swallow the substitution and ship a literal placeholder as
       the page title.
 
-      Copy matches about.html's existing Open Graph tags for consistency across
-      the site. og-image.png is the app icon's line-art book stack, recomposed
+      The description deliberately omits any iOS/Android download line: the
+      PWA is the way in. about.html still carries the older copy mentioning
+      the App Store and the Android waitlist, so the two differ on purpose.
+
+      og-image.png is the app icon's line-art book stack, recomposed
       onto a properly-proportioned 1200x630 canvas in the app's own background
       color — the source logo is a 5000x5000 square, which platforms crop
       unpredictably if served as-is.
     -->
-    <meta name="description" content="Bertie helps readers track their reading, discover books, and order from independent bookshops. Download on iOS or join the Android waitlist." />
+    <meta name="description" content="Bertie helps readers track their reading, discover books, and order from independent bookshops." />
     <link rel="canonical" href="https://www.bertieapp.com" />
 
     <!-- Open Graph -->
     <meta property="og:title" content="Bertie — Track Your Reading &amp; Order from Independent Bookshops" />
-    <meta property="og:description" content="Bertie helps readers track their reading, discover books, and order from independent bookshops. Download on iOS or join the Android waitlist." />
+    <meta property="og:description" content="Bertie helps readers track their reading, discover books, and order from independent bookshops." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://www.bertieapp.com" />
     <meta property="og:image" content="https://www.bertieapp.com/og-image.png" />
@@ -44,7 +47,7 @@
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Bertie — Track Your Reading &amp; Order from Independent Bookshops" />
-    <meta name="twitter:description" content="Bertie helps readers track their reading, discover books, and order from independent bookshops. Download on iOS or join the Android waitlist." />
+    <meta name="twitter:description" content="Bertie helps readers track their reading, discover books, and order from independent bookshops." />
     <meta name="twitter:image" content="https://www.bertieapp.com/og-image.png" />
 
     <!-- The `react-native-web` recommended style reset: https://necolas.github.io/react-native-web/docs/setup/#root-element -->
