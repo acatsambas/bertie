@@ -17,7 +17,7 @@
     "prettify": "prettier --write .",
     "start": "expo start",
     "web": "expo start --web",
-    "build:web": "expo export -p web && cp -r public/* dist/ && cp about.html support.html data_request.html styles.css bertie_logo.png dist/ && cp -r screenshots dist/"
+    "build:web": "expo export -p web && cp about.html support.html data_request.html styles.css bertie_logo.png dist/ && cp -r screenshots dist/"
   },
   "dependencies": {
     "@expo-google-fonts/commissioner": "^0.4.1",
@@ -85,6 +85,7 @@
     "eslint-config-expo": "~10.0.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "5.5.4",
+    "firebase-admin": "14.3.0",
     "prettier": "3.6.2",
     "tsx": "4.20.6",
     "typescript": "~5.9.2"

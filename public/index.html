@@ -12,9 +12,15 @@
       back to its built-in one). The default has no Open Graph or Twitter Card
       tags at all, which is why pasting bertieapp.com into WhatsApp/iMessage/etc
       produced no image and no description — there was nothing for the link
-      preview crawler to read. %LANG_ISO_CODE% and %WEB_TITLE% above are Expo's
-      own placeholders (from app.json's web.lang / web.name) and still get
-      substituted normally; everything below is new.
+      preview crawler to read.
+
+      The two percent-delimited tokens in the html and title tags above are
+      Expo's own placeholders, filled in from app.json's web.lang and web.name
+      at export time. Do not write those tokens anywhere else in this file,
+      including in a comment: Expo substitutes them with a plain string
+      replace, which only replaces the first occurrence, so a stray earlier
+      copy would swallow the substitution and ship a literal placeholder as
+      the page title.
 
       Copy matches about.html's existing Open Graph tags for consistency across
       the site. og-image.png is the app icon's line-art book stack, recomposed
