@@ -1,5 +1,11 @@
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import { addDoc, collection, doc } from 'firebase/firestore';
+import { useQueryClient } from '@tanstack/react-query';
+import {
+  addDoc,
+  collection,
+  doc,
+  serverTimestamp,
+} from 'firebase/firestore';
 import { useMemo } from 'react';
 
 import { useFavouriteShopsQuery, useShopsQuery } from 'api/app/shops';
@@ -14,6 +20,7 @@ import { getOrderMail, isInvalidEmail } from './utils';
 
 export const useOrderShopScreen = () => {
   const { navigate } = useNavigation<OrderShopScreenProps>();
+  const queryClient = useQueryClient();
   const route =
     useRoute<RouteProp<NavigationType, typeof Routes.ORDER_02_ORDER_SHOP>>();
 
@@ -52,7 +59,11 @@ export const useOrderShopScreen = () => {
       shopRef: doc(db, 'shops', favouriteShop.id),
       booksRef: books.map(({ id }) => doc(db, 'books', id)),
       status: 'ordered',
+      createdAt: serverTimestamp(),
     });
+
+    // The Past orders tab is mounted behind this flow, so it needs telling.
+    void queryClient.invalidateQueries({ queryKey: ['orderHistory'] });
 
     const selectedShop = shops.find(shop => shop.id === favouriteShop.id);
 

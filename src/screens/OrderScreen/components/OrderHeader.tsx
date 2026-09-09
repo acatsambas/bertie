@@ -8,10 +8,6 @@ import { translations } from 'locales/translations';
 export const OrderHeader = ({ hasBooks }: { hasBooks: boolean }) => {
   const { t } = useTranslation();
   if (!hasBooks) return null;
-  return (
-    <>
-      <Text text={t(translations.order.title)} kind="bigHeader" />
-      <Text text={t(translations.order.header)} kind="header" />
-    </>
-  );
+  // The screen header above the tabs already carries the "Order" title.
+  return <Text text={t(translations.order.header)} kind="header" />;
 };

@@ -1,82 +1,39 @@
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { makeStyles } from '@rneui/themed';
-import React, { useCallback, useState } from 'react';
-import { FlatList, RefreshControl } from 'react-native';
+import { Tab, makeStyles } from '@rneui/themed';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import Book from 'components/Book';
-import AuthGateModal from 'components/AuthGateModal';
+import Text from 'components/Text';
 
-import { useAuthGate } from 'hooks/useAuthGate';
+import { translations } from 'locales/translations';
 
-import { Routes } from 'navigation/routes';
-import { NavigationType } from 'navigation/types';
-
-import { OrderEmpty, OrderFooter, OrderHeader } from './components/';
-import { useOrderList } from './hooks/useOrderList';
-
-export interface OrderPageProps
-  extends StackNavigationProp<NavigationType, typeof Routes.ORDER_01_ORDER> { }
+import { NewOrderTab, PastOrdersTab } from './components';
 
 export const OrderScreen = () => {
   const styles = useStyles();
-  const { navigate } = useNavigation<OrderPageProps>();
-  const { unreadBooks, selectedBooks, orderList, fetchMoreBooks, loading, refetch, toggleOrder } =
-    useOrderList();
-  const [refreshing, setRefreshing] = useState(false);
-  const { requireAuth, gateVisible, gateMessage, dismissGate, confirmGate } = useAuthGate();
-
-  const handleNext = () => {
-    if (requireAuth()) return;
-    navigate(Routes.ORDER_02_ORDER_SHOP, {
-      books: selectedBooks,
-    });
-  };
-
-  const onRefresh = useCallback(async () => {
-    setRefreshing(true);
-    await refetch();
-    setRefreshing(false);
-  }, [refetch]);
+  const { t } = useTranslation();
+  const [index, setIndex] = useState(0);
 
   return (
     <SafeAreaView edges={['left', 'right', 'top']} style={styles.safeAreaView}>
-      <FlatList
-        data={unreadBooks}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-        contentContainerStyle={styles.container}
-        showsVerticalScrollIndicator={false}
-        ListHeaderComponent={<OrderHeader hasBooks={unreadBooks.length > 0} />}
-        ListEmptyComponent={OrderEmpty}
-        ListFooterComponent={
-          <OrderFooter
-            loading={loading}
-            hasBooks={selectedBooks.length > 0}
-            onNext={handleNext}
-          />
-        }
-        renderItem={({ item }) => (
-          <Book
-            key={item.id}
-            title={item.volumeInfo?.title}
-            author={item.volumeInfo?.authors?.join?.(', ')}
-            kind="order"
-            isChecked={orderList.includes(item.id)}
-            onChange={() => toggleOrder(item.id)}
-          />
-        )}
-        onEndReached={fetchMoreBooks}
-        onEndReachedThreshold={0.5}
-      />
-      <AuthGateModal
-        visible={gateVisible}
-        message={gateMessage}
-        onDismiss={dismissGate}
-        onSignUp={confirmGate}
-      />
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Text text={t(translations.order.title)} kind="bigHeader" />
+        </View>
+        <Tab
+          value={index}
+          onChange={setIndex}
+          titleStyle={{
+            fontFamily: 'GoudyBookletter1911_400Regular',
+            fontSize: 24,
+          }}
+        >
+          <Tab.Item>{t(translations.order.history.tabNew)}</Tab.Item>
+          <Tab.Item>{t(translations.order.history.tabPast)}</Tab.Item>
+        </Tab>
+        {index === 0 ? <NewOrderTab /> : <PastOrdersTab />}
+      </View>
     </SafeAreaView>
   );
 };
@@ -84,12 +41,11 @@ export const OrderScreen = () => {
 const useStyles = makeStyles(theme => ({
   safeAreaView: {
     flex: 1,
-    paddingHorizontal: 20,
     backgroundColor: theme.colors.white,
   },
-  container: {
+  container: { flex: 1, paddingHorizontal: 20 },
+  header: {
     paddingTop: 20,
-    paddingBottom: 20,
-    gap: 20,
+    paddingBottom: 10,
   },
 }));

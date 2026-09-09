@@ -23,3 +23,18 @@ export type UserBook = {
 };
 
 export type UserBookId = Pick<UserBook, 'id'>;
+
+export type OrderBook = {
+  id: string;
+  title?: string;
+  authors?: string[];
+};
+
+export type Order = {
+  id: string;
+  status: string;
+  /** Absent on orders placed before the field was introduced. */
+  createdAt?: { seconds: number };
+  shopName?: string;
+  books: OrderBook[];
+};
