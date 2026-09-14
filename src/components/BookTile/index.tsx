@@ -11,9 +11,24 @@ import {
 
 import Text from 'components/Text';
 
-import { LibraryBook } from '../hooks/utils';
+export const TILE_COLUMN_GAP = 20;
+export const TILE_ROW_GAP = 28;
+const MIN_TILE_WIDTH = 150;
 
-// Library books are Google Books volumes, so a cover can come straight from
+/** How many tiles fit across `width`, and how wide each one is. */
+export const tileGrid = (width: number) => {
+  const columns = Math.max(
+    2,
+    Math.floor((width + TILE_COLUMN_GAP) / (MIN_TILE_WIDTH + TILE_COLUMN_GAP)),
+  );
+  // Floored so rounding can never push the last tile in a row onto the next.
+  const tileWidth = Math.floor(
+    (width - TILE_COLUMN_GAP * (columns - 1)) / columns,
+  );
+  return { columns, tileWidth };
+};
+
+// Books in Bertie are Google Books volumes, so a cover can come straight from
 // Google's image endpoint by volume id, with no API call and no key.
 const coverUri = (bookId: string) =>
   `https://books.google.com/books/content?id=${encodeURIComponent(bookId)}&printsec=frontcover&img=1&zoom=1&source=gbs_api`;
@@ -44,26 +59,37 @@ const fallbackColor = (bookId: string) => {
   return FALLBACK_COLORS[Math.abs(hash) % FALLBACK_COLORS.length];
 };
 
-interface BookCardProps {
-  book: LibraryBook;
-  width: number;
+/** The control in the cover's corner: read status on My list, on-your-list on Discover. */
+export interface BookTileToggle {
+  checked: boolean;
+  /** A material-community icon name. */
+  icon: string;
+  color: string;
+  label: string;
   onPress(): void;
-  onToggleRead(): void;
 }
 
-/** One book in the desktop My list grid: its cover, a read checkbox, title and author. */
-export const BookCard = ({
-  book,
+interface BookTileProps {
+  bookId: string;
+  title?: string;
+  author?: string;
+  width: number;
+  onPress(): void;
+  toggle: BookTileToggle;
+}
+
+/** One book in a desktop grid: its cover, a corner toggle, title and author. */
+const BookTile = ({
+  bookId,
+  title = '',
+  author = '',
   width,
   onPress,
-  onToggleRead,
-}: BookCardProps) => {
+  toggle,
+}: BookTileProps) => {
   const styles = useStyles();
   const { theme } = useTheme();
   const [hasCover, setHasCover] = useState(true);
-
-  const title = book.volumeInfo?.title ?? '';
-  const author = book.volumeInfo?.authors?.join?.(', ') ?? '';
 
   const handleLoad = ({
     nativeEvent,
@@ -92,7 +118,7 @@ export const BookCard = ({
           onPress={onPress}
           style={state => [
             styles.cover,
-            { backgroundColor: fallbackColor(book.id) },
+            { backgroundColor: fallbackColor(bookId) },
             (state as { hovered?: boolean }).hovered && styles.coverHovered,
           ]}
         >
@@ -107,7 +133,7 @@ export const BookCard = ({
           />
           {hasCover && (
             <Image
-              source={{ uri: coverUri(book.id) }}
+              source={{ uri: coverUri(bookId) }}
               style={StyleSheet.absoluteFill}
               resizeMode="cover"
               onLoad={handleLoad}
@@ -117,17 +143,17 @@ export const BookCard = ({
         </Pressable>
         <Pressable
           accessibilityRole="checkbox"
-          accessibilityState={{ checked: !!book.isRead }}
-          accessibilityLabel={title}
+          accessibilityState={{ checked: toggle.checked }}
+          accessibilityLabel={toggle.label}
           hitSlop={6}
-          onPress={onToggleRead}
-          style={styles.check}
+          onPress={toggle.onPress}
+          style={styles.toggle}
         >
           <RNEIcon
             type="material-community"
-            name={book.isRead ? 'checkbox-marked' : 'checkbox-blank-outline'}
+            name={toggle.icon}
             size={20}
-            color={book.isRead ? theme.colors.primary : theme.colors.secondary}
+            color={toggle.color}
           />
         </Pressable>
       </View>
@@ -170,7 +196,7 @@ const useStyles = makeStyles(() => ({
     fontSize: 17,
     lineHeight: 21,
   },
-  check: {
+  toggle: {
     position: 'absolute',
     top: 8,
     right: 8,
@@ -189,4 +215,4 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export default BookCard;
+export default BookTile;

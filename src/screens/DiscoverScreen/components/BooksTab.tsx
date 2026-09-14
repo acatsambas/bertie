@@ -1,6 +1,7 @@
 import React from 'react';
 import { ScrollView, View } from 'react-native';
 import { makeStyles } from '@rneui/themed';
+import { useIsDesktop } from 'hooks/useIsDesktop';
 import { useTranslation } from 'react-i18next';
 
 import Text from 'components/Text';
@@ -11,7 +12,13 @@ import { useEssentialBooksQuery, useBooksQuery } from 'api/app/book';
 
 import { translations } from 'locales/translations';
 
-export const BooksTab = () => {
+import { DesktopBooksTab } from './DesktopBooksTab';
+
+/** Desktop browsers get a grid of covers; everywhere else keeps this list. */
+export const BooksTab = () =>
+  useIsDesktop() ? <DesktopBooksTab /> : <MobileBooksTab />;
+
+const MobileBooksTab = () => {
   const styles = useStyles();
   const { t } = useTranslation();
   const { data: essentialBookIds = [], isLoading: isLoadingIds } =

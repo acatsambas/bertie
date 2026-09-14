@@ -9,6 +9,11 @@ import {
   View,
 } from 'react-native';
 
+import BookTile, {
+  TILE_COLUMN_GAP,
+  TILE_ROW_GAP,
+  tileGrid,
+} from 'components/BookTile';
 import Icon from 'components/Icon';
 import Text from 'components/Text';
 
@@ -16,15 +21,11 @@ import { translations } from 'locales/translations';
 
 import { useLibrary } from '../hooks';
 import { LibraryBook } from '../hooks/utils';
-import { BookCard } from './BookCard';
 
 const CURRENT_TAB = 0;
 const PAST_TAB = 1;
-const COLUMN_GAP = 20;
-const ROW_GAP = 28;
-const MIN_CARD_WIDTH = 150;
 
-const RowGap = () => <View style={{ height: ROW_GAP }} />;
+const RowGap = () => <View style={{ height: TILE_ROW_GAP }} />;
 
 /**
  * My list on desktop: the same library, tabs and actions as the mobile
@@ -59,11 +60,7 @@ export const DesktopLibrary = () => {
     }
   }, [books.length, hasNextPage, loading, fetchMoreBooks]);
 
-  const columns = Math.max(
-    2,
-    Math.floor((gridWidth + COLUMN_GAP) / (MIN_CARD_WIDTH + COLUMN_GAP)),
-  );
-  const cardWidth = (gridWidth - COLUMN_GAP * (columns - 1)) / columns;
+  const { columns, tileWidth } = tileGrid(gridWidth);
 
   // Only once the whole library has loaded — mid-paging it would undercount.
   const count = books.length;
@@ -173,11 +170,23 @@ export const DesktopLibrary = () => {
             numColumns={columns}
             keyExtractor={(item: LibraryBook) => item.id}
             renderItem={({ item }) => (
-              <BookCard
-                book={item}
-                width={cardWidth}
+              <BookTile
+                bookId={item.id}
+                title={item.volumeInfo?.title}
+                author={item.volumeInfo?.authors?.join?.(', ')}
+                width={tileWidth}
                 onPress={() => handleOnPressBook(item)}
-                onToggleRead={() => handleOnRead(item.id, item.isRead)}
+                toggle={{
+                  checked: !!item.isRead,
+                  icon: item.isRead
+                    ? 'checkbox-marked'
+                    : 'checkbox-blank-outline',
+                  color: item.isRead
+                    ? theme.colors.primary
+                    : theme.colors.secondary,
+                  label: item.volumeInfo?.title ?? '',
+                  onPress: () => handleOnRead(item.id, item.isRead),
+                }}
               />
             )}
             columnWrapperStyle={styles.row}
@@ -245,7 +254,7 @@ const useStyles = makeStyles(theme => ({
   addButtonLabel: { fontFamily: 'Commissioner_600SemiBold' },
   grid: { flex: 1 },
   gridContent: { paddingBottom: 40 },
-  row: { gap: COLUMN_GAP },
+  row: { gap: TILE_COLUMN_GAP },
   loading: { paddingTop: 20 },
   empty: {
     paddingTop: 40,

@@ -1,6 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Tab, makeStyles } from '@rneui/themed';
+import { useIsDesktop } from 'hooks/useIsDesktop';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
@@ -29,6 +30,7 @@ export const DiscoverScreen = () => {
   const { t } = useTranslation();
   const { navigate } = useNavigation<DiscoverScreenProps>();
   const { data: user } = useUserQuery();
+  const isDesktop = useIsDesktop();
 
   const [index, setIndex] = useState(0);
 
@@ -47,7 +49,8 @@ export const DiscoverScreen = () => {
       <View style={styles.container}>
         <View style={styles.header}>
           <Text text={t(translations.discover.title)} kind="bigHeader" />
-          <Avatar onPress={handleAvatarClick} />
+          {/* On desktop the side rail carries the link to settings. */}
+          {!isDesktop && <Avatar onPress={handleAvatarClick} />}
         </View>
         <Tab
           value={index}
