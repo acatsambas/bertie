@@ -6,9 +6,10 @@ import { AuthContext } from 'api/auth/AuthProvider';
 
 interface AvatarProps {
   onPress?(): void;
+  size?: number;
 }
 
-const Avatar = ({ onPress }: AvatarProps) => {
+const Avatar = ({ onPress, size = 44 }: AvatarProps) => {
   const { user } = useContext(AuthContext);
   const { data: userData } = useUserQuery();
 
@@ -20,7 +21,7 @@ const Avatar = ({ onPress }: AvatarProps) => {
       }
       source={user?.photoURL ? { uri: user.photoURL } : undefined}
       rounded
-      size={44}
+      size={size}
       containerStyle={{ backgroundColor: '#6E78D7' }}
       onPress={onPress}
     />

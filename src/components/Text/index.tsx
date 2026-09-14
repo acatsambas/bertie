@@ -13,9 +13,17 @@ interface TextProps {
   onPress?(): void;
   color?: string;
   style?: StyleProp<TextStyle>;
+  numberOfLines?: number;
 }
 
-const Text = ({ kind, text, onPress, color, style }: TextProps) => {
+const Text = ({
+  kind,
+  text,
+  onPress,
+  color,
+  style,
+  numberOfLines,
+}: TextProps) => {
   const { theme } = useTheme();
 
   return (
@@ -33,6 +41,7 @@ const Text = ({ kind, text, onPress, color, style }: TextProps) => {
         style,
       ]}
       onPress={onPress}
+      numberOfLines={numberOfLines}
     >
       {text}
     </RNEText>

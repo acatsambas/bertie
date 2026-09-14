@@ -1,5 +1,6 @@
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { makeStyles, useTheme } from '@rneui/themed';
+import { useIsDesktop } from 'hooks/useIsDesktop';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -14,6 +15,7 @@ import RenderHtml from 'react-native-render-html';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Button from 'components/Button';
+import DesktopColumn from 'components/DesktopColumn';
 import Icon from 'components/Icon';
 import Text from 'components/Text';
 import AuthGateModal from 'components/AuthGateModal';
@@ -34,6 +36,7 @@ import { useBookQuery } from 'api/google-books/useBookQuery';
 import { useAuthGate } from 'hooks/useAuthGate';
 
 import BottomMenu from 'navigation/navigators/components/BottomMenu';
+import SideRail from 'navigation/navigators/components/SideRail';
 import { Routes } from 'navigation/routes';
 
 import { translations } from 'locales/translations';
@@ -68,6 +71,7 @@ export const BookScreen = () => {
   const [menuVisible, setMenuVisible] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ top: 0, right: 0 });
   const menuAnchorRef = useRef<View>(null);
+  const isDesktop = useIsDesktop();
 
   const isBookInLibrary = userBooksIds.some(({ id }) => id === params.bookId);
   const medianRating = computeMedian(ratings);
@@ -150,6 +154,18 @@ export const BookScreen = () => {
   const inApp = !!user || isGuest;
   const showBack = canGoBack || inApp;
 
+  // On desktop the side rail stands in for the tab bar here too, and the page
+  // sits in the same centred column as the tab screens.
+  const withDesktopChrome = (screen: React.ReactElement) =>
+    isDesktop && inApp ? (
+      <View style={styles.desktopShell}>
+        <SideRail />
+        <DesktopColumn>{screen}</DesktopColumn>
+      </View>
+    ) : (
+      screen
+    );
+
   const handleBack = () => {
     if (canGoBack) {
       navigation.goBack();
@@ -180,7 +196,7 @@ export const BookScreen = () => {
   };
 
   if (isBookLoading || !book) {
-    return (
+    return withDesktopChrome(
       <SafeAreaView style={styles.safeAreaView}>
         <View style={styles.backHeader}>
           {showBack && <Icon icon="back" onPress={handleBack} />}
@@ -188,11 +204,11 @@ export const BookScreen = () => {
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={theme.colors.primary} />
         </View>
-      </SafeAreaView>
+      </SafeAreaView>,
     );
   }
 
-  return (
+  return withDesktopChrome(
     <SafeAreaView style={styles.safeAreaView}>
       <View style={styles.backHeader}>
         {showBack && <Icon icon="back" onPress={handleBack} />}
@@ -300,13 +316,18 @@ export const BookScreen = () => {
 
       {/* This screen sits outside the tab navigator, so it renders the tab
           bar itself — but only for signed-in users, since a logged-out
-          visitor arriving via a shared link has nowhere to tab to. */}
-      {inApp && <BottomMenu />}
-    </SafeAreaView>
+          visitor arriving via a shared link has nowhere to tab to. On
+          desktop the side rail takes its place. */}
+      {inApp && !isDesktop && <BottomMenu />}
+    </SafeAreaView>,
   );
 };
 
 const useStyles = makeStyles(theme => ({
+  desktopShell: {
+    flex: 1,
+    flexDirection: 'row',
+  },
   safeAreaView: {
     flex: 1,
     paddingHorizontal: 20,

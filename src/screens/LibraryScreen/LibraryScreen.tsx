@@ -1,5 +1,6 @@
 import { LegendList, LegendListRenderItemProps } from '@legendapp/list';
 import { Tab, makeStyles } from '@rneui/themed';
+import { useIsDesktop } from 'hooks/useIsDesktop';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, View } from 'react-native';
@@ -10,13 +11,17 @@ import Text from 'components/Text';
 
 import { translations } from 'locales/translations';
 
-import { AddBookButton, ListHeader } from './components';
+import { AddBookButton, DesktopLibrary, ListHeader } from './components';
 import { useLibrary } from './hooks';
 import { LibraryBook } from './hooks/utils';
 
 const CURRENT_TAB = 0;
 
-export const LibraryScreen = () => {
+/** Desktop browsers get the cover grid; everywhere else keeps this list. */
+export const LibraryScreen = () =>
+  useIsDesktop() ? <DesktopLibrary /> : <MobileLibraryScreen />;
+
+const MobileLibraryScreen = () => {
   const styles = useStyles();
   const { t } = useTranslation();
   const [tab, setTab] = useState(CURRENT_TAB);
