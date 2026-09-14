@@ -30,8 +30,8 @@ export const HomeNavigator = () => {
       }
       tabBar={
         isDesktop
-          ? ({ state }) => (
-              <SideRail activeScreen={state.routes[state.index].name} />
+          ? ({ state, navigation }) => (
+              <SideRail state={state} navigation={navigation} />
             )
           : () => <BottomMenu />
       }

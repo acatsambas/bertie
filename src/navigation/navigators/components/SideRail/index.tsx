@@ -1,4 +1,5 @@
-import { useNavigation } from '@react-navigation/native';
+import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
+import { CommonActions, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { makeStyles, useTheme } from '@rneui/themed';
 import React from 'react';
@@ -22,26 +23,59 @@ import { menuItems } from '../BottomMenu/data';
 // types don't know about it.
 type WebPressableState = PressableStateCallbackType & { hovered?: boolean };
 
-interface SideRailProps {
-  /** The Home tab on screen, if any — the book screen sits outside the tabs. */
-  activeScreen?: string;
-}
+type HomeTab = (typeof menuItems)[number]['screen'];
+
+/**
+ * The Home tab navigator's state and navigation, when the rail is its tab
+ * bar. Absent on the book screen, which sits outside the tabs.
+ */
+type SideRailProps = Partial<Pick<BottomTabBarProps, 'state' | 'navigation'>>;
 
 /**
  * The desktop stand-in for BottomMenu: the same three destinations in a rail
  * down the left edge, plus the link to settings that sits in the My list
  * header on mobile.
  */
-const SideRail = ({ activeScreen }: SideRailProps) => {
+const SideRail = ({ state, navigation: tabNavigation }: SideRailProps) => {
   const { navigate } = useNavigation<StackNavigationProp<NavigationType>>();
   const { data: userData } = useUserQuery();
   const { t } = useTranslation();
   const { theme } = useTheme();
   const styles = useStyles();
 
+  const activeScreen = state?.routes[state.index]?.name;
   const name = [userData?.givenName, userData?.familyName]
     .filter(Boolean)
     .join(' ');
+
+  const handlePress = (screen: HomeTab) => {
+    const route = state?.routes.find(({ name }) => name === screen);
+
+    if (!state || !tabNavigation || !route) {
+      // Outside the tabs, address the tab from the root, as BottomMenu does.
+      navigate(Routes.ROOT_02_APP, {
+        screen: Routes.APP_01_HOME,
+        params: { screen },
+      });
+      return;
+    }
+
+    // Do what the stock tab bar does: announce the press, so a tab that is
+    // already showing pops its stack back to its first screen, and only
+    // then switch tabs.
+    const event = tabNavigation.emit({
+      type: 'tabPress',
+      target: route.key,
+      canPreventDefault: true,
+    });
+
+    if (screen !== activeScreen && !event.defaultPrevented) {
+      tabNavigation.dispatch({
+        ...CommonActions.navigate(route),
+        target: state.key,
+      });
+    }
+  };
 
   return (
     <View style={styles.rail}>
@@ -56,19 +90,12 @@ const SideRail = ({ activeScreen }: SideRailProps) => {
               key={menu.title}
               accessibilityRole="link"
               accessibilityState={{ selected: active }}
-              style={state => [
+              style={pressState => [
                 styles.item,
-                (state as WebPressableState).hovered && styles.itemHovered,
+                (pressState as WebPressableState).hovered && styles.itemHovered,
                 active && styles.itemActive,
               ]}
-              onPress={() =>
-                // Addressed from the root, as in BottomMenu, so this also
-                // works from the root-level book screen.
-                navigate(Routes.ROOT_02_APP, {
-                  screen: Routes.APP_01_HOME,
-                  params: { screen: menu.screen },
-                })
-              }
+              onPress={() => handlePress(menu.screen)}
             >
               <Icon icon={menu.icon} color={color} size={20} />
               <Text kind="paragraph" text={menu.title} color={color} />
@@ -78,9 +105,9 @@ const SideRail = ({ activeScreen }: SideRailProps) => {
       </View>
       <Pressable
         accessibilityRole="link"
-        style={state => [
+        style={pressState => [
           styles.account,
-          (state as WebPressableState).hovered && styles.itemHovered,
+          (pressState as WebPressableState).hovered && styles.itemHovered,
         ]}
         onPress={() => navigate(Routes.APP_02_SETTINGS)}
       >
