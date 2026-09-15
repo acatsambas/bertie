@@ -5,14 +5,17 @@ import { translations } from 'locales/translations';
 import { Kind, ReadingInsights, summarise } from './computeInsights';
 
 /** The opening sentences, and the "12 books read · 8 rated" line. */
-export const useInsightsSummary = (insights: ReadingInsights) => {
+export const useInsightsSummary = (
+  insights: ReadingInsights,
+  pendingCount: number,
+) => {
   const { t } = useTranslation();
   const labels = translations.discover.insights;
 
   const kindName = (kind: Kind) =>
     t(kind === 'fiction' ? labels.fictionLower : labels.nonFictionLower);
 
-  const summary = summarise(insights, kindName)
+  const summary = summarise(insights, kindName, pendingCount > 0)
     .map(({ id, values }) => t(labels.summary[id], values))
     .join(' ');
 
@@ -26,5 +29,11 @@ export const useInsightsSummary = (insights: ReadingInsights) => {
     ),
   ].join(' · ');
 
-  return { summary, counts };
+  const pending = pendingCount
+    ? t(pendingCount === 1 ? labels.pendingOne : labels.pendingOther, {
+        count: pendingCount,
+      })
+    : '';
+
+  return { summary, counts, pending };
 };

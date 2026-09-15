@@ -8,15 +8,24 @@ import Text from 'components/Text';
 import { translations } from 'locales/translations';
 
 import { ReadingInsights, byDecade } from './computeInsights';
-import { FictionSection, RankedSection } from './parts';
+import { FictionSection, PendingLookups, RankedSection } from './parts';
 import { useInsightsSummary } from './useInsightsSummary';
 
 /** Insights on phones and the PWA: the summary, then one list after another. */
-export const MobileInsights = ({ insights }: { insights: ReadingInsights }) => {
+export const MobileInsights = ({
+  insights,
+  pendingCount,
+}: {
+  insights: ReadingInsights;
+  pendingCount: number;
+}) => {
   const styles = useStyles();
   const { theme } = useTheme();
   const { t } = useTranslation();
-  const { summary, counts } = useInsightsSummary(insights);
+  const { summary, counts, pending } = useInsightsSummary(
+    insights,
+    pendingCount,
+  );
 
   return (
     <ScrollView
@@ -33,6 +42,7 @@ export const MobileInsights = ({ insights }: { insights: ReadingInsights }) => {
           text={`${counts} · ${t(translations.discover.insights.ratingScale)}`}
           color={theme.colors.grey2}
         />
+        {!!pending && <PendingLookups text={pending} />}
       </View>
       <RankedSection
         title={t(translations.discover.insights.authors)}

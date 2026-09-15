@@ -8,7 +8,32 @@ export interface BookInsightsMeta {
   firstPublishYear: number | null;
 }
 
-type IndustryIdentifier = { type: string; identifier: string };
+/** The parts of a Google Books volume Insights reads. */
+export interface InsightsVolumeInfo {
+  title?: string;
+  authors?: string[];
+  categories?: string[];
+  industryIdentifiers?: { type: string; identifier: string }[];
+}
+
+/** Genres from a Google Books volume, first publication from Open Library. */
+export const insightsMetaFromVolume = async (
+  volumeInfo: InsightsVolumeInfo,
+): Promise<BookInsightsMeta> => {
+  const identifiers = volumeInfo.industryIdentifiers ?? [];
+  const isbn = ['ISBN_13', 'ISBN_10']
+    .map(type => identifiers.find(id => id.type === type)?.identifier)
+    .find(Boolean);
+
+  return {
+    categories: volumeInfo.categories ?? [],
+    firstPublishYear: await fetchFirstPublishYear({
+      isbn,
+      title: volumeInfo.title,
+      author: volumeInfo.authors?.[0],
+    }),
+  };
+};
 
 export const fetchBookInsightsMeta = async (
   bookId: string,
@@ -22,22 +47,9 @@ export const fetchBookInsightsMeta = async (
   }
 
   const { volumeInfo = {} } = await response.json();
-  const authors: string[] = volumeInfo.authors ?? [];
-  const identifiers: IndustryIdentifier[] =
-    volumeInfo.industryIdentifiers ?? [];
-  const isbn = ['ISBN_13', 'ISBN_10']
-    .map(type => identifiers.find(id => id.type === type)?.identifier)
-    .find(Boolean);
 
   return {
-    authors,
-    meta: {
-      categories: volumeInfo.categories ?? [],
-      firstPublishYear: await fetchFirstPublishYear({
-        isbn,
-        title: volumeInfo.title,
-        author: authors[0],
-      }),
-    },
+    authors: volumeInfo.authors ?? [],
+    meta: await insightsMetaFromVolume(volumeInfo),
   };
 };

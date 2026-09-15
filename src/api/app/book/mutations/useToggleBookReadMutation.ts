@@ -6,6 +6,7 @@ import {
   updateDoc,
 } from 'firebase/firestore';
 
+import { warmBookInsights } from 'api/app/book/cacheBookInsights';
 import { auth, db } from 'api/firebase';
 import { useGuest } from 'api/guest/GuestProvider';
 import { setGuestBookRead } from 'api/guest/guestStore';
@@ -36,6 +37,9 @@ export const useToggleBookReadMutation = () => {
         isRead: !isRead,
         readAt: isRead ? deleteField() : serverTimestamp(),
       });
+
+      // Get it ready for Insights while the reader carries on.
+      if (!isRead) void warmBookInsights(bookId);
     },
     onMutate: async ({ bookId, isRead }) => {
       await queryClient.cancelQueries({ queryKey: ['userBooks'] });

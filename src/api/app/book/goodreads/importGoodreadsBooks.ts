@@ -7,15 +7,16 @@ import {
   getDocs,
   query,
   setDoc,
+  updateDoc,
   where,
 } from 'firebase/firestore';
 
 import { db } from 'api/firebase';
-import { BookResult } from 'api/google-books/search';
+import { insightsMetaFromVolume } from 'api/google-books/fetchBookInsightsMeta';
 
 import { mapWithLimit } from 'utils/mapWithLimit';
 
-import { findGoogleBook } from './findGoogleBook';
+import { Volume, findGoogleVolume, toBookResult } from './findGoogleBook';
 import { GoodreadsBook } from './parseGoodreadsCsv';
 
 export interface GoodreadsImportResult {
@@ -30,19 +31,34 @@ export interface GoodreadsImportResult {
 
 type Outcome = 'added' | 'updated' | 'unchanged';
 
-// Google lookups run a couple at a time: faster than one by one, gentle
-// enough that retries rarely kick in.
-const CONCURRENT_BOOKS = 2;
+// A few books at a time: faster than one by one, gentle enough on Google
+// that retries rarely kick in.
+const CONCURRENT_BOOKS = 3;
 
 const saveBook = async (
   userId: string,
-  found: BookResult,
+  volume: Volume,
   book: GoodreadsBook,
   entry: DocumentData | undefined,
   alreadyRated: boolean,
 ): Promise<Outcome> => {
+  const found = toBookResult(volume);
   const bookRef = doc(db, 'books', found.id);
-  if (!(await getDoc(bookRef)).exists()) await setDoc(bookRef, found);
+  const snapshot = await getDoc(bookRef);
+
+  // Ready finished books for Insights now, while Google's answer is in hand,
+  // so the Insights tab doesn't have to look them up. If Open Library lets
+  // us down, Insights tries again itself.
+  const insights =
+    (book.isRead || book.rating) && !snapshot.data()?.insights
+      ? await insightsMetaFromVolume(volume.volumeInfo ?? {}).catch(() => null)
+      : null;
+
+  if (!snapshot.exists()) {
+    await setDoc(bookRef, { ...found, ...(insights ? { insights } : {}) });
+  } else if (insights) {
+    await updateDoc(bookRef, { insights });
+  }
 
   const userBookRef = doc(db, 'users', userId, 'books', found.id);
   const readAt =
@@ -111,22 +127,22 @@ export const importGoodreadsBooks = async (
 
   await mapWithLimit(books, CONCURRENT_BOOKS, async book => {
     try {
-      const found = await findGoogleBook(book);
+      const volume = await findGoogleVolume(book);
 
-      if (!found) {
+      if (!volume) {
         result.missed.push(book);
-      } else if (seen.has(found.id)) {
+      } else if (seen.has(volume.id)) {
         // Two editions of one book on Goodreads, one volume on Google.
         result.unchanged += 1;
       } else {
-        seen.add(found.id);
+        seen.add(volume.id);
         result[
           await saveBook(
             userId,
-            found,
+            volume,
             book,
-            existing.get(found.id),
-            rated.has(found.id),
+            existing.get(volume.id),
+            rated.has(volume.id),
           )
         ] += 1;
       }

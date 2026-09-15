@@ -1,19 +1,17 @@
+import { InsightsVolumeInfo } from 'api/google-books/fetchBookInsightsMeta';
 import { BookResult } from 'api/google-books/search';
 
 import { GoodreadsBook } from './parseGoodreadsCsv';
 
-interface Volume {
+export interface Volume {
   id: string;
-  volumeInfo?: {
-    title?: string;
-    authors?: string[];
-    description?: string;
-    industryIdentifiers?: { type: string; identifier: string }[];
-  };
+  volumeInfo?: InsightsVolumeInfo & { description?: string };
 }
 
+// Categories too, so finished books can be readied for Insights on import
+// without asking Google again.
 const FIELDS =
-  'items(id,volumeInfo/title,volumeInfo/authors,volumeInfo/description,volumeInfo/industryIdentifiers)';
+  'items(id,volumeInfo/title,volumeInfo/authors,volumeInfo/description,volumeInfo/categories,volumeInfo/industryIdentifiers)';
 const RETRYABLE = [429, 500, 503];
 const MAX_ATTEMPTS = 4;
 
@@ -88,7 +86,7 @@ export const matchesTitleAndAuthor = (
 
 // Shaped like a search result, which is what the rest of the app stores.
 // Firestore rejects undefined, so missing fields are left out.
-const toBookResult = ({ id, volumeInfo = {} }: Volume): BookResult => ({
+export const toBookResult = ({ id, volumeInfo = {} }: Volume): BookResult => ({
   id,
   volumeInfo: {
     title: volumeInfo.title ?? '',
@@ -102,14 +100,14 @@ const toBookResult = ({ id, volumeInfo = {} }: Volume): BookResult => ({
  * only accepting a volume that carries that ISBN; otherwise, or if that
  * fails, by title and author, only accepting an exact title and author match.
  */
-export const findGoogleBook = async (
+export const findGoogleVolume = async (
   book: GoodreadsBook,
-): Promise<BookResult | null> => {
+): Promise<Volume | null> => {
   for (const isbn of book.isbns) {
     const match = (await searchVolumes(`isbn:${isbn}`)).find(volume =>
       hasIsbn(volume, isbn),
     );
-    if (match) return toBookResult(match);
+    if (match) return match;
   }
 
   const title = searchableTitle(book.title);

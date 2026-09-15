@@ -20,7 +20,12 @@ export const InsightsTab = () => {
   const styles = useStyles();
   const { t } = useTranslation();
   const isDesktop = useIsDesktop();
-  const { data: books, isLoading, isError } = useReadingInsightsQuery();
+  const {
+    data: books,
+    isLoading,
+    isError,
+    pendingCount,
+  } = useReadingInsightsQuery();
   const insights = useMemo(
     () => (books ? computeInsights(books) : null),
     [books],
@@ -45,9 +50,9 @@ export const InsightsTab = () => {
   }
 
   return isDesktop ? (
-    <DesktopInsights insights={insights} />
+    <DesktopInsights insights={insights} pendingCount={pendingCount} />
   ) : (
-    <MobileInsights insights={insights} />
+    <MobileInsights insights={insights} pendingCount={pendingCount} />
   );
 };
 

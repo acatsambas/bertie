@@ -114,6 +114,8 @@
       "percentOfReading": "{{percent}}% of your reading",
       "noData": "Nothing to show here yet.",
       "noRatings": "Top rated needs at least two rated books each. Rate a few more to see what comes out on top.",
+      "pendingOne": "Looking up genres and publication dates for 1 more book…",
+      "pendingOther": "Looking up genres and publication dates for {{count}} more books…",
       "unclassifiedOne": "1 book has no genre on Google Books, so it isn't counted here.",
       "unclassifiedOther": "{{count}} books have no genre on Google Books, so they aren't counted here.",
       "summary": {

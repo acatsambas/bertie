@@ -2,6 +2,7 @@ import { makeStyles, useTheme } from '@rneui/themed';
 import React, { ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  ActivityIndicator,
   DimensionValue,
   Pressable,
   StyleProp,
@@ -363,7 +364,25 @@ export const FictionSection = ({
   );
 };
 
+/** "Looking up 12 more books…", while genres and dates are still coming in. */
+export const PendingLookups = ({ text }: { text: string }) => {
+  const styles = useStyles();
+  const { theme } = useTheme();
+
+  return (
+    <View style={styles.pending}>
+      <ActivityIndicator size="small" color={theme.colors.grey2} />
+      <Text kind="littleText" text={text} color={theme.colors.grey2} />
+    </View>
+  );
+};
+
 const useStyles = makeStyles(theme => ({
+  pending: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
   section: { gap: 16 },
   sectionHeader: {
     flexDirection: 'row',

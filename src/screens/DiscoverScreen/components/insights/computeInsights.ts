@@ -259,23 +259,30 @@ const favouritesLine = (
   return null;
 };
 
-/** The sentences that open the tab, as translation ids and their values. */
+/**
+ * The sentences that open the tab, as translation ids and their values.
+ * While books are still being looked up, the genre and fiction sentences
+ * wait, so the summary doesn't change under the reader.
+ */
 export const summarise = (
   insights: ReadingInsights,
   kindName: (kind: Kind) => string,
+  lookupsPending = false,
 ): SummaryLine[] =>
   [
-    fictionLine(insights, kindName),
+    lookupsPending ? null : fictionLine(insights, kindName),
     favouritesLine(insights.authors, {
       same: 'authorSame',
       diff: 'authorDiff',
       goTo: 'authorGoTo',
       top: 'authorTop',
     }),
-    favouritesLine(insights.genres, {
-      same: 'genreSame',
-      diff: 'genreDiff',
-      goTo: 'genreGoTo',
-      top: 'genreTop',
-    }),
+    lookupsPending
+      ? null
+      : favouritesLine(insights.genres, {
+          same: 'genreSame',
+          diff: 'genreDiff',
+          goTo: 'genreGoTo',
+          top: 'genreTop',
+        }),
   ].filter((line): line is SummaryLine => line !== null);

@@ -16,6 +16,7 @@ import {
 import {
   FictionSection,
   MAX_RATING,
+  PendingLookups,
   RankedSection,
   formatRating,
 } from './parts';
@@ -112,12 +113,14 @@ const Stat = ({
  */
 export const DesktopInsights = ({
   insights,
+  pendingCount,
 }: {
   insights: ReadingInsights;
+  pendingCount: number;
 }) => {
   const styles = useStyles();
   const { t } = useTranslation();
-  const { summary } = useInsightsSummary(insights);
+  const { summary, pending } = useInsightsSummary(insights, pendingCount);
 
   return (
     <ScrollView
@@ -128,6 +131,7 @@ export const DesktopInsights = ({
       {!!summary && (
         <Text kind="header" text={summary} style={styles.summary} />
       )}
+      {!!pending && <PendingLookups text={pending} />}
       <View style={styles.stats}>
         <Stat
           label={t(translations.discover.insights.booksRead)}

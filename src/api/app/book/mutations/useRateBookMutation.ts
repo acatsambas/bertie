@@ -4,6 +4,7 @@ import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { auth, db } from 'api/firebase';
 import { useGuest } from 'api/guest/GuestProvider';
 import { setGuestRating } from 'api/guest/guestStore';
+import { warmBookInsights } from 'api/app/book/cacheBookInsights';
 import { bookQueryKeys } from 'api/app/book/queryKeys';
 import { BookResult } from 'api/google-books/search';
 
@@ -44,6 +45,9 @@ export const useRateBookMutation = () => {
 
             const ratingRef = doc(db, 'ratings', `${bookId}_${userId}`);
             await setDoc(ratingRef, { bookId, userId, rating });
+
+            // Get it ready for Insights while the reader carries on.
+            void warmBookInsights(bookId);
         },
         onMutate: async ({ bookId, rating }) => {
             await queryClient.cancelQueries({

@@ -1,14 +1,14 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQueries, useQuery } from '@tanstack/react-query';
 import {
+  DocumentData,
   collection,
-  doc,
   documentId,
   getDocs,
   query,
-  updateDoc,
   where,
 } from 'firebase/firestore';
 
+import { saveBookInsights } from 'api/app/book/cacheBookInsights';
 import { RatingValue } from 'api/app/book/mutations/useRateBookMutation';
 import { auth, db } from 'api/firebase';
 import {
@@ -18,7 +18,7 @@ import {
 import { useGuest } from 'api/guest/GuestProvider';
 import { readGuestData } from 'api/guest/guestStore';
 
-import { mapWithLimit } from 'utils/mapWithLimit';
+import { createLimiter } from 'utils/mapWithLimit';
 
 /** A book the reader has finished, with what Insights groups it by. */
 export interface ReadBook {
@@ -29,46 +29,43 @@ export interface ReadBook {
   rating?: RatingValue;
 }
 
-interface KnownBook {
-  authors?: string[];
+/** A finished book as stored; `insights` is missing until it's looked up. */
+interface FinishedBook {
+  id: string;
+  authors: string[];
   insights?: BookInsightsMeta;
-}
-
-interface Sources {
-  /** Every book the reader has finished: ticked as read, or rated. */
-  ids: string[];
-  ratings: Record<string, RatingValue>;
-  /** What's already stored about those books, keyed by id. */
-  known: Record<string, KnownBook>;
+  rating?: RatingValue;
+  /** Whether it has a shared books/{id} document to cache a lookup on. */
+  hasDoc: boolean;
 }
 
 // Firestore caps an `in` filter at 30 values.
 const IN_LIMIT = 30;
-// Enough to fill a first visit quickly without tripping Google's rate limit.
-const MAX_GOOGLE_FETCHES = 4;
+// Enough to get through a first visit quickly without tripping Google's
+// rate limit, shared by every lookup the tab starts.
+const lookUp = createLimiter(4);
 
 const chunk = <T>(items: T[], size: number) =>
   Array.from({ length: Math.ceil(items.length / size) }, (_, i) =>
     items.slice(i * size, (i + 1) * size),
   );
 
-const readGuestSources = async (): Promise<Sources> => {
+const readGuestBooks = async (): Promise<FinishedBook[]> => {
   const { books, ratings } = await readGuestData();
-  const readIds = Object.keys(books).filter(id => books[id].isRead);
+  const ids = new Set([
+    ...Object.keys(books).filter(id => books[id].isRead),
+    ...Object.keys(ratings),
+  ]);
 
-  return {
-    ids: [...new Set([...readIds, ...Object.keys(ratings)])],
-    ratings,
-    known: Object.fromEntries(
-      Object.entries(books).map(([id, { book }]) => [
-        id,
-        { authors: book.volumeInfo?.authors },
-      ]),
-    ),
-  };
+  return [...ids].map(id => ({
+    id,
+    authors: books[id]?.book.volumeInfo?.authors ?? [],
+    rating: ratings[id],
+    hasDoc: false,
+  }));
 };
 
-const readUserSources = async (userId: string): Promise<Sources> => {
+const readUserBooks = async (userId: string): Promise<FinishedBook[]> => {
   const [entries, ratingDocs] = await Promise.all([
     getDocs(collection(db, 'users', userId, 'books')),
     getDocs(query(collection(db, 'ratings'), where('userId', '==', userId))),
@@ -90,18 +87,21 @@ const readUserSources = async (userId: string): Promise<Sources> => {
       getDocs(query(collection(db, 'books'), where(documentId(), 'in', batch))),
     ),
   );
-  const known: Record<string, KnownBook> = {};
+  const stored = new Map<string, DocumentData>();
   bookDocs.forEach(snapshot =>
-    snapshot.docs.forEach(bookDoc => {
-      const data = bookDoc.data();
-      known[bookDoc.id] = {
-        authors: data.volumeInfo?.authors,
-        insights: data.insights,
-      };
-    }),
+    snapshot.docs.forEach(bookDoc => stored.set(bookDoc.id, bookDoc.data())),
   );
 
-  return { ids, ratings, known };
+  return ids.map(id => {
+    const data = stored.get(id);
+    return {
+      id,
+      authors: data?.volumeInfo?.authors ?? [],
+      insights: data?.insights,
+      rating: ratings[id],
+      hasDoc: !!data,
+    };
+  });
 };
 
 /**
@@ -109,60 +109,71 @@ const readUserSources = async (userId: string): Promise<Sources> => {
  * year it first came out, for the Insights tab.
  *
  * Saved books only carry a title, authors and description, so genres come
- * from Google Books and first publication from Open Library. Each book is
- * looked up once and the answer
- * cached on its shared `books/{id}` document, so the next reader of the same
- * book — and every later visit — reads it from Firestore instead of spending
- * the app's Google quota.
+ * from Google Books and first publication from Open Library. The answer is
+ * cached on the book's shared `books/{id}` document — usually ahead of time,
+ * when it's ticked as read, rated or imported — so most books arrive ready.
+ * Any that don't are looked up one query each, so the tab can show the rest
+ * straight away and fill these in as they land; `pendingCount` says how
+ * many are still out.
  */
 export const useReadingInsightsQuery = () => {
   const { isGuest } = useGuest();
   const userId = auth.currentUser?.uid;
 
-  return useQuery<ReadBook[]>({
+  const finished = useQuery<FinishedBook[]>({
     queryKey: ['readingInsights', isGuest, userId],
     queryFn: async () => {
-      if (!isGuest && !userId) return [];
-
-      const { ids, ratings, known } = isGuest
-        ? await readGuestSources()
-        : await readUserSources(userId!);
-
-      return mapWithLimit(ids, MAX_GOOGLE_FETCHES, async id => {
-        const stored = known[id];
-        let authors = stored?.authors ?? [];
-        let meta = stored?.insights;
-
-        if (!meta) {
-          try {
-            const fetched = await fetchBookInsightsMeta(id);
-            meta = fetched.meta;
-            if (!authors.length) authors = fetched.authors;
-
-            // Only onto books that already have a document: a rated book
-            // can lack one, and a guest can't write at all.
-            if (!isGuest && stored) {
-              updateDoc(doc(db, 'books', id), { insights: meta }).catch(error =>
-                console.warn('Could not cache book insights:', error),
-              );
-            }
-          } catch (error) {
-            // Still counts towards authors and ratings; the next visit retries.
-            console.warn('Could not fetch book insights:', error);
-          }
-        }
-
-        return {
-          id,
-          authors,
-          categories: meta?.categories ?? [],
-          firstPublishYear: meta?.firstPublishYear ?? null,
-          rating: ratings[id],
-        };
-      });
+      if (isGuest) return readGuestBooks();
+      return userId ? readUserBooks(userId) : [];
     },
     enabled: isGuest || !!userId,
     staleTime: 5 * 60 * 1000,
     gcTime: 30 * 60 * 1000,
   });
+
+  const missing = (finished.data ?? []).filter(book => !book.insights);
+  const lookups = useQueries({
+    queries: missing.map(book => ({
+      queryKey: ['bookInsightsMeta', book.id],
+      queryFn: () =>
+        lookUp(async () => {
+          const fetched = await fetchBookInsightsMeta(book.id);
+
+          // Guests can't write, and a rated book can lack a doc to write to.
+          if (!isGuest && book.hasDoc) {
+            saveBookInsights(book.id, fetched.meta).catch(error =>
+              console.warn('Could not cache book insights:', error),
+            );
+          }
+          return fetched;
+        }),
+      // A book's genres and first publication don't change.
+      staleTime: Infinity,
+      gcTime: 30 * 60 * 1000,
+      retry: 1,
+    })),
+  });
+
+  const lookedUp = new Map(
+    missing.map((book, i) => [book.id, lookups[i]?.data]),
+  );
+  const data = finished.data?.map((book): ReadBook => {
+    const fetched = lookedUp.get(book.id);
+    const meta = book.insights ?? fetched?.meta;
+
+    return {
+      id: book.id,
+      authors: book.authors.length ? book.authors : (fetched?.authors ?? []),
+      categories: meta?.categories ?? [],
+      firstPublishYear: meta?.firstPublishYear ?? null,
+      rating: book.rating,
+    };
+  });
+
+  return {
+    data,
+    isLoading: finished.isLoading,
+    isError: finished.isError,
+    pendingCount: lookups.filter(lookup => lookup.isPending).length,
+  };
 };

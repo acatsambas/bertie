@@ -26,15 +26,10 @@ const REQUIRED_COLUMNS = [
   'Exclusive Shelf',
 ];
 
-// Goodreads rates out of 5 and leaves 0 for unrated. Bertie's 4 — essential
-// reading — is left for the reader to give.
-const RATINGS: Record<string, RatingValue> = {
-  '1': 1,
-  '2': 1,
-  '3': 2,
-  '4': 3,
-  '5': 3,
-};
+// Goodreads rates out of 5 and leaves 0 for unrated, written "4" or, in
+// newer exports, "4.0". Bertie's 4 — essential reading — is left for the
+// reader to give.
+const RATINGS: Record<number, RatingValue> = { 1: 1, 2: 1, 3: 2, 4: 3, 5: 3 };
 
 /** RFC 4180: quoted fields can hold commas, line breaks and doubled quotes. */
 export const parseCsv = (text: string): string[][] => {
@@ -110,7 +105,7 @@ export const parseGoodreadsCsv = (text: string): GoodreadsBook[] => {
   return rows
     .map(row => {
       const isRead = cell(row, 'Exclusive Shelf') === 'read';
-      const rating = RATINGS[cell(row, 'My Rating')];
+      const rating = RATINGS[Math.round(Number(cell(row, 'My Rating')))];
       const addedAt = parseGoodreadsDate(cell(row, 'Date Added'));
       const readAt = isRead
         ? parseGoodreadsDate(cell(row, 'Date Read'))
