@@ -7,19 +7,25 @@ import { View } from 'react-native';
 import LoadingState from 'components/LoadingState/LoadingState';
 import Text from 'components/Text';
 
-import { useReadingInsightsQuery } from 'api/app/book';
+import {
+  useOtherReadersRatingsQuery,
+  useReadingInsightsQuery,
+} from 'api/app/book';
+import { useGuest } from 'api/guest/GuestProvider';
 
 import { translations } from 'locales/translations';
 
 import { DesktopInsights } from './DesktopInsights';
 import { MobileInsights } from './MobileInsights';
-import { computeInsights } from './computeInsights';
+import { OthersStatus } from './RatingsSection';
+import { compareRatings, computeInsights } from './computeInsights';
 
 /** What the reader's finished and rated books say about their reading. */
 export const InsightsTab = () => {
   const styles = useStyles();
   const { t } = useTranslation();
   const isDesktop = useIsDesktop();
+  const { isGuest } = useGuest();
   const {
     data: books,
     isLoading,
@@ -30,6 +36,25 @@ export const InsightsTab = () => {
     () => (books ? computeInsights(books) : null),
     [books],
   );
+
+  // Sorted, so the query doesn't refetch just because the list reordered.
+  const ratedIds = (books ?? [])
+    .filter(book => book.rating)
+    .map(book => book.id)
+    .sort();
+  const others = useOtherReadersRatingsQuery(ratedIds);
+  const comparison = useMemo(
+    () => compareRatings(books ?? [], others.data ?? {}),
+    [books, others.data],
+  );
+  // Guests can't read other people's ratings, so they see only their own.
+  const othersStatus: OthersStatus =
+    isGuest || others.isError
+      ? 'unavailable'
+      : others.isPending
+        ? 'loading'
+        : 'ready';
+  const ratings = { comparison, othersStatus };
 
   if (isLoading) return <LoadingState />;
 
@@ -50,9 +75,17 @@ export const InsightsTab = () => {
   }
 
   return isDesktop ? (
-    <DesktopInsights insights={insights} pendingCount={pendingCount} />
+    <DesktopInsights
+      insights={insights}
+      pendingCount={pendingCount}
+      ratings={ratings}
+    />
   ) : (
-    <MobileInsights insights={insights} pendingCount={pendingCount} />
+    <MobileInsights
+      insights={insights}
+      pendingCount={pendingCount}
+      ratings={ratings}
+    />
   );
 };
 

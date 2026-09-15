@@ -7,11 +7,13 @@ import Text from 'components/Text';
 
 import { translations } from 'locales/translations';
 
+import { OthersStatus, RatingsSection } from './RatingsSection';
 import {
   InsightGroup,
   Ranking,
+  RatingComparison,
   ReadingInsights,
-  byDecade,
+  byCentury,
 } from './computeInsights';
 import {
   FictionSection,
@@ -24,8 +26,8 @@ import { useInsightsSummary } from './useInsightsSummary';
 
 const COLUMN_MAX_HEIGHT = 140;
 
-/** The top five decades as columns, tallest for whatever they're ranked by. */
-const DecadeColumns = ({
+/** The top five centuries as columns, tallest for whatever they're ranked by. */
+const CenturyColumns = ({
   groups,
   ranking,
 }: {
@@ -67,12 +69,13 @@ const DecadeColumns = ({
               <Text
                 kind="description"
                 text={group.label}
-                style={styles.medium}
+                style={[styles.medium, styles.centred]}
               />
               <Text
                 kind="littleText"
                 text={byRating ? reads : rating}
                 color={theme.colors.grey2}
+                style={styles.centred}
               />
             </View>
           </View>
@@ -114,9 +117,11 @@ const Stat = ({
 export const DesktopInsights = ({
   insights,
   pendingCount,
+  ratings,
 }: {
   insights: ReadingInsights;
   pendingCount: number;
+  ratings: { comparison: RatingComparison; othersStatus: OthersStatus };
 }) => {
   const styles = useStyles();
   const { t } = useTranslation();
@@ -163,18 +168,24 @@ export const DesktopInsights = ({
           style={styles.card}
         />
         <RankedSection
-          title={t(translations.discover.insights.decades)}
-          subtitle={t(translations.discover.insights.decadesSubtitle)}
-          groups={insights.decades}
+          title={t(translations.discover.insights.centuries)}
+          subtitle={t(translations.discover.insights.centuriesSubtitle)}
+          groups={insights.centuries}
           variant="desktop"
-          sortShown={byDecade}
+          sortShown={byCentury}
           style={styles.card}
           renderChart={(ranked, ranking) => (
-            <DecadeColumns groups={ranked} ranking={ranking} />
+            <CenturyColumns groups={ranked} ranking={ranking} />
           )}
         />
         <FictionSection
           insights={insights}
+          variant="desktop"
+          style={styles.card}
+        />
+        <RatingsSection
+          comparison={ratings.comparison}
+          othersStatus={ratings.othersStatus}
           variant="desktop"
           style={styles.card}
         />
@@ -257,6 +268,7 @@ const useStyles = makeStyles(theme => ({
     borderTopColor: theme.colors.grey0,
   },
   medium: { fontFamily: 'Commissioner_500Medium' },
+  centred: { textAlign: 'center' },
 }));
 
 export default DesktopInsights;

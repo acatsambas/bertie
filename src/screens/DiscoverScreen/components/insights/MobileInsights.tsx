@@ -7,7 +7,12 @@ import Text from 'components/Text';
 
 import { translations } from 'locales/translations';
 
-import { ReadingInsights, byDecade } from './computeInsights';
+import { OthersStatus, RatingsSection } from './RatingsSection';
+import {
+  RatingComparison,
+  ReadingInsights,
+  byCentury,
+} from './computeInsights';
 import { FictionSection, PendingLookups, RankedSection } from './parts';
 import { useInsightsSummary } from './useInsightsSummary';
 
@@ -15,9 +20,11 @@ import { useInsightsSummary } from './useInsightsSummary';
 export const MobileInsights = ({
   insights,
   pendingCount,
+  ratings,
 }: {
   insights: ReadingInsights;
   pendingCount: number;
+  ratings: { comparison: RatingComparison; othersStatus: OthersStatus };
 }) => {
   const styles = useStyles();
   const { theme } = useTheme();
@@ -55,13 +62,18 @@ export const MobileInsights = ({
         variant="mobile"
       />
       <RankedSection
-        title={t(translations.discover.insights.decades)}
-        subtitle={t(translations.discover.insights.decadesSubtitle)}
-        groups={insights.decades}
+        title={t(translations.discover.insights.centuries)}
+        subtitle={t(translations.discover.insights.centuriesSubtitle)}
+        groups={insights.centuries}
         variant="mobile"
-        sortShown={byDecade}
+        sortShown={byCentury}
       />
       <FictionSection insights={insights} variant="mobile" />
+      <RatingsSection
+        comparison={ratings.comparison}
+        othersStatus={ratings.othersStatus}
+        variant="mobile"
+      />
     </ScrollView>
   );
 };

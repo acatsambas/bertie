@@ -17,7 +17,7 @@ export interface ReadingInsights {
   avgRating: number | null;
   authors: InsightGroup[];
   genres: InsightGroup[];
-  decades: InsightGroup[];
+  centuries: InsightGroup[];
   fiction: InsightGroup;
   nonFiction: InsightGroup;
   /** Books Google gave no categories for, so neither fiction nor non-fiction. */
@@ -72,9 +72,20 @@ export const genreOf = (category: string) => {
   return GENRE_NAMES[genre] ?? genre;
 };
 
-/** Books with no known first publication are left out, never guessed. */
-export const decadeOf = (year: number | null) =>
-  year === null ? null : `${Math.floor(year / 10) * 10}s`;
+const ordinal = (n: number) => {
+  const suffixes: Record<number, string> = { 1: 'st', 2: 'nd', 3: 'rd' };
+  const teens = n % 100 >= 11 && n % 100 <= 13;
+  return `${n}${teens ? 'th' : (suffixes[n % 10] ?? 'th')}`;
+};
+
+/**
+ * "20th century" for 1900–1999, as people say it (strictly, 1900 closes the
+ * 19th). Books with no known first publication are left out, never guessed.
+ */
+export const centuryOf = (year: number | null) =>
+  year === null || year < 1
+    ? null
+    : `${ordinal(Math.floor(year / 100) + 1)} century`;
 
 const groupBooks = (
   books: ReadBook[],
@@ -130,7 +141,7 @@ export const computeInsights = (books: ReadBook[]): ReadingInsights => {
       : null,
     authors: groupBooks(books, book => book.authors.map(name => name.trim())),
     genres: groupBooks(books, book => book.categories.map(genreOf)),
-    decades: groupBooks(books, book => [decadeOf(book.firstPublishYear)]),
+    centuries: groupBooks(books, book => [centuryOf(book.firstPublishYear)]),
     fiction:
       kinds.find(group => group.label === 'fiction') ?? emptyGroup('fiction'),
     nonFiction:
@@ -163,8 +174,67 @@ export const rank = (groups: InsightGroup[], ranking: Ranking, limit = 5) =>
         .slice(0, limit)
     : [...groups].sort(byReads).slice(0, limit);
 
-/** Oldest decade first, so a chart of them reads as a timeline. */
-export const byDecade = (a: InsightGroup, b: InsightGroup) =>
+// --- ratings compared ---------------------------------------------------------
+
+/** How many ratings sit at each level: index 0 is a 1, index 3 a 4. */
+export interface RatingDistribution {
+  counts: number[];
+  total: number;
+}
+
+export interface RatingComparison {
+  mine: RatingDistribution;
+  /** Other readers' ratings of the books this reader rated. */
+  others: RatingDistribution;
+  /** Enough of those to set beside the reader's own. */
+  enoughOthers: boolean;
+  /**
+   * The reader's rating minus other readers' average for the same book,
+   * averaged over books both have rated; null when too few overlap.
+   */
+  averageDifference: number | null;
+}
+
+// Below these, a comparison says more about a couple of books than about
+// how the reader rates.
+const MIN_OTHER_RATINGS = 10;
+const MIN_COMPARED_BOOKS = 3;
+
+const distribution = (ratings: number[]): RatingDistribution => {
+  const counts = [0, 0, 0, 0];
+  ratings.forEach(rating => {
+    if (rating >= 1 && rating <= 4) counts[rating - 1] += 1;
+  });
+  return { counts, total: counts.reduce((sum, count) => sum + count, 0) };
+};
+
+const mean = (values: number[]) =>
+  values.reduce((sum, value) => sum + value, 0) / values.length;
+
+export const compareRatings = (
+  books: ReadBook[],
+  othersByBook: Record<string, number[]>,
+): RatingComparison => {
+  const rated = books.filter(book => book.rating);
+  const others = distribution(
+    rated.flatMap(book => othersByBook[book.id] ?? []),
+  );
+  const differences = rated.flatMap(book => {
+    const theirs = othersByBook[book.id] ?? [];
+    return theirs.length ? [book.rating! - mean(theirs)] : [];
+  });
+
+  return {
+    mine: distribution(rated.map(book => book.rating!)),
+    others,
+    enoughOthers: others.total >= MIN_OTHER_RATINGS,
+    averageDifference:
+      differences.length >= MIN_COMPARED_BOOKS ? mean(differences) : null,
+  };
+};
+
+/** Oldest century first, so a chart of them reads as a timeline. */
+export const byCentury = (a: InsightGroup, b: InsightGroup) =>
   parseInt(a.label, 10) - parseInt(b.label, 10);
 
 // --- summary ---------------------------------------------------------------

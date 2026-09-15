@@ -5,3 +5,4 @@ export * from './useBookRatingsQuery';
 export * from './useUserBookRatingQuery';
 export * from './useEssentialBooksQuery';
 export * from './useReadingInsightsQuery';
+export * from './useOtherReadersRatingsQuery';

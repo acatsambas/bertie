@@ -18,6 +18,7 @@ import {
 import { useGuest } from 'api/guest/GuestProvider';
 import { readGuestData } from 'api/guest/guestStore';
 
+import { chunk } from 'utils/chunk';
 import { createLimiter } from 'utils/mapWithLimit';
 
 /** A book the reader has finished, with what Insights groups it by. */
@@ -44,11 +45,6 @@ const IN_LIMIT = 30;
 // Enough to get through a first visit quickly without tripping Google's
 // rate limit, shared by every lookup the tab starts.
 const lookUp = createLimiter(4);
-
-const chunk = <T>(items: T[], size: number) =>
-  Array.from({ length: Math.ceil(items.length / size) }, (_, i) =>
-    items.slice(i * size, (i + 1) * size),
-  );
 
 const readGuestBooks = async (): Promise<FinishedBook[]> => {
   const { books, ratings } = await readGuestData();
