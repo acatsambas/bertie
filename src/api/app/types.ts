@@ -20,6 +20,13 @@ export type UserBook = {
   id: string;
   bookRef: DocumentReference<DocumentData>;
   isRead?: boolean;
+  /**
+   * When the book went on the list, and when it was ticked as read (cleared
+   * if it's unticked). Stored as Firestore timestamps; useUserBooksQuery
+   * hands them out as epoch ms. Absent on books from before they were tracked.
+   */
+  addedAt?: number;
+  readAt?: number;
 };
 
 export type UserBookId = Pick<UserBook, 'id'>;

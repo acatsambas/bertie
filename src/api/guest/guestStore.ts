@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { doc, setDoc } from 'firebase/firestore';
+import { Timestamp, doc, setDoc } from 'firebase/firestore';
 
 import { RatingValue } from 'api/app/book/mutations/useRateBookMutation';
 import { UserData } from 'api/types';
@@ -24,6 +24,9 @@ const GUEST_MODE_KEY = '@bertie/guest-mode';
 export interface GuestBook {
   book: BookResult;
   isRead: boolean;
+  /** Epoch ms, as on UserBook. Absent on books from before they were tracked. */
+  addedAt?: number;
+  readAt?: number;
 }
 
 export interface GuestData {
@@ -122,7 +125,13 @@ export const setGuestBook = (book: BookResult, isUserBook: boolean) =>
     if (isUserBook) {
       delete books[book.id];
     } else {
-      books[book.id] = { book, isRead: books[book.id]?.isRead ?? false };
+      const existing = books[book.id];
+      books[book.id] = {
+        book,
+        isRead: existing?.isRead ?? false,
+        addedAt: existing?.addedAt ?? Date.now(),
+        readAt: existing?.readAt,
+      };
     }
 
     return { ...data, books };
@@ -135,7 +144,15 @@ export const setGuestBookRead = (bookId: string, isRead: boolean) =>
 
     return {
       ...data,
-      books: { ...data.books, [bookId]: { ...existing, isRead } },
+      books: {
+        ...data.books,
+        // Unticking clears the read date, as it does for signed-in users.
+        [bookId]: {
+          ...existing,
+          isRead,
+          readAt: isRead ? Date.now() : undefined,
+        },
+      },
     };
   });
 
@@ -195,13 +212,22 @@ export const migrateGuestDataToUser = async (
   // that are still missing before pointing the user's library at them.
   await Promise.all(
     bookIds.map(async bookId => {
-      const { book, isRead } = data.books[bookId];
+      const { book, isRead, addedAt, readAt } = data.books[bookId];
       const bookRef = doc(db, 'books', bookId);
 
       await setDoc(bookRef, book, { merge: true });
       await setDoc(
         doc(db, 'users', userId, 'books', bookId),
-        { bookRef, isRead },
+        {
+          bookRef,
+          isRead,
+          ...(addedAt !== undefined
+            ? { addedAt: Timestamp.fromMillis(addedAt) }
+            : {}),
+          ...(isRead && readAt !== undefined
+            ? { readAt: Timestamp.fromMillis(readAt) }
+            : {}),
+        },
         { merge: true },
       );
     }),

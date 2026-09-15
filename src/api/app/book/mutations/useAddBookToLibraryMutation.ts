@@ -1,5 +1,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { deleteDoc, doc, getDoc, setDoc } from 'firebase/firestore';
+import {
+  deleteDoc,
+  doc,
+  getDoc,
+  serverTimestamp,
+  setDoc,
+} from 'firebase/firestore';
 
 import { bookQueryKeys } from 'api/app/book/queryKeys';
 import { UserBookId } from 'api/app/types';
@@ -42,7 +48,7 @@ export const useAddBookToLibraryMutation = () => {
       if (isUserBook) {
         await deleteDoc(userBookRef);
       } else {
-        await setDoc(userBookRef, { bookRef });
+        await setDoc(userBookRef, { bookRef, addedAt: serverTimestamp() });
       }
     },
     onMutate: async ({ book, isUserBook }) => {

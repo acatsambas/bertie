@@ -1,5 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { doc, updateDoc } from 'firebase/firestore';
+import {
+  deleteField,
+  doc,
+  serverTimestamp,
+  updateDoc,
+} from 'firebase/firestore';
 
 import { auth, db } from 'api/firebase';
 import { useGuest } from 'api/guest/GuestProvider';
@@ -25,8 +30,11 @@ export const useToggleBookReadMutation = () => {
 
       if (!userId) throw new Error('User not authenticated');
 
+      // Unticking clears the read date, so ticking it again later records
+      // the new one.
       await updateDoc(doc(db, 'users', userId, 'books', bookId), {
         isRead: !isRead,
+        readAt: isRead ? deleteField() : serverTimestamp(),
       });
     },
     onMutate: async ({ bookId, isRead }) => {
@@ -41,7 +49,13 @@ export const useToggleBookReadMutation = () => {
         const pages = old.pages.map((page: any) => ({
           ...page,
           books: page.books.map((book: any) =>
-            book.id === bookId ? { ...book, isRead: !isRead } : book,
+            book.id === bookId
+              ? {
+                  ...book,
+                  isRead: !isRead,
+                  readAt: isRead ? undefined : Date.now(),
+                }
+              : book,
           ),
         }));
         return { ...old, pages };
