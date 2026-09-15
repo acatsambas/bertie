@@ -6,6 +6,7 @@ import type { SettingsNavigatorParamList } from 'navigation/types';
 
 import AddressScreen from 'screens/AddressScreen';
 import DeleteScreen from 'screens/DeleteScreen';
+import GoodreadsImportScreen from 'screens/GoodreadsImportScreen';
 import ResetScreen from 'screens/ResetScreen';
 import SettingsScreen from 'screens/SettingsScreen';
 
@@ -32,6 +33,10 @@ export const SettingsNavigator = () => (
     <SettingsStack.Screen
       name={SETTINGS_ROUTES.SETTINGS_04_DELETE_ACCOUNT}
       component={DeleteScreen}
+    />
+    <SettingsStack.Screen
+      name={SETTINGS_ROUTES.SETTINGS_05_IMPORT_GOODREADS}
+      component={GoodreadsImportScreen}
     />
   </SettingsStack.Navigator>
 );

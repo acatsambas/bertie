@@ -71,6 +71,10 @@ const iconType = {
     type: 'material-community',
     name: 'information-outline',
   },
+  import: {
+    type: 'material-community',
+    name: 'tray-arrow-down',
+  },
   dotsHorizontal: {
     type: 'material-community',
     name: 'dots-vertical',

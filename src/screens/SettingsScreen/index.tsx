@@ -2,6 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { makeStyles } from '@rneui/themed';
 import { useQueryClient } from '@tanstack/react-query';
+import { useIsDesktop } from 'hooks/useIsDesktop';
 import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Linking, Platform, View } from 'react-native';
@@ -34,6 +35,7 @@ const SettingsScreen = ({ navigation }) => {
   const { logout, user } = useContext(AuthContext);
   const { isGuest, exitGuestMode } = useGuest();
   const queryClient = useQueryClient();
+  const isDesktop = useIsDesktop();
   const handleLogout = async () => {
     // A guest has no session to sign out of, just the local flag.
     if (isGuest) {
@@ -56,6 +58,10 @@ const SettingsScreen = ({ navigation }) => {
     navigate(Routes.SETTINGS_04_DELETE_ACCOUNT);
   };
 
+  const handleImportGoodreads = () => {
+    navigate(Routes.SETTINGS_05_IMPORT_GOODREADS);
+  };
+
   const handleExit = () => {
     navigation.goBack();
   };
@@ -76,6 +82,15 @@ const SettingsScreen = ({ navigation }) => {
           }
         />
         <View style={styles.buttonsArea}>
+          {/* Desktop only for now: it needs a CSV from the Goodreads site. */}
+          {isDesktop && !isGuest && (
+            <Button
+              kind="secondary"
+              onPress={handleImportGoodreads}
+              text={t(translations.settings.importGoodreads)}
+              icon="import"
+            />
+          )}
           <Button
             kind="secondary"
             onPress={handleChangeAddress}

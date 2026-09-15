@@ -43,6 +43,7 @@ export const SETTINGS_ROUTES = {
   SETTINGS_02_CHANGE_ADDRESS: 'change-address',
   SETTINGS_03_RESET_PASSWORD: 'reset-password',
   SETTINGS_04_DELETE_ACCOUNT: 'delete-account',
+  SETTINGS_05_IMPORT_GOODREADS: 'import-goodreads',
 } as const;
 
 export const ROOT_ROUTES = {

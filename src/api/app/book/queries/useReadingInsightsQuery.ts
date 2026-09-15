@@ -18,6 +18,8 @@ import {
 import { useGuest } from 'api/guest/GuestProvider';
 import { readGuestData } from 'api/guest/guestStore';
 
+import { mapWithLimit } from 'utils/mapWithLimit';
+
 /** A book the reader has finished, with what Insights groups it by. */
 export interface ReadBook {
   id: string;
@@ -49,25 +51,6 @@ const chunk = <T>(items: T[], size: number) =>
   Array.from({ length: Math.ceil(items.length / size) }, (_, i) =>
     items.slice(i * size, (i + 1) * size),
   );
-
-const mapWithLimit = async <T, R>(
-  items: T[],
-  limit: number,
-  fn: (item: T) => Promise<R>,
-) => {
-  const results: R[] = new Array(items.length);
-  let next = 0;
-  const worker = async () => {
-    while (next < items.length) {
-      const i = next++;
-      results[i] = await fn(items[i]);
-    }
-  };
-  await Promise.all(
-    Array.from({ length: Math.min(limit, items.length) }, worker),
-  );
-  return results;
-};
 
 const readGuestSources = async (): Promise<Sources> => {
   const { books, ratings } = await readGuestData();

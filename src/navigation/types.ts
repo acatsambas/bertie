@@ -60,6 +60,7 @@ export type SettingsNavigatorParamList = {
   [Routes.SETTINGS_02_CHANGE_ADDRESS]: undefined;
   [Routes.SETTINGS_03_RESET_PASSWORD]: undefined;
   [Routes.SETTINGS_04_DELETE_ACCOUNT]: undefined;
+  [Routes.SETTINGS_05_IMPORT_GOODREADS]: undefined;
 };
 
 export type RootNavigatorParamList = {
