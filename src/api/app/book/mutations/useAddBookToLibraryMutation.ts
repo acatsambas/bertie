@@ -78,6 +78,7 @@ export const useAddBookToLibraryMutation = () => {
     onSettled: () => {
       void queryClient.invalidateQueries({ queryKey: ['userBooksIds'] });
       void queryClient.invalidateQueries({ queryKey: ['userBooks'] });
+      void queryClient.invalidateQueries({ queryKey: ['readingInsights'] });
     },
   });
 };

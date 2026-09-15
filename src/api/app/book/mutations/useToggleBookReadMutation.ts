@@ -74,6 +74,7 @@ export const useToggleBookReadMutation = () => {
     },
     onSettled: () => {
       void queryClient.invalidateQueries({ queryKey: ['userBooks'] });
+      void queryClient.invalidateQueries({ queryKey: ['readingInsights'] });
     },
   });
 };

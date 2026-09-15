@@ -102,6 +102,9 @@ export const useRateBookMutation = () => {
             void queryClient.invalidateQueries({
                 queryKey: ['bookRatings', bookId],
             });
+            void queryClient.invalidateQueries({
+                queryKey: ['readingInsights'],
+            });
         },
     });
 };

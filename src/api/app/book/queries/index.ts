@@ -4,3 +4,4 @@ export * from './useBooksQuery';
 export * from './useBookRatingsQuery';
 export * from './useUserBookRatingQuery';
 export * from './useEssentialBooksQuery';
+export * from './useReadingInsightsQuery';

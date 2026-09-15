@@ -17,7 +17,7 @@ import { NavigationType } from 'navigation/types';
 
 import { translations } from 'locales/translations';
 
-import { BooksTab, BookshopTab } from './components';
+import { BooksTab, BookshopTab, InsightsTab } from './components';
 
 export interface DiscoverScreenProps
   extends StackNavigationProp<
@@ -40,6 +40,7 @@ export const DiscoverScreen = () => {
     switch (index) {
       case 0: return <BooksTab />;
       case 1: return <BookshopTab user={user} />;
+      case 2: return <InsightsTab />;
       default: return <BooksTab />;
     }
   };
@@ -62,6 +63,7 @@ export const DiscoverScreen = () => {
         >
           <Tab.Item>{t(translations.discover.books)}</Tab.Item>
           <Tab.Item>{t(translations.discover.bookshops)}</Tab.Item>
+          <Tab.Item>{t(translations.discover.insights.tab)}</Tab.Item>
         </Tab>
         {renderTab()}
       </View>
