@@ -163,6 +163,10 @@ export const rank = (groups: InsightGroup[], ranking: Ranking, limit = 5) =>
         .slice(0, limit)
     : [...groups].sort(byReads).slice(0, limit);
 
+/** Oldest decade first, so a chart of them reads as a timeline. */
+export const byDecade = (a: InsightGroup, b: InsightGroup) =>
+  parseInt(a.label, 10) - parseInt(b.label, 10);
+
 // --- summary ---------------------------------------------------------------
 
 export type SummaryId =

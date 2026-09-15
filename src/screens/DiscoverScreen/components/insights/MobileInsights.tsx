@@ -7,7 +7,7 @@ import Text from 'components/Text';
 
 import { translations } from 'locales/translations';
 
-import { ReadingInsights } from './computeInsights';
+import { ReadingInsights, byDecade } from './computeInsights';
 import { FictionSection, RankedSection } from './parts';
 import { useInsightsSummary } from './useInsightsSummary';
 
@@ -49,6 +49,7 @@ export const MobileInsights = ({ insights }: { insights: ReadingInsights }) => {
         subtitle={t(translations.discover.insights.decadesSubtitle)}
         groups={insights.decades}
         variant="mobile"
+        sortShown={byDecade}
       />
       <FictionSection insights={insights} variant="mobile" />
     </ScrollView>

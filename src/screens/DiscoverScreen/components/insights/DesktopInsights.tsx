@@ -7,7 +7,12 @@ import Text from 'components/Text';
 
 import { translations } from 'locales/translations';
 
-import { InsightGroup, Ranking, ReadingInsights } from './computeInsights';
+import {
+  InsightGroup,
+  Ranking,
+  ReadingInsights,
+  byDecade,
+} from './computeInsights';
 import {
   FictionSection,
   MAX_RATING,
@@ -158,6 +163,7 @@ export const DesktopInsights = ({
           subtitle={t(translations.discover.insights.decadesSubtitle)}
           groups={insights.decades}
           variant="desktop"
+          sortShown={byDecade}
           style={styles.card}
           renderChart={(ranked, ranking) => (
             <DecadeColumns groups={ranked} ranking={ranking} />

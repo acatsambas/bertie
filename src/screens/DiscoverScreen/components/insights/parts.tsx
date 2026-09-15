@@ -82,10 +82,13 @@ const RankedBars = ({
   groups,
   ranking,
   variant,
+  numbered,
 }: {
   groups: InsightGroup[];
   ranking: Ranking;
   variant: InsightsVariant;
+  /** Whether rows are in ranked order, so a position number means something. */
+  numbered: boolean;
 }) => {
   const styles = useStyles();
   const { theme } = useTheme();
@@ -120,12 +123,14 @@ const RankedBars = ({
         if (variant === 'desktop') {
           return (
             <View key={group.label} style={styles.inlineRow}>
-              <Text
-                kind="description"
-                text={`${index + 1}`}
-                color={theme.colors.grey2}
-                style={styles.rank}
-              />
+              {numbered && (
+                <Text
+                  kind="description"
+                  text={`${index + 1}`}
+                  color={theme.colors.grey2}
+                  style={styles.rank}
+                />
+              )}
               <Text
                 kind="description"
                 text={group.label}
@@ -153,7 +158,7 @@ const RankedBars = ({
             <View style={styles.stackedTop}>
               <Text
                 kind="description"
-                text={`${index + 1}. ${group.label}`}
+                text={numbered ? `${index + 1}. ${group.label}` : group.label}
                 numberOfLines={1}
                 style={styles.stackedLabel}
               />
@@ -173,7 +178,8 @@ const RankedBars = ({
 
 /**
  * A titled top five that can be ranked by reads or by rating. Bars by
- * default; `renderChart` swaps in another picture of the same five.
+ * default; `renderChart` swaps in another picture of the same five, and
+ * `sortShown` puts them in a fixed order whichever way they were picked.
  */
 export const RankedSection = ({
   title,
@@ -182,6 +188,7 @@ export const RankedSection = ({
   variant,
   style,
   renderChart,
+  sortShown,
 }: {
   title: string;
   subtitle?: string;
@@ -189,12 +196,14 @@ export const RankedSection = ({
   variant: InsightsVariant;
   style?: StyleProp<ViewStyle>;
   renderChart?(ranked: InsightGroup[], ranking: Ranking): ReactNode;
+  sortShown?(a: InsightGroup, b: InsightGroup): number;
 }) => {
   const styles = useStyles();
   const { theme } = useTheme();
   const { t } = useTranslation();
   const [ranking, setRanking] = useState<Ranking>('mostRead');
-  const ranked = rank(groups, ranking);
+  const topFive = rank(groups, ranking);
+  const ranked = sortShown ? [...topFive].sort(sortShown) : topFive;
 
   const renderBody = () => {
     if (!groups.length || !ranked.length) {
@@ -214,7 +223,12 @@ export const RankedSection = ({
     return renderChart ? (
       renderChart(ranked, ranking)
     ) : (
-      <RankedBars groups={ranked} ranking={ranking} variant={variant} />
+      <RankedBars
+        groups={ranked}
+        ranking={ranking}
+        variant={variant}
+        numbered={!sortShown}
+      />
     );
   };
 
