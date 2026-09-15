@@ -28,6 +28,8 @@ import type { NavigationType } from 'navigation/types';
 
 import { translations } from 'locales/translations';
 
+import RatingMapping from './RatingMapping';
+
 const GOODREADS_EXPORT_URL = 'https://www.goodreads.com/review/import';
 const STEPS = ['step1', 'step2', 'step3', 'step4'] as const;
 const REFRESHED_QUERIES = [
@@ -155,9 +157,10 @@ const GoodreadsImportScreen = () => {
       />
       <Text
         kind="description"
-        text={t(labels.howItMaps)}
+        text={t(labels.shelves)}
         color={theme.colors.grey2}
       />
+      <RatingMapping />
     </>
   );
 
@@ -180,10 +183,11 @@ const GoodreadsImportScreen = () => {
           />
           <Text
             kind="description"
-            text={t(labels.howItMaps)}
+            text={t(labels.shelves)}
             color={theme.colors.grey2}
           />
         </View>
+        <RatingMapping />
         <Button
           kind="primary"
           text={t(labels.start)}
