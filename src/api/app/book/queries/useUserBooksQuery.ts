@@ -20,13 +20,24 @@ interface QueryResult {
 
 type PageParam = { entries: UserBook[]; offset: number } | null;
 
+/** One tab of someone's list: what they're reading now, or have read. */
+export type Shelf = 'current' | 'past';
+
+/**
+ * Someone's list, a page at a time. Pass a `shelf` to page through just that
+ * tab: paged together, a long Past fills the first pages and leaves Current
+ * showing only a handful of books.
+ */
 export const useUserBooksQuery = ({
   withRefs,
-}: { withRefs?: boolean } = {}) => {
+  shelf,
+}: { withRefs?: boolean; shelf?: Shelf } = {}) => {
   const { isGuest } = useGuest();
+  const onShelf = (book: { isRead?: boolean }) =>
+    !shelf || (shelf === 'past') === !!book.isRead;
 
   return useInfiniteQuery<QueryResult>({
-    queryKey: ['userBooks', withRefs, isGuest],
+    queryKey: ['userBooks', withRefs, isGuest, shelf],
     queryFn: async ({ pageParam }) => {
       if (isGuest) {
         // A guest is capped at three books, so there is nothing to paginate
@@ -44,7 +55,7 @@ export const useUserBooksQuery = ({
         ) as QueryResult['books'];
 
         return {
-          books: guestBooks.sort(byListDateDesc),
+          books: guestBooks.filter(onShelf).sort(byListDateDesc),
           entries: [],
           nextOffset: null,
         };
@@ -71,6 +82,7 @@ export const useUserBooksQuery = ({
               readAt: toMillis(data.readAt),
             } as UserBook;
           })
+          .filter(onShelf)
           .sort(byListDateDesc);
       const offset = param?.offset ?? 0;
 

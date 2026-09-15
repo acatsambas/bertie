@@ -2,7 +2,11 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useCallback, useMemo } from 'react';
 
-import { useToggleBookReadMutation, useUserBooksQuery } from 'api/app/book';
+import {
+  Shelf,
+  useToggleBookReadMutation,
+  useUserBooksQuery,
+} from 'api/app/book';
 
 import { Routes } from 'navigation/routes';
 import { NavigationType } from 'navigation/types';
@@ -15,14 +19,25 @@ interface LibraryPageProps
     typeof Routes.LIBRARY_01_LIBRARY
   > {}
 
-export const useLibrary = () => {
-  const { data, fetchNextPage, hasNextPage, isFetching } = useUserBooksQuery({
-    withRefs: true,
-  });
+/**
+ * Someone's list for the Library tabs. Each tab pages through its own shelf,
+ * so a long Past can't crowd Current out of the first page; `shelf` is the
+ * tab on show, which the load-more and loading state belong to.
+ */
+export const useLibrary = (shelf: Shelf) => {
+  const currentQuery = useUserBooksQuery({ withRefs: true, shelf: 'current' });
+  const pastQuery = useUserBooksQuery({ withRefs: true, shelf: 'past' });
+  const { fetchNextPage, hasNextPage, isFetching } =
+    shelf === 'current' ? currentQuery : pastQuery;
   const { mutate: toggleRead } = useToggleBookReadMutation();
   const { navigate } = useNavigation<LibraryPageProps>();
 
-  const { current, past } = useMemo(() => categorizeBooks(data), [data]);
+  // Sorted into tabs across both shelves, so a book ticked in Current moves
+  // to Past straight away rather than once the refetch lands.
+  const { current, past } = useMemo(
+    () => categorizeBooks(currentQuery.data, pastQuery.data),
+    [currentQuery.data, pastQuery.data],
+  );
 
   const fetchMoreBooks = useCallback(() => {
     if (hasNextPage && !isFetching) {

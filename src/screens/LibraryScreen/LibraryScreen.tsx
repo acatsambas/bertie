@@ -1,7 +1,7 @@
 import { LegendList, LegendListRenderItemProps } from '@legendapp/list';
 import { Tab, makeStyles } from '@rneui/themed';
 import { useIsDesktop } from 'hooks/useIsDesktop';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -32,22 +32,11 @@ const MobileLibraryScreen = () => {
     handleOnRead,
     handleAddBook,
     fetchMoreBooks,
-    hasNextPage,
     loading,
-  } = useLibrary();
+  } = useLibrary(tab === CURRENT_TAB ? 'current' : 'past');
 
   const isCurrent = tab === CURRENT_TAB;
   const books = isCurrent ? currentBooks : pastBooks;
-
-  // Paging walks the whole library, not one tab of it, so the selected tab can
-  // legitimately be empty while its books sit in a page that has not loaded.
-  // An empty list never reaches its end, so onEndReached cannot rescue it —
-  // keep pulling pages until this tab has something or the library runs out.
-  useEffect(() => {
-    if (books.length === 0 && hasNextPage && !loading) {
-      fetchMoreBooks();
-    }
-  }, [books.length, hasNextPage, loading, fetchMoreBooks]);
 
   const renderItem = ({ item }: LegendListRenderItemProps<LibraryBook>) => (
     <Book

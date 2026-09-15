@@ -1,5 +1,5 @@
 import { makeStyles, useTheme } from '@rneui/themed';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
@@ -47,22 +47,14 @@ export const DesktopLibrary = () => {
     fetchMoreBooks,
     hasNextPage,
     loading,
-  } = useLibrary();
+  } = useLibrary(tab === CURRENT_TAB ? 'current' : 'past');
 
   const isCurrent = tab === CURRENT_TAB;
   const books = isCurrent ? currentBooks : pastBooks;
 
-  // As on mobile: paging walks the whole library, not one tab of it, so keep
-  // pulling pages until this tab has something or the library runs out.
-  useEffect(() => {
-    if (books.length === 0 && hasNextPage && !loading) {
-      fetchMoreBooks();
-    }
-  }, [books.length, hasNextPage, loading, fetchMoreBooks]);
-
   const { columns, tileWidth } = tileGrid(gridWidth);
 
-  // Only once the whole library has loaded — mid-paging it would undercount.
+  // Only once this tab has fully loaded — mid-paging it would undercount.
   const count = books.length;
   const showCount = !hasNextPage && count > 0;
   const countText = isCurrent

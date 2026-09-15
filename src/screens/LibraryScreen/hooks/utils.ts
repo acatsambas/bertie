@@ -24,13 +24,24 @@ export type CategorisedBooks = {
  * tabs, so the shape is a pair of lists rather than a flattened array with
  * section headers interleaved.
  *
+ * Takes the pages of each shelf's query. A book just ticked or unticked is
+ * still in its old shelf's pages until the refetch lands, so it's sorted by
+ * its flag, not by where it came from, and counted once.
+ *
  * Each tab is newest first: Current by when a book was added, Past by when it
  * was read. The query already returns that order; sorting again here keeps a
  * book that was just ticked in the right place before the refetch lands.
  */
-export const categorizeBooks = (rawBooks): CategorisedBooks => {
-  const allBooks: LibraryBook[] =
-    rawBooks?.pages?.flatMap(page => page.books) ?? [];
+export const categorizeBooks = (...sources): CategorisedBooks => {
+  const byId = new Map<string, LibraryBook>();
+  sources.forEach(source =>
+    source?.pages?.forEach(page =>
+      page.books.forEach((book: LibraryBook) => {
+        if (!byId.has(book.id)) byId.set(book.id, book);
+      }),
+    ),
+  );
+  const allBooks = [...byId.values()];
 
   return {
     current: allBooks.filter(book => !book.isRead).sort(byListDateDesc),
