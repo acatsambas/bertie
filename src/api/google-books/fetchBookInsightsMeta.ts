@@ -1,5 +1,7 @@
 import { fetchFirstPublishYear } from 'api/open-library/fetchFirstPublishYear';
 
+import { googleBooksFetch } from './request';
+
 /** What Insights needs about a book that a saved book doesn't carry. */
 export interface BookInsightsMeta {
   /** BISAC paths, e.g. "Fiction / Science Fiction / General". */
@@ -38,8 +40,9 @@ export const insightsMetaFromVolume = async (
 export const fetchBookInsightsMeta = async (
   bookId: string,
 ): Promise<{ authors: string[]; meta: BookInsightsMeta }> => {
-  const response = await fetch(
+  const response = await googleBooksFetch(
     `https://www.googleapis.com/books/v1/volumes/${bookId}?fields=volumeInfo/title,volumeInfo/authors,volumeInfo/categories,volumeInfo/industryIdentifiers&key=${process.env.EXPO_PUBLIC_BOOKS_API_KEY}`,
+    { background: true },
   );
 
   if (!response.ok) {

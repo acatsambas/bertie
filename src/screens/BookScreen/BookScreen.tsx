@@ -27,10 +27,10 @@ import {
   useUserBooksIdsQuery,
   useBookRatingsQuery,
   useUserBookRatingQuery,
+  useStoredBookQuery,
 } from 'api/app/book';
 import { RatingValue } from 'api/app/book/mutations/useRateBookMutation';
 import { AuthContext } from 'api/auth/AuthProvider';
-import { bookDescription } from 'api/google-books/bookDescription';
 import { useBookQuery } from 'api/google-books/useBookQuery';
 
 import { useAuthGate } from 'hooks/useAuthGate';
@@ -54,7 +54,19 @@ const computeMedian = (values: RatingValue[]): RatingValue | null => {
 export const BookScreen = () => {
   const { params } =
     useRoute<RouteProp<{ route: { bookId: string } }, 'route'>>();
-  const { data: book, isLoading: isBookLoading } = useBookQuery(params.bookId);
+  const {
+    data: googleBook,
+    isLoading: isBookLoading,
+    isFetching: isBookFetching,
+    refetch: refetchBook,
+  } = useBookQuery(params.bookId);
+  // Bertie's own copy, saved when someone first added or rated this book. It
+  // fills the page in while Google answers, and stands in when Google is slow
+  // or down, so the title and the buttons are there either way.
+  const { data: storedBook, isLoading: isStoredLoading } = useStoredBookQuery(
+    params.bookId,
+  );
+  const book = googleBook ?? storedBook ?? undefined;
   const styles = useStyles();
   const { theme } = useTheme();
   const { t } = useTranslation();
@@ -66,7 +78,6 @@ export const BookScreen = () => {
   const { data: ratings = [] } = useBookRatingsQuery(params.bookId);
   const { data: userRating = null } = useUserBookRatingQuery(params.bookId);
   const { isGuest, isLoggedOut, requireAuth, gateVisible, gateMessage, dismissGate, confirmGate } = useAuthGate();
-  const [description, setDescription] = useState<string | null>(null);
   const [ratingSheetVisible, setRatingSheetVisible] = useState(false);
   const [menuVisible, setMenuVisible] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ top: 0, right: 0 });
@@ -74,6 +85,9 @@ export const BookScreen = () => {
   const isDesktop = useIsDesktop();
 
   const isBookInLibrary = userBooksIds.some(({ id }) => id === params.bookId);
+  // The book query already brings the description back, so this screen
+  // doesn't ask Google for the same volume a second time.
+  const description = book?.volumeInfo?.description ?? null;
   const medianRating = computeMedian(ratings);
 
   const medianKeys: Record<RatingValue, string> = {
@@ -82,15 +96,6 @@ export const BookScreen = () => {
     3: translations.library.rating.median3,
     4: translations.library.rating.median4,
   };
-
-  useEffect(() => {
-    const fetchDescription = async () => {
-      const desc = await bookDescription(params.bookId);
-      setDescription(desc);
-    };
-
-    void fetchDescription();
-  }, [params.bookId]);
 
   // Update browser tab title when book data loads
   useEffect(() => {
@@ -195,7 +200,9 @@ export const BookScreen = () => {
     handleAddOrRemove();
   };
 
-  if (isBookLoading || !book) {
+  // Only a spinner while both sources are still out; whichever lands first
+  // renders the page.
+  if (!book && (isBookLoading || isStoredLoading || isBookFetching)) {
     return withDesktopChrome(
       <SafeAreaView style={styles.safeAreaView}>
         <View style={styles.backHeader}>
@@ -203,6 +210,30 @@ export const BookScreen = () => {
         </View>
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={theme.colors.primary} />
+        </View>
+      </SafeAreaView>,
+    );
+  }
+
+  // Google was unreachable or had nothing for this id. Say so and offer
+  // another go, rather than spinning forever.
+  if (!book) {
+    return withDesktopChrome(
+      <SafeAreaView style={styles.safeAreaView}>
+        <View style={styles.backHeader}>
+          {showBack && <Icon icon="back" onPress={handleBack} />}
+        </View>
+        <View style={styles.loadingContainer}>
+          <Text
+            kind="paragraph"
+            text={t(translations.library.loadError)}
+            style={styles.loadErrorText}
+          />
+          <Button
+            kind="primary"
+            text={t(translations.library.tryAgain)}
+            onPress={() => void refetchBook()}
+          />
         </View>
       </SafeAreaView>,
     );
@@ -344,6 +375,11 @@ const useStyles = makeStyles(theme => ({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    gap: 20,
+  },
+  loadErrorText: {
+    maxWidth: 360,
+    textAlign: 'center',
   },
   titleRow: {
     flexDirection: 'row',

@@ -1,3 +1,5 @@
+import { googleBooksFetch } from './request';
+
 export interface BookResult {
   id: string;
   volumeInfo?: {
@@ -11,7 +13,7 @@ export const searchBooks = async (
   query: string,
   toggleWord: 'intitle' | 'inauthor' = 'intitle',
 ) => {
-  const response = await fetch(
+  const response = await googleBooksFetch(
     `https://www.googleapis.com/books/v1/volumes?q=${toggleWord}:${query}&fields=items/volumeInfo/title,items/id,items/volumeInfo/description,items/volumeInfo/authors&orderBy=relevance&maxResults=40&key=${process.env.EXPO_PUBLIC_BOOKS_API_KEY}`,
   );
 

@@ -170,6 +170,8 @@
     "book": "Book",
     "add": "Add to list",
     "remove": "Remove from list",
+    "loadError": "We couldn't load this book just now. Please try again.",
+    "tryAgain": "Try again",
     "back": "Back",
     "orderNow": "Order now",
     "search": {

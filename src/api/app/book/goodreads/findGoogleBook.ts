@@ -1,4 +1,5 @@
 import { InsightsVolumeInfo } from 'api/google-books/fetchBookInsightsMeta';
+import { googleBooksFetch } from 'api/google-books/request';
 import { BookResult } from 'api/google-books/search';
 
 import { GoodreadsBook } from './parseGoodreadsCsv';
@@ -21,8 +22,9 @@ const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 // clears it.
 const searchVolumes = async (q: string): Promise<Volume[]> => {
   for (let attempt = 1; ; attempt++) {
-    const response = await fetch(
+    const response = await googleBooksFetch(
       `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(q)}&fields=${FIELDS}&maxResults=10&key=${process.env.EXPO_PUBLIC_BOOKS_API_KEY}`,
+      { background: true },
     );
 
     if (response.ok) return (await response.json()).items ?? [];

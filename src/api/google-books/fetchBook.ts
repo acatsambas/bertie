@@ -1,7 +1,8 @@
+import { googleBooksFetch } from './request';
 import { BookResult } from './search';
 
 export const fetchBook = async (bookId: string): Promise<BookResult> => {
-  const response = await fetch(
+  const response = await googleBooksFetch(
     `https://www.googleapis.com/books/v1/volumes/${bookId}?fields=id,volumeInfo/title,volumeInfo/authors,volumeInfo/description&key=${process.env.EXPO_PUBLIC_BOOKS_API_KEY}`,
   );
 

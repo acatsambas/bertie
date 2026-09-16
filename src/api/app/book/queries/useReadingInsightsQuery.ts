@@ -19,7 +19,6 @@ import { useGuest } from 'api/guest/GuestProvider';
 import { readGuestData } from 'api/guest/guestStore';
 
 import { chunk } from 'utils/chunk';
-import { createLimiter } from 'utils/mapWithLimit';
 
 /** A book the reader has finished, with what Insights groups it by. */
 export interface ReadBook {
@@ -42,9 +41,10 @@ interface FinishedBook {
 
 // Firestore caps an `in` filter at 30 values.
 const IN_LIMIT = 30;
-// Enough to get through a first visit quickly without tripping Google's
-// rate limit, shared by every lookup the tab starts.
-const lookUp = createLimiter(4);
+// A long library fills in over a few visits rather than in one burst: each
+// lookup costs a call on the app's Google key, and the backfill script
+// (scripts/backfill-book-insights.ts) does the rest in one go.
+const MAX_LOOKUPS_PER_VISIT = 60;
 
 const readGuestBooks = async (): Promise<FinishedBook[]> => {
   const { books, ratings } = await readGuestData();
@@ -127,22 +127,23 @@ export const useReadingInsightsQuery = () => {
     gcTime: 30 * 60 * 1000,
   });
 
-  const missing = (finished.data ?? []).filter(book => !book.insights);
+  const missing = (finished.data ?? [])
+    .filter(book => !book.insights)
+    .slice(0, MAX_LOOKUPS_PER_VISIT);
   const lookups = useQueries({
     queries: missing.map(book => ({
       queryKey: ['bookInsightsMeta', book.id],
-      queryFn: () =>
-        lookUp(async () => {
-          const fetched = await fetchBookInsightsMeta(book.id);
+      queryFn: async () => {
+        const fetched = await fetchBookInsightsMeta(book.id);
 
-          // Guests can't write, and a rated book can lack a doc to write to.
-          if (!isGuest && book.hasDoc) {
-            saveBookInsights(book.id, fetched.meta).catch(error =>
-              console.warn('Could not cache book insights:', error),
-            );
-          }
-          return fetched;
-        }),
+        // Guests can't write, and a rated book can lack a doc to write to.
+        if (!isGuest && book.hasDoc) {
+          saveBookInsights(book.id, fetched.meta).catch(error =>
+            console.warn('Could not cache book insights:', error),
+          );
+        }
+        return fetched;
+      },
       // A book's genres and first publication don't change.
       staleTime: Infinity,
       gcTime: 30 * 60 * 1000,
