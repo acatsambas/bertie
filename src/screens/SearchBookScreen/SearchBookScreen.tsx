@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Platform, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import Button from 'components/Button';
 import Icon from 'components/Icon';
 import Input from 'components/Input';
 import LoadingState from 'components/LoadingState/LoadingState';
@@ -34,6 +35,9 @@ export const SearchBookScreen = () => {
     'intitle',
   );
   const [isLoading, setIsLoading] = useState(false);
+  // A search that failed looks exactly like one that found nothing, unless
+  // we keep them apart.
+  const [searchFailed, setSearchFailed] = useState(false);
   const { data: user } = useUserQuery();
   const updateFirstSearchFlag = useUpdateFirstSearchFlagMutation();
   const styles = useStyles();
@@ -50,6 +54,7 @@ export const SearchBookScreen = () => {
         try {
           const results = await searchBooks(searchValue, toggleWord);
           setSearchResults(results); // Update search results
+          setSearchFailed(false);
 
           // Update first search flag only if search was successful
           if (user && user.isFirstSearch) {
@@ -57,6 +62,10 @@ export const SearchBookScreen = () => {
           }
         } catch (error) {
           console.error('Search error:', error);
+          // Say so, rather than leaving the last results — or nothing —
+          // standing as if that were the answer.
+          setSearchResults([]);
+          setSearchFailed(true);
         } finally {
           setIsLoading(false); // Stop loading regardless of success or error
         }
@@ -64,6 +73,7 @@ export const SearchBookScreen = () => {
       }
 
       setSearchResults([]);
+      setSearchFailed(false);
     }, 350),
     [toggleWord],
   );
@@ -128,7 +138,35 @@ export const SearchBookScreen = () => {
           />
         )}
 
-        {isLoading ? <LoadingState /> : <SearchBooks books={searchResults} />}
+        {isLoading ? (
+          <LoadingState />
+        ) : searchFailed ? (
+          <View style={styles.searchState}>
+            <Text
+              kind="paragraph"
+              text={t(translations.library.search.failed)}
+              style={styles.searchStateText}
+            />
+            <Button
+              kind="primary"
+              text={t(translations.library.tryAgain)}
+              onPress={() => searchDebounce(searchValue)}
+            />
+          </View>
+        ) : (
+          <>
+            <SearchBooks books={searchResults} />
+            {!!searchValue.trim() && searchResults.length === 0 && (
+              <Text
+                kind="paragraph"
+                text={t(translations.library.search.noMatches, {
+                  search: searchValue.trim(),
+                })}
+                style={styles.searchStateText}
+              />
+            )}
+          </>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -152,5 +190,14 @@ const useStyles = makeStyles(theme => ({
     gap: 8,
   },
   search: { alignItems: 'flex-start' },
+  searchState: {
+    alignItems: 'center',
+    gap: 20,
+    paddingTop: 20,
+  },
+  searchStateText: {
+    maxWidth: 420,
+    textAlign: 'center',
+  },
   toggle: { flexDirection: 'row', alignItems: 'center', gap: 20 },
 }));

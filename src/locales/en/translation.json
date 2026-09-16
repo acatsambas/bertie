@@ -179,7 +179,9 @@
       "placeholder": "What are you looking for today?",
       "toggle": "Toggle to search by author",
       "toggle2": "Toggle to search by title",
-      "addToList": "Tap on the plus sign to add a book to your list"
+      "addToList": "Tap on the plus sign to add a book to your list",
+      "failed": "Book search isn't working just now. It's not you — please try again in a moment.",
+      "noMatches": "No books found for “{{search}}”. Try a different spelling, or search by author instead."
     },
     "rating": {
       "rate": "Rate",
