@@ -67,6 +67,7 @@ export const MobileInsights = ({
         groups={insights.centuries}
         variant="mobile"
         sortShown={byCentury}
+        showAll
       />
       <FictionSection insights={insights} variant="mobile" />
       <RatingsSection

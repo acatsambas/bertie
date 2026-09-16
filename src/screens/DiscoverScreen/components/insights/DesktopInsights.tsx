@@ -58,13 +58,15 @@ const CenturyColumns = ({
 
         return (
           <View key={group.label} style={styles.column}>
-            <Text kind="description" text={byRating ? rating : reads} />
-            <View
-              style={[
-                styles.columnBar,
-                { height: Math.max(4, share * COLUMN_MAX_HEIGHT) },
-              ]}
-            />
+            <View style={styles.columnPlot}>
+              <Text kind="description" text={byRating ? rating : reads} />
+              <View
+                style={[
+                  styles.columnBar,
+                  { height: Math.max(4, share * COLUMN_MAX_HEIGHT) },
+                ]}
+              />
+            </View>
             <View style={styles.columnFoot}>
               <Text
                 kind="description"
@@ -173,6 +175,7 @@ export const DesktopInsights = ({
           groups={insights.centuries}
           variant="desktop"
           sortShown={byCentury}
+          showAll
           style={styles.card}
           renderChart={(ranked, ranking) => (
             <CenturyColumns groups={ranked} ranking={ranking} />
@@ -243,14 +246,16 @@ const useStyles = makeStyles(theme => ({
   },
   columns: {
     flexDirection: 'row',
-    alignItems: 'flex-end',
     gap: 12,
-    minHeight: COLUMN_MAX_HEIGHT + 80,
   },
-  column: {
-    flex: 1,
+  column: { flex: 1 },
+  // A fixed height, so every bar sits on the same baseline and the labels
+  // below all start level, whether or not a label wraps onto two lines.
+  columnPlot: {
+    height: COLUMN_MAX_HEIGHT + 24,
+    justifyContent: 'flex-end',
     alignItems: 'center',
-    gap: 8,
+    gap: 4,
   },
   columnBar: {
     width: '100%',

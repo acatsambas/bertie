@@ -147,7 +147,11 @@
         "genreSame": "Your top-rated genre is {{top}}, which is also the one you read most.",
         "genreDiff": "Your top-rated genre is {{top}}, but you prefer to read {{goTo}}.",
         "genreGoTo": "You read more {{goTo}} than any other genre.",
-        "genreTop": "Your top-rated genre is {{top}}."
+        "genreTop": "Your top-rated genre is {{top}}.",
+        "centurySame": "The {{top}} is both what you read most and what you rate highest.",
+        "centuryDiff": "Your top-rated century is the {{top}}, though you read more from the {{goTo}} than any other.",
+        "centuryGoTo": "You read more from the {{goTo}} than from any other century.",
+        "centuryTop": "Your top-rated century is the {{top}}."
       }
     }
   },

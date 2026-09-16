@@ -253,7 +253,11 @@ export type SummaryId =
   | 'genreSame'
   | 'genreDiff'
   | 'genreGoTo'
-  | 'genreTop';
+  | 'genreTop'
+  | 'centurySame'
+  | 'centuryDiff'
+  | 'centuryGoTo'
+  | 'centuryTop';
 
 export interface SummaryLine {
   id: SummaryId;
@@ -354,5 +358,13 @@ export const summarise = (
           diff: 'genreDiff',
           goTo: 'genreGoTo',
           top: 'genreTop',
+        }),
+    lookupsPending
+      ? null
+      : favouritesLine(insights.centuries, {
+          same: 'centurySame',
+          diff: 'centuryDiff',
+          goTo: 'centuryGoTo',
+          top: 'centuryTop',
         }),
   ].filter((line): line is SummaryLine => line !== null);

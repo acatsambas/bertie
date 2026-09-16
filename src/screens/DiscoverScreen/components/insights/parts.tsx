@@ -190,6 +190,7 @@ export const RankedSection = ({
   style,
   renderChart,
   sortShown,
+  showAll,
 }: {
   title: string;
   subtitle?: string;
@@ -198,13 +199,15 @@ export const RankedSection = ({
   style?: StyleProp<ViewStyle>;
   renderChart?(ranked: InsightGroup[], ranking: Ranking): ReactNode;
   sortShown?(a: InsightGroup, b: InsightGroup): number;
+  /** Show every group rather than the top five. */
+  showAll?: boolean;
 }) => {
   const styles = useStyles();
   const { theme } = useTheme();
   const { t } = useTranslation();
   const [ranking, setRanking] = useState<Ranking>('mostRead');
-  const topFive = rank(groups, ranking);
-  const ranked = sortShown ? [...topFive].sort(sortShown) : topFive;
+  const top = rank(groups, ranking, showAll ? groups.length : undefined);
+  const ranked = sortShown ? [...top].sort(sortShown) : top;
 
   const renderBody = () => {
     if (!groups.length || !ranked.length) {
