@@ -7,6 +7,9 @@ export const useOrderList = () => {
   const { data, fetchNextPage, hasNextPage, isFetching, refetch } =
     useUserBooksQuery({
       withRefs: true,
+      // Only books still to read can be ordered, and paged together a long
+      // Past fills the first pages and leaves this looking empty.
+      shelf: 'current',
     });
 
   const unreadBooks = useMemo(() => {

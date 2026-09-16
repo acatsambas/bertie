@@ -60,7 +60,9 @@ export const NewOrderTab = () => {
         contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}
         ListHeaderComponent={<OrderHeader hasBooks={unreadBooks.length > 0} />}
-        ListEmptyComponent={OrderEmpty}
+        // Not while the first page is still on its way: an empty list then
+        // means "not loaded yet", not "nothing to order".
+        ListEmptyComponent={loading ? null : OrderEmpty}
         ListFooterComponent={
           <OrderFooter
             loading={loading}

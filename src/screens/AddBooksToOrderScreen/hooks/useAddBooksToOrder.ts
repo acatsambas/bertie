@@ -16,6 +16,9 @@ export const useAddBooksToOrder = () => {
 
     const { data, fetchNextPage, hasNextPage, isFetching } = useUserBooksQuery({
         withRefs: true,
+        // Only books still to read can be added, and paged together a long
+        // Past fills the first pages and this screen skips itself.
+        shelf: 'current',
     });
 
     const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
