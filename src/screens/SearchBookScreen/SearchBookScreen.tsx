@@ -26,7 +26,7 @@ export interface SearchBookProps
   extends StackNavigationProp<
     NavigationType,
     typeof Routes.LIBRARY_03_SEARCH
-  > { }
+  > {}
 
 export const SearchBookScreen = () => {
   const [searchResults, setSearchResults] = useState<BookResult[]>([]);
@@ -38,6 +38,10 @@ export const SearchBookScreen = () => {
   // A search that failed looks exactly like one that found nothing, unless
   // we keep them apart.
   const [searchFailed, setSearchFailed] = useState(false);
+  // The search the results on screen came from. Typing runs ahead of the
+  // debounce, so without this an empty list reads as "nothing found" before
+  // the request has even gone out.
+  const [settledQuery, setSettledQuery] = useState('');
   const { data: user } = useUserQuery();
   const updateFirstSearchFlag = useUpdateFirstSearchFlagMutation();
   const styles = useStyles();
@@ -55,6 +59,7 @@ export const SearchBookScreen = () => {
           const results = await searchBooks(searchValue, toggleWord);
           setSearchResults(results); // Update search results
           setSearchFailed(false);
+          setSettledQuery(`${toggleWord}:${searchValue}`);
 
           // Update first search flag only if search was successful
           if (user && user.isFirstSearch) {
@@ -66,6 +71,7 @@ export const SearchBookScreen = () => {
           // standing as if that were the answer.
           setSearchResults([]);
           setSearchFailed(true);
+          setSettledQuery(`${toggleWord}:${searchValue}`);
         } finally {
           setIsLoading(false); // Stop loading regardless of success or error
         }
@@ -74,6 +80,7 @@ export const SearchBookScreen = () => {
 
       setSearchResults([]);
       setSearchFailed(false);
+      setSettledQuery('');
     }, 350),
     [toggleWord],
   );
@@ -156,15 +163,16 @@ export const SearchBookScreen = () => {
         ) : (
           <>
             <SearchBooks books={searchResults} />
-            {!!searchValue.trim() && searchResults.length === 0 && (
-              <Text
-                kind="paragraph"
-                text={t(translations.library.search.noMatches, {
-                  search: searchValue.trim(),
-                })}
-                style={styles.searchStateText}
-              />
-            )}
+            {settledQuery === `${toggleWord}:${searchValue.trim()}` &&
+              searchResults.length === 0 && (
+                <Text
+                  kind="paragraph"
+                  text={t(translations.library.search.noMatches, {
+                    search: searchValue.trim(),
+                  })}
+                  style={styles.searchStateText}
+                />
+              )}
           </>
         )}
       </ScrollView>
