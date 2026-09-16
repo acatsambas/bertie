@@ -184,6 +184,7 @@
     "rating": {
       "rate": "Rate",
       "sheetTitle": "Rate this book",
+      "tapToRemove": "Tap your rating again to remove it.",
       "option1": "Reading this hurt my soul",
       "option2": "This is OK to pass the time",
       "option3": "This is an outstanding book in its genre",

@@ -158,11 +158,16 @@ export const setGuestBookRead = (bookId: string, isRead: boolean) =>
 
 // --- ratings ---------------------------------------------------------------
 
-export const setGuestRating = (bookId: string, rating: RatingValue) =>
-  updateGuestData(data => ({
-    ...data,
-    ratings: { ...data.ratings, [bookId]: rating },
-  }));
+/** null takes the rating off again. */
+export const setGuestRating = (bookId: string, rating: RatingValue | null) =>
+  updateGuestData(data => {
+    const ratings = { ...data.ratings };
+
+    if (rating === null) delete ratings[bookId];
+    else ratings[bookId] = rating;
+
+    return { ...data, ratings };
+  });
 
 // --- favourite shops -------------------------------------------------------
 

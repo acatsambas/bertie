@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { deleteDoc, doc, getDoc, setDoc } from 'firebase/firestore';
 
 import { auth, db } from 'api/firebase';
 import { useGuest } from 'api/guest/GuestProvider';
@@ -22,7 +22,8 @@ export const useRateBookMutation = () => {
             book,
         }: {
             bookId: string;
-            rating: RatingValue;
+            /** null takes the rating off: tapping the one you gave clears it. */
+            rating: RatingValue | null;
             book?: BookResult;
         }) => {
             if (isGuest) {
@@ -33,6 +34,11 @@ export const useRateBookMutation = () => {
             }
 
             if (!userId) throw new Error('User not authenticated');
+
+            if (rating === null) {
+                await deleteDoc(doc(db, 'ratings', `${bookId}_${userId}`));
+                return;
+            }
 
             // Ensure the book exists in the books collection
             if (book) {
@@ -70,15 +76,24 @@ export const useRateBookMutation = () => {
             );
 
             if (!isGuest) {
+                // Only this reader's own vote moves: swap the one copy of it
+                // in the median, drop it, or add a new one.
                 queryClient.setQueryData(
                     ['bookRatings', bookId],
                     (old: RatingValue[] = []) => {
-                        if (previousUserRating != null) {
-                            return old.map(r =>
-                                r === previousUserRating ? rating : r,
-                            );
+                        const mine =
+                            previousUserRating == null
+                                ? -1
+                                : old.indexOf(previousUserRating);
+
+                        if (mine === -1) {
+                            return rating === null ? old : [...old, rating];
                         }
-                        return [...old, rating];
+
+                        const next = [...old];
+                        if (rating === null) next.splice(mine, 1);
+                        else next[mine] = rating;
+                        return next;
                     },
                 );
             }

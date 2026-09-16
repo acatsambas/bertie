@@ -71,6 +71,13 @@ const RatingBottomSheet = ({
                             );
                         })}
                     </View>
+                    {currentRating !== null && (
+                        <Text
+                            kind="description"
+                            text={t(translations.library.rating.tapToRemove)}
+                            color={theme.colors.grey2}
+                        />
+                    )}
                 </Pressable>
             </Pressable>
         </Modal>

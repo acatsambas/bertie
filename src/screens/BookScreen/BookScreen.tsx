@@ -147,7 +147,12 @@ export const BookScreen = () => {
   const handleRate = (rating: RatingValue) => {
     if (!book) return;
     if (requireAccount(t(translations.authGate.rate))) return;
-    rateBook({ bookId: params.bookId, rating, book });
+    // Tapping the rating you already gave takes it off.
+    rateBook({
+      bookId: params.bookId,
+      rating: rating === userRating ? null : rating,
+      book,
+    });
     setTimeout(() => setRatingSheetVisible(false), 500);
   };
 
