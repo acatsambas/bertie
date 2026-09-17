@@ -11,6 +11,7 @@ import {
   where,
 } from 'firebase/firestore';
 
+import { writeRatingWithStats } from 'api/app/book/ratingStats';
 import { db } from 'api/firebase';
 import { insightsMetaFromVolume } from 'api/google-books/fetchBookInsightsMeta';
 
@@ -90,7 +91,7 @@ const saveBook = async (
 
   // A rating given in Bertie always wins over one from Goodreads.
   if (book.rating && !alreadyRated) {
-    await setDoc(doc(db, 'ratings', `${found.id}_${userId}`), {
+    await writeRatingWithStats({
       bookId: found.id,
       userId,
       rating: book.rating,

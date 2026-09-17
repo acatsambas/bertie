@@ -1,14 +1,14 @@
-import React from 'react';
-import { ScrollView, View } from 'react-native';
 import { makeStyles } from '@rneui/themed';
 import { useIsDesktop } from 'hooks/useIsDesktop';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { ScrollView, View } from 'react-native';
 
-import Text from 'components/Text';
-import SearchBooks from 'components/SearchBooks';
 import LoadingState from 'components/LoadingState/LoadingState';
+import SearchBooks from 'components/SearchBooks';
+import Text from 'components/Text';
 
-import { useEssentialBooksQuery, useBooksQuery } from 'api/app/book';
+import { useEssentialBooksQuery } from 'api/app/book';
 
 import { translations } from 'locales/translations';
 
@@ -21,13 +21,7 @@ export const BooksTab = () =>
 const MobileBooksTab = () => {
   const styles = useStyles();
   const { t } = useTranslation();
-  const { data: essentialBookIds = [], isLoading: isLoadingIds } =
-    useEssentialBooksQuery();
-  const { data: books = [], isLoading: isLoadingBooks } = useBooksQuery({
-    ids: essentialBookIds,
-  });
-
-  const isLoading = isLoadingIds || isLoadingBooks;
+  const { data: books = [], isLoading, isError } = useEssentialBooksQuery();
 
   return (
     <ScrollView
@@ -35,10 +29,7 @@ const MobileBooksTab = () => {
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
-      <Text
-        kind="paragraph"
-        text={t(translations.discover.booksHeader)}
-      />
+      <Text kind="paragraph" text={t(translations.discover.booksHeader)} />
       {isLoading ? (
         <LoadingState />
       ) : books.length > 0 ? (
@@ -47,7 +38,11 @@ const MobileBooksTab = () => {
         <View style={styles.emptyState}>
           <Text
             kind="description"
-            text="No essential reads yet. Be the first to rate a book!"
+            text={t(
+              isError
+                ? translations.discover.booksError
+                : translations.discover.noBooksYet,
+            )}
           />
         </View>
       )}

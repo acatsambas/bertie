@@ -17,7 +17,6 @@ import Text from 'components/Text';
 
 import {
   useAddBookToLibraryMutation,
-  useBooksQuery,
   useEssentialBooksQuery,
   useUserBooksIdsQuery,
 } from 'api/app/book';
@@ -41,11 +40,7 @@ export const DesktopBooksTab = () => {
   const { t } = useTranslation();
   const { navigate } = useNavigation<StackNavigationProp<NavigationType>>();
   const [gridWidth, setGridWidth] = useState(0);
-  const { data: essentialBookIds = [], isLoading: isLoadingIds } =
-    useEssentialBooksQuery();
-  const { data: books = [], isLoading: isLoadingBooks } = useBooksQuery({
-    ids: essentialBookIds,
-  });
+  const { data: books = [], isLoading, isError } = useEssentialBooksQuery();
   const { data: userBooksIds = [] } = useUserBooksIdsQuery();
   const { mutate: addBook } = useAddBookToLibraryMutation();
   const {
@@ -57,7 +52,6 @@ export const DesktopBooksTab = () => {
     confirmGate,
   } = useAuthGate();
 
-  const isLoading = isLoadingIds || isLoadingBooks;
   const { tileWidth } = tileGrid(gridWidth);
 
   // The same rules SearchBooks applies to this list on mobile.
@@ -78,7 +72,14 @@ export const DesktopBooksTab = () => {
     if (books.length === 0) {
       return (
         <View style={styles.emptyState}>
-          <Text kind="description" text={t(translations.discover.noBooksYet)} />
+          <Text
+            kind="description"
+            text={t(
+              isError
+                ? translations.discover.booksError
+                : translations.discover.noBooksYet,
+            )}
+          />
         </View>
       );
     }

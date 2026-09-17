@@ -1,50 +1,49 @@
 import { useQuery } from '@tanstack/react-query';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, limit, query, where } from 'firebase/firestore';
 
 import { db } from 'api/firebase';
-import { RatingValue } from 'api/app/book/mutations/useRateBookMutation';
+import { BookResult } from 'api/google-books/search';
 
-interface RatingDoc {
-    bookId: string;
-    rating: RatingValue;
-}
+/** How many books Discover shows under "essential reads". */
+const ESSENTIAL_LIMIT = 10;
 
-const computeMedian = (values: number[]): number => {
-    const sorted = [...values].sort((a, b) => a - b);
-    const mid = Math.floor(sorted.length / 2);
-    if (sorted.length % 2 === 0) {
-        return Math.round((sorted[mid - 1] + sorted[mid]) / 2);
-    }
-    return sorted[mid];
-};
+/**
+ * The books our readers say everyone must read at least once.
+ *
+ * A book is essential when the median of its ratings is 4, which each rating
+ * write keeps up to date on the book itself (see `ratingStats`). This used to
+ * download every rating document in the database and take the medians here —
+ * every visit to Discover, to pick ten books — so it grew with the number of
+ * ratings ever given rather than with the number of books shown.
+ *
+ * Readable without an account: guests browse Discover too.
+ */
+export const useEssentialBooksQuery = () =>
+  useQuery<BookResult[]>({
+    queryKey: ['essentialBooks'],
+    queryFn: async () => {
+      const snapshot = await getDocs(
+        query(
+          collection(db, 'books'),
+          where('essential', '==', true),
+          limit(ESSENTIAL_LIMIT),
+        ),
+      );
 
-export const useEssentialBooksQuery = () => {
-    return useQuery<string[]>({
-        queryKey: ['essentialBooks'],
-        queryFn: async () => {
-            const snapshot = await getDocs(collection(db, 'ratings'));
-            const ratings = snapshot.docs.map(doc => doc.data() as RatingDoc);
-
-            // Group ratings by bookId
-            const byBook = new Map<string, RatingValue[]>();
-            for (const { bookId, rating } of ratings) {
-                const existing = byBook.get(bookId) || [];
-                existing.push(rating);
-                byBook.set(bookId, existing);
-            }
-
-            // Find books with median rating of 4
-            const essentialBookIds: string[] = [];
-            for (const [bookId, bookRatings] of byBook) {
-                if (computeMedian(bookRatings) === 4) {
-                    essentialBookIds.push(bookId);
-                }
-                if (essentialBookIds.length >= 10) break;
-            }
-
-            return essentialBookIds;
-        },
-        staleTime: 5 * 60 * 1000,
-        gcTime: 30 * 60 * 1000,
-    });
-};
+      return (
+        snapshot.docs
+          .map(
+            document =>
+              ({
+                id: document.id,
+                ...document.data(),
+              }) as BookResult,
+          )
+          // A tally can outlive the volume it was written against, and a book
+          // with no title has nothing to show on a shelf.
+          .filter(book => !!book.volumeInfo?.title)
+      );
+    },
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+  });

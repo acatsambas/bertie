@@ -1,11 +1,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { deleteDoc, doc, getDoc, setDoc } from 'firebase/firestore';
 
-import { auth, db } from 'api/firebase';
+import { auth } from 'api/firebase';
 import { useGuest } from 'api/guest/GuestProvider';
 import { setGuestRating } from 'api/guest/guestStore';
 import { warmBookInsights } from 'api/app/book/cacheBookInsights';
 import { bookQueryKeys } from 'api/app/book/queryKeys';
+import { writeRatingWithStats } from 'api/app/book/ratingStats';
 import { BookResult } from 'api/google-books/search';
 
 export type RatingValue = 1 | 2 | 3 | 4;
@@ -35,22 +35,12 @@ export const useRateBookMutation = () => {
 
             if (!userId) throw new Error('User not authenticated');
 
-            if (rating === null) {
-                await deleteDoc(doc(db, 'ratings', `${bookId}_${userId}`));
-                return;
-            }
+            // Seeds the shared book document if it is missing, and moves the
+            // book's rating tally — which is what Discover reads — in the same
+            // transaction as the rating itself.
+            await writeRatingWithStats({ bookId, userId, rating, book });
 
-            // Ensure the book exists in the books collection
-            if (book) {
-                const bookRef = doc(db, 'books', bookId);
-                const bookDoc = await getDoc(bookRef);
-                if (!bookDoc.exists()) {
-                    await setDoc(bookRef, book);
-                }
-            }
-
-            const ratingRef = doc(db, 'ratings', `${bookId}_${userId}`);
-            await setDoc(ratingRef, { bookId, userId, rating });
+            if (rating === null) return;
 
             // Get it ready for Insights while the reader carries on.
             void warmBookInsights(bookId);

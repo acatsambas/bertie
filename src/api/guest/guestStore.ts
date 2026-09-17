@@ -2,9 +2,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Timestamp, doc, setDoc } from 'firebase/firestore';
 
 import { RatingValue } from 'api/app/book/mutations/useRateBookMutation';
-import { UserData } from 'api/types';
+import { writeRatingWithStats } from 'api/app/book/ratingStats';
 import { db } from 'api/firebase';
 import { BookResult } from 'api/google-books/search';
+import { UserData } from 'api/types';
 
 /**
  * Local store for people exploring without an account.
@@ -238,9 +239,12 @@ export const migrateGuestDataToUser = async (
     }),
   );
 
+  // Each rating has to move the book's tally as well, or a reader who arrives
+  // as a guest and signs up leaves Discover's essential reads out of step with
+  // the ratings behind them.
   await Promise.all(
     ratingIds.map(bookId =>
-      setDoc(doc(db, 'ratings', `${bookId}_${userId}`), {
+      writeRatingWithStats({
         bookId,
         userId,
         rating: data.ratings[bookId],
