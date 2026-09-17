@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { StyleSheet, View } from 'react-native';
 
 import { useShopsQuery } from 'api/app/shops';
 import { Shop } from 'api/app/types';
@@ -9,8 +9,11 @@ import { Shop } from 'api/app/types';
 import { Routes } from 'navigation/routes';
 import { NavigationType } from 'navigation/types';
 
+import { translations } from 'locales/translations';
+
 import BookShop from '../Bookshop';
 import LoadingState from '../LoadingState/LoadingState';
+import Text from '../Text';
 
 export interface DiscoverPageProps
   extends StackNavigationProp<
@@ -19,37 +22,53 @@ export interface DiscoverPageProps
   > {}
 
 const BookshopsList = () => {
-  const { data: shops = [] } = useShopsQuery();
+  const { data: shops = [], isLoading, isError } = useShopsQuery();
   const { navigate } = useNavigation<DiscoverPageProps>();
-  const [isLoading, setIsLoading] = useState(true);
+  const { t } = useTranslation();
 
   const handlePressShop = (shop: Shop) => {
     navigate(Routes.DISCOVER_03_BOOKSHOP, { shop });
   };
 
-  useEffect(() => {
-    if (shops.length > 0) {
-      setIsLoading(false);
-    }
-  }, [shops]);
+  // A failed load used to leave the spinner up for good: the old local flag
+  // only ever cleared once shops arrived.
+  if (isLoading) return <LoadingState />;
+
+  if (isError || shops.length === 0) {
+    return (
+      <View style={styles.emptyState}>
+        <Text
+          kind="description"
+          text={t(
+            isError
+              ? translations.discover.bookshopsError
+              : translations.discover.noBookshopsYet,
+          )}
+        />
+      </View>
+    );
+  }
 
   return (
     <View>
-      {isLoading ? (
-        <LoadingState />
-      ) : (
-        shops.map(shop => (
-          <BookShop
-            key={shop.id}
-            name={shop.name}
-            location={shop.city}
-            kind="default"
-            onPress={() => handlePressShop(shop)}
-          />
-        ))
-      )}
+      {shops.map(shop => (
+        <BookShop
+          key={shop.id}
+          name={shop.name}
+          location={shop.city}
+          kind="default"
+          onPress={() => handlePressShop(shop)}
+        />
+      ))}
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  emptyState: {
+    alignItems: 'center',
+    paddingTop: 20,
+  },
+});
 
 export default BookshopsList;

@@ -1,0 +1,89 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return signedIn() && request.auth.uid == userId;
+    }
+
+    function ownDocument(field) {
+      return field == /databases/$(database)/documents/users/$(request.auth.uid);
+    }
+
+    // --- Public catalogue ---------------------------------------------------
+    // Readable without an account so that "Explore without an account" can
+    // show Discover and book pages. Guests hold no Firebase identity at all.
+
+    // Bookshops are curated by hand, so nothing in the app writes them.
+    match /shops/{shopId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // A shared cache of Google Books volumes. Any signed-in reader may seed a
+    // book that isn't cached and top one up with insights; guest migration
+    // re-merges whole volume documents, so updates can't be narrowed to the
+    // insights field. Nothing may remove a book another reader's list points at.
+    match /books/{bookId} {
+      allow read: if true;
+      allow create, update: if signedIn();
+      allow delete: if false;
+    }
+
+    // One document per reader per book, id `${bookId}_${userId}`. Public to
+    // read, because medians and Discover's essential reads are derived from
+    // the whole collection. Writable only as yourself, only at the id your own
+    // uid gives you, and only within Bertie's 1-4 scale.
+    match /ratings/{ratingId} {
+      allow read: if true;
+
+      allow create, update: if signedIn()
+        && request.resource.data.userId == request.auth.uid
+        && ratingId == request.resource.data.bookId + '_' + request.auth.uid
+        && request.resource.data.rating is int
+        && request.resource.data.rating >= 1
+        && request.resource.data.rating <= 4;
+
+      allow delete: if signedIn() && resource.data.userId == request.auth.uid;
+    }
+
+    // --- Per-reader data ----------------------------------------------------
+    // Profile, address, contact email, plus the books and favouriteShops
+    // subcollections. Private to the reader in both directions: nothing in the
+    // app reads another account's document.
+    match /users/{userId} {
+      allow read, write: if isOwner(userId);
+
+      match /{subcollection=**} {
+        allow read, write: if isOwner(userId);
+      }
+    }
+
+    // --- Orders -------------------------------------------------------------
+    // Placed by the reader, then handled by shop staff outside the app, so the
+    // client may create its own and read them back but never edit one after the
+    // fact. The Past orders query filters on this same userRef, which is what
+    // lets the list pass the rule.
+    match /orders/{orderId} {
+      allow read: if signedIn() && ownDocument(resource.data.userRef);
+      allow create: if signedIn() && ownDocument(request.resource.data.userRef);
+      allow update, delete: if false;
+    }
+
+    // --- Outbound email -----------------------------------------------------
+    // The Trigger Email extension's queue. Write-only: the documents hold
+    // bookshop addresses and order contents, and nothing in the app reads them.
+    match /mail/{mailId} {
+      allow create: if signedIn();
+      allow read, update, delete: if false;
+    }
+
+    // Anything not matched above is denied. Adding a collection means adding
+    // a rule for it here.
+  }
+}

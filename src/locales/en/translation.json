@@ -83,6 +83,9 @@
     "back": "Back",
     "booksHeader": "Looking for your next read? Here are some books our readers say everyone must read at least once in their lifetime.",
     "noBooksYet": "No essential reads yet. Be the first to rate a book!",
+    "booksError": "We couldn't load these books just now. Please try again later.",
+    "bookshopsError": "We couldn't load the bookshops just now. Please try again later.",
+    "noBookshopsYet": "No bookshops to show just yet.",
     "insights": {
       "tab": "Insights",
       "empty": "Tick off the books you've finished, and rate them, to see what your reading says about you.",
