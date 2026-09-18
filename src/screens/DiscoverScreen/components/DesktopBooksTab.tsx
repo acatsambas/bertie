@@ -137,10 +137,16 @@ export const DesktopBooksTab = () => {
 };
 
 const useStyles = makeStyles(() => ({
-  container: { flex: 1 },
+  // minHeight keeps the grid scrollable. react-native-web gives ScrollView
+  // `flex-grow/shrink: 1` and `overflow-y: auto` but no `min-height`, so with
+  // `flex: 1` CSS's default `min-height: auto` stops it shrinking below its
+  // content: it grows to the full height of the grid, never scrolls, and is
+  // clipped by the parent instead. Yoga defaults the same thing to 0, so the
+  // phone layout never had to say it.
+  container: { flex: 1, minHeight: 0 },
   content: {
     paddingTop: 24,
-    paddingBottom: 40,
+    paddingBottom: 64,
     gap: 24,
   },
   intro: { maxWidth: 640 },
