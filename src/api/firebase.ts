@@ -1,23 +1,15 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   Analytics,
   getAnalytics,
   setAnalyticsCollectionEnabled,
 } from 'firebase/analytics';
 import { FirebaseApp, getApps, initializeApp } from 'firebase/app';
-import {
-  Auth,
-  getAuth,
-  // @ts-expect-error - getReactNativePersistence is not typed
-  getReactNativePersistence,
-  initializeAuth,
-} from 'firebase/auth';
+import { Auth, getAuth } from 'firebase/auth';
 import {
   Firestore,
   enableIndexedDbPersistence,
   getFirestore,
 } from 'firebase/firestore';
-import { Platform } from 'react-native';
 import 'react-native-get-random-values';
 
 const firebaseConfig = {
@@ -26,12 +18,7 @@ const firebaseConfig = {
   projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID,
   storageBucket: process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: Platform.select({
-    ios: process.env.EXPO_PUBLIC_FIREBASE_APP_ID_IOS,
-    android: process.env.EXPO_PUBLIC_FIREBASE_APP_ID_ANDROID,
-    web: process.env.EXPO_PUBLIC_FIREBASE_APP_ID_WEB,
-    default: process.env.EXPO_PUBLIC_FIREBASE_APP_ID_WEB,
-  }),
+  appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID_WEB,
 };
 
 let app: FirebaseApp;
@@ -41,55 +28,28 @@ if (getApps().length === 0) {
   app = getApps()[0];
 }
 
-let auth: Auth;
-if (Platform.OS === 'web') {
-  auth = getAuth(app);
-} else {
-  try {
-    auth = initializeAuth(app, {
-      persistence: getReactNativePersistence(AsyncStorage),
-    });
-  } catch (error: any) {
-    if (error.code === 'auth/already-initialized') {
-      auth = getAuth(app);
-    } else {
-      console.warn(
-        'Failed to initialize auth with AsyncStorage persistence, using default:',
-        error,
-      );
-      auth = getAuth(app);
-    }
-  }
-}
-
-export { auth };
+export const auth: Auth = getAuth(app);
 export const db: Firestore = getFirestore(app);
 
 let analytics: Analytics | null = null;
 try {
-  if (Platform.OS === 'web') {
-    analytics = getAnalytics(app);
-  }
+  analytics = getAnalytics(app);
 } catch (error) {
   console.warn('Firebase Analytics initialization failed:', error);
 }
 
 const initFirestorePersistence = async () => {
-  if (Platform.OS === 'web') {
-    try {
-      await enableIndexedDbPersistence(db);
-      console.log('Firestore persistence enabled (web)');
-    } catch (error: any) {
-      if (error.code === 'failed-precondition') {
-        console.warn('Firestore persistence failed: Multiple tabs open');
-      } else if (error.code === 'unimplemented') {
-        console.warn('Firestore persistence not supported on this platform');
-      } else {
-        console.warn('Firestore persistence error:', error);
-      }
+  try {
+    await enableIndexedDbPersistence(db);
+    console.log('Firestore persistence enabled (web)');
+  } catch (error: any) {
+    if (error.code === 'failed-precondition') {
+      console.warn('Firestore persistence failed: Multiple tabs open');
+    } else if (error.code === 'unimplemented') {
+      console.warn('Firestore persistence not supported on this platform');
+    } else {
+      console.warn('Firestore persistence error:', error);
     }
-  } else {
-    console.log('Firestore persistence enabled (React Native - automatic)');
   }
 };
 

@@ -2,11 +2,11 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { makeStyles } from '@rneui/themed';
 import { useQueryClient } from '@tanstack/react-query';
+import Constants from 'expo-constants';
 import { useIsDesktop } from 'hooks/useIsDesktop';
 import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Linking, Platform, View } from 'react-native';
-import DeviceInfo from 'react-native-device-info';
+import { Linking, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Button from 'components/Button';
@@ -121,14 +121,12 @@ const SettingsScreen = ({ navigation }) => {
           text={t(translations.settings.signout)}
           onPress={handleLogout}
         />
-        {Platform.OS !== 'web' && (
-          <Text
-            kind="paragraph"
-            text={t(translations.settings.version, {
-              version: `${DeviceInfo.getVersion()} (${DeviceInfo.getBuildNumber()})`,
-            })}
-          />
-        )}
+        <Text
+          kind="paragraph"
+          text={t(translations.settings.version, {
+            version: Constants.expoConfig?.version ?? '',
+          })}
+        />
       </View>
     </SafeAreaView>
   );

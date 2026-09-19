@@ -8,14 +8,6 @@ node_modules/
 dist/
 web-build/
 
-# Native
-*.orig.*
-*.jks
-*.p8
-*.p12
-*.key
-*.mobileprovision
-
 # Metro
 .metro-health-check*
 
@@ -34,28 +26,8 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
-# Firebase
-GoogleService-Info.plist
-google-services.json
-release.keystore
-
 # env
 .env
 
 # Development
 .idea/
-
-# Fastlane
-**/fastlane/report.xml
-**/fastlane/Preview.html
-**/fastlane/screenshots
-**/fastlane/test_output
-builds/*
-*.xcarchive
-bertie-434108-5fd4928195d9.json
-bertie-74d8c-e01b7dfc401f.json
-
-# iOS Build
-.local_derived_data
-*.ipa
-*.app.dSYM.zip
