@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Switch, makeStyles } from '@rneui/themed';
-import { debounce } from 'lodash';
+import debounce from 'lodash.debounce';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Platform, ScrollView, View } from 'react-native';
