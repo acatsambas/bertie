@@ -4,10 +4,12 @@ export interface IconProps extends Omit<RNEIconProps, 'name' | 'type'> {
   icon: keyof typeof iconType;
 }
 
-const Icon = ({ icon, ...props }: IconProps) => {
+const Icon = ({ icon, onPress, accessibilityRole, ...props }: IconProps) => {
   return (
     <RNEIcon
       {...props}
+      onPress={onPress}
+      accessibilityRole={accessibilityRole ?? (onPress ? 'button' : 'image')}
       type={icon in iconType && iconType[icon].type}
       name={icon in iconType && iconType[icon].name}
     />
@@ -28,7 +30,7 @@ const iconType = {
     name: 'format-list-bulleted',
   },
   discover: {
-    type: 'oction',
+    type: 'octicon',
     name: 'search',
   },
   order: {

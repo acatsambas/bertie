@@ -1,18 +1,20 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "baseUrl": "./src",
+    "strict": false,
     "paths": {
-      "components/*": ["components/*"],
-      "api/*": ["api/*"],
-      "assets/*": ["assets/*"],
-      "lib/*": ["lib/*"],
-      "gpt/*": ["gpt/*"],
-      "navigation/*": ["navigation/*"],
-      "screens/*": ["screens/*"],
-      "styles/*": ["styles/*"],
-      "utils/*": ["utils/*"],
-      "locales/*": ["locales/*"]
+      "components/*": ["./src/components/*"],
+      "api/*": ["./src/api/*"],
+      "assets/*": ["./src/assets/*"],
+      "lib/*": ["./src/lib/*"],
+      "gpt/*": ["./src/gpt/*"],
+      "navigation/*": ["./src/navigation/*"],
+      "screens/*": ["./src/screens/*"],
+      "styles/*": ["./src/styles/*"],
+      "utils/*": ["./src/utils/*"],
+      "locales/*": ["./src/locales/*"],
+      "contexts/*": ["./src/contexts/*"],
+      "hooks/*": ["./src/hooks/*"]
     }
   },
   "exclude": ["node_modules", "babel.config.js", "metro.config.js"]

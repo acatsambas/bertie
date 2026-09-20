@@ -5,6 +5,7 @@ import { Image, Modal, Platform, View } from 'react-native';
 
 import Button from 'components/Button';
 import Text from 'components/Text';
+import { translations } from 'locales/translations';
 
 // @ts-ignore
 import icon from '../../assets/icon.png';
@@ -31,28 +32,12 @@ const PWAInstallModal = ({
     return null;
   }
 
-  const iosInstructions = t(
-    'pwa.iosInstructions',
-    'Tap the share button in Safari, then tap "Add to Home Screen"',
-  );
-
-  const androidManualInstructions = t(
-    'pwa.androidInstructions',
-    'Tap the menu (⋮) in Chrome, then tap "Add to Home screen"',
-  );
-
-  const defaultInstructions = t(
-    'pwa.installBody',
-    'Install Bertie on your home screen for quick and easy access when you need it.',
-  );
-
-  // Determine which instructions to show
   const showManualInstructions = isIOS || !hasDeferredPrompt;
   const instructionText = isIOS
-    ? iosInstructions
+    ? t(translations.pwa.iosInstructions)
     : hasDeferredPrompt
-      ? defaultInstructions
-      : androidManualInstructions;
+      ? t(translations.pwa.installBody)
+      : t(translations.pwa.androidInstructions);
 
   return (
     <Modal
@@ -64,26 +49,26 @@ const PWAInstallModal = ({
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
           <Image source={icon} style={styles.icon} />
-          <Text kind="header" text={t('pwa.installTitle', 'Install Bertie')} />
+          <Text kind="header" text={t(translations.pwa.installTitle)} />
           <Text kind="paragraph" text={instructionText} style={styles.text} />
 
           <View style={styles.buttonContainer}>
             {showManualInstructions ? (
               <Button
                 kind="primary"
-                text={t('common.gotIt', 'Got it!')}
+                text={t(translations.common.gotIt)}
                 onPress={onClose}
               />
             ) : (
               <>
                 <Button
                   kind="primary"
-                  text={t('pwa.installButton', 'Install')}
+                  text={t(translations.pwa.installButton)}
                   onPress={onInstall}
                 />
                 <Button
                   kind="tertiary"
-                  text={t('common.maybeLater', 'Maybe later')}
+                  text={t(translations.common.maybeLater)}
                   onPress={onClose}
                 />
               </>

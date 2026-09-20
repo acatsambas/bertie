@@ -300,5 +300,16 @@
     "rate": "You need an account to rate books.",
     "signUp": "Sign up",
     "cancel": "Not now"
+  },
+  "common": {
+    "gotIt": "Got it!",
+    "maybeLater": "Maybe later"
+  },
+  "pwa": {
+    "installTitle": "Install Bertie",
+    "installBody": "Install Bertie on your home screen for quick and easy access when you need it.",
+    "installButton": "Install",
+    "iosInstructions": "Tap the share button in Safari, then tap \"Add to Home Screen\"",
+    "androidInstructions": "Tap the menu (⋮) in Chrome, then tap \"Add to Home screen\""
   }
 }

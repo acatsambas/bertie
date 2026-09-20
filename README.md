@@ -16,6 +16,8 @@ pnpm web
 ## Local Firebase
 
 ```sh
+pnpm dev              # emulators + Expo web (one terminal)
+# or separately:
 pnpm start:firebase   # terminal 1 — Auth/Firestore emulators + UI :4000
 pnpm web:emulators    # terminal 2
 ```

@@ -1,6 +1,6 @@
 # Bertie — agent notes
 
-Expo 54 web PWA for books, reading lists, and independent bookshop orders. Single package (not a monorepo). Use **pnpm**.
+Expo 57 web PWA for books, reading lists, and independent bookshop orders. Single package (not a monorepo). Use **pnpm**.
 
 ## Layout
 
@@ -22,9 +22,10 @@ Expo 54 web PWA for books, reading lists, and independent bookshop orders. Singl
 ```bash
 pnpm install
 pnpm secrets:decrypt          # needs SECRETS_PASSPHRASE
+pnpm dev                      # Auth/Firestore emulators + Expo web
 pnpm web                      # Expo web (prod Firebase)
-pnpm start:firebase           # Auth + Firestore emulators
-pnpm web:emulators            # web + EXPO_PUBLIC_USE_FIREBASE_EMULATORS=1
+pnpm start:firebase           # emulators only
+pnpm web:emulators            # web only, against emulators
 pnpm check                    # format + knip + lint + types
 pnpm fix                      # oxlint --fix + oxfmt
 pnpm build:web                # expo export → dist/
@@ -32,6 +33,8 @@ pnpm deploy:rules             # production Firestore rules/indexes
 ```
 
 Conventional commits (`feat:`, `fix:`, …) — enforced by commitlint via lefthook.
+
+When adding or upgrading packages, install the **latest** published version and pin it exactly (`saveExact: true`). Use `npx expo install` for Expo SDK packages; only pin older versions when peers/Expo force it.
 
 ## Ownership
 

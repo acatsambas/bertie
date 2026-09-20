@@ -23,6 +23,16 @@ This folder is **not** the `firebase` npm package. App code imports the SDK from
 
 ## Local development
 
+Requires **Java 21+** for the Emulator Suite (`firebase-tools` 15).
+
+One-shot (emulators + Expo web):
+
+```bash
+pnpm dev
+```
+
+Or in two terminals:
+
 ```bash
 pnpm start:firebase
 ```

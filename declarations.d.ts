@@ -4,6 +4,11 @@ declare module '*.png' {
   export default source;
 }
 
+declare module '*.ttf' {
+  const source: number;
+  export default source;
+}
+
 declare namespace NodeJS {
   export interface ProcessEnv {
     NODE_ENV: 'development' | 'production';
