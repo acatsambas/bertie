@@ -1,17 +1,11 @@
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
-import {
-  addDoc,
-  collection,
-  doc,
-  serverTimestamp,
-} from 'firebase/firestore';
+import { addDoc, collection, doc, serverTimestamp } from 'firebase/firestore';
 import { useMemo } from 'react';
 
 import { useFavouriteShopsQuery, useShopsQuery } from 'api/app/shops';
 import { useUserQuery } from 'api/app/user';
 import { db } from 'api/firebase';
-
 import { Routes } from 'navigation/routes';
 import { NavigationType } from 'navigation/types';
 

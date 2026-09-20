@@ -1,44 +1,41 @@
 # Bertie
 
-An app about books.
+An app about books (Expo web PWA).
 
-## Starting Guide
+Agent/architecture notes: [`AGENTS.md`](AGENTS.md).
 
-### Installing dependencies
-
-```sh
-yarn
-```
-
-Then start the app with:
+## Setup
 
 ```sh
-yarn web
-```
-
-### Decrypting secrets
-
-In order to use the app you will need to decrypt the secrets that are used to access 3rd party services.
-
-```sh
+pnpm install
 export SECRETS_PASSPHRASE=YOUR-PASSWORD
-./.github/scripts/decrypt.sh
+pnpm secrets:decrypt
+pnpm web
 ```
 
-### Linting and Prettier
+## Local Firebase
 
 ```sh
-yarn lint
+pnpm start:firebase   # terminal 1 — Auth/Firestore emulators + UI :4000
+pnpm web:emulators    # terminal 2
 ```
 
-### Deployment
+Details: [`services/firebase/README.md`](services/firebase/README.md).
 
-The web app is deployed via Vercel (`yarn build:web`).
-
-#### Local Web Build Testing
+## Quality
 
 ```sh
-yarn build:web
+pnpm check    # format + knip + lint + types
+pnpm fix      # auto-fix lint/format
+```
 
+## Deploy
+
+Web: Vercel (`pnpm build:web` → `dist/`).
+
+Firestore rules: `pnpm deploy:rules`.
+
+```sh
+pnpm build:web
 npx serve dist
 ```

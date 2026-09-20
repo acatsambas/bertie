@@ -5,7 +5,6 @@ import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Text from 'components/Text';
-
 import { translations } from 'locales/translations';
 
 import { NewOrderTab, PastOrdersTab } from './components';

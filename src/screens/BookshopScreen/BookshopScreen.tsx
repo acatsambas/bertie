@@ -7,26 +7,22 @@ import { View } from 'react-native';
 import RenderHtml from 'react-native-render-html';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import Button from 'components/Button';
-import GoogleMaps from 'components/GoogleMaps';
-import Icon from 'components/Icon';
-import Text from 'components/Text';
-
 import {
   useFavouriteShopsQuery,
   useToggleFavouriteShopMutation,
 } from 'api/app/shops';
-
+import Button from 'components/Button';
+import GoogleMaps from 'components/GoogleMaps';
+import Icon from 'components/Icon';
+import Text from 'components/Text';
+import { translations } from 'locales/translations';
 import { Routes } from 'navigation/routes';
 import { NavigationType } from 'navigation/types';
 
-import { translations } from 'locales/translations';
-
-export interface BookshopPageProps
-  extends StackNavigationProp<
-    NavigationType,
-    typeof Routes.DISCOVER_03_BOOKSHOP
-  > { }
+export interface BookshopPageProps extends StackNavigationProp<
+  NavigationType,
+  typeof Routes.DISCOVER_03_BOOKSHOP
+> {}
 
 export const BookshopScreen = ({ navigation }) => {
   const {

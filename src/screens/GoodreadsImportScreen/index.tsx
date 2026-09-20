@@ -8,10 +8,6 @@ import { useTranslation } from 'react-i18next';
 import { Linking, Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import Button from 'components/Button';
-import Icon from 'components/Icon';
-import Text from 'components/Text';
-
 import {
   GoodreadsImportResult,
   importGoodreadsBooks,
@@ -22,11 +18,12 @@ import {
 } from 'api/app/book/goodreads/parseGoodreadsCsv';
 import { auth } from 'api/firebase';
 import { useGuest } from 'api/guest/GuestProvider';
-
+import Button from 'components/Button';
+import Icon from 'components/Icon';
+import Text from 'components/Text';
+import { translations } from 'locales/translations';
 import { Routes } from 'navigation/routes';
 import type { NavigationType } from 'navigation/types';
-
-import { translations } from 'locales/translations';
 
 import RatingMapping from './RatingMapping';
 

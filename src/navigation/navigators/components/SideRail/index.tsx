@@ -6,16 +6,13 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Pressable, PressableStateCallbackType, View } from 'react-native';
 
+import { useUserQuery } from 'api/app/user';
 import Avatar from 'components/Avatar';
 import Icon from 'components/Icon';
 import Text from 'components/Text';
-
-import { useUserQuery } from 'api/app/user';
-
+import { translations } from 'locales/translations';
 import { Routes } from 'navigation/routes';
 import type { NavigationType } from 'navigation/types';
-
-import { translations } from 'locales/translations';
 
 import { menuItems } from '../BottomMenu/data';
 

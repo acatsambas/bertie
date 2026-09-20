@@ -16,7 +16,6 @@ import BookTile, {
 } from 'components/BookTile';
 import Icon from 'components/Icon';
 import Text from 'components/Text';
-
 import { translations } from 'locales/translations';
 
 import { useLibrary } from '../hooks';

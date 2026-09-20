@@ -4,15 +4,13 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import Book from 'components/Book';
-import Text from 'components/Text';
-
 import {
   useAddBookToLibraryMutation,
   useBooksQuery,
   useUserBooksIdsQuery,
 } from 'api/app/book';
-
+import Book from 'components/Book';
+import Text from 'components/Text';
 import { translations } from 'locales/translations';
 
 const DISCOVER_RECOMMENDED_IDS = [

@@ -16,6 +16,12 @@ npm-debug.*
 yarn-debug.*
 yarn-error.*
 
+# Firebase
+firebase-debug.log*
+firestore-debug.log*
+ui-debug.log*
+.firebase/
+
 # macOS
 .DS_Store
 *.pem

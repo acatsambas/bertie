@@ -1,17 +1,39 @@
 {
   "name": "bertie",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "private": true,
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "checkTs": "tsc --noEmit",
+    "build:web": "expo export -p web",
+    "check:format": "oxfmt --check",
+    "check:knip": "knip",
+    "check:lint": "oxlint .",
+    "check:types": "tsc --noEmit",
+    "check": "pnpm check:format && pnpm check:knip && pnpm check:lint && pnpm check:types",
+    "deploy:rules": "firebase deploy --only firestore:rules,firestore:indexes --config services/firebase/firebase.json --project production",
+    "fix:format": "oxfmt .",
+    "fix:lint": "oxlint --fix .",
+    "fix": "pnpm fix:lint && pnpm fix:format",
     "gpt": "tsx src/gpt/discover-books.ts",
-    "lint": "expo lint",
-    "prettify": "prettier --write .",
+    "prepare": "lefthook install",
+    "secrets:decrypt": "sh .github/scripts/decrypt.sh",
+    "secrets:encrypt": "sh .github/scripts/encrypt.sh",
+    "start:firebase": "firebase emulators:start --only auth,firestore --config services/firebase/firebase.json",
     "start": "expo start",
-    "web": "expo start --web",
-    "build:web": "expo export -p web && cp about.html support.html data_request.html styles.css bertie_logo.png dist/ && cp -r screenshots dist/"
+    "web:emulators": "EXPO_PUBLIC_USE_FIREBASE_EMULATORS=1 expo start --web",
+    "web": "expo start --web"
   },
+  "lint-staged": {
+    "*.{ts,tsx,js,mjs,cjs}": [
+      "oxlint --fix",
+      "oxfmt"
+    ]
+  },
+  "engines": {
+    "node": ">=24.18.0",
+    "pnpm": ">=11.23.0"
+  },
+  "packageManager": "pnpm@11.23.0",
   "dependencies": {
     "@expo-google-fonts/commissioner": "0.4.1",
     "@expo-google-fonts/goudy-bookletter-1911": "0.4.1",
@@ -52,15 +74,21 @@
   },
   "devDependencies": {
     "@babel/core": "7.28.5",
-    "@trivago/prettier-plugin-sort-imports": "6.0.0",
+    "@commitlint/cli": "21.2.2",
+    "@commitlint/config-conventional": "21.2.2",
     "@types/lodash.debounce": "4.0.9",
     "@types/react": "19.1.17",
     "babel-plugin-module-resolver": "5.0.2",
-    "eslint": "8.57.1",
-    "eslint-config-expo": "10.0.0",
-    "eslint-config-prettier": "10.1.8",
-    "eslint-plugin-prettier": "5.5.4",
-    "prettier": "3.6.2",
+    "eslint-plugin-expo": "1.1.0",
+    "firebase-admin": "13.6.0",
+    "firebase-tools": "14.11.0",
+    "knip": "6.32.2",
+    "lefthook": "2.1.10",
+    "lint-staged": "17.3.0",
+    "oxfmt": "0.64.0",
+    "oxlint": "1.79.0",
+    "oxlint-config-universe": "0.2.0",
+    "oxlint-tsgolint": "7.0.2001",
     "tsx": "4.20.6",
     "typescript": "5.9.3"
   }

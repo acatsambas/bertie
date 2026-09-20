@@ -12,11 +12,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Button from 'components/Button';
 import Text from 'components/Text';
-
+import { translations } from 'locales/translations';
 import { Routes } from 'navigation/routes';
 import { NavigationType } from 'navigation/types';
-
-import { translations } from 'locales/translations';
 
 const OrderPlacedScreen = () => {
   const styles = useStyles();

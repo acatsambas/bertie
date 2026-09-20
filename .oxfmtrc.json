@@ -1,0 +1,51 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "arrowParens": "avoid",
+  "printWidth": 80,
+  "semi": true,
+  "singleQuote": true,
+  "tabWidth": 2,
+  "trailingComma": "all",
+  "sortPackageJson": false,
+  "ignorePatterns": [
+    "dist/",
+    "node_modules/",
+    "package-lock.json",
+    "yarn.lock",
+    "pnpm-lock.yaml",
+    ".agents/",
+    "*.json",
+    "public/"
+  ],
+  "sortImports": {
+    "internalPattern": [
+      "api/",
+      "assets/",
+      "components/",
+      "contexts/",
+      "gpt/",
+      "lib/",
+      "locales/",
+      "navigation/",
+      "screens/",
+      "styles/",
+      "utils/"
+    ],
+    "newlinesBetween": true,
+    "groups": [
+      ["side_effect_style", "side_effect"],
+      ["type-builtin", "value-builtin", "type-external", "value-external"],
+      ["type-internal", "value-internal"],
+      [
+        "type-parent",
+        "type-sibling",
+        "type-index",
+        "value-parent",
+        "value-sibling",
+        "value-index"
+      ],
+      "style",
+      "unknown"
+    ]
+  }
+}

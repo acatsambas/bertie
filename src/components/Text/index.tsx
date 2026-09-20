@@ -3,12 +3,12 @@ import { StyleProp, TextStyle } from 'react-native';
 
 interface TextProps {
   kind:
-  | 'bigHeader'
-  | 'header'
-  | 'paragraph'
-  | 'description'
-  | 'littleText'
-  | 'button';
+    | 'bigHeader'
+    | 'header'
+    | 'paragraph'
+    | 'description'
+    | 'littleText'
+    | 'button';
   text: string;
   onPress?(): void;
   color?: string;
@@ -58,4 +58,3 @@ const textKind = {
 };
 
 export default Text;
-

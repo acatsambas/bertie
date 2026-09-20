@@ -1,14 +1,12 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { makeStyles } from '@rneui/themed';
+import { useAuthGate } from 'hooks/useAuthGate';
 import React, { useCallback, useState } from 'react';
 import { FlatList, RefreshControl } from 'react-native';
 
 import AuthGateModal from 'components/AuthGateModal';
 import Book from 'components/Book';
-
-import { useAuthGate } from 'hooks/useAuthGate';
-
 import { Routes } from 'navigation/routes';
 import { NavigationType } from 'navigation/types';
 
@@ -17,8 +15,10 @@ import { OrderEmpty } from './OrderEmpty';
 import { OrderFooter } from './OrderFooter';
 import { OrderHeader } from './OrderHeader';
 
-export interface NewOrderTabProps
-  extends StackNavigationProp<NavigationType, typeof Routes.ORDER_01_ORDER> {}
+export interface NewOrderTabProps extends StackNavigationProp<
+  NavigationType,
+  typeof Routes.ORDER_01_ORDER
+> {}
 
 export const NewOrderTab = () => {
   const styles = useStyles();

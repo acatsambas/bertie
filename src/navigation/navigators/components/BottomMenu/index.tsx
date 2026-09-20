@@ -6,7 +6,6 @@ import { Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import BottomMenuItem from 'components/BottomMenuItem';
-
 import { Routes } from 'navigation/routes';
 import type { NavigationType } from 'navigation/types';
 

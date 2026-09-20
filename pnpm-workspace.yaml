@@ -1,0 +1,10 @@
+saveExact: true
+engineStrict: false
+nodeLinker: hoisted
+
+allowBuilds:
+  '@firebase/util': true
+  esbuild: true
+  lefthook: true
+  protobufjs: true
+  re2: true

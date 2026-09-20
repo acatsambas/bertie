@@ -8,7 +8,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Book from 'components/Book';
 import Text from 'components/Text';
-
 import { translations } from 'locales/translations';
 
 import { AddBookButton, DesktopLibrary, ListHeader } from './components';

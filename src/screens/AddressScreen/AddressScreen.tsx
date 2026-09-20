@@ -4,13 +4,11 @@ import { useTranslation } from 'react-i18next';
 import { Alert, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { useUpdateAddressMutation, useUserQuery } from 'api/app/user';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
 import Input from 'components/Input';
 import Text from 'components/Text';
-
-import { useUpdateAddressMutation, useUserQuery } from 'api/app/user';
-
 import { translations } from 'locales/translations';
 
 export const AddressScreen = ({ navigation }) => {

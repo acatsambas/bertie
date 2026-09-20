@@ -5,21 +5,18 @@ import { StyleSheet, View } from 'react-native';
 
 import { useShopsQuery } from 'api/app/shops';
 import { Shop } from 'api/app/types';
-
+import { translations } from 'locales/translations';
 import { Routes } from 'navigation/routes';
 import { NavigationType } from 'navigation/types';
-
-import { translations } from 'locales/translations';
 
 import BookShop from '../Bookshop';
 import LoadingState from '../LoadingState/LoadingState';
 import Text from '../Text';
 
-export interface DiscoverPageProps
-  extends StackNavigationProp<
-    NavigationType,
-    typeof Routes.DISCOVER_01_DISCOVER
-  > {}
+export interface DiscoverPageProps extends StackNavigationProp<
+  NavigationType,
+  typeof Routes.DISCOVER_01_DISCOVER
+> {}
 
 const BookshopsList = () => {
   const { data: shops = [], isLoading, isError } = useShopsQuery();

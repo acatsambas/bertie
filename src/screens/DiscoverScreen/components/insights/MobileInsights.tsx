@@ -4,16 +4,15 @@ import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 
 import Text from 'components/Text';
-
 import { translations } from 'locales/translations';
 
-import { OthersStatus, RatingsSection } from './RatingsSection';
 import {
   RatingComparison,
   ReadingInsights,
   byCentury,
 } from './computeInsights';
 import { FictionSection, PendingLookups, RankedSection } from './parts';
+import { OthersStatus, RatingsSection } from './RatingsSection';
 import { useInsightsSummary } from './useInsightsSummary';
 
 /** Insights on phones and the PWA: the summary, then one list after another. */

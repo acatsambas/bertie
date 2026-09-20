@@ -3,11 +3,9 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, FlatList, View } from 'react-native';
 
-import Text from 'components/Text';
-
 import { useOrderHistoryQuery } from 'api/app/orders';
 import { Order } from 'api/app/types';
-
+import Text from 'components/Text';
 import { translations } from 'locales/translations';
 
 const formatOrderDate = (order: Order) => {

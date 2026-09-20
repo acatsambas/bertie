@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { DimensionValue, StyleProp, View, ViewStyle } from 'react-native';
 
 import Text from 'components/Text';
-
 import { translations } from 'locales/translations';
 
 import { RatingComparison, RatingDistribution } from './computeInsights';

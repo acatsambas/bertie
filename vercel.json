@@ -1,6 +1,6 @@
 {
-  "installCommand": "yarn install",
-  "buildCommand": "yarn build:web",
+  "installCommand": "pnpm install --frozen-lockfile",
+  "buildCommand": "pnpm build:web",
   "outputDirectory": "dist",
   "rewrites": [
     {

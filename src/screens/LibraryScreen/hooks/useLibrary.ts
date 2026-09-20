@@ -7,17 +7,15 @@ import {
   useToggleBookReadMutation,
   useUserBooksQuery,
 } from 'api/app/book';
-
 import { Routes } from 'navigation/routes';
 import { NavigationType } from 'navigation/types';
 
 import { categorizeBooks } from './utils';
 
-interface LibraryPageProps
-  extends StackNavigationProp<
-    NavigationType,
-    typeof Routes.LIBRARY_01_LIBRARY
-  > {}
+interface LibraryPageProps extends StackNavigationProp<
+  NavigationType,
+  typeof Routes.LIBRARY_01_LIBRARY
+> {}
 
 /**
  * Someone's list for the Library tabs. Each tab pages through its own shelf,

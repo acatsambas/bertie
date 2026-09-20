@@ -5,12 +5,9 @@ import { StyleSheet, View } from 'react-native';
 
 import BookshopsList from 'components/BookshopsList';
 import Text from 'components/Text';
-
-import { Routes } from 'navigation/routes';
-
-import { DiscoverScreenProps } from 'screens/DiscoverScreen';
-
 import { translations } from 'locales/translations';
+import { Routes } from 'navigation/routes';
+import { DiscoverScreenProps } from 'screens/DiscoverScreen';
 
 export const BookshopTab = ({ user }) => {
   const { navigate } = useNavigation<DiscoverScreenProps>();

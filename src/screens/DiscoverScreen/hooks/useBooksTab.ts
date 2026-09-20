@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { useUserBooksQuery } from 'api/app/book';
-
 import { executeGPT } from 'gpt/discover-books';
 
 export const useBooksTab = ({

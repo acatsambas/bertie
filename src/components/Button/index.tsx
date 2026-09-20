@@ -12,7 +12,14 @@ interface ButtonProps {
   containerStyle?: StyleProp<ViewStyle>;
 }
 
-const Button = ({ text, onPress, kind, icon, disabled, containerStyle }: ButtonProps) => {
+const Button = ({
+  text,
+  onPress,
+  kind,
+  icon,
+  disabled,
+  containerStyle,
+}: ButtonProps) => {
   const { theme } = useTheme();
 
   return (

@@ -1,16 +1,22 @@
+import 'react-native-get-random-values';
+
 import {
   Analytics,
   getAnalytics,
   setAnalyticsCollectionEnabled,
 } from 'firebase/analytics';
 import { FirebaseApp, getApps, initializeApp } from 'firebase/app';
-import { Auth, getAuth } from 'firebase/auth';
+import { Auth, connectAuthEmulator, getAuth } from 'firebase/auth';
 import {
   Firestore,
+  connectFirestoreEmulator,
   enableIndexedDbPersistence,
   getFirestore,
 } from 'firebase/firestore';
-import 'react-native-get-random-values';
+
+const useEmulators =
+  process.env.EXPO_PUBLIC_USE_FIREBASE_EMULATORS === '1' ||
+  process.env.EXPO_PUBLIC_USE_FIREBASE_EMULATORS === 'true';
 
 const firebaseConfig = {
   apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
@@ -31,14 +37,25 @@ if (getApps().length === 0) {
 export const auth: Auth = getAuth(app);
 export const db: Firestore = getFirestore(app);
 
+if (useEmulators) {
+  connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true });
+  connectFirestoreEmulator(db, '127.0.0.1', 8080);
+}
+
 let analytics: Analytics | null = null;
-try {
-  analytics = getAnalytics(app);
-} catch (error) {
-  console.warn('Firebase Analytics initialization failed:', error);
+if (!useEmulators) {
+  try {
+    analytics = getAnalytics(app);
+  } catch (error) {
+    console.warn('Firebase Analytics initialization failed:', error);
+  }
 }
 
 const initFirestorePersistence = async () => {
+  if (useEmulators) {
+    return;
+  }
+
   try {
     await enableIndexedDbPersistence(db);
     console.log('Firestore persistence enabled (web)');

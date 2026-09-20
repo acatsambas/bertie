@@ -9,23 +9,19 @@ import { useTranslation } from 'react-i18next';
 import { Linking, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { AuthContext } from 'api/auth/AuthProvider';
+import { useGuest } from 'api/guest/GuestProvider';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
 import Text from 'components/Text';
-
-import { AuthContext } from 'api/auth/AuthProvider';
-import { useGuest } from 'api/guest/GuestProvider';
-
+import { translations } from 'locales/translations';
 import { Routes } from 'navigation/routes';
 import type { NavigationType } from 'navigation/types';
 
-import { translations } from 'locales/translations';
-
-export interface SettingsPageProps
-  extends StackNavigationProp<
-    NavigationType,
-    typeof Routes.SETTINGS_01_SETTINGS
-  > { }
+export interface SettingsPageProps extends StackNavigationProp<
+  NavigationType,
+  typeof Routes.SETTINGS_01_SETTINGS
+> {}
 
 const SettingsScreen = ({ navigation }) => {
   const { navigate } = useNavigation<SettingsPageProps>();

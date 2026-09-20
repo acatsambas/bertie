@@ -4,12 +4,10 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 
+import { useEssentialBooksQuery } from 'api/app/book';
 import LoadingState from 'components/LoadingState/LoadingState';
 import SearchBooks from 'components/SearchBooks';
 import Text from 'components/Text';
-
-import { useEssentialBooksQuery } from 'api/app/book';
-
 import { translations } from 'locales/translations';
 
 import { DesktopBooksTab } from './DesktopBooksTab';

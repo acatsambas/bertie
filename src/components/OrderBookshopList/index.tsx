@@ -7,11 +7,9 @@ import { View } from 'react-native';
 
 import { Shop } from 'api/app/types';
 import { useUpdateFavouriteShopMutation, useUserQuery } from 'api/app/user';
-
+import { translations } from 'locales/translations';
 import { Routes } from 'navigation/routes';
 import { NavigationType } from 'navigation/types';
-
-import { translations } from 'locales/translations';
 
 import BookShop from '../Bookshop';
 import LoadingState from '../LoadingState/LoadingState';
@@ -21,8 +19,10 @@ interface OrderBookshopListProps {
   kind: 'favourites' | 'more';
   shops?: Shop[];
 }
-export interface OrderPageProps
-  extends StackNavigationProp<NavigationType, typeof Routes.ORDER_01_ORDER> {}
+export interface OrderPageProps extends StackNavigationProp<
+  NavigationType,
+  typeof Routes.ORDER_01_ORDER
+> {}
 
 const OrderBookshopList = ({ kind, shops }: OrderBookshopListProps) => {
   const styles = useStyles();

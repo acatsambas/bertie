@@ -3,7 +3,6 @@ import React from 'react';
 
 import { SETTINGS_ROUTES } from 'navigation/routes';
 import type { SettingsNavigatorParamList } from 'navigation/types';
-
 import AddressScreen from 'screens/AddressScreen';
 import DeleteScreen from 'screens/DeleteScreen';
 import GoodreadsImportScreen from 'screens/GoodreadsImportScreen';

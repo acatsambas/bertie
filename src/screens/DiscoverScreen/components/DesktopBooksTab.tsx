@@ -6,6 +6,12 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LayoutChangeEvent, ScrollView, View } from 'react-native';
 
+import {
+  useAddBookToLibraryMutation,
+  useEssentialBooksQuery,
+  useUserBooksIdsQuery,
+} from 'api/app/book';
+import { BookResult } from 'api/google-books/search';
 import AuthGateModal from 'components/AuthGateModal';
 import BookTile, {
   TILE_COLUMN_GAP,
@@ -14,18 +20,9 @@ import BookTile, {
 } from 'components/BookTile';
 import LoadingState from 'components/LoadingState/LoadingState';
 import Text from 'components/Text';
-
-import {
-  useAddBookToLibraryMutation,
-  useEssentialBooksQuery,
-  useUserBooksIdsQuery,
-} from 'api/app/book';
-import { BookResult } from 'api/google-books/search';
-
+import { translations } from 'locales/translations';
 import { Routes } from 'navigation/routes';
 import { NavigationType } from 'navigation/types';
-
-import { translations } from 'locales/translations';
 
 // The tick colour the mobile list uses for books already on your list.
 const IN_LIST_COLOR = '#38AD59';

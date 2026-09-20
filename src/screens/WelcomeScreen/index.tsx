@@ -5,22 +5,21 @@ import { useTranslation } from 'react-i18next';
 import { Linking, Platform, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { useGuest } from 'api/guest/GuestProvider';
 import AppleSigninButton from 'components/AuthButtons/Apple';
 import GoogleButton from 'components/AuthButtons/GoogleButton';
 import Button from 'components/Button';
 import Illustration from 'components/Illustration';
 import Logo from 'components/Logo';
 import Text from 'components/Text';
-
-import { useGuest } from 'api/guest/GuestProvider';
-
+import { translations } from 'locales/translations';
 import { Routes } from 'navigation/routes';
 import type { NavigationType } from 'navigation/types';
 
-import { translations } from 'locales/translations';
-
-export interface WelcomePageProps
-  extends StackNavigationProp<NavigationType, typeof Routes.AUTH_01_WELCOME> { }
+export interface WelcomePageProps extends StackNavigationProp<
+  NavigationType,
+  typeof Routes.AUTH_01_WELCOME
+> {}
 
 const WelcomeScreen = () => {
   const styles = useStyles();

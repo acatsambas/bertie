@@ -1,17 +1,15 @@
+import 'locales/i18n';
+
 import { ThemeProvider, createTheme } from '@rneui/themed';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { PWAProvider } from 'contexts/PWAContext';
 import { useEffect, useState } from 'react';
 
 import { AuthProvider } from 'api/auth/AuthProvider';
-import { GuestProvider } from 'api/guest/GuestProvider';
 import { initFirebase } from 'api/firebase';
-
+import { GuestProvider } from 'api/guest/GuestProvider';
+import { PWAProvider } from 'contexts/PWAContext';
 import RootNavigator from 'navigation/RootNavigator';
-
 import { FontsProvider } from 'styles/FontsProvider';
-
-import 'locales/i18n';
 
 const theme = createTheme({
   lightColors: {

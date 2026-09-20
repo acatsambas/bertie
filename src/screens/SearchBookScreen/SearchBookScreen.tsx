@@ -7,26 +7,22 @@ import { useTranslation } from 'react-i18next';
 import { Platform, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { useUpdateFirstSearchFlagMutation, useUserQuery } from 'api/app/user';
+import { BookResult, searchBooks } from 'api/google-books/search';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
 import Input from 'components/Input';
 import LoadingState from 'components/LoadingState/LoadingState';
 import SearchBooks from 'components/SearchBooks';
 import Text from 'components/Text';
-
-import { useUpdateFirstSearchFlagMutation, useUserQuery } from 'api/app/user';
-import { BookResult, searchBooks } from 'api/google-books/search';
-
+import { translations } from 'locales/translations';
 import { Routes } from 'navigation/routes';
 import { NavigationType } from 'navigation/types';
 
-import { translations } from 'locales/translations';
-
-export interface SearchBookProps
-  extends StackNavigationProp<
-    NavigationType,
-    typeof Routes.LIBRARY_03_SEARCH
-  > {}
+export interface SearchBookProps extends StackNavigationProp<
+  NavigationType,
+  typeof Routes.LIBRARY_03_SEARCH
+> {}
 
 export const SearchBookScreen = () => {
   const [searchResults, setSearchResults] = useState<BookResult[]>([]);

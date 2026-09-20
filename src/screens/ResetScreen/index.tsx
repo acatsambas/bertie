@@ -7,7 +7,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from 'components/Button';
 import Input from 'components/Input';
 import Text from 'components/Text';
-
 import { translations } from 'locales/translations';
 
 //TODO: Reset password doesn't work
@@ -42,7 +41,7 @@ const ResetScreen = () => {
     }
   };
 
-  const handleDone = () => { };
+  const handleDone = () => {};
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <View style={styles.container}>

@@ -9,19 +9,16 @@ import Button from 'components/Button';
 import Icon from 'components/Icon';
 import OrderBookshopList from 'components/OrderBookshopList';
 import Text from 'components/Text';
-
+import { translations } from 'locales/translations';
 import { Routes } from 'navigation/routes';
 import { NavigationType } from 'navigation/types';
 
-import { translations } from 'locales/translations';
-
 import { useOrderShopScreen } from './hooks/useOrderShopScreen';
 
-export interface OrderShopScreenProps
-  extends StackNavigationProp<
-    NavigationType,
-    typeof Routes.ORDER_02_ORDER_SHOP
-  > { }
+export interface OrderShopScreenProps extends StackNavigationProp<
+  NavigationType,
+  typeof Routes.ORDER_02_ORDER_SHOP
+> {}
 
 export const OrderShopScreen = () => {
   const { t } = useTranslation();

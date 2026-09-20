@@ -4,13 +4,11 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { useUpdateContactEmailMutation, useUserQuery } from 'api/app/user';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
 import Input from 'components/Input';
 import Text from 'components/Text';
-
-import { useUpdateContactEmailMutation, useUserQuery } from 'api/app/user';
-
 import { translations } from 'locales/translations';
 
 export const EmailScreen = ({ navigation }) => {
@@ -32,7 +30,7 @@ export const EmailScreen = ({ navigation }) => {
   };
 
   const handleSave = async () => {
-    const validRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
+    const validRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g;
     if (email === checkEmail && email.match(validRegex) && user) {
       await updateContactEmail.mutateAsync({ contactEmail: email });
 

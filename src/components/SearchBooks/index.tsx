@@ -1,5 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { useAuthGate } from 'hooks/useAuthGate';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
@@ -9,13 +10,9 @@ import {
   useUserBooksIdsQuery,
 } from 'api/app/book';
 import { BookResult } from 'api/google-books/search';
-
+import { translations } from 'locales/translations';
 import { Routes } from 'navigation/routes';
 import { NavigationType } from 'navigation/types';
-
-import { useAuthGate } from 'hooks/useAuthGate';
-
-import { translations } from 'locales/translations';
 
 import AuthGateModal from '../AuthGateModal';
 import Book from '../Book';
@@ -31,7 +28,14 @@ const SearchBooks = ({ books }: SearchBookProps) => {
     >();
   const { data: userBooksIds = [] } = useUserBooksIdsQuery();
   const { mutate: addBook } = useAddBookToLibraryMutation();
-  const { isGuest, requireAuth, gateVisible, gateMessage, dismissGate, confirmGate } = useAuthGate();
+  const {
+    isGuest,
+    requireAuth,
+    gateVisible,
+    gateMessage,
+    dismissGate,
+    confirmGate,
+  } = useAuthGate();
   const { t } = useTranslation();
 
   const handlePressBook = (book: BookResult) => {

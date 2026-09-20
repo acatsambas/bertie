@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "default": "demo-bertie",
+    "production": "bertie-74d8c"
+  }
+}

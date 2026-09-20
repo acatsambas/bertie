@@ -1,5 +1,6 @@
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { makeStyles, useTheme } from '@rneui/themed';
+import { useAuthGate } from 'hooks/useAuthGate';
 import { useIsDesktop } from 'hooks/useIsDesktop';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -14,13 +15,6 @@ import {
 import RenderHtml from 'react-native-render-html';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import Button from 'components/Button';
-import DesktopColumn from 'components/DesktopColumn';
-import Icon from 'components/Icon';
-import Text from 'components/Text';
-import AuthGateModal from 'components/AuthGateModal';
-import RatingBottomSheet from 'components/RatingBottomSheet';
-
 import {
   useAddBookToLibraryMutation,
   useRateBookMutation,
@@ -32,14 +26,16 @@ import {
 import { RatingValue } from 'api/app/book/mutations/useRateBookMutation';
 import { AuthContext } from 'api/auth/AuthProvider';
 import { useBookQuery } from 'api/google-books/useBookQuery';
-
-import { useAuthGate } from 'hooks/useAuthGate';
-
+import AuthGateModal from 'components/AuthGateModal';
+import Button from 'components/Button';
+import DesktopColumn from 'components/DesktopColumn';
+import Icon from 'components/Icon';
+import RatingBottomSheet from 'components/RatingBottomSheet';
+import Text from 'components/Text';
+import { translations } from 'locales/translations';
 import BottomMenu from 'navigation/navigators/components/BottomMenu';
 import SideRail from 'navigation/navigators/components/SideRail';
 import { Routes } from 'navigation/routes';
-
-import { translations } from 'locales/translations';
 
 const computeMedian = (values: RatingValue[]): RatingValue | null => {
   if (values.length === 0) return null;
@@ -77,7 +73,15 @@ export const BookScreen = () => {
   const { mutate: rateBook } = useRateBookMutation();
   const { data: ratings = [] } = useBookRatingsQuery(params.bookId);
   const { data: userRating = null } = useUserBookRatingQuery(params.bookId);
-  const { isGuest, isLoggedOut, requireAuth, gateVisible, gateMessage, dismissGate, confirmGate } = useAuthGate();
+  const {
+    isGuest,
+    isLoggedOut,
+    requireAuth,
+    gateVisible,
+    gateMessage,
+    dismissGate,
+    confirmGate,
+  } = useAuthGate();
   const [ratingSheetVisible, setRatingSheetVisible] = useState(false);
   const [menuVisible, setMenuVisible] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ top: 0, right: 0 });
@@ -323,13 +327,27 @@ export const BookScreen = () => {
           activeOpacity={1}
           onPress={() => setMenuVisible(false)}
         >
-          <View style={[styles.menuCard, { top: menuPosition.top, right: menuPosition.right }]}>
+          <View
+            style={[
+              styles.menuCard,
+              { top: menuPosition.top, right: menuPosition.right },
+            ]}
+          >
             {!isBookInLibrary ? (
-              <TouchableOpacity style={styles.menuItem} onPress={handleMenuRate}>
-                <Text kind="paragraph" text={t(translations.library.rating.rate)} />
+              <TouchableOpacity
+                style={styles.menuItem}
+                onPress={handleMenuRate}
+              >
+                <Text
+                  kind="paragraph"
+                  text={t(translations.library.rating.rate)}
+                />
               </TouchableOpacity>
             ) : (
-              <TouchableOpacity style={styles.menuItem} onPress={handleMenuRemove}>
+              <TouchableOpacity
+                style={styles.menuItem}
+                onPress={handleMenuRemove}
+              >
                 <Text kind="paragraph" text={t(translations.library.remove)} />
               </TouchableOpacity>
             )}
@@ -426,4 +444,3 @@ const useStyles = makeStyles(theme => ({
     borderRadius: 8,
   },
 }));
-

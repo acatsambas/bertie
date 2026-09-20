@@ -7,23 +7,19 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { useUserQuery } from 'api/app/user';
 import Avatar from 'components/Avatar';
 import Text from 'components/Text';
-
-import { useUserQuery } from 'api/app/user';
-
+import { translations } from 'locales/translations';
 import { Routes } from 'navigation/routes';
 import { NavigationType } from 'navigation/types';
 
-import { translations } from 'locales/translations';
-
 import { BooksTab, BookshopTab, InsightsTab } from './components';
 
-export interface DiscoverScreenProps
-  extends StackNavigationProp<
-    NavigationType,
-    typeof Routes.DISCOVER_01_DISCOVER
-  > { }
+export interface DiscoverScreenProps extends StackNavigationProp<
+  NavigationType,
+  typeof Routes.DISCOVER_01_DISCOVER
+> {}
 
 export const DiscoverScreen = () => {
   const styles = useStyles();
@@ -38,10 +34,14 @@ export const DiscoverScreen = () => {
 
   const renderTab = () => {
     switch (index) {
-      case 0: return <BooksTab />;
-      case 1: return <BookshopTab user={user} />;
-      case 2: return <InsightsTab />;
-      default: return <BooksTab />;
+      case 0:
+        return <BooksTab />;
+      case 1:
+        return <BookshopTab user={user} />;
+      case 2:
+        return <InsightsTab />;
+      default:
+        return <BooksTab />;
     }
   };
 
@@ -85,4 +85,3 @@ const useStyles = makeStyles(theme => ({
     paddingBottom: 10,
   },
 }));
-

@@ -8,7 +8,6 @@ import GoogleButton from 'components/AuthButtons/GoogleButton';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
 import Text from 'components/Text';
-
 import { translations } from 'locales/translations';
 
 const NoAccountScreen = ({ navigation }) => {
@@ -19,7 +18,7 @@ const NoAccountScreen = ({ navigation }) => {
     navigation.goBack();
   };
 
-  const handleLogin = () => { };
+  const handleLogin = () => {};
 
   return (
     <SafeAreaView style={styles.safeAreaView}>

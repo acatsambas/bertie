@@ -4,21 +4,19 @@ import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import LoadingState from 'components/LoadingState/LoadingState';
-import Text from 'components/Text';
-
 import {
   useOtherReadersRatingsQuery,
   useReadingInsightsQuery,
 } from 'api/app/book';
 import { useGuest } from 'api/guest/GuestProvider';
-
+import LoadingState from 'components/LoadingState/LoadingState';
+import Text from 'components/Text';
 import { translations } from 'locales/translations';
 
+import { compareRatings, computeInsights } from './computeInsights';
 import { DesktopInsights } from './DesktopInsights';
 import { MobileInsights } from './MobileInsights';
 import { OthersStatus } from './RatingsSection';
-import { compareRatings, computeInsights } from './computeInsights';
 
 /** What the reader's finished and rated books say about their reading. */
 export const InsightsTab = () => {

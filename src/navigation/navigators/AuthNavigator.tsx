@@ -2,7 +2,6 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { AUTH_ROUTES } from 'navigation/routes';
 import type { AuthNavigatorParamList } from 'navigation/types';
-
 import ForgotScreen from 'screens/ForgotScreen';
 import LoginScreen from 'screens/LoginScreen';
 import RegisterScreen from 'screens/RegisterScreen';

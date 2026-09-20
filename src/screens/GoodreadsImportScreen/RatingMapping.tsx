@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import Text from 'components/Text';
-
 import { translations } from 'locales/translations';
 
 // Goodreads stars on the left, the Bertie rating they become on the right.
