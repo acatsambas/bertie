@@ -1,6 +1,11 @@
 import { CheckBox, makeStyles } from '@rneui/themed';
 import { useEffect, useState } from 'react';
-import { TouchableOpacity, TouchableOpacityProps, View } from 'react-native';
+import {
+  Pressable,
+  TouchableOpacity,
+  TouchableOpacityProps,
+  View,
+} from 'react-native';
 
 import Icon from '../Icon';
 import Text from '../Text';
@@ -89,7 +94,13 @@ const Book = ({
           </TouchableOpacity>
         </View>
       ) : (
-        <View style={styles.removeBookContainer}>
+        <Pressable
+          style={styles.removeBookContainer}
+          onPress={handlePressCheck}
+          disabled={props.disabled}
+          accessibilityRole="checkbox"
+          accessibilityState={{ checked: Boolean(checked) }}
+        >
           <View style={{ width: '80%' }}>
             <Text
               text={title?.length > 58 ? `${title.slice(0, 58)}...` : title}
@@ -97,16 +108,17 @@ const Book = ({
             />
             <Text text={author} kind="littleText" />
           </View>
-          <CheckBox
-            onPress={handlePressCheck}
-            iconType="material-design"
-            checkedIcon="checkbox-outline"
-            uncheckedIcon="checkbox-blank-outline"
-            checkedColor="#38AD59"
-            containerStyle={{ backgroundColor: 'transparent' }}
-            checked={checked}
-          />
-        </View>
+          <View pointerEvents="none">
+            <CheckBox
+              iconType="material-design"
+              checkedIcon="checkbox-outline"
+              uncheckedIcon="checkbox-blank-outline"
+              checkedColor="#38AD59"
+              containerStyle={{ backgroundColor: 'transparent' }}
+              checked={checked}
+            />
+          </View>
+        </Pressable>
       )}
     </View>
   );

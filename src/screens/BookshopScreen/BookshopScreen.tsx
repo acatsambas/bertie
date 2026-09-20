@@ -11,9 +11,9 @@ import {
   useFavouriteShopsQuery,
   useToggleFavouriteShopMutation,
 } from 'api/app/shops';
+import { BackTitleHeader } from 'components/BackTitleHeader';
 import Button from 'components/Button';
 import GoogleMaps from 'components/GoogleMaps';
-import Icon from 'components/Icon';
 import Text from 'components/Text';
 import { translations } from 'locales/translations';
 import { goBackOrFallback } from 'navigation/goBackOrFallback';
@@ -54,15 +54,12 @@ export const BookshopScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <View style={styles.backHeader}>
-        <Icon icon="back" onPress={handleBack} />
-      </View>
       <View style={styles.container}>
-        <GoogleMaps />
         <View>
-          <Text kind="bigHeader" text={name} />
+          <BackTitleHeader title={name} onBack={handleBack} />
           <Text kind="paragraph" text={`${address}, ${city} ${zipcode}`} />
         </View>
+        <GoogleMaps />
         <View>
           <RenderHtml source={{ html: description }} contentWidth={0} />
         </View>
@@ -86,11 +83,5 @@ const useStyles = makeStyles(theme => ({
     paddingHorizontal: 20,
     backgroundColor: theme.colors.white,
   },
-  container: { paddingTop: 10, gap: 20 },
-  backHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingTop: 10,
-    paddingBottom: 5,
-  },
+  container: { paddingTop: 20, gap: 20 },
 }));

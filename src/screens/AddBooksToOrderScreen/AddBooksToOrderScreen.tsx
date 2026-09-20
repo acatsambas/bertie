@@ -6,8 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { FlatList, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { BackTitleHeader } from 'components/BackTitleHeader';
 import Button from 'components/Button';
-import Icon from 'components/Icon';
 import Text from 'components/Text';
 import { translations } from 'locales/translations';
 import { goBackOrFallback } from 'navigation/goBackOrFallback';
@@ -106,14 +106,6 @@ export const AddBooksToOrderScreen = () => {
 
   return (
     <SafeAreaView edges={['left', 'right', 'top']} style={styles.safeAreaView}>
-      <View style={styles.backHeader}>
-        <Icon
-          icon="back"
-          onPress={() =>
-            goBackOrFallback(navigation, Routes.ORDER_00_ADD_BOOKS)
-          }
-        />
-      </View>
       <FlatList
         data={otherBooks}
         keyExtractor={item => item.id}
@@ -121,7 +113,12 @@ export const AddBooksToOrderScreen = () => {
         showsVerticalScrollIndicator={false}
         ListHeaderComponent={
           <View style={styles.headerContainer}>
-            <Text text={t(translations.order.addMoreTitle)} kind="bigHeader" />
+            <BackTitleHeader
+              title={t(translations.order.addMoreTitle)}
+              onBack={() =>
+                goBackOrFallback(navigation, Routes.ORDER_00_ADD_BOOKS)
+              }
+            />
             <Text
               text={t(translations.order.addMoreDescription)}
               kind="paragraph"
@@ -168,15 +165,9 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.colors.white,
   },
   container: {
-    paddingTop: 10,
+    paddingTop: 20,
     paddingBottom: 120,
     gap: 12,
-  },
-  backHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingTop: 10,
-    paddingBottom: 5,
   },
   headerContainer: {
     gap: 8,

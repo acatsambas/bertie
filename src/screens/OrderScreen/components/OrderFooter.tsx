@@ -1,3 +1,4 @@
+import { makeStyles } from '@rneui/themed';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
@@ -7,29 +8,19 @@ import Text from 'components/Text';
 import { translations } from 'locales/translations';
 
 interface OrderFooterProps {
-  loading: boolean;
   hasBooks: boolean;
   onNext: () => void;
 }
 
-export const OrderFooter = ({
-  loading,
-  hasBooks,
-  onNext,
-}: OrderFooterProps) => {
+export const OrderFooter = ({ hasBooks, onNext }: OrderFooterProps) => {
   const { t } = useTranslation();
+  const styles = useStyles();
 
-  if (loading || !hasBooks) return null;
+  if (!hasBooks) return null;
 
   return (
-    <View style={{ paddingTop: 20, paddingBottom: 20 }}>
-      <Text text={t(translations.order.details)} kind="header" />
-      <View style={{ marginBottom: 20 }}>
-        <Text text={`\u2022 First Name`} kind="description" />
-        <Text text={`\u2022 Last Name`} kind="description" />
-        <Text text={`\u2022 Email`} kind="description" />
-        <Text text={`\u2022 Address`} kind="description" />
-      </View>
+    <View style={styles.dock}>
+      <Text text={t(translations.order.details)} kind="description" />
       <Button
         kind="primary"
         text={t(translations.order.next)}
@@ -38,3 +29,15 @@ export const OrderFooter = ({
     </View>
   );
 };
+
+const useStyles = makeStyles(theme => ({
+  dock: {
+    borderTopWidth: 1,
+    borderTopColor: theme.colors.grey0,
+    backgroundColor: theme.colors.white,
+    paddingHorizontal: 20,
+    paddingTop: 12,
+    paddingBottom: 16,
+    gap: 12,
+  },
+}));

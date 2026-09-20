@@ -47,7 +47,7 @@ pnpm web:emulators
 
 Emulator UI: http://127.0.0.1:4000
 
-`web:emulators` sets `EXPO_PUBLIC_USE_FIREBASE_EMULATORS=1` so the app connects to Auth/Firestore emulators.
+`web:emulators` sets `EXPO_PUBLIC_USE_FIREBASE_EMULATORS=1` so the app connects to Auth/Firestore emulators under the `demo-bertie` project id (same namespace the seed uses).
 
 ## Emulator seed data
 
@@ -56,7 +56,7 @@ Emulator UI: http://127.0.0.1:4000
 - Mock London bookshops from `seed/shops.json`
 - A signed-in-ready Auth user + Firestore profile from `seed/user.json`
 
-Both skip when already present (no duplicates). Dev login (emulators only):
+Both upsert the Auth user + Firestore profile to match register + address-save (names, emails, London address). Dev login (emulators only):
 
 | Field    | Value              |
 | -------- | ------------------ |

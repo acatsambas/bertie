@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   Modal,
   Platform,
+  Pressable,
   ScrollView,
   TouchableOpacity,
   View,
@@ -242,18 +243,29 @@ export const BookScreen = () => {
     );
   }
 
+  const bookTitle = book.volumeInfo?.title ?? '';
+
   return withDesktopChrome(
     <SafeAreaView style={styles.safeAreaView}>
-      <View style={styles.backHeader}>
-        {showBack && <Icon icon="back" onPress={handleBack} />}
-      </View>
       <ScrollView
         contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.titleRow}>
           <View style={styles.titleText}>
-            <Text kind="bigHeader" text={book.volumeInfo?.title} />
+            {showBack ? (
+              <Pressable
+                onPress={handleBack}
+                style={styles.titleBack}
+                accessibilityRole="button"
+                accessibilityLabel={bookTitle}
+              >
+                <Icon icon="back" />
+                <Text kind="bigHeader" text={bookTitle} style={styles.title} />
+              </Pressable>
+            ) : (
+              <Text kind="bigHeader" text={bookTitle} />
+            )}
             <Text
               kind="paragraph"
               text={book.volumeInfo?.authors?.join?.(', ')}
@@ -387,7 +399,7 @@ const useStyles = makeStyles(theme => ({
     paddingTop: 10,
     paddingBottom: 5,
   },
-  container: { paddingTop: 10, gap: 20 },
+  container: { paddingTop: 20, gap: 20 },
   loadingContainer: {
     flex: 1,
     alignItems: 'center',
@@ -401,11 +413,20 @@ const useStyles = makeStyles(theme => ({
   titleRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
   },
   titleText: {
     flex: 1,
     marginRight: 12,
+  },
+  titleBack: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    alignSelf: 'flex-start',
+  },
+  title: {
+    flexShrink: 1,
   },
   medianRating: {
     fontStyle: 'italic',

@@ -25,12 +25,14 @@ const useStyles = makeStyles(theme => ({
     flex: 1,
     alignItems: 'center',
     backgroundColor: theme.colors.white,
+    overflow: 'visible',
   },
   inner: {
     flex: 1,
     width: '100%',
     maxWidth: DESKTOP_CONTENT_MAX_WIDTH,
     paddingHorizontal: 20,
+    overflow: 'visible',
   },
 }));
 

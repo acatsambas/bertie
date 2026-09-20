@@ -18,10 +18,18 @@ const useEmulators =
   process.env.EXPO_PUBLIC_USE_FIREBASE_EMULATORS === '1' ||
   process.env.EXPO_PUBLIC_USE_FIREBASE_EMULATORS === 'true';
 
+// Emulator data is namespaced by projectId. Keep this in lockstep with
+// `services/firebase/.firebaserc` (default) and `scripts/seed-emulator.ts`,
+// otherwise the app talks to an empty bertie-74d8c namespace while seed
+// writes into demo-bertie.
+const EMULATOR_PROJECT_ID = 'demo-bertie';
+
 const firebaseConfig = {
   apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID,
+  projectId: useEmulators
+    ? EMULATOR_PROJECT_ID
+    : process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID,
   storageBucket: process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID_WEB,

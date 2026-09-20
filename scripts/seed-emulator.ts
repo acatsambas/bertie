@@ -1,8 +1,14 @@
+import { initializeApp } from 'firebase-admin/app';
+import { getAuth } from 'firebase-admin/auth';
+import { getFirestore } from 'firebase-admin/firestore';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 /**
  * Seeds curated mock data into the local Auth + Firestore emulators.
  *
  * Only writes when emulator hosts are set, so it cannot touch production.
- * Skips shops / the dev user when they already exist (no duplicates).
+ * Shops skip when already present. The dev user is upserted so Auth +
+ * Firestore stay aligned with register + address-save (name, emails, address).
  *
  * Usage (emulators must already be up):
  *   pnpm seed:emulator
@@ -11,11 +17,7 @@
  *
  * Dev login: see services/firebase/seed/user.json
  */
-import { initializeApp } from 'firebase-admin/app';
-import { getAuth } from 'firebase-admin/auth';
-import { getFirestore } from 'firebase-admin/firestore';
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { format } from 'postal-code-checker';
 
 type SeedShop = {
   id: string;
@@ -43,6 +45,7 @@ type SeedUser = {
 };
 
 const ROOT = join(__dirname, '..');
+/** Must match `services/firebase/.firebaserc` default and emulator app config. */
 const PROJECT_ID = 'demo-bertie';
 const FIRESTORE_HOST = process.env.FIRESTORE_EMULATOR_HOST ?? '127.0.0.1:8080';
 const AUTH_HOST = process.env.FIREBASE_AUTH_EMULATOR_HOST ?? '127.0.0.1:9099';
@@ -91,13 +94,47 @@ const seedShops = async () => {
   );
 };
 
+/**
+ * Shape the Firestore profile the same way register (`createUser`) and the
+ * address screen (`useUpdateAddressMutation`) would after a successful signup.
+ */
+const buildUserProfile = (uid: string) => {
+  const country = seedUser.address.country.trim().toUpperCase();
+  const postcode =
+    format(country, seedUser.address.postcode.trim()) ??
+    seedUser.address.postcode.trim().toUpperCase();
+
+  return {
+    documentId: uid,
+    email: seedUser.email,
+    contactEmail: seedUser.email,
+    givenName: seedUser.givenName,
+    familyName: seedUser.familyName,
+    address: {
+      firstLine: seedUser.address.firstLine.trim(),
+      secondLine: (seedUser.address.secondLine ?? '').trim(),
+      city: seedUser.address.city.trim(),
+      postcode,
+      country,
+    },
+  };
+};
+
 const seedDevUser = async () => {
+  const displayName =
+    `${seedUser.givenName} ${seedUser.familyName}`.trim() || undefined;
+
   let uid: string;
   let createdAuth = false;
 
   try {
     const existing = await auth.getUserByEmail(seedUser.email);
     uid = existing.uid;
+    await auth.updateUser(uid, {
+      password: seedUser.password,
+      displayName,
+      emailVerified: true,
+    });
   } catch (error) {
     const code =
       error && typeof error === 'object' && 'code' in error
@@ -108,7 +145,7 @@ const seedDevUser = async () => {
     const created = await auth.createUser({
       email: seedUser.email,
       password: seedUser.password,
-      displayName: `${seedUser.givenName} ${seedUser.familyName}`,
+      displayName,
       emailVerified: true,
     });
     uid = created.uid;
@@ -117,29 +154,16 @@ const seedDevUser = async () => {
 
   const userRef = db.collection('users').doc(uid);
   const userSnap = await userRef.get();
+  const profile = buildUserProfile(uid);
 
-  if (userSnap.exists) {
-    console.log(
-      createdAuth
-        ? `Created Auth user ${seedUser.email}; Firestore profile already present, skipping`
-        : `Dev user already present (${seedUser.email}), skipping (${AUTH_HOST})`,
-    );
-    return;
-  }
-
-  await userRef.set({
-    documentId: uid,
-    email: seedUser.email,
-    contactEmail: seedUser.email,
-    givenName: seedUser.givenName,
-    familyName: seedUser.familyName,
-    address: seedUser.address,
-  });
+  await userRef.set(profile, { merge: true });
 
   console.log(
     createdAuth
       ? `Seeded Auth + profile for ${seedUser.email} (${AUTH_HOST})`
-      : `Seeded Firestore profile for existing ${seedUser.email}`,
+      : userSnap.exists
+        ? `Updated Auth + profile for ${seedUser.email} (${AUTH_HOST})`
+        : `Seeded Firestore profile for existing ${seedUser.email}`,
   );
 };
 

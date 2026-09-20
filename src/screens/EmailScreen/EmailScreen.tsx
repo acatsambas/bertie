@@ -5,8 +5,8 @@ import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useUpdateContactEmailMutation, useUserQuery } from 'api/app/user';
+import { BackTitleHeader } from 'components/BackTitleHeader';
 import Button from 'components/Button';
-import Icon from 'components/Icon';
 import Input from 'components/Input';
 import Text from 'components/Text';
 import { translations } from 'locales/translations';
@@ -44,16 +44,13 @@ export const EmailScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <View style={styles.backHeader}>
-        <Icon
-          icon="back"
-          onPress={() =>
+      <View style={styles.container}>
+        <BackTitleHeader
+          title={t(translations.order.emailTitle)}
+          onBack={() =>
             goBackOrFallback(navigation, Routes.ORDER_05_EMAIL_SCREEN)
           }
         />
-      </View>
-      <View style={styles.container}>
-        <Text text={t(translations.order.emailTitle)} kind="header" />
         <Text text={t(translations.order.email)} kind="paragraph" />
         <View>
           <Input
@@ -92,13 +89,7 @@ const useStyles = makeStyles(theme => ({
     paddingHorizontal: 20,
     backgroundColor: theme.colors.white,
   },
-  container: { gap: 20 },
-  backHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingTop: 10,
-    paddingBottom: 5,
-  },
+  container: { paddingTop: 20, gap: 20 },
   error: {
     backgroundColor: '#FDEDED',
     paddingHorizontal: 20,

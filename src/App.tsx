@@ -8,6 +8,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AuthProvider } from 'api/auth/AuthProvider';
 import { initFirebase } from 'api/firebase';
 import { GuestProvider } from 'api/guest/GuestProvider';
+import { DraftOrderProvider } from 'contexts/DraftOrderContext';
 import { PWAProvider } from 'contexts/PWAContext';
 import { ToastProvider } from 'contexts/ToastContext';
 import RootNavigator from 'navigation/RootNavigator';
@@ -52,9 +53,11 @@ const App = () => {
             <FontsProvider>
               <QueryClientProvider client={queryClient}>
                 <GuestProvider>
-                  <ToastProvider>
-                    <RootNavigator />
-                  </ToastProvider>
+                  <DraftOrderProvider>
+                    <ToastProvider>
+                      <RootNavigator />
+                    </ToastProvider>
+                  </DraftOrderProvider>
                 </GuestProvider>
               </QueryClientProvider>
             </FontsProvider>

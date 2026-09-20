@@ -100,7 +100,7 @@
       "countryPlaceholder": "Select a country",
       "countrySearch": "Search countries",
       "button": "Save address",
-      "validationRequired": "Add your street, city, and country.",
+      "validationRequired": "Add your street, city and country.",
       "validationCountry": "Pick a country from the list.",
       "validationPostcode": "That doesn't look like a valid {{label}} for {{country}}.",
       "validationPostcodeRequired": "Add a {{label}} so we can place you on the map.",
@@ -246,7 +246,7 @@
     "header": "Which books do you want to order?",
     "headerNoBooks": "Uh oh. There are no books in your list. Add some to get started!",
     "suggestions": "Here are some of our own favourites - just tap on the plus sign to add them to your list, and refresh this page to order.",
-    "details": "...and we'll share these details with the bookshops for you:",
+    "details": "We'll share your name, email and address with the bookshop.",
     "next": "Next",
     "where": "Where do you want to order from?",
     "favourites": "Favourites",
@@ -273,12 +273,14 @@
       "emptyDescription": "When you order books from a bookshop, they'll show up here.",
       "placed": "Order sent to the bookshop",
       "unknownBook": "Untitled book"
-    }
+    },
+    "menuBadge": "{{count}} books selected for order",
+    "menuBadgeOne": "1 book selected for order"
   },
   "delete": {
     "title": "Delete account",
     "paragraph1": "We're very sorry to see you go. But we suppose it wasn't meant to be.",
-    "consequence": "Your lists, ratings, and bookshop orders leave with you.",
+    "consequence": "Your lists, ratings and bookshop orders leave with you.",
     "begone": "begone!",
     "confirmHint": "Type begone! to confirm",
     "button": "Delete account",
@@ -286,7 +288,7 @@
     "farewellTitle": "Someone we used to know",
     "finalMessage": "All done. We've deleted your account from our systems.",
     "errors": {
-      "mismatch": "That isn't quite ‘begone!'. Check the spelling and try again."
+      "mismatch": "That isn't quite 'begone!'. Check the spelling and try again."
     }
   },
   "reset": {

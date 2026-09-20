@@ -5,13 +5,14 @@ import {
   useRoute,
 } from '@react-navigation/native';
 import { makeStyles } from '@rneui/themed';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Button from 'components/Button';
 import Text from 'components/Text';
+import { useDraftOrder } from 'contexts/DraftOrderContext';
 import { translations } from 'locales/translations';
 import { Routes } from 'navigation/routes';
 import { NavigationType } from 'navigation/types';
@@ -19,10 +20,15 @@ import { NavigationType } from 'navigation/types';
 const OrderPlacedScreen = () => {
   const styles = useStyles();
   const { t } = useTranslation();
+  const { clear: clearDraftOrder } = useDraftOrder();
   const { params } =
     useRoute<RouteProp<NavigationType, typeof Routes.ORDER_06_ORDER_PLACED>>();
   const { bookshopName } = params;
   const navigation = useNavigation<any>();
+
+  useEffect(() => {
+    clearDraftOrder();
+  }, [clearDraftOrder]);
 
   const handlePressDone = () => {
     navigation.dispatch(() => {

@@ -11,6 +11,7 @@ import {
 import BookTile, {
   TILE_COLUMN_GAP,
   TILE_ROW_GAP,
+  TILE_SHADOW_PAD,
   tileGrid,
 } from 'components/BookTile';
 import { DESKTOP_PAGE_PADDING_TOP } from 'components/DesktopColumn';
@@ -91,7 +92,9 @@ export const DesktopLibrary = () => {
     loading,
   } = useLibrary(filter);
 
-  const { columns, tileWidth } = tileGrid(gridWidth);
+  const { columns, tileWidth } = tileGrid(
+    Math.max(0, gridWidth - TILE_SHADOW_PAD * 2),
+  );
   const rows = useMemo(
     () => (columns > 0 ? toGridRows(items, columns) : []),
     [items, columns],
@@ -155,6 +158,8 @@ export const DesktopLibrary = () => {
           <FlatList
             data={rows}
             keyExtractor={(row: GridRow) => row.id}
+            removeClippedSubviews={false}
+            style={styles.list}
             renderItem={({ item: row }) => {
               if (row.type === 'section') {
                 return (
@@ -215,6 +220,7 @@ const useStyles = makeStyles(theme => ({
     flex: 1,
     paddingTop: DESKTOP_PAGE_PADDING_TOP,
     backgroundColor: theme.colors.white,
+    overflow: 'visible',
   },
   header: {
     flexDirection: 'row',
@@ -233,11 +239,17 @@ const useStyles = makeStyles(theme => ({
     marginTop: 8,
     marginBottom: 16,
   },
-  grid: { flex: 1 },
-  gridContent: { paddingBottom: 40 },
+  grid: { flex: 1, overflow: 'visible' },
+  list: { overflow: 'visible' },
+  gridContent: {
+    paddingBottom: 40,
+    paddingHorizontal: TILE_SHADOW_PAD,
+    overflow: 'visible',
+  },
   row: {
     flexDirection: 'row',
     gap: TILE_COLUMN_GAP,
+    overflow: 'visible',
   },
   section: {
     fontFamily: 'Commissioner_600SemiBold',

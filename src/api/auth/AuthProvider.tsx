@@ -80,10 +80,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           password,
         );
         const authUser = userCredential.user;
+        const displayName =
+          updates?.displayName?.trim() ||
+          `${givenName} ${familyName}`.trim() ||
+          undefined;
 
-        if (updates) {
-          await updateProfile(authUser, updates);
-        }
+        await updateProfile(authUser, {
+          ...updates,
+          ...(displayName ? { displayName } : null),
+        });
 
         await createUser({ givenName, familyName });
       },

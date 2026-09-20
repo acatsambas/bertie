@@ -16,6 +16,7 @@ import AuthGateModal from 'components/AuthGateModal';
 import BookTile, {
   TILE_COLUMN_GAP,
   TILE_ROW_GAP,
+  TILE_SHADOW_PAD,
   tileGrid,
 } from 'components/BookTile';
 import LoadingState from 'components/LoadingState/LoadingState';
@@ -49,7 +50,7 @@ export const DesktopBooksTab = () => {
     confirmGate,
   } = useAuthGate();
 
-  const { tileWidth } = tileGrid(gridWidth);
+  const { tileWidth } = tileGrid(Math.max(0, gridWidth - TILE_SHADOW_PAD * 2));
 
   // The same rules SearchBooks applies to this list on mobile.
   const handleToggle = (book: BookResult, inList: boolean) => {
@@ -152,6 +153,8 @@ const useStyles = makeStyles(() => ({
     flexWrap: 'wrap',
     columnGap: TILE_COLUMN_GAP,
     rowGap: TILE_ROW_GAP,
+    paddingHorizontal: TILE_SHADOW_PAD,
+    overflow: 'visible',
   },
   emptyState: {
     alignItems: 'center',

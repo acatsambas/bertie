@@ -11,6 +11,7 @@ import Avatar from 'components/Avatar';
 import Icon from 'components/Icon';
 import { useSoftCardStyles } from 'components/SoftCard';
 import Text from 'components/Text';
+import { useDraftOrder } from 'contexts/DraftOrderContext';
 import { translations } from 'locales/translations';
 import { Routes } from 'navigation/routes';
 import type { NavigationType } from 'navigation/types';
@@ -37,6 +38,7 @@ type SideRailProps = Partial<Pick<BottomTabBarProps, 'state' | 'navigation'>>;
 const SideRail = ({ state, navigation: tabNavigation }: SideRailProps) => {
   const { navigate } = useNavigation<StackNavigationProp<NavigationType>>();
   const { data: userData } = useUserQuery();
+  const { count: draftOrderCount } = useDraftOrder();
   const { t } = useTranslation();
   const { theme } = useTheme();
   const styles = useStyles();
@@ -83,12 +85,22 @@ const SideRail = ({ state, navigation: tabNavigation }: SideRailProps) => {
         {menuItems.map(menu => {
           const active = menu.screen === activeScreen;
           const color = active ? theme.colors.white : theme.colors.secondary;
+          const isOrder = menu.screen === Routes.HOME_03_ORDER;
+          const badgeCount = isOrder ? draftOrderCount : 0;
+          const showBadge = badgeCount > 0;
+          const badgeLabel =
+            badgeCount === 1
+              ? t(translations.order.menuBadgeOne)
+              : t(translations.order.menuBadge, { count: badgeCount });
 
           return (
             <Pressable
               key={menu.title}
               accessibilityRole="link"
               accessibilityState={{ selected: active }}
+              accessibilityLabel={
+                showBadge ? `${menu.title}, ${badgeLabel}` : menu.title
+              }
               style={pressState => [
                 styles.item,
                 (pressState as WebPressableState).hovered && styles.itemHovered,
@@ -96,7 +108,22 @@ const SideRail = ({ state, navigation: tabNavigation }: SideRailProps) => {
               ]}
               onPress={() => handlePress(menu.screen)}
             >
-              <Icon icon={menu.icon} color={color} size={20} />
+              <View style={styles.iconWrap}>
+                <Icon icon={menu.icon} color={color} size={20} />
+                {showBadge && (
+                  <View
+                    style={[styles.badge, active && styles.badgeOnActive]}
+                    accessibilityElementsHidden
+                  >
+                    <Text
+                      kind="littleText"
+                      text={badgeCount > 99 ? '99+' : String(badgeCount)}
+                      color={active ? theme.colors.primary : theme.colors.white}
+                      style={styles.badgeText}
+                    />
+                  </View>
+                )}
+              </View>
               <Text kind="paragraph" text={menu.title} color={color} />
             </Pressable>
           );
@@ -151,6 +178,32 @@ const useStyles = makeStyles(theme => ({
     paddingHorizontal: 12,
     paddingVertical: 10,
     borderRadius: 8,
+  },
+  iconWrap: {
+    position: 'relative',
+  },
+  badge: {
+    position: 'absolute',
+    top: -6,
+    right: -10,
+    minWidth: 18,
+    height: 18,
+    paddingHorizontal: 4,
+    borderRadius: 9,
+    backgroundColor: theme.colors.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: theme.colors.grey0,
+  },
+  badgeOnActive: {
+    backgroundColor: theme.colors.white,
+    borderColor: theme.colors.primary,
+  },
+  badgeText: {
+    fontFamily: 'Commissioner_700Bold',
+    fontSize: 10,
+    lineHeight: 12,
   },
   itemHovered: { backgroundColor: 'rgba(34, 34, 34, 0.05)' },
   itemActive: { backgroundColor: theme.colors.primary },

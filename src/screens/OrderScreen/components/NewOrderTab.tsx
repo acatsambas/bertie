@@ -3,7 +3,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { makeStyles } from '@rneui/themed';
 import { useAuthGate } from 'hooks/useAuthGate';
 import React, { useCallback, useState } from 'react';
-import { FlatList, RefreshControl } from 'react-native';
+import { FlatList, RefreshControl, View } from 'react-native';
 
 import AuthGateModal from 'components/AuthGateModal';
 import Book from 'components/Book';
@@ -36,6 +36,8 @@ export const NewOrderTab = () => {
   const { requireAuth, gateVisible, gateMessage, dismissGate, confirmGate } =
     useAuthGate();
 
+  const hasSelection = selectedBooks.length > 0;
+
   const handleNext = () => {
     if (requireAuth()) return;
     navigate(Routes.ORDER_02_ORDER_SHOP, {
@@ -50,26 +52,22 @@ export const NewOrderTab = () => {
   }, [refetch]);
 
   return (
-    <>
+    <View style={styles.root}>
       <FlatList
         style={styles.list}
         data={unreadBooks}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
-        contentContainerStyle={styles.container}
+        contentContainerStyle={[
+          styles.container,
+          hasSelection ? styles.containerWithDock : null,
+        ]}
         showsVerticalScrollIndicator={false}
         ListHeaderComponent={<OrderHeader hasBooks={unreadBooks.length > 0} />}
         // Not while the first page is still on its way: an empty list then
         // means "not loaded yet", not "nothing to order".
         ListEmptyComponent={loading ? null : OrderEmpty}
-        ListFooterComponent={
-          <OrderFooter
-            loading={loading}
-            hasBooks={selectedBooks.length > 0}
-            onNext={handleNext}
-          />
-        }
         renderItem={({ item }) => (
           <Book
             key={item.id}
@@ -83,17 +81,19 @@ export const NewOrderTab = () => {
         onEndReached={fetchMoreBooks}
         onEndReachedThreshold={0.5}
       />
+      <OrderFooter hasBooks={hasSelection} onNext={handleNext} />
       <AuthGateModal
         visible={gateVisible}
         message={gateMessage}
         onDismiss={dismissGate}
         onSignUp={confirmGate}
       />
-    </>
+    </View>
   );
 };
 
 const useStyles = makeStyles(() => ({
+  root: { flex: 1 },
   list: { flex: 1 },
   // Now that the screen container carries no horizontal padding of its own
   // (matching Discover), this list supplies its own gutter.
@@ -102,5 +102,8 @@ const useStyles = makeStyles(() => ({
     paddingTop: 20,
     paddingBottom: 20,
     gap: 20,
+  },
+  containerWithDock: {
+    paddingBottom: 24,
   },
 }));
