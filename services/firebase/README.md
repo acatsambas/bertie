@@ -58,8 +58,8 @@ Emulator UI: http://127.0.0.1:4000
 
 Both upsert the Auth user + Firestore profile to match register + address-save (names, emails, London address). Dev login (emulators only):
 
-| Field    | Value              |
-| -------- | ------------------ |
+| Field    | Value                  |
+| -------- | ---------------------- |
 | Email    | `aris@bertieapp.local` |
 | Password | `bertie`               |
 
