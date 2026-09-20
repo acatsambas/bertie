@@ -1,4 +1,43 @@
-export const getOrderMail = ({ selectedShop, user, books }) => ({
+import { Shop, UserBook } from 'api/app/types';
+import { BookResult } from 'api/google-books/search';
+import { UserData } from 'api/types';
+import {
+  DEFAULT_COUNTRY_CODE,
+  getCountryDisplayName,
+  resolveCountryCode,
+} from 'utils/addressCountry';
+
+type OrderMailBook = UserBook & BookResult;
+
+type GetOrderMailParams = {
+  selectedShop: Shop;
+  user: UserData;
+  books: OrderMailBook[];
+};
+
+const formatBookLine = (book: OrderMailBook) => {
+  const title = book.volumeInfo?.title;
+  const authors = book.volumeInfo?.authors?.join(', ');
+  return authors ? `- ${title} (${authors})` : `- ${title}`;
+};
+
+const formatAddress = (address: UserData['address']) =>
+  [
+    address?.firstLine,
+    address?.secondLine,
+    [address?.city, address?.postcode].filter(Boolean).join(', '),
+    getCountryDisplayName(
+      resolveCountryCode(address?.country) ?? DEFAULT_COUNTRY_CODE,
+    ),
+  ]
+    .filter(Boolean)
+    .join('\n');
+
+export const getOrderMail = ({
+  selectedShop,
+  user,
+  books,
+}: GetOrderMailParams) => ({
   from: {
     name: 'Bertie',
     address: 'acatsambas@bertieapp.com',
@@ -10,13 +49,10 @@ export const getOrderMail = ({ selectedShop, user, books }) => ({
     text: `Dear ${selectedShop.name} team,
 
 ${user.givenName} ${user.familyName} would like to order these books:
-${books.map(book => `- ${book?.volumeInfo?.title} (${book?.volumeInfo?.authors?.join?.(', ')})`).join('\n')}
+${books.map(formatBookLine).join('\n')}
 
 Their address is:
-${user.address?.firstLine && user.address.firstLine}
-${user.address?.secondLine && user.address.secondLine}
-${user.address?.city && `${user.address.city}, `}${user.address?.postcode}
-${user.address?.country ? user.address.country : 'United Kingdom'}
+${formatAddress(user.address)}
 
 Please get in touch with them directly to arrange payment and delivery at ${user.contactEmail}.
 
@@ -25,5 +61,5 @@ Bertie`,
   },
 });
 
-export const isInvalidEmail = (email?: string) =>
+export const needsRealContactEmail = (email?: string) =>
   !email || email.includes('@privaterelay.appleid.com');

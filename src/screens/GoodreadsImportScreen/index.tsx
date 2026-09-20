@@ -2,11 +2,10 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { makeStyles, useTheme } from '@rneui/themed';
 import { useQueryClient } from '@tanstack/react-query';
-import { useIsDesktop } from 'hooks/useIsDesktop';
+import { isDesktopPlatform } from 'hooks/useIsDesktop';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Linking, Pressable, ScrollView, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Linking, Pressable, View } from 'react-native';
 
 import {
   GoodreadsImportResult,
@@ -20,10 +19,13 @@ import { auth } from 'api/firebase';
 import { useGuest } from 'api/guest/GuestProvider';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
+import { SoftCard } from 'components/SoftCard';
 import Text from 'components/Text';
 import { translations } from 'locales/translations';
+import { goBackOrFallback } from 'navigation/goBackOrFallback';
 import { Routes } from 'navigation/routes';
 import type { NavigationType } from 'navigation/types';
+import { SettingsPageShell } from 'screens/SettingsScreen/SettingsPageShell';
 
 import RatingMapping from './RatingMapping';
 
@@ -59,7 +61,7 @@ const GoodreadsImportScreen = () => {
   const { t } = useTranslation();
   const navigation = useNavigation<StackNavigationProp<NavigationType>>();
   const queryClient = useQueryClient();
-  const isDesktop = useIsDesktop();
+  const onDesktop = isDesktopPlatform();
   const { isGuest } = useGuest();
   const [stage, setStage] = useState<Stage>({ name: 'choose' });
   const labels = translations.goodreadsImport;
@@ -106,7 +108,7 @@ const GoodreadsImportScreen = () => {
 
   const renderChoose = (error?: string) => (
     <>
-      <View style={styles.card}>
+      <SoftCard style={styles.card}>
         <Text kind="paragraph" text={t(labels.intro)} />
         <View style={styles.steps}>
           {STEPS.map((step, index) => (
@@ -140,7 +142,7 @@ const GoodreadsImportScreen = () => {
           />
           <Icon icon="right" color={theme.colors.primary} size={18} />
         </Pressable>
-      </View>
+      </SoftCard>
       {error && (
         <View style={styles.error}>
           <Text kind="paragraph" text={error} />
@@ -166,7 +168,7 @@ const GoodreadsImportScreen = () => {
 
     return (
       <>
-        <View style={styles.card}>
+        <SoftCard style={styles.card}>
           <Text
             kind="header"
             text={t(books.length === 1 ? labels.foundOne : labels.foundOther, {
@@ -183,7 +185,7 @@ const GoodreadsImportScreen = () => {
             text={t(labels.shelves)}
             color={theme.colors.grey2}
           />
-        </View>
+        </SoftCard>
         <RatingMapping />
         <Button
           kind="primary"
@@ -200,7 +202,7 @@ const GoodreadsImportScreen = () => {
   };
 
   const renderImporting = (done: number, total: number) => (
-    <View style={styles.card}>
+    <SoftCard style={styles.card}>
       <Text kind="header" text={t(labels.importing, { done, total })} />
       <View style={styles.track}>
         <View
@@ -212,7 +214,7 @@ const GoodreadsImportScreen = () => {
         text={t(labels.keepOpen)}
         color={theme.colors.grey2}
       />
-    </View>
+    </SoftCard>
   );
 
   const renderDone = ({
@@ -222,7 +224,7 @@ const GoodreadsImportScreen = () => {
     missed,
   }: GoodreadsImportResult) => (
     <>
-      <View style={styles.card}>
+      <SoftCard style={styles.card}>
         <Text kind="header" text={t(labels.doneTitle)} />
         <View style={styles.tally}>
           <Text kind="paragraph" text={t(labels.added, { count: added })} />
@@ -245,9 +247,9 @@ const GoodreadsImportScreen = () => {
             />
           )}
         </View>
-      </View>
+      </SoftCard>
       {missed.length > 0 && (
-        <View style={styles.card}>
+        <SoftCard style={styles.card}>
           <Text kind="description" text={t(labels.missedHelp)} />
           <View style={styles.missedList}>
             {missed.map((book, index) => (
@@ -261,7 +263,7 @@ const GoodreadsImportScreen = () => {
               />
             ))}
           </View>
-        </View>
+        </SoftCard>
       )}
       <Button
         kind="primary"
@@ -274,7 +276,7 @@ const GoodreadsImportScreen = () => {
   const renderBody = () => {
     // Reached only through the desktop Settings button, but a link can land
     // anyone here.
-    if (!isDesktop)
+    if (!onDesktop)
       return <Text kind="paragraph" text={t(labels.desktopOnly)} />;
     if (isGuest) return <Text kind="paragraph" text={t(labels.needsAccount)} />;
 
@@ -291,43 +293,21 @@ const GoodreadsImportScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.safeAreaView}>
-      <ScrollView contentContainerStyle={styles.scroll}>
-        <View style={styles.column}>
-          <View style={styles.header}>
-            {stage.name !== 'importing' && (
-              <Icon icon="back" onPress={() => navigation.goBack()} />
-            )}
-            <Text kind="bigHeader" text={t(labels.title)} />
-          </View>
-          {renderBody()}
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <SettingsPageShell
+      title={t(labels.title)}
+      onBack={
+        stage.name !== 'importing'
+          ? () =>
+              goBackOrFallback(navigation, Routes.SETTINGS_05_IMPORT_GOODREADS)
+          : undefined
+      }
+    >
+      {renderBody()}
+    </SettingsPageShell>
   );
 };
 
 const useStyles = makeStyles(theme => ({
-  safeAreaView: {
-    flex: 1,
-    backgroundColor: theme.colors.white,
-  },
-  scroll: {
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 36,
-    paddingBottom: 40,
-  },
-  column: {
-    width: '100%',
-    maxWidth: 640,
-    gap: 20,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
   card: {
     gap: 16,
     padding: 24,

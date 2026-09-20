@@ -10,6 +10,8 @@ import Icon from 'components/Icon';
 import Input from 'components/Input';
 import Text from 'components/Text';
 import { translations } from 'locales/translations';
+import { goBackOrFallback } from 'navigation/goBackOrFallback';
+import { Routes } from 'navigation/routes';
 
 export const EmailScreen = ({ navigation }) => {
   const styles = useStyles();
@@ -43,7 +45,12 @@ export const EmailScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <View style={styles.backHeader}>
-        <Icon icon="back" onPress={() => navigation.goBack()} />
+        <Icon
+          icon="back"
+          onPress={() =>
+            goBackOrFallback(navigation, Routes.ORDER_05_EMAIL_SCREEN)
+          }
+        />
       </View>
       <View style={styles.container}>
         <Text text={t(translations.order.emailTitle)} kind="header" />

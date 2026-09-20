@@ -30,6 +30,9 @@ ui-debug.log*
 # local env files
 .env*.local
 
+# local one-off exports / scratch (addresses, etc.)
+.local/
+
 # typescript
 *.tsbuildinfo
 

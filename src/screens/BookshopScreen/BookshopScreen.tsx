@@ -16,6 +16,7 @@ import GoogleMaps from 'components/GoogleMaps';
 import Icon from 'components/Icon';
 import Text from 'components/Text';
 import { translations } from 'locales/translations';
+import { goBackOrFallback } from 'navigation/goBackOrFallback';
 import { Routes } from 'navigation/routes';
 import { NavigationType } from 'navigation/types';
 
@@ -25,11 +26,13 @@ export interface BookshopPageProps extends StackNavigationProp<
 > {}
 
 export const BookshopScreen = ({ navigation }) => {
+  const route =
+    useRoute<RouteProp<NavigationType, typeof Routes.DISCOVER_03_BOOKSHOP>>();
   const {
     params: {
       shop: { id, address, city, name, zipcode, description },
     },
-  } = useRoute<RouteProp<NavigationType, typeof Routes.DISCOVER_03_BOOKSHOP>>();
+  } = route;
   const { data: favouriteShops = [] } = useFavouriteShopsQuery();
   const { mutate: toggleFavouriteShop } = useToggleFavouriteShopMutation();
 
@@ -46,7 +49,7 @@ export const BookshopScreen = ({ navigation }) => {
   };
 
   const handleBack = () => {
-    navigation.goBack();
+    goBackOrFallback(navigation, route.name);
   };
 
   return (

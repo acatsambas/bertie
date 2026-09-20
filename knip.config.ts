@@ -29,6 +29,8 @@ const config: KnipConfig = {
         'expo-updates',
         'expo-system-ui',
         'eslint-plugin-expo',
+        // Needed so @rneui/base Icon.d.ts can resolve react-native-vector-icons/Icon
+        '@types/react-native-vector-icons',
       ],
     },
   },

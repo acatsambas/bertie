@@ -1,16 +1,18 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { makeStyles } from '@rneui/themed';
-import React, { useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Pressable, View } from 'react-native';
 
 import { AuthContext } from 'api/auth/AuthProvider';
+import { isFirebaseError } from 'api/types';
+import AuthPageShell from 'components/AuthPageShell';
 import Button from 'components/Button';
 import Input from 'components/Input';
 import Logo from 'components/Logo';
 import Text from 'components/Text';
+import { useToast } from 'contexts/ToastContext';
 import { translations } from 'locales/translations';
 import { Routes } from 'navigation/routes';
 import { NavigationType } from 'navigation/types';
@@ -20,11 +22,24 @@ export interface ForgotPageProps extends StackNavigationProp<
   typeof Routes.AUTH_05_FORGOT
 > {}
 
+const forgotErrorKey = (code: string) => {
+  switch (code) {
+    case 'auth/invalid-email':
+      return translations.forgot.errors.invalidEmail;
+    case 'auth/too-many-requests':
+      return translations.forgot.errors.tooManyRequests;
+    case 'auth/network-request-failed':
+      return translations.forgot.errors.network;
+    default:
+      return translations.forgot.errors.generic;
+  }
+};
+
 const ForgotScreen = () => {
   const { forgot } = useContext(AuthContext);
+  const { showToast } = useToast();
   const [email, setEmail] = useState('');
-  const [isSent, setIsSent] = useState(false);
-  const [error, setError] = useState(false);
+  const [errorKey, setErrorKey] = useState<string | null>(null);
 
   const { t } = useTranslation();
   const styles = useStyles();
@@ -32,81 +47,105 @@ const ForgotScreen = () => {
 
   const handleInputEmail = (value: string) => {
     setEmail(value.toLowerCase().trim());
+    setErrorKey(null);
+  };
+
+  const goToLogin = () => {
+    navigate(Routes.AUTH_02_LOGIN);
+  };
+
+  const handleForgotSuccess = () => {
+    showToast(t(translations.forgot.success));
+    goToLogin();
   };
 
   const handleForgot = async () => {
+    setErrorKey(null);
+
     const validRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g;
-    if (email.match(validRegex)) {
-      setIsSent(true);
+    if (!email.match(validRegex)) {
+      setErrorKey(translations.forgot.errors.invalidEmail);
+      return;
+    }
+
+    try {
       await forgot(email);
-    } else {
-      setError(true);
+      handleForgotSuccess();
+    } catch (error) {
+      // Don't reveal whether the email is registered.
+      if (isFirebaseError(error) && error.code === 'auth/user-not-found') {
+        handleForgotSuccess();
+        return;
+      }
+
+      if (isFirebaseError(error)) {
+        setErrorKey(forgotErrorKey(error.code));
+        return;
+      }
+
+      setErrorKey(translations.forgot.errors.generic);
     }
   };
 
-  const handleDone = () => {
-    navigate(Routes.AUTH_01_WELCOME);
-  };
-
   return (
-    <SafeAreaView style={styles.safeAreaView}>
-      <View style={styles.logo}>
-        <Logo />
-      </View>
-      <View style={styles.container}>
-        <Text kind="header" text={t(translations.forgot.title)} />
-        {!isSent ? (
-          <>
-            <View>
-              <Text kind="paragraph" text={t(translations.forgot.enterEmail)} />
-              <Text kind="paragraph" text={t(translations.forgot.sendEmail)} />
+    <AuthPageShell>
+      <View style={styles.body}>
+        <View style={styles.logo}>
+          <Logo />
+        </View>
+        <View style={styles.container}>
+          <Text kind="header" text={t(translations.forgot.title)} />
+          <View>
+            <Text kind="paragraph" text={t(translations.forgot.enterEmail)} />
+            <Text kind="paragraph" text={t(translations.forgot.sendEmail)} />
+          </View>
+          <Input
+            placeholder={t(translations.forgot.placeholder)}
+            kind="email"
+            icon="email"
+            onChangeText={handleInputEmail}
+            value={email}
+            keyboardType="email-address"
+            textContentType="emailAddress"
+            autoCapitalize="none"
+            autoCorrect={false}
+          />
+          {errorKey && (
+            <View style={styles.error}>
+              <Text kind="paragraph" text={t(errorKey)} />
             </View>
-            <Input
-              placeholder={t(translations.forgot.placeholder)}
-              kind="email"
-              icon="email"
-              onChangeText={handleInputEmail}
-              value={email}
-              keyboardType="email-address"
-              textContentType="emailAddress"
-              autoCapitalize="none"
-              autoCorrect={false}
-            />
-            {error && (
-              <View style={styles.error}>
-                <Text kind="paragraph" text={t(translations.forgot.error)} />
-              </View>
-            )}
-          </>
-        ) : (
-          <Text kind="paragraph" text={t(translations.forgot.success)} />
-        )}
-      </View>
-      <View style={styles.bottomArea}>
-        {!isSent ? (
+          )}
+        </View>
+        <View style={styles.bottomArea}>
           <Button
             kind="primary"
             text={t(translations.forgot.button)}
             onPress={handleForgot}
           />
-        ) : (
-          <Button
-            kind="primary"
-            text={t(translations.forgot.done)}
-            onPress={handleDone}
-          />
-        )}
+          <Pressable
+            onPress={goToLogin}
+            accessibilityRole="button"
+            style={({ pressed }) => [
+              styles.backLink,
+              pressed && styles.backLinkPressed,
+            ]}
+          >
+            <Text
+              kind="button"
+              text={t(translations.forgot.backToLogin)}
+              style={styles.backLinkText}
+            />
+          </Pressable>
+        </View>
       </View>
-    </SafeAreaView>
+    </AuthPageShell>
   );
 };
 
-const useStyles = makeStyles(theme => ({
-  safeAreaView: {
+const useStyles = makeStyles(() => ({
+  body: {
     flex: 1,
     gap: 20,
-    paddingHorizontal: 20,
-    backgroundColor: theme.colors.white,
   },
   logo: {
     alignItems: 'center',
@@ -119,7 +158,25 @@ const useStyles = makeStyles(theme => ({
     paddingVertical: 10,
     alignItems: 'center',
   },
-  bottomArea: { flex: 1, justifyContent: 'flex-end', marginBottom: 20 },
+  bottomArea: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    marginBottom: 20,
+    gap: 12,
+  },
+  backLink: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 48,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+  },
+  backLinkPressed: {
+    opacity: 0.55,
+  },
+  backLinkText: {
+    textAlign: 'center',
+  },
 }));
 
 export default ForgotScreen;

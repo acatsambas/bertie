@@ -33,6 +33,7 @@ import Icon from 'components/Icon';
 import RatingBottomSheet from 'components/RatingBottomSheet';
 import Text from 'components/Text';
 import { translations } from 'locales/translations';
+import { goBackOrFallback } from 'navigation/goBackOrFallback';
 import BottomMenu from 'navigation/navigators/components/BottomMenu';
 import SideRail from 'navigation/navigators/components/SideRail';
 import { Routes } from 'navigation/routes';
@@ -181,14 +182,7 @@ export const BookScreen = () => {
     );
 
   const handleBack = () => {
-    if (canGoBack) {
-      navigation.goBack();
-      return;
-    }
-    navigation.navigate(Routes.ROOT_02_APP, {
-      screen: Routes.APP_01_HOME,
-      params: { screen: Routes.HOME_01_LIBRARY },
-    });
+    goBackOrFallback(navigation, Routes.ROOT_06_BOOK);
   };
 
   const openMenu = () => {
@@ -431,11 +425,7 @@ const useStyles = makeStyles(theme => ({
     borderRadius: 12,
     paddingVertical: 4,
     paddingHorizontal: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    elevation: 5,
+    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.15)',
     minWidth: 180,
   },
   menuItem: {

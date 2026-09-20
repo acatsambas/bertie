@@ -14,7 +14,7 @@ export type AuthNavigatorParamList = {
   [Routes.AUTH_01_WELCOME]: undefined;
   [Routes.AUTH_02_LOGIN]: undefined;
   [Routes.AUTH_03_REGISTER]: undefined;
-  [Routes.AUTH_04_SET_PROFILE]: { email: string; password: string };
+  [Routes.AUTH_04_SET_PROFILE]: undefined;
   [Routes.AUTH_05_FORGOT]: undefined;
 };
 

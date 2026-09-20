@@ -10,6 +10,7 @@ import Button from 'components/Button';
 import Icon from 'components/Icon';
 import Text from 'components/Text';
 import { translations } from 'locales/translations';
+import { goBackOrFallback } from 'navigation/goBackOrFallback';
 import { Routes } from 'navigation/routes';
 import { NavigationType } from 'navigation/types';
 
@@ -50,7 +51,7 @@ const BookSelectItem = ({
         <CheckBox
           checked={isSelected}
           onPress={onToggle}
-          iconType="material-community"
+          iconType="material-design"
           checkedIcon="checkbox-outline"
           uncheckedIcon="checkbox-blank-outline"
           checkedColor={theme.colors.primary}
@@ -64,10 +65,11 @@ const BookSelectItem = ({
 export const AddBooksToOrderScreen = () => {
   const styles = useStyles();
   const { t } = useTranslation();
-  const { navigate, replace, goBack } =
+  const navigation =
     useNavigation<
       StackNavigationProp<NavigationType, typeof Routes.ORDER_00_ADD_BOOKS>
     >();
+  const { navigate, replace } = navigation;
 
   const {
     initialBook,
@@ -105,7 +107,12 @@ export const AddBooksToOrderScreen = () => {
   return (
     <SafeAreaView edges={['left', 'right', 'top']} style={styles.safeAreaView}>
       <View style={styles.backHeader}>
-        <Icon icon="back" onPress={() => goBack()} />
+        <Icon
+          icon="back"
+          onPress={() =>
+            goBackOrFallback(navigation, Routes.ORDER_00_ADD_BOOKS)
+          }
+        />
       </View>
       <FlatList
         data={otherBooks}

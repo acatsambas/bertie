@@ -10,6 +10,7 @@ import Icon from 'components/Icon';
 import OrderBookshopList from 'components/OrderBookshopList';
 import Text from 'components/Text';
 import { translations } from 'locales/translations';
+import { goBackOrFallback } from 'navigation/goBackOrFallback';
 import { Routes } from 'navigation/routes';
 import { NavigationType } from 'navigation/types';
 
@@ -24,12 +25,17 @@ export const OrderShopScreen = () => {
   const { t } = useTranslation();
   const { bookshops, placeOrder, canPlaceOrder } = useOrderShopScreen();
   const styles = useStyles();
-  const { navigate, goBack } = useNavigation<OrderShopScreenProps>();
+  const navigation = useNavigation<OrderShopScreenProps>();
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <View style={styles.backHeader}>
-        <Icon icon="back" onPress={() => goBack()} />
+        <Icon
+          icon="back"
+          onPress={() =>
+            goBackOrFallback(navigation, Routes.ORDER_02_ORDER_SHOP)
+          }
+        />
       </View>
       <ScrollView
         contentContainerStyle={styles.container}

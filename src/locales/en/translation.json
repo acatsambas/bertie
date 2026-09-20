@@ -6,6 +6,7 @@
     "agree": "By logging in, you agree to our",
     "terms": "Terms of Service & Privacy Policy",
     "email": "Continue with email",
+    "google": "Continue with Google",
     "explore": "Explore without an account"
   },
   "login": {
@@ -14,16 +15,27 @@
     "password": "Password",
     "forgot": "Forgot password?",
     "button": "Login",
-    "create": "Create account"
+    "create": "Don't have an account yet? Create one",
+    "errors": {
+      "invalidEmail": "That doesn't look like a valid email address.",
+      "userNotFound": "We couldn't find an account with that email. Try signing up instead.",
+      "wrongPassword": "That password isn't correct. Try again or reset it.",
+      "invalidCredential": "Email or password is incorrect. Please try again.",
+      "userDisabled": "This account has been disabled. Contact support if you need help.",
+      "tooManyRequests": "Too many failed attempts. Please wait a moment and try again.",
+      "network": "We couldn't reach the server. Check your connection and try again.",
+      "generic": "Something went wrong signing in. Please try again."
+    }
   },
   "signup": {
     "title": "Sign Up",
     "email": "What's your email?",
     "password": "...and a password",
     "password2": "Enter your password again",
-    "agree": "By logging in, you agree to our",
+    "agree": "By signing up, you agree to our",
     "terms": "Terms of Service & Privacy Policy",
     "button": "Sign Up",
+    "login": "Log in",
     "explore": "Explore Bertie",
     "mailError": "The entered email address is invalid.",
     "mailDuplicateError": "That email is already registered! Try signing in instead",
@@ -39,12 +51,17 @@
   "forgot": {
     "title": "Forgot Password?",
     "enterEmail": "Enter your email address to reset your password.",
-    "sendEmail": "We'll send an email with instructions on how to reset your it.",
+    "sendEmail": "We'll send an email with instructions on how to reset it.",
     "placeholder": "Enter your email address",
     "button": "Reset",
-    "success": "We sent you an email with instructions on how to reset your password. Please check your inbox!",
-    "done": "Done",
-    "error": "The entered email address is invalid."
+    "success": "If an account exists with that email, we've sent you instructions to reset your password. Please check your inbox.",
+    "backToLogin": "Back to login",
+    "errors": {
+      "invalidEmail": "That doesn't look like a valid email address.",
+      "tooManyRequests": "Too many attempts. Please wait a moment and try again.",
+      "network": "We couldn't reach the server. Check your connection and try again.",
+      "generic": "Something went wrong. Please try again."
+    }
   },
   "noAccount": {
     "title": "Terribly sorry, but...",
@@ -59,17 +76,36 @@
     "delete": "Delete Account",
     "importGoodreads": "Import from Goodreads",
     "version": "Version {{version}}",
+    "versionLabel": "Version",
+    "sections": {
+      "account": "Account",
+      "support": "Support"
+    },
+    "profile": {
+      "guest": "Browsing as guest",
+      "limited": "Limited access",
+      "connectedGoogle": "Connected with Google",
+      "connectedApple": "Connected with Apple",
+      "connectedEmail": "Signed in with email"
+    },
     "address": {
       "title": "Address",
-      "description": "We use it to suggest nearby bookstores and direct them on where to dispatch your orders.",
-      "addr1": "Address Line 1",
-      "addr2": "Address Line 2",
+      "description": "Used to suggest nearby bookshops and tell them where to send your orders.",
+      "addr1": "Address line 1",
+      "addr2": "Address line 2",
       "city": "City",
       "postcode": "Postcode",
+      "postcodeExample": "{{label}} (e.g. {{example}})",
       "country": "Country",
-      "button": "Save",
-      "validationTitle": "Incomplete Address",
-      "validationMessage": "Be sure that at least the Postcode is filled."
+      "countryPlaceholder": "Select a country",
+      "countrySearch": "Search countries",
+      "button": "Save address",
+      "validationRequired": "Add your street, city, and country.",
+      "validationCountry": "Pick a country from the list.",
+      "validationPostcode": "That doesn't look like a valid {{label}} for {{country}}.",
+      "validationPostcodeRequired": "Add a {{label}} so we can place you on the map.",
+      "warningUnrecognizedCountry": "We couldn't recognise \"{{value}}\" as a country. Please pick one from the list.",
+      "warningInvalidPostcode": "Your saved {{label}} ({{value}}) doesn't look valid for {{country}}. Please check it."
     }
   },
   "discover": {
@@ -237,22 +273,36 @@
   "delete": {
     "title": "Delete account",
     "paragraph1": "We're very sorry to see you go. But we suppose it wasn't meant to be.",
-    "paragraph2": "Just to make sure you're not pocket-deleting, just write ‘begone!' below.",
+    "consequence": "Your lists, ratings, and bookshop orders leave with you.",
     "begone": "begone!",
+    "confirmHint": "Type begone! to confirm",
     "button": "Delete account",
     "done": "Done",
-    "finalMessage": "All done. We've deleted your account from our systems. Now you're just someone that we used to know."
+    "farewellTitle": "Someone we used to know",
+    "finalMessage": "All done. We've deleted your account from our systems.",
+    "errors": {
+      "mismatch": "That isn't quite ‘begone!'. Check the spelling and try again."
+    }
   },
   "reset": {
-    "title": "Reset passsword",
-    "enterPassword": "Enter your current password...",
-    "newPassword": "... and the new one...",
-    "confirmPassword": "... and write it down once again to make sure you didn't get any mistakes...",
-    "placeholder1": "Password",
-    "placeholder2": "New password",
-    "button": "Save",
-    "allDone": "All done! Your password has been updated.",
-    "done": "Done"
+    "title": "Reset password",
+    "description": "Update the password you use to sign in with email.",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm new password",
+    "sectionCurrent": "Current",
+    "sectionNew": "New password",
+    "button": "Save password",
+    "allDone": "Your password has been updated.",
+    "done": "Done",
+    "errors": {
+      "mismatch": "Those new passwords don't match. Try again.",
+      "weakPassword": "Use at least 6 characters.",
+      "wrongPassword": "That current password isn't correct.",
+      "tooManyRequests": "Too many attempts. Wait a moment and try again.",
+      "network": "Couldn't reach the server. Check your connection and try again.",
+      "generic": "Couldn't update your password. Please try again."
+    }
   },
   "goodreadsImport": {
     "title": "Import from Goodreads",

@@ -1,27 +1,21 @@
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import {
-  GoogleAuthProvider,
-  OAuthProvider,
+  EmailAuthProvider,
   User,
   createUserWithEmailAndPassword,
   onAuthStateChanged,
+  reauthenticateWithCredential,
   sendPasswordResetEmail,
-  signInWithCredential,
   signInWithEmailAndPassword,
   signOut,
+  updatePassword,
   updateProfile,
 } from 'firebase/auth';
 import React, { createContext, useEffect, useMemo, useState } from 'react';
 
-import { appleAuth } from 'utils/react-native-apple-authentication';
-
 import { auth } from '../firebase';
+import { signInWithApple } from './appleSignIn';
+import { signInWithGoogle } from './googleSignIn';
 import { createUser, ensureUserDocument, updateUserProfile } from './hooks';
-
-GoogleSignin.configure({
-  offlineAccess: true,
-  webClientId: process.env.EXPO_PUBLIC_GOOGLE_OAUTH_WEB_CLIENT_ID,
-});
 
 export const AuthContext = createContext<{
   user: User | null;
@@ -41,6 +35,10 @@ export const AuthContext = createContext<{
   ) => Promise<void>;
   logout: () => Promise<void>;
   forgot: (email: string) => Promise<void>;
+  changePassword: (
+    currentPassword: string,
+    newPassword: string,
+  ) => Promise<void>;
   googleLogin: () => Promise<void>;
   appleLogin: () => Promise<void>;
 }>(undefined as any);
@@ -113,26 +111,22 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       forgot: async (email: string) => {
         await sendPasswordResetEmail(auth, email);
       },
-      googleLogin: async () => {
-        await GoogleSignin.hasPlayServices({
-          showPlayServicesUpdateDialog: true,
-        });
-
-        const {
-          data: { idToken },
-        } = await GoogleSignin.signIn();
-
-        if (!idToken) {
-          throw new Error('Google Sign-In failed - no ID token returned');
+      changePassword: async (currentPassword: string, newPassword: string) => {
+        const currentUser = auth.currentUser;
+        if (!currentUser?.email) {
+          throw new Error('No authenticated email user');
         }
 
-        const googleCredential = GoogleAuthProvider.credential(idToken);
-        const userCredential = await signInWithCredential(
-          auth,
-          googleCredential,
+        const credential = EmailAuthProvider.credential(
+          currentUser.email,
+          currentPassword,
         );
-
-        const nameParts = userCredential.user.displayName?.split(' ') ?? [];
+        await reauthenticateWithCredential(currentUser, credential);
+        await updatePassword(currentUser, newPassword);
+      },
+      googleLogin: async () => {
+        const authUser = await signInWithGoogle();
+        const nameParts = authUser.displayName?.split(' ') ?? [];
 
         // Runs on every Google sign-in: the document is only written when it
         // is missing, so this creates it for accounts with no displayName and
@@ -144,35 +138,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         });
       },
       appleLogin: async () => {
-        if (!appleAuth.isSupported) {
-          throw new Error('Apple Sign-In failed - platform unavailable');
-        }
-
-        const appleAuthRequestResponse = await appleAuth.performRequest({
-          requestedOperation: appleAuth.Operation.LOGIN,
-          requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
-        });
-
-        if (!appleAuthRequestResponse.identityToken) {
-          throw new Error('Apple Sign-In failed - no identify token returned');
-        }
-
-        const { identityToken, nonce, fullName } = appleAuthRequestResponse;
-        const provider = new OAuthProvider('apple.com');
-        const appleCredential = provider.credential({
-          idToken: identityToken,
-          rawNonce: nonce,
-        });
-
-        await signInWithCredential(auth, appleCredential);
+        const { givenName, familyName } = await signInWithApple();
 
         // Apple only returns fullName on the very first authorization for the
         // app, so a user who re-registers arrives nameless. Write the document
         // regardless and fill the name in when Apple does give us one.
-        await ensureUserDocument({
-          givenName: fullName?.givenName ?? '',
-          familyName: fullName?.familyName ?? '',
-        });
+        await ensureUserDocument({ givenName, familyName });
       },
     }),
     [user, authLoading],

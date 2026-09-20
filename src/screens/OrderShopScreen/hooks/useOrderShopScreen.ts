@@ -10,7 +10,7 @@ import { Routes } from 'navigation/routes';
 import { NavigationType } from 'navigation/types';
 
 import { OrderShopScreenProps } from '../OrderShopScreen';
-import { getOrderMail, isInvalidEmail } from './utils';
+import { getOrderMail, needsRealContactEmail } from './utils';
 
 export const useOrderShopScreen = () => {
   const { navigate } = useNavigation<OrderShopScreenProps>();
@@ -41,7 +41,7 @@ export const useOrderShopScreen = () => {
   const placeOrder = async () => {
     if (!user) return;
 
-    if (isInvalidEmail(user?.contactEmail)) {
+    if (needsRealContactEmail(user?.contactEmail)) {
       navigate(Routes.ORDER_05_EMAIL_SCREEN);
       return;
     }

@@ -28,9 +28,9 @@ export function FontsProvider({ children }: React.PropsWithChildren) {
     Commissioner_700Bold,
     Commissioner_800ExtraBold,
     Commissioner_900Black,
-    MaterialCommunityIcons: require('react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf'),
-    Feather: require('react-native-vector-icons/Fonts/Feather.ttf'),
-    Octicons: require('react-native-vector-icons/Fonts/Octicons.ttf'),
+    MaterialDesignIcons: require('@react-native-vector-icons/material-design-icons/fonts/MaterialDesignIcons.ttf'),
+    Feather: require('@react-native-vector-icons/feather/fonts/Feather.ttf'),
+    Octicons: require('@react-native-vector-icons/octicons/fonts/Octicons.ttf'),
   });
 
   useEffect(() => {

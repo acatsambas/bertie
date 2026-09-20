@@ -52,7 +52,7 @@ const Book = ({
             containerStyle={{ backgroundColor: 'transparent' }}
             checked={checked}
             onPress={handlePressCheck}
-            iconType="material-community"
+            iconType="material-design"
             checkedIcon={
               kind === 'library' ? 'checkbox-outline' : 'plus-circle-outline'
             }
@@ -99,7 +99,7 @@ const Book = ({
           </View>
           <CheckBox
             onPress={handlePressCheck}
-            iconType="material-community"
+            iconType="material-design"
             checkedIcon="checkbox-outline"
             uncheckedIcon="checkbox-blank-outline"
             checkedColor="#38AD59"

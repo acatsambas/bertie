@@ -1,10 +1,10 @@
 import { makeStyles } from '@rneui/themed';
 import { useTranslation } from 'react-i18next';
 import { Platform, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import AppleSigninButton from 'components/AuthButtons/Apple';
 import GoogleButton from 'components/AuthButtons/GoogleButton';
+import AuthPageShell from 'components/AuthPageShell';
 import Button from 'components/Button';
 import Icon from 'components/Icon';
 import Text from 'components/Text';
@@ -21,7 +21,7 @@ const NoAccountScreen = ({ navigation }) => {
   const handleLogin = () => {};
 
   return (
-    <SafeAreaView style={styles.safeAreaView}>
+    <AuthPageShell>
       <View style={styles.container}>
         <View style={styles.top}>
           <Icon icon="back" onPress={handleBack} />
@@ -31,6 +31,7 @@ const NoAccountScreen = ({ navigation }) => {
         <View style={styles.buttons}>
           <Button
             kind="primary"
+            icon="email"
             text={t(translations.welcome.email)}
             onPress={handleLogin}
           />
@@ -38,17 +39,11 @@ const NoAccountScreen = ({ navigation }) => {
           {Platform.OS === 'ios' && <AppleSigninButton />}
         </View>
       </View>
-    </SafeAreaView>
+    </AuthPageShell>
   );
 };
 
-const useStyles = makeStyles(theme => ({
-  safeAreaView: {
-    flex: 1,
-    gap: 20,
-    paddingHorizontal: 20,
-    backgroundColor: theme.colors.white,
-  },
+const useStyles = makeStyles(() => ({
   container: { paddingTop: 20, gap: 20 },
   top: {
     flexDirection: 'row',
@@ -56,7 +51,7 @@ const useStyles = makeStyles(theme => ({
     gap: 8,
   },
   buttons: {
-    gap: 20,
+    gap: 12,
   },
 }));
 

@@ -16,6 +16,7 @@ import LoadingState from 'components/LoadingState/LoadingState';
 import SearchBooks from 'components/SearchBooks';
 import Text from 'components/Text';
 import { translations } from 'locales/translations';
+import { goBackOrFallback } from 'navigation/goBackOrFallback';
 import { Routes } from 'navigation/routes';
 import { NavigationType } from 'navigation/types';
 
@@ -42,7 +43,7 @@ export const SearchBookScreen = () => {
   const updateFirstSearchFlag = useUpdateFirstSearchFlagMutation();
   const styles = useStyles();
   const { t } = useTranslation();
-  const { navigate } = useNavigation<SearchBookProps>();
+  const navigation = useNavigation<SearchBookProps>();
   const [searchValue, setSearchValue] = useState('');
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -96,7 +97,7 @@ export const SearchBookScreen = () => {
   );
 
   const handleCloseClick = () => {
-    navigate(Routes.LIBRARY_01_LIBRARY);
+    goBackOrFallback(navigation, Routes.LIBRARY_03_SEARCH);
   };
 
   const handleToggle = () => {

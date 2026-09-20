@@ -62,7 +62,7 @@ const fallbackColor = (bookId: string) => {
 /** The control in the cover's corner: read status on My list, on-your-list on Discover. */
 export interface BookTileToggle {
   checked: boolean;
-  /** A material-community icon name. */
+  /** A material-design icon name. */
   icon: string;
   color: string;
   label: string;
@@ -150,7 +150,7 @@ const BookTile = ({
           style={styles.toggle}
         >
           <RNEIcon
-            type="material-community"
+            type="material-design"
             name={toggle.icon}
             size={20}
             color={toggle.color}

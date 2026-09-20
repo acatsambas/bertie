@@ -3,11 +3,13 @@ import 'locales/i18n';
 import { ThemeProvider, createTheme } from '@rneui/themed';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { AuthProvider } from 'api/auth/AuthProvider';
 import { initFirebase } from 'api/firebase';
 import { GuestProvider } from 'api/guest/GuestProvider';
 import { PWAProvider } from 'contexts/PWAContext';
+import { ToastProvider } from 'contexts/ToastContext';
 import RootNavigator from 'navigation/RootNavigator';
 import { FontsProvider } from 'styles/FontsProvider';
 
@@ -38,19 +40,23 @@ const App = () => {
   }
 
   return (
-    <ThemeProvider theme={theme}>
-      <AuthProvider>
-        <PWAProvider>
-          <FontsProvider>
-            <QueryClientProvider client={queryClient}>
-              <GuestProvider>
-                <RootNavigator />
-              </GuestProvider>
-            </QueryClientProvider>
-          </FontsProvider>
-        </PWAProvider>
-      </AuthProvider>
-    </ThemeProvider>
+    <SafeAreaProvider>
+      <ThemeProvider theme={theme}>
+        <AuthProvider>
+          <PWAProvider>
+            <FontsProvider>
+              <QueryClientProvider client={queryClient}>
+                <GuestProvider>
+                  <ToastProvider>
+                    <RootNavigator />
+                  </ToastProvider>
+                </GuestProvider>
+              </QueryClientProvider>
+            </FontsProvider>
+          </PWAProvider>
+        </AuthProvider>
+      </ThemeProvider>
+    </SafeAreaProvider>
   );
 };
 

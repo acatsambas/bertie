@@ -18,7 +18,7 @@ const Icon = ({ icon, onPress, accessibilityRole, ...props }: IconProps) => {
 
 const iconType = {
   email: {
-    type: 'material-community',
+    type: 'material-design',
     name: 'email-outline',
   },
   password: {
@@ -26,7 +26,7 @@ const iconType = {
     name: 'key',
   },
   myList: {
-    type: 'material-community',
+    type: 'material-design',
     name: 'format-list-bulleted',
   },
   discover: {
@@ -34,7 +34,7 @@ const iconType = {
     name: 'search',
   },
   order: {
-    type: 'material-community',
+    type: 'material-design',
     name: 'cart-outline',
   },
   address: {
@@ -46,39 +46,43 @@ const iconType = {
     name: 'trash-2',
   },
   x: {
-    type: 'material-community',
+    type: 'material-design',
     name: 'close',
   },
   right: {
-    type: 'material-community',
+    type: 'material-design',
     name: 'chevron-right',
   },
+  down: {
+    type: 'material-design',
+    name: 'chevron-down',
+  },
   minus: {
-    type: 'material-community',
+    type: 'material-design',
     name: 'minus-circle-outline',
   },
   plus: {
-    type: 'material-community',
+    type: 'material-design',
     name: 'plus',
   },
   left: {
-    type: 'material-community',
+    type: 'material-design',
     name: 'arrow-u-left-top',
   },
   back: {
-    type: 'material-community',
+    type: 'material-design',
     name: 'arrow-left',
   },
   info: {
-    type: 'material-community',
+    type: 'material-design',
     name: 'information-outline',
   },
   import: {
-    type: 'material-community',
+    type: 'material-design',
     name: 'tray-arrow-down',
   },
   dotsHorizontal: {
-    type: 'material-community',
+    type: 'material-design',
     name: 'dots-vertical',
   },
 };

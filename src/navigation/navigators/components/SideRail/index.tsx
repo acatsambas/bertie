@@ -9,6 +9,7 @@ import { Pressable, PressableStateCallbackType, View } from 'react-native';
 import { useUserQuery } from 'api/app/user';
 import Avatar from 'components/Avatar';
 import Icon from 'components/Icon';
+import { useSoftCardStyles } from 'components/SoftCard';
 import Text from 'components/Text';
 import { translations } from 'locales/translations';
 import { Routes } from 'navigation/routes';
@@ -39,6 +40,7 @@ const SideRail = ({ state, navigation: tabNavigation }: SideRailProps) => {
   const { t } = useTranslation();
   const { theme } = useTheme();
   const styles = useStyles();
+  const softCard = useSoftCardStyles();
 
   const activeScreen = state?.routes[state.index]?.name;
   const name = [userData?.givenName, userData?.familyName]
@@ -103,10 +105,15 @@ const SideRail = ({ state, navigation: tabNavigation }: SideRailProps) => {
       <Pressable
         accessibilityRole="link"
         style={pressState => [
+          softCard.card,
           styles.account,
           (pressState as WebPressableState).hovered && styles.itemHovered,
         ]}
-        onPress={() => navigate(Routes.APP_02_SETTINGS)}
+        onPress={() =>
+          navigate(Routes.APP_02_SETTINGS, {
+            screen: Routes.SETTINGS_01_SETTINGS,
+          })
+        }
       >
         <Avatar size={36} />
         <View style={styles.accountText}>
@@ -153,7 +160,6 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     gap: 12,
     padding: 12,
-    borderRadius: 8,
   },
   accountText: { flex: 1, gap: 2 },
 }));
