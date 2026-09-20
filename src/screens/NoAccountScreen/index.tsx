@@ -5,8 +5,8 @@ import { Platform, View } from 'react-native';
 import AppleSigninButton from 'components/AuthButtons/Apple';
 import GoogleButton from 'components/AuthButtons/GoogleButton';
 import AuthPageShell from 'components/AuthPageShell';
+import { BackTitleHeader } from 'components/BackTitleHeader';
 import Button from 'components/Button';
-import Icon from 'components/Icon';
 import Text from 'components/Text';
 import { translations } from 'locales/translations';
 
@@ -23,10 +23,10 @@ const NoAccountScreen = ({ navigation }) => {
   return (
     <AuthPageShell>
       <View style={styles.container}>
-        <View style={styles.top}>
-          <Icon icon="back" onPress={handleBack} />
-          <Text kind="bigHeader" text={t(translations.noAccount.title)} />
-        </View>
+        <BackTitleHeader
+          title={t(translations.noAccount.title)}
+          onBack={handleBack}
+        />
         <Text kind="paragraph" text={t(translations.noAccount.paragraph)} />
         <View style={styles.buttons}>
           <Button
@@ -45,11 +45,6 @@ const NoAccountScreen = ({ navigation }) => {
 
 const useStyles = makeStyles(() => ({
   container: { paddingTop: 20, gap: 20 },
-  top: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
   buttons: {
     gap: 12,
   },

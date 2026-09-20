@@ -25,6 +25,7 @@ pnpm secrets:decrypt          # needs SECRETS_PASSPHRASE
 pnpm dev                      # Auth/Firestore emulators + Expo web
 pnpm web                      # Expo web (prod Firebase)
 pnpm start:firebase           # emulators only
+pnpm seed:emulator            # mock London shops into running emulator
 pnpm web:emulators            # web only, against emulators
 pnpm check                    # format + knip + lint + types
 pnpm fix                      # oxlint --fix + oxfmt

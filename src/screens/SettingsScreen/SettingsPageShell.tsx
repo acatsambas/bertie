@@ -4,9 +4,9 @@ import type { ReactNode } from 'react';
 import { ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import Icon from 'components/Icon';
+import { BackTitleHeader } from 'components/BackTitleHeader';
+import { DESKTOP_PAGE_PADDING_TOP } from 'components/DesktopColumn';
 import { FORM_PAGE_MAX_WIDTH } from 'components/pageMaxWidth';
-import Text from 'components/Text';
 
 type SettingsPageShellProps = {
   title: string;
@@ -30,16 +30,14 @@ export const SettingsPageShell = ({
       <ScrollView
         contentContainerStyle={[
           styles.scroll,
+          isDesktop ? styles.scrollDesktop : null,
           stickyFooter ? styles.scrollWithStickyFooter : null,
         ]}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
         <View style={styles.column}>
-          <View style={styles.header}>
-            {onBack ? <Icon icon="back" onPress={onBack} /> : null}
-            <Text kind="bigHeader" text={title} />
-          </View>
+          <BackTitleHeader title={title} onBack={onBack} />
           {children}
           {footer && !stickyFooter ? (
             <View style={styles.inlineFooter}>{footer}</View>
@@ -63,9 +61,12 @@ const useStyles = makeStyles(theme => ({
   scroll: {
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingTop: 36,
+    paddingTop: 20,
     paddingBottom: 40,
     flexGrow: 1,
+  },
+  scrollDesktop: {
+    paddingTop: DESKTOP_PAGE_PADDING_TOP,
   },
   scrollWithStickyFooter: {
     paddingBottom: 24,
@@ -74,11 +75,6 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
     maxWidth: FORM_PAGE_MAX_WIDTH,
     gap: 20,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
   },
   inlineFooter: {
     marginTop: 12,

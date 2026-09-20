@@ -4,6 +4,7 @@ import { View } from 'react-native';
 
 /** Widest the desktop content column grows before it centres in the window. */
 export const DESKTOP_CONTENT_MAX_WIDTH = 1080;
+export const DESKTOP_PAGE_PADDING_TOP = 36;
 
 /**
  * Holds a screen in a centred column on desktop, so layouts built for a phone

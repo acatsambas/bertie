@@ -21,6 +21,11 @@ const theme = createTheme({
     white: '#FDF9F6',
   },
   mode: 'light',
+  components: {
+    Tab: {
+      variant: 'default',
+    },
+  },
 });
 
 const queryClient = new QueryClient();

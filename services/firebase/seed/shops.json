@@ -1,0 +1,32 @@
+[
+  {
+    "id": "daunt-marylebone",
+    "name": "Daunt Books Marylebone",
+    "address": "83–84 Marylebone High Street",
+    "city": "London",
+    "country": "United Kingdom",
+    "zipcode": "W1U 4QW",
+    "email": "orders@daunt-marylebone.example",
+    "description": "<p>An Edwardian bookshop with long oak galleries and travel-led shelves — a Marylebone landmark for browsing and special orders.</p>"
+  },
+  {
+    "id": "london-review-bookshop",
+    "name": "London Review Bookshop",
+    "address": "14 Bury Place",
+    "city": "London",
+    "country": "United Kingdom",
+    "zipcode": "WC1A 2JL",
+    "email": "orders@lrb-bookshop.example",
+    "description": "<p>Independent bookshop next to the British Museum, known for literary fiction, essays, and a calm café upstairs.</p>"
+  },
+  {
+    "id": "john-sandoe",
+    "name": "John Sandoe Books",
+    "address": "10 Blacklands Terrace",
+    "city": "London",
+    "country": "United Kingdom",
+    "zipcode": "SW3 2SR",
+    "email": "orders@john-sandoe.example",
+    "description": "<p>A Chelsea institution packed floor to ceiling — staff picks, hard-to-find titles, and carefully chosen new releases.</p>"
+  }
+]

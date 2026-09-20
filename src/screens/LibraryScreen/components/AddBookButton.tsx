@@ -1,46 +1,61 @@
-import { makeStyles } from '@rneui/themed';
+import { makeStyles, useTheme } from '@rneui/themed';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { TouchableOpacity } from 'react-native';
+import { Pressable, StyleProp, ViewStyle } from 'react-native';
 
 import Icon from 'components/Icon';
 import Text from 'components/Text';
 import { translations } from 'locales/translations';
 
 /**
- * The dashed "Search for a book" row. It used to live inside the Current
- * section header of the single combined list; now that Current and Past are
- * tabs, it heads the Current list — a book you add starts out unread, so it
- * has no place above the Past list.
+ * Compact search chip next to the shelf filter. Opens the search screen.
  */
-export const AddBookButton = ({ onPress }: { onPress: () => void }) => {
+export const AddBookButton = ({
+  onPress,
+  style,
+}: {
+  onPress: () => void;
+  style?: StyleProp<ViewStyle>;
+}) => {
   const styles = useStyles();
+  const { theme } = useTheme();
   const { t } = useTranslation();
+  const label = t(translations.library.searchTitle);
 
   return (
-    <TouchableOpacity style={styles.button} onPress={onPress}>
-      <Icon icon="plus" color="grey" />
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      onPress={onPress}
+      style={state => [
+        styles.button,
+        (state as { hovered?: boolean }).hovered && styles.buttonHovered,
+        style,
+      ]}
+    >
+      <Icon icon="search" size={18} color={theme.colors.secondary} />
       <Text
-        kind="paragraph"
-        text={t(translations.library.searchTitle)}
-        color="grey"
+        kind="description"
+        text={label}
+        color={theme.colors.secondary}
+        numberOfLines={1}
       />
-    </TouchableOpacity>
+    </Pressable>
   );
 };
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   button: {
     flexDirection: 'row',
-    paddingHorizontal: 20,
-    paddingVertical: 20,
-    gap: 20,
-    borderWidth: 1,
-    borderRadius: 5,
-    borderStyle: 'dashed',
     alignItems: 'center',
-    borderColor: 'grey',
+    gap: 6,
+    minHeight: 44,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: 8,
+    backgroundColor: theme.colors.grey0,
   },
+  buttonHovered: { opacity: 0.9 },
 }));
 
 export default AddBookButton;

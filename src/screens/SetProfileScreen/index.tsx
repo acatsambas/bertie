@@ -44,8 +44,10 @@ const SetProfileScreen = () => {
     };
   }, []);
 
+  const canSubmit = givenName.length > 0 && familyName.length > 0;
+
   const handleRegister = async () => {
-    if (!pendingSignup) {
+    if (!pendingSignup || !canSubmit) {
       return;
     }
 
@@ -104,6 +106,7 @@ const SetProfileScreen = () => {
             kind="primary"
             text={t(translations.signup.profile.button)}
             onPress={handleRegister}
+            disabled={!canSubmit}
           />
         </View>
       </View>

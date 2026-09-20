@@ -33,6 +33,10 @@ const iconType = {
     type: 'octicon',
     name: 'search',
   },
+  search: {
+    type: 'octicon',
+    name: 'search',
+  },
   order: {
     type: 'material-design',
     name: 'cart-outline',
@@ -84,6 +88,10 @@ const iconType = {
   dotsHorizontal: {
     type: 'material-design',
     name: 'dots-vertical',
+  },
+  filter: {
+    type: 'material-design',
+    name: 'filter-variant',
   },
 };
 

@@ -5,8 +5,8 @@ import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { BackTitleHeader } from 'components/BackTitleHeader';
 import Button from 'components/Button';
-import Icon from 'components/Icon';
 import OrderBookshopList from 'components/OrderBookshopList';
 import Text from 'components/Text';
 import { translations } from 'locales/translations';
@@ -29,19 +29,16 @@ export const OrderShopScreen = () => {
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <View style={styles.backHeader}>
-        <Icon
-          icon="back"
-          onPress={() =>
-            goBackOrFallback(navigation, Routes.ORDER_02_ORDER_SHOP)
-          }
-        />
-      </View>
       <ScrollView
         contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}
       >
-        <Text text={t(translations.order.title)} kind="bigHeader" />
+        <BackTitleHeader
+          title={t(translations.order.title)}
+          onBack={() =>
+            goBackOrFallback(navigation, Routes.ORDER_02_ORDER_SHOP)
+          }
+        />
         <Text text={t(translations.order.where)} kind="paragraph" />
         <OrderBookshopList kind="favourites" shops={bookshops.favourites} />
         <OrderBookshopList shops={bookshops.rest} kind="more" />
@@ -66,13 +63,7 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.colors.white,
     position: 'relative',
   },
-  container: { paddingTop: 10, gap: 20, paddingBottom: 150 },
-  backHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingTop: 10,
-    paddingBottom: 5,
-  },
+  container: { paddingTop: 20, gap: 20, paddingBottom: 150 },
   bottomArea: {
     backgroundColor: theme.colors.white,
     flex: 1,

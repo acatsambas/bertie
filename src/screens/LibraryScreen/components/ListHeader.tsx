@@ -36,9 +36,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     // Matches the header on Discover: the screen container carries no
-    // horizontal padding of its own (so the Tab bar below spans edge to
+    // horizontal padding of its own (so content below can span edge to
     // edge), so this supplies its own gutter along with the top/bottom
-    // spacing it needs now that it sits fixed above the tab bar rather
+    // spacing it needs now that it sits fixed above the list rather
     // than scrolling as a list header.
     paddingHorizontal: 20,
     paddingTop: 20,

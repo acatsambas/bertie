@@ -14,8 +14,11 @@ App SDK imports use the **`firebase`** npm package from `src/api/firebase.ts` (`
 
 ```bash
 pnpm start:firebase      # Auth 9099, Firestore 8080, UI 4000
+pnpm seed:emulator       # mock London shops into running emulator
 pnpm web:emulators       # Expo web against emulators
 pnpm deploy:rules        # production rules + indexes
 ```
+
+`pnpm dev` runs `seed:emulator` once Auth/Firestore are listening. Fixtures live in `services/firebase/seed/` (`shops.json`, `user.json`). Dev login: `aris@bertieapp.local` / `bertie`.
 
 Do not put rules files back at the repo root.

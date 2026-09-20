@@ -76,6 +76,8 @@ interface BookTileProps {
   width: number;
   onPress(): void;
   toggle: BookTileToggle;
+  /** Soften finished books when Current and Past share one grid. */
+  muted?: boolean;
 }
 
 /** One book in a desktop grid: its cover, a corner toggle, title and author. */
@@ -86,6 +88,7 @@ const BookTile = ({
   width,
   onPress,
   toggle,
+  muted = false,
 }: BookTileProps) => {
   const styles = useStyles();
   const { theme } = useTheme();
@@ -110,7 +113,7 @@ const BookTile = ({
   };
 
   return (
-    <View style={{ width }}>
+    <View style={[{ width }, muted && styles.muted]}>
       <View>
         <Pressable
           accessibilityRole="button"
@@ -178,6 +181,7 @@ const BookTile = ({
 };
 
 const useStyles = makeStyles(() => ({
+  muted: { opacity: 0.65 },
   cover: {
     aspectRatio: 2 / 3,
     borderRadius: 6,

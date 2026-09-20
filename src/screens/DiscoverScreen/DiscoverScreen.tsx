@@ -9,6 +9,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useUserQuery } from 'api/app/user';
 import Avatar from 'components/Avatar';
+import { DESKTOP_PAGE_PADDING_TOP } from 'components/DesktopColumn';
 import Text from 'components/Text';
 import { translations } from 'locales/translations';
 import { Routes } from 'navigation/routes';
@@ -48,7 +49,7 @@ export const DiscoverScreen = () => {
   return (
     <SafeAreaView edges={['left', 'right', 'top']} style={styles.safeAreaView}>
       <View style={styles.container}>
-        <View style={styles.header}>
+        <View style={[styles.header, isDesktop && styles.headerDesktop]}>
           <Text text={t(translations.discover.title)} kind="bigHeader" />
           {/* On desktop the side rail carries the link to settings. */}
           {!isDesktop && <Avatar onPress={handleAvatarClick} />}
@@ -83,5 +84,9 @@ const useStyles = makeStyles(theme => ({
     paddingHorizontal: 20,
     paddingTop: 20,
     paddingBottom: 10,
+  },
+  headerDesktop: {
+    paddingHorizontal: 0,
+    paddingTop: DESKTOP_PAGE_PADDING_TOP,
   },
 }));

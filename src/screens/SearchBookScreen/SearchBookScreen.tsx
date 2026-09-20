@@ -1,16 +1,16 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Switch, makeStyles } from '@rneui/themed';
+import { makeStyles, useTheme } from '@rneui/themed';
 import debounce from 'lodash.debounce';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Platform, ScrollView, View } from 'react-native';
+import { Platform, Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useUpdateFirstSearchFlagMutation, useUserQuery } from 'api/app/user';
 import { BookResult, searchBooks } from 'api/google-books/search';
+import { BackTitleHeader } from 'components/BackTitleHeader';
 import Button from 'components/Button';
-import Icon from 'components/Icon';
 import Input from 'components/Input';
 import LoadingState from 'components/LoadingState/LoadingState';
 import SearchBooks from 'components/SearchBooks';
@@ -25,12 +25,54 @@ export interface SearchBookProps extends StackNavigationProp<
   typeof Routes.LIBRARY_03_SEARCH
 > {}
 
+type SearchField = 'intitle' | 'inauthor';
+
+const SEARCH_FIELDS: SearchField[] = ['intitle', 'inauthor'];
+
+const SearchFieldScope = ({
+  value,
+  onChange,
+}: {
+  value: SearchField;
+  onChange(value: SearchField): void;
+}) => {
+  const styles = useStyles();
+  const { theme } = useTheme();
+  const { t } = useTranslation();
+
+  return (
+    <View style={styles.scope} accessibilityRole="tablist">
+      {SEARCH_FIELDS.map(field => {
+        const selected = field === value;
+        const label =
+          field === 'intitle'
+            ? t(translations.library.search.byTitle)
+            : t(translations.library.search.byAuthor);
+
+        return (
+          <Pressable
+            key={field}
+            accessibilityRole="tab"
+            accessibilityState={{ selected }}
+            onPress={() => onChange(field)}
+            style={[styles.scopeOption, selected && styles.scopeOptionSelected]}
+          >
+            <Text
+              kind="description"
+              text={label}
+              color={selected ? theme.colors.secondary : theme.colors.grey2}
+              style={styles.scopeLabel}
+            />
+          </Pressable>
+        );
+      })}
+    </View>
+  );
+};
+
 export const SearchBookScreen = () => {
   const [searchResults, setSearchResults] = useState<BookResult[]>([]);
-  const [isTitle, setIsTitle] = useState(false);
-  const [toggleWord, setToggleWord] = useState<'intitle' | 'inauthor'>(
-    'intitle',
-  );
+  const [searchField, setSearchField] = useState<SearchField>('intitle');
   const [isLoading, setIsLoading] = useState(false);
   // A search that failed looks exactly like one that found nothing, unless
   // we keep them apart.
@@ -42,6 +84,7 @@ export const SearchBookScreen = () => {
   const { data: user } = useUserQuery();
   const updateFirstSearchFlag = useUpdateFirstSearchFlagMutation();
   const styles = useStyles();
+  const { theme } = useTheme();
   const { t } = useTranslation();
   const navigation = useNavigation<SearchBookProps>();
   const [searchValue, setSearchValue] = useState('');
@@ -51,14 +94,13 @@ export const SearchBookScreen = () => {
     debounce(async value => {
       const searchValue = value.trim();
       if (searchValue.length) {
-        setIsLoading(true); // Start loading
+        setIsLoading(true);
         try {
-          const results = await searchBooks(searchValue, toggleWord);
-          setSearchResults(results); // Update search results
+          const results = await searchBooks(searchValue, searchField);
+          setSearchResults(results);
           setSearchFailed(false);
-          setSettledQuery(`${toggleWord}:${searchValue}`);
+          setSettledQuery(`${searchField}:${searchValue}`);
 
-          // Update first search flag only if search was successful
           if (user && user.isFirstSearch) {
             await updateFirstSearchFlag.mutateAsync({ isFirstSearch: false });
           }
@@ -68,9 +110,9 @@ export const SearchBookScreen = () => {
           // standing as if that were the answer.
           setSearchResults([]);
           setSearchFailed(true);
-          setSettledQuery(`${toggleWord}:${searchValue}`);
+          setSettledQuery(`${searchField}:${searchValue}`);
         } finally {
-          setIsLoading(false); // Stop loading regardless of success or error
+          setIsLoading(false);
         }
         return;
       }
@@ -79,14 +121,14 @@ export const SearchBookScreen = () => {
       setSearchFailed(false);
       setSettledQuery('');
     }, 350),
-    [toggleWord],
+    [searchField],
   );
 
   useEffect(() => {
     if (searchValue.trim().length) {
       searchDebounce(searchValue);
     }
-  }, [toggleWord, searchValue, searchDebounce]);
+  }, [searchField, searchValue, searchDebounce]);
 
   const handleSearch = useCallback(
     (value: string) => {
@@ -100,45 +142,46 @@ export const SearchBookScreen = () => {
     goBackOrFallback(navigation, Routes.LIBRARY_03_SEARCH);
   };
 
-  const handleToggle = () => {
-    setIsTitle(!isTitle);
-    setToggleWord(isTitle ? 'intitle' : 'inauthor');
-  };
+  const placeholder =
+    searchField === 'intitle'
+      ? t(translations.library.search.placeholderTitle)
+      : t(translations.library.search.placeholderAuthor);
+
+  const otherFieldLabel =
+    searchField === 'intitle'
+      ? t(translations.library.search.byAuthor)
+      : t(translations.library.search.byTitle);
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <ScrollView
         contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
       >
-        <View style={styles.header}>
-          <Icon icon="back" onPress={handleCloseClick} />
-          <Text text={t(translations.library.search.title)} kind="bigHeader" />
-        </View>
-        <View style={styles.search}>
+        <BackTitleHeader
+          title={t(translations.library.search.title)}
+          onBack={handleCloseClick}
+        />
+
+        <View style={styles.searchCluster}>
           <Input
-            placeholder={t(translations.library.search.placeholder)}
+            placeholder={placeholder}
             kind="search"
+            icon="search"
             onChangeText={handleSearch}
             autoFocus
             value={searchValue}
+            marginTop={0}
           />
-          <View style={styles.toggle}>
-            <Switch value={isTitle} onValueChange={handleToggle} />
-            <Text
-              text={
-                isTitle
-                  ? t(translations.library.search.toggle2)
-                  : t(translations.library.search.toggle)
-              }
-              kind="paragraph"
-            />
-          </View>
+          <SearchFieldScope value={searchField} onChange={setSearchField} />
         </View>
+
         {user?.isFirstSearch !== false && (
           <Text
             kind="paragraph"
             text={t(translations.library.search.addToList)}
+            color={theme.colors.grey2}
           />
         )}
 
@@ -160,14 +203,16 @@ export const SearchBookScreen = () => {
         ) : (
           <>
             <SearchBooks books={searchResults} />
-            {settledQuery === `${toggleWord}:${searchValue.trim()}` &&
+            {settledQuery === `${searchField}:${searchValue.trim()}` &&
               searchResults.length === 0 && (
                 <Text
                   kind="paragraph"
                   text={t(translations.library.search.noMatches, {
                     search: searchValue.trim(),
+                    other: otherFieldLabel,
                   })}
                   style={styles.searchStateText}
+                  color={theme.colors.grey2}
                 />
               )}
           </>
@@ -186,23 +231,41 @@ const useStyles = makeStyles(theme => ({
   },
   container: {
     paddingTop: 20,
-    gap: 20,
+    gap: 16,
     paddingBottom: Platform.OS === 'ios' ? 20 : 40,
   },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  searchCluster: {
+    gap: 10,
   },
-  search: { alignItems: 'flex-start' },
+  scope: {
+    flexDirection: 'row',
+    padding: 3,
+    borderRadius: 12,
+    backgroundColor: theme.colors.grey0,
+    gap: 2,
+  },
+  scopeOption: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 8,
+    borderRadius: 10,
+  },
+  scopeOptionSelected: {
+    backgroundColor: '#FFFFFF',
+    boxShadow: '0 1px 2px rgba(0, 0, 0, 0.08)',
+  },
+  scopeLabel: {
+    textAlign: 'center',
+  },
   searchState: {
     alignItems: 'center',
     gap: 20,
-    paddingTop: 20,
+    paddingTop: 12,
   },
   searchStateText: {
     maxWidth: 420,
     textAlign: 'center',
+    alignSelf: 'center',
   },
-  toggle: { flexDirection: 'row', alignItems: 'center', gap: 20 },
 }));

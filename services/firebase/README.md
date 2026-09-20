@@ -12,6 +12,8 @@ This folder is **not** the `firebase` npm package. App code imports the SDK from
 | `.firebaserc`            | `demo-bertie` (default/emulators) + `production` alias |
 | `firestore.rules`        | Security rules                                         |
 | `firestore.indexes.json` | Composite indexes                                      |
+| `seed/shops.json`        | Mock London bookshops for the Firestore emulator       |
+| `seed/user.json`         | Dev Auth user + London address for the emulators       |
 
 ## Emulator ports
 
@@ -46,6 +48,26 @@ pnpm web:emulators
 Emulator UI: http://127.0.0.1:4000
 
 `web:emulators` sets `EXPO_PUBLIC_USE_FIREBASE_EMULATORS=1` so the app connects to Auth/Firestore emulators.
+
+## Emulator seed data
+
+`pnpm dev` runs `seed:emulator` after Auth/Firestore are up. It seeds:
+
+- Mock London bookshops from `seed/shops.json`
+- A signed-in-ready Auth user + Firestore profile from `seed/user.json`
+
+Both skip when already present (no duplicates). Dev login (emulators only):
+
+| Field    | Value              |
+| -------- | ------------------ |
+| Email    | `aris@bertieapp.local` |
+| Password | `bertie`               |
+
+```bash
+pnpm seed:emulator
+```
+
+The script sets `FIRESTORE_EMULATOR_HOST` / `FIREBASE_AUTH_EMULATOR_HOST`, so it cannot write to production.
 
 ## Deploy rules
 
