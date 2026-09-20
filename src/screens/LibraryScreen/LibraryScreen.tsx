@@ -7,6 +7,7 @@ import { ActivityIndicator, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Book from 'components/Book';
+import EmptyState from 'components/EmptyState';
 import Text from 'components/Text';
 import { translations } from 'locales/translations';
 
@@ -23,10 +24,23 @@ import { LibraryFilter, LibraryListItem } from './hooks/utils';
 export const LibraryScreen = () =>
   useIsDesktop() ? <DesktopLibrary /> : <MobileLibraryScreen />;
 
-const emptyKey = (filter: LibraryFilter) => {
-  if (filter === 'current') return translations.library.emptyCurrent;
-  if (filter === 'past') return translations.library.emptyPast;
-  return translations.library.emptyBoth;
+const emptyCopy = (filter: LibraryFilter) => {
+  if (filter === 'current') {
+    return {
+      title: translations.library.emptyCurrentTitle,
+      description: translations.library.emptyCurrentDescription,
+    };
+  }
+  if (filter === 'past') {
+    return {
+      title: translations.library.emptyPastTitle,
+      description: translations.library.emptyPastDescription,
+    };
+  }
+  return {
+    title: translations.library.emptyBothTitle,
+    description: translations.library.emptyBothDescription,
+  };
 };
 
 const sectionLabel = (shelf: 'current' | 'past') =>
@@ -76,8 +90,14 @@ const MobileLibraryScreen = () => {
   const renderEmpty = () => {
     if (loading) return null;
 
+    const copy = emptyCopy(filter);
     return (
-      <Text kind="paragraph" text={t(emptyKey(filter))} style={styles.empty} />
+      <EmptyState
+        variant="list"
+        title={t(copy.title)}
+        description={t(copy.description)}
+        icon="myList"
+      />
     );
   };
 
@@ -132,9 +152,5 @@ const useStyles = makeStyles(theme => ({
     paddingTop: 8,
     paddingBottom: 2,
     fontFamily: 'Commissioner_600SemiBold',
-  },
-  empty: {
-    paddingTop: 20,
-    textAlign: 'center',
   },
 }));

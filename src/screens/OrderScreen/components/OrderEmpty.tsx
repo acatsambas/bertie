@@ -10,7 +10,7 @@ import {
   useUserBooksIdsQuery,
 } from 'api/app/book';
 import Book from 'components/Book';
-import Text from 'components/Text';
+import EmptyState from 'components/EmptyState';
 import { translations } from 'locales/translations';
 
 const DISCOVER_RECOMMENDED_IDS = [
@@ -59,9 +59,13 @@ export const OrderEmpty = ({ kind = 'order' }: OrderEmptyProps) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text text={t(translations.order.headerNoBooks)} kind="header" />
-      <Text text={t(translations.order.suggestions)} kind="paragraph" />
+    <EmptyState
+      variant="list"
+      icon="myList"
+      title={t(translations.order.headerNoBooks)}
+      description={t(translations.order.suggestions)}
+      style={styles.container}
+    >
       <View>
         {recommendedBooks.map(book => (
           <Book
@@ -75,15 +79,12 @@ export const OrderEmpty = ({ kind = 'order' }: OrderEmptyProps) => {
           />
         ))}
       </View>
-    </View>
+    </EmptyState>
   );
 };
 
 const useStyles = makeStyles(() => ({
   container: {
-    paddingTop: 20,
     paddingBottom: 120,
-    gap: 20,
-    position: 'relative',
   },
 }));

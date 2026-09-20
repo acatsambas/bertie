@@ -1,4 +1,4 @@
-import { Shop, UserBook } from 'api/app/types';
+import { Shop } from 'api/app/types';
 import { BookResult } from 'api/google-books/search';
 import { UserData } from 'api/types';
 import {
@@ -7,15 +7,13 @@ import {
   resolveCountryCode,
 } from 'utils/addressCountry';
 
-type OrderMailBook = UserBook & BookResult;
-
 type GetOrderMailParams = {
   selectedShop: Shop;
   user: UserData;
-  books: OrderMailBook[];
+  books: BookResult[];
 };
 
-const formatBookLine = (book: OrderMailBook) => {
+const formatBookLine = (book: BookResult) => {
   const title = book.volumeInfo?.title;
   const authors = book.volumeInfo?.authors?.join(', ');
   return authors ? `- ${title} (${authors})` : `- ${title}`;

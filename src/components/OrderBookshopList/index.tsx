@@ -1,12 +1,14 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { makeStyles } from '@rneui/themed';
-import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
+import { useFavouriteShopsQuery, useShopsQuery } from 'api/app/shops';
 import { Shop } from 'api/app/types';
 import { useUpdateFavouriteShopMutation, useUserQuery } from 'api/app/user';
+import AddressNeededNotice from 'components/AddressNeededNotice';
+import EmptyState from 'components/EmptyState';
 import { translations } from 'locales/translations';
 import { Routes } from 'navigation/routes';
 import { NavigationType } from 'navigation/types';
@@ -19,95 +21,131 @@ interface OrderBookshopListProps {
   kind: 'favourites' | 'more';
   shops?: Shop[];
 }
+
 export interface OrderPageProps extends StackNavigationProp<
   NavigationType,
   typeof Routes.ORDER_01_ORDER
 > {}
 
-const OrderBookshopList = ({ kind, shops }: OrderBookshopListProps) => {
+const OrderBookshopList = ({ kind, shops = [] }: OrderBookshopListProps) => {
   const styles = useStyles();
   const { t } = useTranslation();
   const { navigate } = useNavigation<OrderPageProps>();
   const { data: user, isLoading: isLoadingUser } = useUserQuery();
-  const [isLoading, setIsLoading] = useState(true);
+  const { data: allShops = [], isLoading: isLoadingShops } = useShopsQuery();
+  const { isLoading: isLoadingFavourites } = useFavouriteShopsQuery();
   const updateFavouriteShop = useUpdateFavouriteShopMutation();
 
-  useEffect(() => {
-    if (shops.length > 0 && !isLoadingUser) {
-      setIsLoading(false);
-    }
-  }, [shops, isLoadingUser]);
+  const isFavourites = kind === 'favourites';
+  const title = t(
+    isFavourites ? translations.order.favourites : translations.order.more,
+  );
+
+  const showLoading = isFavourites
+    ? isLoadingFavourites || isLoadingUser
+    : isLoadingShops || isLoadingUser;
 
   const onSelectBookshop = async (shop: Shop) => {
-    if (!user) {
-      return;
-    }
-
+    if (!user) return;
     await updateFavouriteShop.mutateAsync({ shopId: shop.id });
   };
 
-  if (kind === 'favourites') {
-    return (
-      <View style={styles.container}>
-        <Text kind="header" text={t(translations.order.favourites)} />
-        {shops.map(shop => (
-          <BookShop
-            name={shop.name}
-            location={shop.city}
-            key={shop.id}
-            onPress={() => onSelectBookshop(shop)}
-            kind={
-              user.favouriteShop === shop.id ? 'favoriteSelected' : 'favorite'
-            }
-          />
-        ))}
-      </View>
-    );
-  }
+  const renderEmpty = () => {
+    if (isFavourites) {
+      return (
+        <EmptyState
+          variant="list"
+          icon="bookshop"
+          title={t(translations.order.favouritesEmptyTitle)}
+          description={t(translations.order.favouritesEmptyDescription)}
+        />
+      );
+    }
 
-  if (kind === 'more') {
+    const catalogueEmpty = allShops.length === 0;
+
+    if (!user?.address && catalogueEmpty) {
+      return (
+        <EmptyState
+          variant="list"
+          icon="address"
+          title={t(translations.order.addAddressTitle)}
+          description={t(translations.order.addAddressDescription)}
+          action={{
+            label: t(translations.order.addAddressAction),
+            onPress: () => navigate(Routes.ORDER_03_ADDRESS_SCREEN),
+            kind: 'secondary',
+          }}
+        />
+      );
+    }
+
     return (
-      <View style={styles.container}>
-        <Text kind="header" text={t(translations.order.more)} />
-        {!user?.address && (
-          <View style={styles.addressCTA}>
-            <Text
-              kind="paragraph"
-              text={t(translations.order.add)}
+      <EmptyState
+        variant="list"
+        icon="bookshop"
+        title={t(
+          catalogueEmpty
+            ? translations.order.moreEmptyNoShopsTitle
+            : translations.order.moreEmptyTitle,
+        )}
+        description={t(
+          catalogueEmpty
+            ? translations.order.moreEmptyNoShopsDescription
+            : translations.order.moreEmptyDescription,
+        )}
+        action={
+          !user?.address
+            ? {
+                label: t(translations.order.addAddressAction),
+                onPress: () => navigate(Routes.ORDER_03_ADDRESS_SCREEN),
+                kind: 'secondary',
+              }
+            : undefined
+        }
+      />
+    );
+  };
+
+  return (
+    <View style={styles.container}>
+      <Text kind="header" text={title} />
+      {showLoading ? (
+        <LoadingState />
+      ) : shops.length === 0 ? (
+        renderEmpty()
+      ) : (
+        <View style={styles.list}>
+          {!isFavourites && !user?.address ? (
+            <AddressNeededNotice
+              title={t(translations.order.addAddressTitle)}
+              description={t(translations.order.addAddressDescription)}
+              actionLabel={t(translations.order.addAddressAction)}
               onPress={() => navigate(Routes.ORDER_03_ADDRESS_SCREEN)}
             />
-          </View>
-        )}
-        {isLoading ? (
-          <LoadingState />
-        ) : (
-          shops.map(shop => (
+          ) : null}
+          {shops.map(shop => (
             <BookShop
+              key={shop.id}
               name={shop.name}
               location={shop.city}
-              key={shop.id}
-              kind={
-                user.favouriteShop === shop.id ? 'favoriteSelected' : 'favorite'
-              }
               onPress={() => onSelectBookshop(shop)}
+              kind={
+                user?.favouriteShop === shop.id
+                  ? 'favoriteSelected'
+                  : 'favorite'
+              }
             />
-          ))
-        )}
-      </View>
-    );
-  }
+          ))}
+        </View>
+      )}
+    </View>
+  );
 };
 
 const useStyles = makeStyles(() => ({
-  container: { gap: 16 },
-  header: { marginBottom: 16 },
-  addressCTA: {
-    borderWidth: 1,
-    borderRadius: 5,
-    borderColor: '#8839f5',
-    backgroundColor: '#F3EAFF',
-    padding: 16,
-  },
+  container: { gap: 14 },
+  list: { gap: 10 },
 }));
 
 export default OrderBookshopList;

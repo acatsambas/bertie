@@ -11,6 +11,7 @@ import { Routes } from 'navigation/routes';
 import { NavigationType } from 'navigation/types';
 
 import { useOrderList } from '../hooks/useOrderList';
+import { ORDER_TAB_GUTTER } from '../orderTabGutter';
 import { OrderEmpty } from './OrderEmpty';
 import { OrderFooter } from './OrderFooter';
 import { OrderHeader } from './OrderHeader';
@@ -37,12 +38,11 @@ export const NewOrderTab = () => {
     useAuthGate();
 
   const hasSelection = selectedBooks.length > 0;
+  const isEmpty = !loading && unreadBooks.length === 0;
 
   const handleNext = () => {
     if (requireAuth()) return;
-    navigate(Routes.ORDER_02_ORDER_SHOP, {
-      books: selectedBooks,
-    });
+    navigate(Routes.ORDER_02_ORDER_SHOP);
   };
 
   const onRefresh = useCallback(async () => {
@@ -53,34 +53,39 @@ export const NewOrderTab = () => {
 
   return (
     <View style={styles.root}>
-      <FlatList
-        style={styles.list}
-        data={unreadBooks}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-        contentContainerStyle={[
-          styles.container,
-          hasSelection ? styles.containerWithDock : null,
-        ]}
-        showsVerticalScrollIndicator={false}
-        ListHeaderComponent={<OrderHeader hasBooks={unreadBooks.length > 0} />}
-        // Not while the first page is still on its way: an empty list then
-        // means "not loaded yet", not "nothing to order".
-        ListEmptyComponent={loading ? null : OrderEmpty}
-        renderItem={({ item }) => (
-          <Book
-            key={item.id}
-            title={item.volumeInfo?.title}
-            author={item.volumeInfo?.authors?.join?.(', ')}
-            kind="order"
-            isChecked={orderList.includes(item.id)}
-            onChange={() => toggleOrder(item.id)}
-          />
-        )}
-        onEndReached={fetchMoreBooks}
-        onEndReachedThreshold={0.5}
-      />
+      {isEmpty ? (
+        <View style={styles.gutter}>
+          <OrderEmpty />
+        </View>
+      ) : (
+        <FlatList
+          style={styles.list}
+          data={unreadBooks}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+          contentContainerStyle={[
+            styles.listContent,
+            hasSelection ? styles.containerWithDock : null,
+          ]}
+          showsVerticalScrollIndicator={false}
+          ListHeaderComponent={
+            <OrderHeader hasBooks={unreadBooks.length > 0} />
+          }
+          renderItem={({ item }) => (
+            <Book
+              key={item.id}
+              title={item.volumeInfo?.title}
+              author={item.volumeInfo?.authors?.join?.(', ')}
+              kind="order"
+              isChecked={orderList.includes(item.id)}
+              onChange={() => toggleOrder(item.id)}
+            />
+          )}
+          onEndReached={fetchMoreBooks}
+          onEndReachedThreshold={0.5}
+        />
+      )}
       <OrderFooter hasBooks={hasSelection} onNext={handleNext} />
       <AuthGateModal
         visible={gateVisible}
@@ -95,12 +100,11 @@ export const NewOrderTab = () => {
 const useStyles = makeStyles(() => ({
   root: { flex: 1 },
   list: { flex: 1 },
-  // Now that the screen container carries no horizontal padding of its own
-  // (matching Discover), this list supplies its own gutter.
-  container: {
-    paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 20,
+  gutter: {
+    ...ORDER_TAB_GUTTER,
+  },
+  listContent: {
+    ...ORDER_TAB_GUTTER,
     gap: 20,
   },
   containerWithDock: {

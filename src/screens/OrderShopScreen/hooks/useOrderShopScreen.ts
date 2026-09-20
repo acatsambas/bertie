@@ -1,4 +1,4 @@
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
 import { addDoc, collection, doc, serverTimestamp } from 'firebase/firestore';
 import { useMemo } from 'react';
@@ -6,8 +6,9 @@ import { useMemo } from 'react';
 import { useFavouriteShopsQuery, useShopsQuery } from 'api/app/shops';
 import { useUserQuery } from 'api/app/user';
 import { db } from 'api/firebase';
+import { fetchBook } from 'api/google-books/fetchBook';
+import { useDraftOrder } from 'contexts/DraftOrderContext';
 import { Routes } from 'navigation/routes';
-import { NavigationType } from 'navigation/types';
 
 import { OrderShopScreenProps } from '../OrderShopScreen';
 import { getOrderMail, needsRealContactEmail } from './utils';
@@ -15,10 +16,8 @@ import { getOrderMail, needsRealContactEmail } from './utils';
 export const useOrderShopScreen = () => {
   const { navigate } = useNavigation<OrderShopScreenProps>();
   const queryClient = useQueryClient();
-  const route =
-    useRoute<RouteProp<NavigationType, typeof Routes.ORDER_02_ORDER_SHOP>>();
+  const { bookIds } = useDraftOrder();
 
-  const books = route.params.books;
   const { data: user } = useUserQuery();
   const { data: shops = [] } = useShopsQuery();
   const { data: favouriteShops = [] } = useFavouriteShopsQuery();
@@ -39,7 +38,7 @@ export const useOrderShopScreen = () => {
   );
 
   const placeOrder = async () => {
-    if (!user) return;
+    if (!user || bookIds.length === 0) return;
 
     if (needsRealContactEmail(user?.contactEmail)) {
       navigate(Routes.ORDER_05_EMAIL_SCREEN);
@@ -51,7 +50,7 @@ export const useOrderShopScreen = () => {
     await addDoc(collection(db, 'orders'), {
       userRef: doc(db, 'users', user.documentId),
       shopRef: doc(db, 'shops', favouriteShop.id),
-      booksRef: books.map(({ id }) => doc(db, 'books', id)),
+      booksRef: bookIds.map(id => doc(db, 'books', id)),
       status: 'ordered',
       createdAt: serverTimestamp(),
     });
@@ -64,6 +63,8 @@ export const useOrderShopScreen = () => {
     if (!selectedShop) {
       return;
     }
+
+    const books = await Promise.all(bookIds.map(id => fetchBook(id)));
 
     await addDoc(
       collection(db, 'mail'),

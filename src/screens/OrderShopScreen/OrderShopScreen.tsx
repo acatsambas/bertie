@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { makeStyles } from '@rneui/themed';
+import { makeStyles, useTheme } from '@rneui/themed';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -23,6 +23,7 @@ export interface OrderShopScreenProps extends StackNavigationProp<
 
 export const OrderShopScreen = () => {
   const { t } = useTranslation();
+  const { theme } = useTheme();
   const { bookshops, placeOrder, canPlaceOrder } = useOrderShopScreen();
   const styles = useStyles();
   const navigation = useNavigation<OrderShopScreenProps>();
@@ -39,7 +40,14 @@ export const OrderShopScreen = () => {
             goBackOrFallback(navigation, Routes.ORDER_02_ORDER_SHOP)
           }
         />
-        <Text text={t(translations.order.where)} kind="paragraph" />
+        <View style={styles.intro}>
+          <Text text={t(translations.order.where)} kind="paragraph" />
+          <Text
+            text={t(translations.order.whereHint)}
+            kind="description"
+            color={theme.colors.grey2}
+          />
+        </View>
         <OrderBookshopList kind="favourites" shops={bookshops.favourites} />
         <OrderBookshopList shops={bookshops.rest} kind="more" />
       </ScrollView>
@@ -63,7 +71,8 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.colors.white,
     position: 'relative',
   },
-  container: { paddingTop: 20, gap: 20, paddingBottom: 150 },
+  container: { paddingTop: 20, gap: 24, paddingBottom: 150 },
+  intro: { gap: 6 },
   bottomArea: {
     backgroundColor: theme.colors.white,
     flex: 1,

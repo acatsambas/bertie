@@ -1,17 +1,17 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useTranslation } from 'react-i18next';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 
 import { useShopsQuery } from 'api/app/shops';
 import { Shop } from 'api/app/types';
+import EmptyState from 'components/EmptyState';
 import { translations } from 'locales/translations';
 import { Routes } from 'navigation/routes';
 import { NavigationType } from 'navigation/types';
 
 import BookShop from '../Bookshop';
 import LoadingState from '../LoadingState/LoadingState';
-import Text from '../Text';
 
 export interface DiscoverPageProps extends StackNavigationProp<
   NavigationType,
@@ -33,16 +33,20 @@ const BookshopsList = () => {
 
   if (isError || shops.length === 0) {
     return (
-      <View style={styles.emptyState}>
-        <Text
-          kind="description"
-          text={t(
-            isError
-              ? translations.discover.bookshopsError
-              : translations.discover.noBookshopsYet,
-          )}
-        />
-      </View>
+      <EmptyState
+        variant="list"
+        icon="bookshop"
+        title={t(
+          isError
+            ? translations.discover.bookshopsErrorTitle
+            : translations.discover.noBookshopsYetTitle,
+        )}
+        description={t(
+          isError
+            ? translations.discover.bookshopsErrorDescription
+            : translations.discover.noBookshopsYetDescription,
+        )}
+      />
     );
   }
 
@@ -60,12 +64,5 @@ const BookshopsList = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  emptyState: {
-    alignItems: 'center',
-    paddingTop: 20,
-  },
-});
 
 export default BookshopsList;

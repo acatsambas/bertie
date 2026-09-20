@@ -10,7 +10,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useUpdateFirstSearchFlagMutation, useUserQuery } from 'api/app/user';
 import { BookResult, searchBooks } from 'api/google-books/search';
 import { BackTitleHeader } from 'components/BackTitleHeader';
-import Button from 'components/Button';
+import EmptyState from 'components/EmptyState';
 import Input from 'components/Input';
 import LoadingState from 'components/LoadingState/LoadingState';
 import SearchBooks from 'components/SearchBooks';
@@ -188,31 +188,29 @@ export const SearchBookScreen = () => {
         {isLoading ? (
           <LoadingState />
         ) : searchFailed ? (
-          <View style={styles.searchState}>
-            <Text
-              kind="paragraph"
-              text={t(translations.library.search.failed)}
-              style={styles.searchStateText}
-            />
-            <Button
-              kind="primary"
-              text={t(translations.library.tryAgain)}
-              onPress={() => searchDebounce(searchValue)}
-            />
-          </View>
+          <EmptyState
+            variant="list"
+            icon="search"
+            title={t(translations.library.search.failedTitle)}
+            description={t(translations.library.search.failed)}
+            action={{
+              label: t(translations.library.tryAgain),
+              onPress: () => searchDebounce(searchValue),
+            }}
+          />
         ) : (
           <>
             <SearchBooks books={searchResults} />
             {settledQuery === `${searchField}:${searchValue.trim()}` &&
               searchResults.length === 0 && (
-                <Text
-                  kind="paragraph"
-                  text={t(translations.library.search.noMatches, {
+                <EmptyState
+                  variant="list"
+                  icon="search"
+                  title={t(translations.library.search.noMatchesTitle)}
+                  description={t(translations.library.search.noMatches, {
                     search: searchValue.trim(),
                     other: otherFieldLabel,
                   })}
-                  style={styles.searchStateText}
-                  color={theme.colors.grey2}
                 />
               )}
           </>
@@ -257,15 +255,5 @@ const useStyles = makeStyles(theme => ({
   },
   scopeLabel: {
     textAlign: 'center',
-  },
-  searchState: {
-    alignItems: 'center',
-    gap: 20,
-    paddingTop: 12,
-  },
-  searchStateText: {
-    maxWidth: 420,
-    textAlign: 'center',
-    alignSelf: 'center',
   },
 }));

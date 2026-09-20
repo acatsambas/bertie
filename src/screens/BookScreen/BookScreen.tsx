@@ -30,6 +30,7 @@ import { useBookQuery } from 'api/google-books/useBookQuery';
 import AuthGateModal from 'components/AuthGateModal';
 import Button from 'components/Button';
 import DesktopColumn from 'components/DesktopColumn';
+import EmptyState from 'components/EmptyState';
 import Icon from 'components/Icon';
 import RatingBottomSheet from 'components/RatingBottomSheet';
 import Text from 'components/Text';
@@ -144,7 +145,7 @@ export const BookScreen = () => {
         screen: Routes.HOME_03_ORDER,
         params: {
           screen: Routes.ORDER_00_ADD_BOOKS,
-          params: { initialBook: book },
+          params: { bookId: book.id },
         },
       },
     });
@@ -228,15 +229,15 @@ export const BookScreen = () => {
           {showBack && <Icon icon="back" onPress={handleBack} />}
         </View>
         <View style={styles.loadingContainer}>
-          <Text
-            kind="paragraph"
-            text={t(translations.library.loadError)}
-            style={styles.loadErrorText}
-          />
-          <Button
-            kind="primary"
-            text={t(translations.library.tryAgain)}
-            onPress={() => void refetchBook()}
+          <EmptyState
+            variant="page"
+            icon="book"
+            title={t(translations.library.loadErrorTitle)}
+            description={t(translations.library.loadError)}
+            action={{
+              label: t(translations.library.tryAgain),
+              onPress: () => void refetchBook(),
+            }}
           />
         </View>
       </SafeAreaView>,
@@ -402,13 +403,9 @@ const useStyles = makeStyles(theme => ({
   container: { paddingTop: 20, gap: 20 },
   loadingContainer: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: 'stretch',
+    paddingTop: 20,
     gap: 20,
-  },
-  loadErrorText: {
-    maxWidth: 360,
-    textAlign: 'center',
   },
   titleRow: {
     flexDirection: 'row',

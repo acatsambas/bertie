@@ -3,6 +3,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { DimensionValue, StyleProp, View, ViewStyle } from 'react-native';
 
+import EmptyState from 'components/EmptyState';
 import Text from 'components/Text';
 import { translations } from 'locales/translations';
 
@@ -234,11 +235,7 @@ export const RatingsSection = ({
         )}
       </View>
       {mine.total === 0 ? (
-        <Text
-          kind="description"
-          text={t(labels.ratingsNone)}
-          color={theme.colors.grey2}
-        />
+        <EmptyState variant="section" title={t(labels.ratingsNone)} />
       ) : (
         <>
           {renderHeadline()}

@@ -10,6 +10,7 @@ interface DraftOrderContextType {
   bookIds: string[];
   count: number;
   toggleBook: (bookId: string) => void;
+  setBooks: (bookIds: string[]) => void;
   clear: () => void;
 }
 
@@ -33,6 +34,10 @@ export const DraftOrderProvider = ({
     });
   }, []);
 
+  const setBooks = useCallback((ids: string[]) => {
+    setBookIds(ids);
+  }, []);
+
   const clear = useCallback(() => {
     setBookIds([]);
   }, []);
@@ -42,9 +47,10 @@ export const DraftOrderProvider = ({
       bookIds,
       count: bookIds.length,
       toggleBook,
+      setBooks,
       clear,
     }),
-    [bookIds, toggleBook, clear],
+    [bookIds, toggleBook, setBooks, clear],
   );
 
   return (

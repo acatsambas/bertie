@@ -77,15 +77,14 @@ export const AddBooksToOrderScreen = () => {
     hasOtherBooks,
     selectedIds,
     toggleBook,
-    selectedBooks,
+    commitSelection,
     fetchMoreBooks,
     loading,
   } = useAddBooksToOrder();
 
   const handleNext = () => {
-    navigate(Routes.ORDER_02_ORDER_SHOP, {
-      books: selectedBooks,
-    });
+    commitSelection();
+    navigate(Routes.ORDER_02_ORDER_SHOP);
   };
 
   // With nothing to choose between, this screen has nothing to show, so skip
@@ -98,11 +97,12 @@ export const AddBooksToOrderScreen = () => {
   const hasSkipped = useRef(false);
 
   useEffect(() => {
-    if (loading || hasOtherBooks || hasSkipped.current) return;
+    if (loading || hasOtherBooks || hasSkipped.current || !initialBook) return;
 
     hasSkipped.current = true;
-    replace(Routes.ORDER_02_ORDER_SHOP, { books: selectedBooks });
-  }, [loading, hasOtherBooks, selectedBooks, replace]);
+    commitSelection();
+    replace(Routes.ORDER_02_ORDER_SHOP);
+  }, [loading, hasOtherBooks, initialBook, commitSelection, replace]);
 
   return (
     <SafeAreaView edges={['left', 'right', 'top']} style={styles.safeAreaView}>
@@ -127,8 +127,8 @@ export const AddBooksToOrderScreen = () => {
               <Text text="In your order" kind="description" />
             </View>
             <BookSelectItem
-              title={initialBook.volumeInfo?.title}
-              author={initialBook.volumeInfo?.authors?.join?.(', ')}
+              title={initialBook?.volumeInfo?.title}
+              author={initialBook?.volumeInfo?.authors?.join?.(', ')}
               isSelected
             />
             <View style={styles.sectionLabel}>

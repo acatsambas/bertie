@@ -5,8 +5,11 @@ import { ActivityIndicator, FlatList, View } from 'react-native';
 
 import { useOrderHistoryQuery } from 'api/app/orders';
 import { Order } from 'api/app/types';
+import EmptyState from 'components/EmptyState';
 import Text from 'components/Text';
 import { translations } from 'locales/translations';
+
+import { ORDER_TAB_GUTTER } from '../orderTabGutter';
 
 const formatOrderDate = (order: Order) => {
   if (!order.createdAt?.seconds) return null;
@@ -70,12 +73,12 @@ export const PastOrdersTab = () => {
 
   if (orders.length === 0) {
     return (
-      <View style={styles.centred}>
-        <Text kind="header" text={t(translations.order.history.emptyTitle)} />
-        <Text
-          kind="paragraph"
-          text={t(translations.order.history.emptyDescription)}
-          style={styles.emptyDescription}
+      <View style={styles.gutter}>
+        <EmptyState
+          variant="list"
+          icon="order"
+          title={t(translations.order.history.emptyTitle)}
+          description={t(translations.order.history.emptyDescription)}
         />
       </View>
     );
@@ -86,7 +89,7 @@ export const PastOrdersTab = () => {
       style={styles.list}
       data={orders}
       keyExtractor={order => order.id}
-      contentContainerStyle={styles.container}
+      contentContainerStyle={styles.listContent}
       showsVerticalScrollIndicator={false}
       renderItem={({ item }) => <OrderCard order={item} />}
     />
@@ -95,14 +98,11 @@ export const PastOrdersTab = () => {
 
 const useStyles = makeStyles(() => ({
   list: { flex: 1 },
-  // Now that the screen container carries no horizontal padding of its own
-  // (matching Discover), this list supplies its own gutter. `centred` below
-  // already had one — it renders outside the FlatList for the loading and
-  // empty states.
-  container: {
-    paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 20,
+  gutter: {
+    ...ORDER_TAB_GUTTER,
+  },
+  listContent: {
+    ...ORDER_TAB_GUTTER,
     gap: 12,
   },
   centred: {
@@ -111,9 +111,6 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'center',
     paddingHorizontal: 20,
     gap: 8,
-  },
-  emptyDescription: {
-    textAlign: 'center',
   },
   card: {
     backgroundColor: '#F8EBDD',

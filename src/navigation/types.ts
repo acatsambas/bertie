@@ -1,7 +1,6 @@
 import { NavigatorScreenParams } from '@react-navigation/native';
 
-import { Shop, UserBook } from 'api/app/types';
-import { BookResult } from 'api/google-books/search';
+import { Shop } from 'api/app/types';
 
 import { Routes } from './routes';
 
@@ -31,12 +30,10 @@ export type LibraryNavigatorParamList = {
 
 export type OrderNavigatorParamList = {
   [Routes.ORDER_00_ADD_BOOKS]: {
-    initialBook: BookResult;
+    bookId: string;
   };
   [Routes.ORDER_01_ORDER]: undefined;
-  [Routes.ORDER_02_ORDER_SHOP]: {
-    books: (UserBook & BookResult)[];
-  };
+  [Routes.ORDER_02_ORDER_SHOP]: undefined;
   [Routes.ORDER_03_ADDRESS_SCREEN]: undefined;
   [Routes.ORDER_04_BOOKSHOP]: {
     shop: Shop;

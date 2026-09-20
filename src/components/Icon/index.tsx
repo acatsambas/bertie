@@ -93,6 +93,26 @@ const iconType = {
     type: 'material-design',
     name: 'filter-variant',
   },
+  radioOn: {
+    type: 'material-design',
+    name: 'radiobox-marked',
+  },
+  radioOff: {
+    type: 'material-design',
+    name: 'radiobox-blank',
+  },
+  book: {
+    type: 'material-design',
+    name: 'book-outline',
+  },
+  bookshop: {
+    type: 'material-design',
+    name: 'storefront-outline',
+  },
+  insights: {
+    type: 'material-design',
+    name: 'chart-box-outline',
+  },
 };
 
 export default Icon;

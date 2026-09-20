@@ -15,6 +15,7 @@ import BookTile, {
   tileGrid,
 } from 'components/BookTile';
 import { DESKTOP_PAGE_PADDING_TOP } from 'components/DesktopColumn';
+import EmptyState from 'components/EmptyState';
 import Text from 'components/Text';
 import { translations } from 'locales/translations';
 
@@ -29,10 +30,23 @@ type GridRow =
   | { type: 'section'; id: string; shelf: 'current' | 'past' }
   | { type: 'books'; id: string; books: LibraryBook[] };
 
-const emptyKey = (filter: LibraryFilter) => {
-  if (filter === 'current') return translations.library.emptyCurrent;
-  if (filter === 'past') return translations.library.emptyPast;
-  return translations.library.emptyBoth;
+const emptyCopy = (filter: LibraryFilter) => {
+  if (filter === 'current') {
+    return {
+      title: translations.library.emptyCurrentTitle,
+      description: translations.library.emptyCurrentDescription,
+    };
+  }
+  if (filter === 'past') {
+    return {
+      title: translations.library.emptyPastTitle,
+      description: translations.library.emptyPastDescription,
+    };
+  }
+  return {
+    title: translations.library.emptyBothTitle,
+    description: translations.library.emptyBothDescription,
+  };
 };
 
 const sectionLabel = (shelf: 'current' | 'past') =>
@@ -134,8 +148,14 @@ export const DesktopLibrary = () => {
   const renderEmpty = () => {
     if (loading) return null;
 
+    const copy = emptyCopy(filter);
     return (
-      <Text kind="paragraph" text={t(emptyKey(filter))} style={styles.empty} />
+      <EmptyState
+        variant="list"
+        title={t(copy.title)}
+        description={t(copy.description)}
+        icon="myList"
+      />
     );
   };
 
@@ -256,10 +276,6 @@ const useStyles = makeStyles(theme => ({
     paddingBottom: 4,
   },
   loading: { paddingTop: 20 },
-  empty: {
-    paddingTop: 40,
-    textAlign: 'center',
-  },
 }));
 
 export default DesktopLibrary;

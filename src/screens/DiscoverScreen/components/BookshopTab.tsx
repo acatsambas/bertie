@@ -1,10 +1,10 @@
 import { useNavigation } from '@react-navigation/native';
-import React from 'react';
+import { makeStyles } from '@rneui/themed';
 import { useTranslation } from 'react-i18next';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 
+import AddressNeededNotice from 'components/AddressNeededNotice';
 import BookshopsList from 'components/BookshopsList';
-import Text from 'components/Text';
 import { translations } from 'locales/translations';
 import { Routes } from 'navigation/routes';
 import { DiscoverScreenProps } from 'screens/DiscoverScreen';
@@ -12,32 +12,29 @@ import { DiscoverScreenProps } from 'screens/DiscoverScreen';
 export const BookshopTab = ({ user }) => {
   const { navigate } = useNavigation<DiscoverScreenProps>();
   const { t } = useTranslation();
+  const styles = useStyles();
 
   return (
     <View style={styles.bookshopContainer}>
-      {!user?.address && (
-        <View style={styles.description}>
-          <Text
-            text={t(translations.discover.description)}
-            kind="paragraph"
-            onPress={() => navigate(Routes.SETTINGS_02_CHANGE_ADDRESS)}
-          />
-        </View>
-      )}
+      {!user?.address ? (
+        <AddressNeededNotice
+          title={t(translations.discover.addressNeededTitle)}
+          description={t(translations.discover.addressNeededDescription)}
+          actionLabel={t(translations.discover.addressNeededAction)}
+          onPress={() => navigate(Routes.DISCOVER_02_ADDRESS)}
+        />
+      ) : null}
       <BookshopsList />
     </View>
   );
 };
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles(() => ({
+  // Same gutter as Books / Insights / Order tabs (empty plate + filled list).
   bookshopContainer: {
     paddingHorizontal: 20,
-    paddingTop: 10,
+    paddingTop: 20,
+    paddingBottom: 20,
+    gap: 16,
   },
-  description: {
-    backgroundColor: '#F3EAFF',
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    borderRadius: 8,
-  },
-});
+}));

@@ -2,15 +2,19 @@ import { RouteProp, useRoute } from '@react-navigation/native';
 import { useCallback, useMemo, useState } from 'react';
 
 import { useUserBooksQuery } from 'api/app/book';
-import { UserBook } from 'api/app/types';
-import { BookResult } from 'api/google-books/search';
+import { useBookQuery } from 'api/google-books/useBookQuery';
+import { useDraftOrder } from 'contexts/DraftOrderContext';
 import { Routes } from 'navigation/routes';
 import { NavigationType } from 'navigation/types';
 
 export const useAddBooksToOrder = () => {
   const route =
     useRoute<RouteProp<NavigationType, typeof Routes.ORDER_00_ADD_BOOKS>>();
-  const initialBook = route.params.initialBook;
+  const bookId = route.params.bookId;
+  const { setBooks } = useDraftOrder();
+
+  const { data: initialBook, isLoading: isLoadingInitial } =
+    useBookQuery(bookId);
 
   const { data, fetchNextPage, hasNextPage, isFetching } = useUserBooksQuery({
     withRefs: true,
@@ -24,34 +28,34 @@ export const useAddBooksToOrder = () => {
   const otherBooks = useMemo(() => {
     if (!data?.pages) return [];
     const allBooks = data.pages.flatMap(page => page.books);
-    return allBooks.filter(book => !book.isRead && book.id !== initialBook.id);
-  }, [data?.pages, initialBook.id]);
+    return allBooks.filter(book => !book.isRead && book.id !== bookId);
+  }, [data?.pages, bookId]);
 
   const hasOtherBooks = otherBooks.length > 0;
 
-  const toggleBook = useCallback((bookId: string) => {
+  const toggleBook = useCallback((id: string) => {
     setSelectedIds(prev => {
       const next = new Set(prev);
-      if (next.has(bookId)) {
-        next.delete(bookId);
+      if (next.has(id)) {
+        next.delete(id);
       } else {
-        next.add(bookId);
+        next.add(id);
       }
       return next;
     });
   }, []);
 
-  const selectedBooks = useMemo(() => {
-    const initialAsOrderBook = {
-      ...initialBook,
-      bookRef: undefined as any,
-      isRead: false,
-    } as UserBook & BookResult;
+  const selectedBookIds = useMemo(
+    () => [
+      bookId,
+      ...otherBooks.filter(b => selectedIds.has(b.id)).map(b => b.id),
+    ],
+    [bookId, otherBooks, selectedIds],
+  );
 
-    const additionalBooks = otherBooks.filter(book => selectedIds.has(book.id));
-
-    return [initialAsOrderBook, ...additionalBooks];
-  }, [initialBook, otherBooks, selectedIds]);
+  const commitSelection = useCallback(() => {
+    setBooks(selectedBookIds);
+  }, [setBooks, selectedBookIds]);
 
   const fetchMoreBooks = useCallback(() => {
     if (hasNextPage && !isFetching) {
@@ -65,8 +69,9 @@ export const useAddBooksToOrder = () => {
     hasOtherBooks,
     selectedIds,
     toggleBook,
-    selectedBooks,
+    selectedBookIds,
+    commitSelection,
     fetchMoreBooks,
-    loading: isFetching,
+    loading: isFetching || isLoadingInitial,
   };
 };
