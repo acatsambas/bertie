@@ -13,13 +13,13 @@ export const signInWithGoogle = async (): Promise<User> => {
     showPlayServicesUpdateDialog: true,
   });
 
-  const {
-    data: { idToken },
-  } = await GoogleSignin.signIn();
+  const response = await GoogleSignin.signIn();
 
-  if (!idToken) {
+  if (response.type !== 'success' || !response.data.idToken) {
     throw new Error('Google Sign-In failed - no ID token returned');
   }
+
+  const { idToken } = response.data;
 
   const googleCredential = GoogleAuthProvider.credential(idToken);
   const userCredential = await signInWithCredential(auth, googleCredential);

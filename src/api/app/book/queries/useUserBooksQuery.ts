@@ -46,11 +46,11 @@ export const useUserBooksQuery = ({
         const { books } = await readGuestData();
         const guestBooks = Object.entries(books).map(
           ([id, { book, isRead, addedAt, readAt }]) => ({
+            ...book,
             id,
             isRead,
             addedAt,
             readAt,
-            ...book,
           }),
         ) as QueryResult['books'];
 

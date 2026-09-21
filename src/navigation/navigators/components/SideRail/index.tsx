@@ -16,13 +16,14 @@ import { translations } from 'locales/translations';
 import { Routes } from 'navigation/routes';
 import type { NavigationType } from 'navigation/types';
 
-import { menuItems } from '../BottomMenu/data';
+import { menuItems, homeTabNavigateParams } from '../BottomMenu/data';
+import type { HomeTabScreen } from '../BottomMenu/data';
 
 // react-native-web adds `hovered` to Pressable's state; React Native's own
 // types don't know about it.
 type WebPressableState = PressableStateCallbackType & { hovered?: boolean };
 
-type HomeTab = (typeof menuItems)[number]['screen'];
+type HomeTab = HomeTabScreen;
 
 /**
  * The Home tab navigator's state and navigation, when the rail is its tab
@@ -56,7 +57,7 @@ const SideRail = ({ state, navigation: tabNavigation }: SideRailProps) => {
       // Outside the tabs, address the tab from the root, as BottomMenu does.
       navigate(Routes.ROOT_02_APP, {
         screen: Routes.APP_01_HOME,
-        params: { screen },
+        params: homeTabNavigateParams(screen),
       });
       return;
     }

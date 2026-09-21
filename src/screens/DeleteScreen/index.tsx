@@ -1,4 +1,5 @@
 import { useRoute } from '@react-navigation/native';
+import type { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { makeStyles, useTheme } from '@rneui/themed';
 import React, { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -17,7 +18,11 @@ import { SettingsPageShell } from 'screens/SettingsScreen/SettingsPageShell';
 
 import { BegoneConfirm } from './BegoneConfirm';
 
-const DeleteScreen = ({ navigation }) => {
+const DeleteScreen = ({
+  navigation,
+}: {
+  navigation: NavigationProp<ParamListBase>;
+}) => {
   const [isDeleted, setIsDeleted] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [errorKey, setErrorKey] = useState<string | null>(null);

@@ -1,3 +1,4 @@
+import type { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { makeStyles } from '@rneui/themed';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -13,7 +14,11 @@ import { translations } from 'locales/translations';
 import { goBackOrFallback } from 'navigation/goBackOrFallback';
 import { Routes } from 'navigation/routes';
 
-export const EmailScreen = ({ navigation }) => {
+export const EmailScreen = ({
+  navigation,
+}: {
+  navigation: NavigationProp<ParamListBase>;
+}) => {
   const styles = useStyles();
   const { t } = useTranslation();
   const { data: user } = useUserQuery();

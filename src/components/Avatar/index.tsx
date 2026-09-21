@@ -30,7 +30,7 @@ const Avatar = ({ onPress, size = 44 }: AvatarProps) => {
           ? { name: 'account', type: 'material-design', color: '#fff' }
           : undefined
       }
-      source={showPhoto ? { uri: photoURL } : undefined}
+      source={showPhoto && photoURL ? { uri: photoURL } : undefined}
       rounded
       size={size}
       containerStyle={{ backgroundColor: '#6E78D7' }}

@@ -25,7 +25,11 @@ export interface BookshopPageProps extends StackNavigationProp<
   typeof Routes.DISCOVER_03_BOOKSHOP
 > {}
 
-export const BookshopScreen = ({ navigation }) => {
+export const BookshopScreen = ({
+  navigation,
+}: {
+  navigation: BookshopPageProps;
+}) => {
   const route =
     useRoute<RouteProp<NavigationType, typeof Routes.DISCOVER_03_BOOKSHOP>>();
   const {

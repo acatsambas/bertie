@@ -277,6 +277,7 @@
     "moreEmptyNoShopsTitle": "No bookshops yet",
     "moreEmptyNoShopsDescription": "Check back soon — we're adding independent shops as we go.",
     "place": "Place Order",
+    "placeError": "We couldn't place your order. Please try again.",
     "back": "Back",
     "addMoreTitle": "Add more books?",
     "addMoreDescription": "Want to add any more books from your list to this order?",

@@ -13,7 +13,10 @@ type FallbackTarget = NavigatorScreenParams<AppNavigatorParamList>;
 
 const HOME_LIBRARY = {
   screen: Routes.APP_01_HOME,
-  params: { screen: Routes.HOME_01_LIBRARY },
+  params: {
+    screen: Routes.HOME_01_LIBRARY,
+    params: { screen: Routes.LIBRARY_01_LIBRARY },
+  },
 } as const satisfies FallbackTarget;
 
 const SETTINGS_HOME = {

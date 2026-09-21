@@ -1,4 +1,5 @@
 import { useRoute } from '@react-navigation/native';
+import type { NavigationProp, ParamListBase } from '@react-navigation/native';
 import React, { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -33,7 +34,11 @@ const resetErrorKey = (code: string) => {
   }
 };
 
-const ResetScreen = ({ navigation }) => {
+const ResetScreen = ({
+  navigation,
+}: {
+  navigation: NavigationProp<ParamListBase>;
+}) => {
   const [isReseted, setIsReseted] = useState(false);
   const [password, setPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');

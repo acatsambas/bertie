@@ -10,8 +10,8 @@ const Icon = ({ icon, onPress, accessibilityRole, ...props }: IconProps) => {
       {...props}
       onPress={onPress}
       accessibilityRole={accessibilityRole ?? (onPress ? 'button' : 'image')}
-      type={icon in iconType && iconType[icon].type}
-      name={icon in iconType && iconType[icon].name}
+      type={iconType[icon].type}
+      name={iconType[icon].name}
     />
   );
 };

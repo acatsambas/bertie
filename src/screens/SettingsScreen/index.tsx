@@ -24,7 +24,7 @@ export interface SettingsPageProps extends StackNavigationProp<
   typeof Routes.SETTINGS_01_SETTINGS
 > {}
 
-const SettingsScreen = ({ navigation }) => {
+const SettingsScreen = ({ navigation }: { navigation: SettingsPageProps }) => {
   const { navigate } = useNavigation<SettingsPageProps>();
   const { t } = useTranslation();
 

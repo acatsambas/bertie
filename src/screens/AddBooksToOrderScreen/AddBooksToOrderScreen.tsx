@@ -42,7 +42,11 @@ const BookSelectItem = ({
     >
       <View style={styles.bookInfo}>
         <Text
-          text={title?.length > 50 ? `${title.slice(0, 50)}...` : title || ''}
+          text={
+            (title?.length ?? 0) > 50
+              ? `${title?.slice(0, 50)}...`
+              : title || ''
+          }
           kind="paragraph"
         />
         <Text text={author || ''} kind="littleText" />

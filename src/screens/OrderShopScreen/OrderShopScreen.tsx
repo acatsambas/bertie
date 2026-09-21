@@ -24,7 +24,7 @@ export interface OrderShopScreenProps extends StackNavigationProp<
 export const OrderShopScreen = () => {
   const { t } = useTranslation();
   const { theme } = useTheme();
-  const { bookshops, placeOrder, canPlaceOrder } = useOrderShopScreen();
+  const { bookshops, placeOrder, isPlaceDisabled } = useOrderShopScreen();
   const styles = useStyles();
   const navigation = useNavigation<OrderShopScreenProps>();
 
@@ -57,7 +57,7 @@ export const OrderShopScreen = () => {
           kind="primary"
           text={t(translations.order.place)}
           onPress={placeOrder}
-          disabled={canPlaceOrder}
+          disabled={isPlaceDisabled}
         />
       </View>
     </SafeAreaView>

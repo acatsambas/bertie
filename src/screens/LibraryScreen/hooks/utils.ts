@@ -37,10 +37,12 @@ export type LibraryListItem =
  * it was read. The query already returns that order; sorting again here keeps
  * a book that was just ticked in the right place before the refetch lands.
  */
-export const categorizeBooks = (...sources): CategorisedBooks => {
+export const categorizeBooks = (
+  ...sources: Array<{ pages: Array<{ books: LibraryBook[] }> } | undefined>
+): CategorisedBooks => {
   const byId = new Map<string, LibraryBook>();
   sources.forEach(source =>
-    source?.pages?.forEach(page =>
+    source?.pages?.forEach((page: { books: LibraryBook[] }) =>
       page.books.forEach((book: LibraryBook) => {
         if (!byId.has(book.id)) byId.set(book.id, book);
       }),

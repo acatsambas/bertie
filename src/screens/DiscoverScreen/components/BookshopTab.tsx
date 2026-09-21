@@ -3,13 +3,14 @@ import { makeStyles } from '@rneui/themed';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
+import { UserData } from 'api/types';
 import AddressNeededNotice from 'components/AddressNeededNotice';
 import BookshopsList from 'components/BookshopsList';
 import { translations } from 'locales/translations';
 import { Routes } from 'navigation/routes';
 import { DiscoverScreenProps } from 'screens/DiscoverScreen';
 
-export const BookshopTab = ({ user }) => {
+export const BookshopTab = ({ user }: { user?: UserData }) => {
   const { navigate } = useNavigation<DiscoverScreenProps>();
   const { t } = useTranslation();
   const styles = useStyles();

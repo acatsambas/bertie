@@ -212,7 +212,7 @@ export const DesktopLibrary = () => {
                           ? theme.colors.primary
                           : theme.colors.secondary,
                         label: book.volumeInfo?.title ?? '',
-                        onPress: () => handleOnRead(book.id, book.isRead),
+                        onPress: () => handleOnRead(book.id, !!book.isRead),
                       }}
                     />
                   ))}

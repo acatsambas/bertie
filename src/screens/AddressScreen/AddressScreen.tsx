@@ -1,4 +1,5 @@
 import { useRoute } from '@react-navigation/native';
+import type { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { format, validatePostalCode } from 'postal-code-checker';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -40,7 +41,11 @@ const emptyAddress = (): AddressFields => ({
   country: DEFAULT_COUNTRY_CODE,
 });
 
-export const AddressScreen = ({ navigation }) => {
+export const AddressScreen = ({
+  navigation,
+}: {
+  navigation: NavigationProp<ParamListBase>;
+}) => {
   const { t } = useTranslation();
   const route = useRoute();
   const { data: user } = useUserQuery();

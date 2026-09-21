@@ -31,7 +31,10 @@ export const DiscoverScreen = () => {
 
   const [index, setIndex] = useState(0);
 
-  const handleAvatarClick = () => navigate(Routes.APP_02_SETTINGS);
+  const handleAvatarClick = () =>
+    navigate(Routes.APP_02_SETTINGS, {
+      screen: Routes.SETTINGS_01_SETTINGS,
+    });
 
   const renderTab = () => {
     switch (index) {

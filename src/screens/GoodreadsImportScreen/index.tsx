@@ -104,6 +104,7 @@ const GoodreadsImportScreen = () => {
   const handleGoToList = () =>
     navigation.navigate(Routes.APP_01_HOME, {
       screen: Routes.HOME_01_LIBRARY,
+      params: { screen: Routes.LIBRARY_01_LIBRARY },
     });
 
   const renderChoose = (error?: string) => (

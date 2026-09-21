@@ -1,3 +1,4 @@
+import type { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { makeStyles } from '@rneui/themed';
 import { useTranslation } from 'react-i18next';
 import { Platform, View } from 'react-native';
@@ -10,7 +11,11 @@ import Button from 'components/Button';
 import Text from 'components/Text';
 import { translations } from 'locales/translations';
 
-const NoAccountScreen = ({ navigation }) => {
+const NoAccountScreen = ({
+  navigation,
+}: {
+  navigation: NavigationProp<ParamListBase>;
+}) => {
   const styles = useStyles();
   const { t } = useTranslation();
 

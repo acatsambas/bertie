@@ -6,7 +6,12 @@ import { useToggleBookReadMutation, useUserBooksQuery } from 'api/app/book';
 import { Routes } from 'navigation/routes';
 import { NavigationType } from 'navigation/types';
 
-import { LibraryFilter, buildLibraryList, categorizeBooks } from './utils';
+import {
+  LibraryBook,
+  LibraryFilter,
+  buildLibraryList,
+  categorizeBooks,
+} from './utils';
 
 interface LibraryPageProps extends StackNavigationProp<
   NavigationType,
@@ -76,7 +81,7 @@ export const useLibrary = (filter: LibraryFilter) => {
     items,
     currentBooks: current,
     pastBooks: past,
-    handleOnPressBook: book =>
+    handleOnPressBook: (book: LibraryBook) =>
       navigate(Routes.ROOT_06_BOOK, { bookId: book.id }),
     handleAddBook: () => navigate(Routes.LIBRARY_03_SEARCH),
     handleOnRead: async (bookId: string, isRead: boolean) =>

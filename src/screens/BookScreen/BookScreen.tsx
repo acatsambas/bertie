@@ -269,7 +269,7 @@ export const BookScreen = () => {
             )}
             <Text
               kind="paragraph"
-              text={book.volumeInfo?.authors?.join?.(', ')}
+              text={book.volumeInfo?.authors?.join?.(', ') ?? ''}
             />
             {medianRating != null && (
               <Text

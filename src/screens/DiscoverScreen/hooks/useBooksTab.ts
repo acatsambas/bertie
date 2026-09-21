@@ -19,7 +19,8 @@ export const useBooksTab = ({
 
     const bookTitles = data.pages
       .flatMap(page => page.books)
-      .map(book => book.volumeInfo.title);
+      .map(book => book.volumeInfo?.title)
+      .filter((title): title is string => Boolean(title));
 
     async function fetchInitialMessage() {
       hasInitialized.current = true;

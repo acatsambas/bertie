@@ -30,8 +30,8 @@ const Text = ({
     <RNEText
       style={[
         {
-          fontFamily: kind in textKind && textKind[kind].fontFamily,
-          fontSize: kind in textKind && textKind[kind].size,
+          fontFamily: textKind[kind].fontFamily,
+          fontSize: textKind[kind].size,
           color: color
             ? color
             : kind === 'button'

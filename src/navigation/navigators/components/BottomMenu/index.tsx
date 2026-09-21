@@ -12,7 +12,7 @@ import { translations } from 'locales/translations';
 import { Routes } from 'navigation/routes';
 import type { NavigationType } from 'navigation/types';
 
-import { menuItems } from './data';
+import { menuItems, homeTabNavigateParams } from './data';
 
 export interface BottomMenuProps extends StackNavigationProp<NavigationType> {}
 
@@ -49,7 +49,7 @@ const BottomMenu = () => {
               // from the root-level book screen, which sits outside the tabs.
               navigate(Routes.ROOT_02_APP, {
                 screen: Routes.APP_01_HOME,
-                params: { screen: menu.screen },
+                params: homeTabNavigateParams(menu.screen),
               })
             }
           />

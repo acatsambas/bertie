@@ -20,7 +20,9 @@ export const ListHeader = () => {
   const { navigate } = useNavigation<LibraryScreenProps>();
 
   const handleAvatarClick = () => {
-    navigate(Routes.APP_02_SETTINGS);
+    navigate(Routes.APP_02_SETTINGS, {
+      screen: Routes.SETTINGS_01_SETTINGS,
+    });
   };
 
   return (

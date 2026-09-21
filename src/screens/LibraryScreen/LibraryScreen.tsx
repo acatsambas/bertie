@@ -82,7 +82,7 @@ const MobileLibraryScreen = () => {
         kind="library"
         isChecked={book.isRead}
         onPress={() => handleOnPressBook(book)}
-        onChange={() => handleOnRead(book.id, book.isRead)}
+        onChange={() => handleOnRead(book.id, !!book.isRead)}
       />
     );
   };
