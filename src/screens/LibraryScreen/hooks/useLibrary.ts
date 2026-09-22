@@ -6,12 +6,7 @@ import { useToggleBookReadMutation, useUserBooksQuery } from 'api/app/book';
 import { Routes } from 'navigation/routes';
 import { NavigationType } from 'navigation/types';
 
-import {
-  LibraryBook,
-  LibraryFilter,
-  buildLibraryList,
-  categorizeBooks,
-} from './utils';
+import { LibraryBook, LibraryFilter, categorizeBooks } from './utils';
 
 interface LibraryPageProps extends StackNavigationProp<
   NavigationType,
@@ -21,7 +16,7 @@ interface LibraryPageProps extends StackNavigationProp<
 /**
  * Someone's list for My list. Current and Past are fetched as separate
  * shelves so a long Past can't crowd Current out of the first page; `filter`
- * chooses which of those shelves the screen shows (or both).
+ * chooses which of those shelves the screen shows.
  */
 export const useLibrary = (filter: LibraryFilter) => {
   const currentQuery = useUserBooksQuery({ withRefs: true, shelf: 'current' });
@@ -36,49 +31,19 @@ export const useLibrary = (filter: LibraryFilter) => {
     [currentQuery.data, pastQuery.data],
   );
 
-  const items = useMemo(
-    () => buildLibraryList(filter, current, past),
-    [filter, current, past],
-  );
-
-  const hasNextPage =
-    filter === 'current'
-      ? !!currentQuery.hasNextPage
-      : filter === 'past'
-        ? !!pastQuery.hasNextPage
-        : !!currentQuery.hasNextPage || !!pastQuery.hasNextPage;
-
-  const loading =
-    filter === 'current'
-      ? currentQuery.isFetching
-      : filter === 'past'
-        ? pastQuery.isFetching
-        : currentQuery.isFetching || pastQuery.isFetching;
+  const books = filter === 'current' ? current : past;
+  const shelfQuery = filter === 'current' ? currentQuery : pastQuery;
+  const hasNextPage = !!shelfQuery.hasNextPage;
+  const loading = shelfQuery.isFetching;
 
   const fetchMoreBooks = useCallback(() => {
-    if (filter === 'current') {
-      if (currentQuery.hasNextPage && !currentQuery.isFetching) {
-        void currentQuery.fetchNextPage();
-      }
-      return;
+    if (shelfQuery.hasNextPage && !shelfQuery.isFetching) {
+      void shelfQuery.fetchNextPage();
     }
-    if (filter === 'past') {
-      if (pastQuery.hasNextPage && !pastQuery.isFetching) {
-        void pastQuery.fetchNextPage();
-      }
-      return;
-    }
-    // Both: finish paging Current before Past so the list grows in the
-    // same order it is shown (Current first, then Past).
-    if (currentQuery.hasNextPage && !currentQuery.isFetching) {
-      void currentQuery.fetchNextPage();
-    } else if (pastQuery.hasNextPage && !pastQuery.isFetching) {
-      void pastQuery.fetchNextPage();
-    }
-  }, [filter, currentQuery, pastQuery]);
+  }, [shelfQuery]);
 
   return {
-    items,
+    books,
     currentBooks: current,
     pastBooks: past,
     handleOnPressBook: (book: LibraryBook) =>

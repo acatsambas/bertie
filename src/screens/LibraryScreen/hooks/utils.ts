@@ -18,12 +18,8 @@ export type CategorisedBooks = {
   past: LibraryBook[];
 };
 
-/** Which shelves My list is showing. */
-export type LibraryFilter = 'current' | 'past' | 'both';
-
-export type LibraryListItem =
-  | { type: 'section'; id: string; shelf: 'current' | 'past' }
-  | { type: 'book'; id: string; book: LibraryBook };
+/** Which shelf My list is showing. */
+export type LibraryFilter = 'current' | 'past';
 
 /**
  * Split the library into what someone is reading now and what they have
@@ -54,33 +50,4 @@ export const categorizeBooks = (
     current: allBooks.filter(book => !book.isRead).sort(byListDateDesc),
     past: allBooks.filter(book => book.isRead).sort(byListDateDesc),
   };
-};
-
-/**
- * Flatten Current / Past into one list for the screen. When the filter is
- * Both, Current comes first, then Past, with a section label between groups
- * (and before Past even when Current is empty, so the Past label still shows
- * once there are finished books).
- */
-export const buildLibraryList = (
-  filter: LibraryFilter,
-  current: LibraryBook[],
-  past: LibraryBook[],
-): LibraryListItem[] => {
-  const toBookItems = (books: LibraryBook[]): LibraryListItem[] =>
-    books.map(book => ({ type: 'book', id: book.id, book }));
-
-  if (filter === 'current') return toBookItems(current);
-  if (filter === 'past') return toBookItems(past);
-
-  const items: LibraryListItem[] = [];
-  if (current.length > 0) {
-    items.push({ type: 'section', id: 'section-current', shelf: 'current' });
-    items.push(...toBookItems(current));
-  }
-  if (past.length > 0) {
-    items.push({ type: 'section', id: 'section-past', shelf: 'past' });
-    items.push(...toBookItems(past));
-  }
-  return items;
 };

@@ -15,13 +15,12 @@ import { translations } from 'locales/translations';
 
 import { LibraryFilter } from '../hooks/utils';
 
-const OPTIONS: LibraryFilter[] = ['both', 'current', 'past'];
+const OPTIONS: LibraryFilter[] = ['current', 'past'];
 
-const labelKey = (filter: LibraryFilter) => {
-  if (filter === 'current') return translations.library.current;
-  if (filter === 'past') return translations.library.past;
-  return translations.library.both;
-};
+const labelKey = (filter: LibraryFilter) =>
+  filter === 'current'
+    ? translations.library.current
+    : translations.library.past;
 
 interface LibraryShelfFilterProps {
   value: LibraryFilter;
@@ -29,7 +28,7 @@ interface LibraryShelfFilterProps {
 }
 
 /**
- * Button + menu that picks which shelves My list shows: Current, Past, or Both.
+ * Button + menu that picks which shelf My list shows: Current or Past.
  */
 export const LibraryShelfFilter = ({
   value,

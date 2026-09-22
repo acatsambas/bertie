@@ -20,66 +20,32 @@ import Text from 'components/Text';
 import { translations } from 'locales/translations';
 
 import { useLibrary } from '../hooks';
-import { LibraryBook, LibraryFilter, LibraryListItem } from '../hooks/utils';
+import { LibraryBook, LibraryFilter } from '../hooks/utils';
 import { AddBookButton } from './AddBookButton';
 import { LibraryShelfFilter } from './LibraryShelfFilter';
 
 const RowGap = () => <View style={{ height: TILE_ROW_GAP }} />;
 
-type GridRow =
-  | { type: 'section'; id: string; shelf: 'current' | 'past' }
-  | { type: 'books'; id: string; books: LibraryBook[] };
+type GridRow = { id: string; books: LibraryBook[] };
 
-const emptyCopy = (filter: LibraryFilter) => {
-  if (filter === 'current') {
-    return {
-      title: translations.library.emptyCurrentTitle,
-      description: translations.library.emptyCurrentDescription,
-    };
-  }
-  if (filter === 'past') {
-    return {
-      title: translations.library.emptyPastTitle,
-      description: translations.library.emptyPastDescription,
-    };
-  }
-  return {
-    title: translations.library.emptyBothTitle,
-    description: translations.library.emptyBothDescription,
-  };
-};
+const emptyCopy = (filter: LibraryFilter) =>
+  filter === 'current'
+    ? {
+        title: translations.library.emptyCurrentTitle,
+        description: translations.library.emptyCurrentDescription,
+      }
+    : {
+        title: translations.library.emptyPastTitle,
+        description: translations.library.emptyPastDescription,
+      };
 
-const sectionLabel = (shelf: 'current' | 'past') =>
-  shelf === 'current'
-    ? translations.library.current
-    : translations.library.past;
-
-/** Pack list items into full-width section labels and tile rows. */
-const toGridRows = (items: LibraryListItem[], columns: number): GridRow[] => {
+/** Pack books into tile rows. */
+const toGridRows = (books: LibraryBook[], columns: number): GridRow[] => {
   const rows: GridRow[] = [];
-  let pending: LibraryBook[] = [];
-  let rowIndex = 0;
-
-  const flush = () => {
-    while (pending.length > 0) {
-      const chunk = pending.splice(0, columns);
-      rows.push({
-        type: 'books',
-        id: `row-${rowIndex++}-${chunk[0]?.id ?? 'empty'}`,
-        books: chunk,
-      });
-    }
-  };
-
-  for (const item of items) {
-    if (item.type === 'section') {
-      flush();
-      rows.push({ type: 'section', id: item.id, shelf: item.shelf });
-      continue;
-    }
-    pending.push(item.book);
+  for (let i = 0; i < books.length; i += columns) {
+    const chunk = books.slice(i, i + columns);
+    rows.push({ id: `row-${i / columns}-${chunk[0].id}`, books: chunk });
   }
-  flush();
   return rows;
 };
 
@@ -92,10 +58,10 @@ export const DesktopLibrary = () => {
   const styles = useStyles();
   const { theme } = useTheme();
   const { t } = useTranslation();
-  const [filter, setFilter] = useState<LibraryFilter>('both');
+  const [filter, setFilter] = useState<LibraryFilter>('current');
   const [gridWidth, setGridWidth] = useState(0);
   const {
-    items,
+    books,
     currentBooks,
     pastBooks,
     handleOnPressBook,
@@ -110,13 +76,13 @@ export const DesktopLibrary = () => {
     Math.max(0, gridWidth - TILE_SHADOW_PAD * 2),
   );
   const rows = useMemo(
-    () => (columns > 0 ? toGridRows(items, columns) : []),
-    [items, columns],
+    () => (columns > 0 ? toGridRows(books, columns) : []),
+    [books, columns],
   );
 
-  // Only once the visible shelf/shelves have fully loaded — mid-paging it
-  // would undercount.
-  const showCount = !hasNextPage && items.some(item => item.type === 'book');
+  // Only once the visible shelf has fully loaded — mid-paging it would
+  // undercount.
+  const showCount = !hasNextPage && books.length > 0;
   const countText = (() => {
     if (filter === 'current') {
       const count = currentBooks.length;
@@ -127,19 +93,13 @@ export const DesktopLibrary = () => {
         { count },
       );
     }
-    if (filter === 'past') {
-      const count = pastBooks.length;
-      return t(
-        count === 1
-          ? translations.library.pastCountOne
-          : translations.library.pastCountOther,
-        { count },
-      );
-    }
-    return t(translations.library.bothCount, {
-      current: currentBooks.length,
-      past: pastBooks.length,
-    });
+    const count = pastBooks.length;
+    return t(
+      count === 1
+        ? translations.library.pastCountOne
+        : translations.library.pastCountOther,
+      { count },
+    );
   })();
 
   const handleGridLayout = (event: LayoutChangeEvent) =>
@@ -181,17 +141,6 @@ export const DesktopLibrary = () => {
             removeClippedSubviews={false}
             style={styles.list}
             renderItem={({ item: row }) => {
-              if (row.type === 'section') {
-                return (
-                  <Text
-                    kind="description"
-                    text={t(sectionLabel(row.shelf))}
-                    color={theme.colors.grey2}
-                    style={styles.section}
-                  />
-                );
-              }
-
               return (
                 <View style={styles.row}>
                   {row.books.map(book => (
@@ -270,10 +219,6 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row',
     gap: TILE_COLUMN_GAP,
     overflow: 'visible',
-  },
-  section: {
-    fontFamily: 'Commissioner_600SemiBold',
-    paddingBottom: 4,
   },
   loading: { paddingTop: 20 },
 }));
