@@ -1,30 +1,27 @@
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import { useQueryClient } from '@tanstack/react-query';
-import {
-  addDoc,
-  collection,
-  doc,
-  serverTimestamp,
-} from 'firebase/firestore';
+import { useNavigation } from '@react-navigation/native';
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
+import { usePlaceOrderMutation } from 'api/app/orders';
 import { useFavouriteShopsQuery, useShopsQuery } from 'api/app/shops';
+import { Shop } from 'api/app/types';
 import { useUserQuery } from 'api/app/user';
-import { db } from 'api/firebase';
-
+import { useDraftOrder } from 'contexts/DraftOrderContext';
+import { useToast } from 'contexts/ToastContext';
+import { translations } from 'locales/translations';
 import { Routes } from 'navigation/routes';
-import { NavigationType } from 'navigation/types';
 
 import { OrderShopScreenProps } from '../OrderShopScreen';
-import { getOrderMail, isInvalidEmail } from './utils';
+import { needsRealContactEmail } from './utils';
 
 export const useOrderShopScreen = () => {
+  const { t } = useTranslation();
+  const { showToast } = useToast();
   const { navigate } = useNavigation<OrderShopScreenProps>();
-  const queryClient = useQueryClient();
-  const route =
-    useRoute<RouteProp<NavigationType, typeof Routes.ORDER_02_ORDER_SHOP>>();
+  const { bookIds } = useDraftOrder();
+  const { mutateAsync: placeOrderMutation, isPending: isPlacing } =
+    usePlaceOrderMutation();
 
-  const books = route.params.books;
   const { data: user } = useUserQuery();
   const { data: shops = [] } = useShopsQuery();
   const { data: favouriteShops = [] } = useFavouriteShopsQuery();
@@ -45,50 +42,35 @@ export const useOrderShopScreen = () => {
   );
 
   const placeOrder = async () => {
-    if (!user) return;
+    if (!user || bookIds.length === 0 || isPlacing || !favouriteShop) return;
 
-    if (isInvalidEmail(user?.contactEmail)) {
+    if (needsRealContactEmail(user.contactEmail)) {
       navigate(Routes.ORDER_05_EMAIL_SCREEN);
       return;
     }
 
-    if (!favouriteShop) return;
-
-    await addDoc(collection(db, 'orders'), {
-      userRef: doc(db, 'users', user.documentId),
-      shopRef: doc(db, 'shops', favouriteShop.id),
-      booksRef: books.map(({ id }) => doc(db, 'books', id)),
-      status: 'ordered',
-      createdAt: serverTimestamp(),
-    });
-
-    // The Past orders tab is mounted behind this flow, so it needs telling.
-    void queryClient.invalidateQueries({ queryKey: ['orderHistory'] });
-
-    const selectedShop = shops.find(shop => shop.id === favouriteShop.id);
-
-    if (!selectedShop) {
-      return;
+    try {
+      await placeOrderMutation({
+        user,
+        shop: favouriteShop,
+        bookIds,
+      });
+      navigate(Routes.ORDER_06_ORDER_PLACED, {
+        bookshopName: favouriteShop.name,
+      });
+    } catch {
+      showToast(t(translations.order.placeError));
     }
-
-    await addDoc(
-      collection(db, 'mail'),
-      getOrderMail({ user, selectedShop, books }),
-    );
-
-    navigate(Routes.ORDER_06_ORDER_PLACED, {
-      bookshopName: selectedShop.name,
-    });
   };
 
   return {
     bookshops: {
       favourites: favouriteShops
         .map(({ id }) => shops.find(shop => shop.id === id))
-        .filter(Boolean),
+        .filter((shop): shop is Shop => shop != null),
       rest: moreBookshops,
     },
-    canPlaceOrder: !favouriteShop || !user?.address,
+    isPlaceDisabled: !favouriteShop || !user?.address || isPlacing,
     placeOrder,
   };
 };

@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { useUserBooksQuery } from 'api/app/book';
-
 import { executeGPT } from 'gpt/discover-books';
 
 export const useBooksTab = ({
@@ -20,7 +19,8 @@ export const useBooksTab = ({
 
     const bookTitles = data.pages
       .flatMap(page => page.books)
-      .map(book => book.volumeInfo.title);
+      .map(book => book.volumeInfo?.title)
+      .filter((title): title is string => Boolean(title));
 
     async function fetchInitialMessage() {
       hasInitialized.current = true;

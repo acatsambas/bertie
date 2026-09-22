@@ -7,7 +7,6 @@ import { isFirebaseError } from 'api/types';
 
 const AppleSigninButton = () => {
   const styles = useStyles();
-
   const { appleLogin } = useContext(AuthContext);
 
   const handleLogin = async () => {
@@ -25,7 +24,7 @@ const AppleSigninButton = () => {
       buttonType={AppleAuthentication.AppleAuthenticationButtonType.CONTINUE}
       buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
       style={styles.appleButton}
-      cornerRadius={5}
+      cornerRadius={14}
       onPress={handleLogin}
     />
   );

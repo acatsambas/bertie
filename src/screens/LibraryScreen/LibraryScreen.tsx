@@ -1,5 +1,5 @@
 import { LegendList, LegendListRenderItemProps } from '@legendapp/list';
-import { Tab, makeStyles } from '@rneui/themed';
+import { makeStyles, useTheme } from '@rneui/themed';
 import { useIsDesktop } from 'hooks/useIsDesktop';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -7,60 +7,96 @@ import { ActivityIndicator, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Book from 'components/Book';
+import EmptyState from 'components/EmptyState';
 import Text from 'components/Text';
-
 import { translations } from 'locales/translations';
 
-import { AddBookButton, DesktopLibrary, ListHeader } from './components';
+import {
+  AddBookButton,
+  DesktopLibrary,
+  LibraryShelfFilter,
+  ListHeader,
+} from './components';
 import { useLibrary } from './hooks';
-import { LibraryBook } from './hooks/utils';
-
-const CURRENT_TAB = 0;
+import { LibraryFilter, LibraryListItem } from './hooks/utils';
 
 /** Desktop browsers get the cover grid; everywhere else keeps this list. */
 export const LibraryScreen = () =>
   useIsDesktop() ? <DesktopLibrary /> : <MobileLibraryScreen />;
 
+const emptyCopy = (filter: LibraryFilter) => {
+  if (filter === 'current') {
+    return {
+      title: translations.library.emptyCurrentTitle,
+      description: translations.library.emptyCurrentDescription,
+    };
+  }
+  if (filter === 'past') {
+    return {
+      title: translations.library.emptyPastTitle,
+      description: translations.library.emptyPastDescription,
+    };
+  }
+  return {
+    title: translations.library.emptyBothTitle,
+    description: translations.library.emptyBothDescription,
+  };
+};
+
+const sectionLabel = (shelf: 'current' | 'past') =>
+  shelf === 'current'
+    ? translations.library.current
+    : translations.library.past;
+
 const MobileLibraryScreen = () => {
   const styles = useStyles();
+  const { theme } = useTheme();
   const { t } = useTranslation();
-  const [tab, setTab] = useState(CURRENT_TAB);
+  const [filter, setFilter] = useState<LibraryFilter>('both');
   const {
-    currentBooks,
-    pastBooks,
+    items,
     handleOnPressBook,
     handleOnRead,
     handleAddBook,
     fetchMoreBooks,
     loading,
-  } = useLibrary(tab === CURRENT_TAB ? 'current' : 'past');
+  } = useLibrary(filter);
 
-  const isCurrent = tab === CURRENT_TAB;
-  const books = isCurrent ? currentBooks : pastBooks;
+  const renderItem = ({ item }: LegendListRenderItemProps<LibraryListItem>) => {
+    if (item.type === 'section') {
+      return (
+        <Text
+          kind="description"
+          text={t(sectionLabel(item.shelf))}
+          color={theme.colors.grey2}
+          style={styles.section}
+        />
+      );
+    }
 
-  const renderItem = ({ item }: LegendListRenderItemProps<LibraryBook>) => (
-    <Book
-      title={item.volumeInfo?.title}
-      author={item.volumeInfo?.authors?.join?.(', ')}
-      kind="library"
-      isChecked={item.isRead}
-      onPress={() => handleOnPressBook(item)}
-      onChange={() => handleOnRead(item.id, item.isRead)}
-    />
-  );
+    const book = item.book;
+    return (
+      <Book
+        title={book.volumeInfo?.title}
+        author={book.volumeInfo?.authors?.join?.(', ')}
+        kind="library"
+        isChecked={book.isRead}
+        onPress={() => handleOnPressBook(book)}
+        onChange={() => handleOnRead(book.id, !!book.isRead)}
+      />
+    );
+  };
 
   const renderEmpty = () => {
     if (loading) return null;
 
+    const copy = emptyCopy(filter);
     return (
-      <Text
-        kind="paragraph"
-        text={t(
-          isCurrent
-            ? translations.library.emptyCurrent
-            : translations.library.emptyPast,
-        )}
-        style={styles.empty}
+      <EmptyState
+        variant="list"
+        title={t(copy.title)}
+        description={t(copy.description)}
+        icon="myList"
       />
     );
   };
@@ -69,29 +105,19 @@ const MobileLibraryScreen = () => {
     <SafeAreaView edges={['left', 'right', 'top']} style={styles.safeAreaView}>
       <View style={styles.container}>
         <ListHeader />
-        <Tab
-          value={tab}
-          onChange={setTab}
-          titleStyle={{
-            fontFamily: 'GoudyBookletter1911_400Regular',
-            fontSize: 24,
-          }}
-        >
-          <Tab.Item>{t(translations.library.current)}</Tab.Item>
-          <Tab.Item>{t(translations.library.past)}</Tab.Item>
-        </Tab>
+        <View style={styles.toolbar}>
+          <AddBookButton onPress={handleAddBook} style={styles.search} />
+          <LibraryShelfFilter value={filter} onChange={setFilter} />
+        </View>
         <LegendList
           style={styles.list}
           contentContainerStyle={styles.listContainer}
           showsVerticalScrollIndicator={false}
-          data={books}
+          data={items}
           renderItem={renderItem}
-          keyExtractor={(item: LibraryBook) => item.id}
+          keyExtractor={(item: LibraryListItem) => item.id}
           estimatedItemSize={70}
           initialContainerPoolRatio={2}
-          ListHeaderComponent={
-            isCurrent ? <AddBookButton onPress={handleAddBook} /> : undefined
-          }
           ListEmptyComponent={renderEmpty}
           onEndReached={fetchMoreBooks}
           onEndReachedThreshold={0.5}
@@ -110,10 +136,21 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.colors.white,
   },
   container: { flex: 1 },
+  toolbar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingHorizontal: 20,
+    paddingBottom: 8,
+  },
+  search: {
+    flex: 1,
+  },
   list: { flex: 1 },
-  listContainer: { paddingTop: 20, paddingHorizontal: 20, gap: 10 },
-  empty: {
-    paddingTop: 20,
-    textAlign: 'center',
+  listContainer: { paddingTop: 12, paddingHorizontal: 20, gap: 10 },
+  section: {
+    paddingTop: 8,
+    paddingBottom: 2,
+    fontFamily: 'Commissioner_600SemiBold',
   },
 }));

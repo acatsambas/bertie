@@ -39,7 +39,7 @@ export const AUTH_ROUTES = {
 } as const;
 
 export const SETTINGS_ROUTES = {
-  SETTINGS_01_SETTINGS: 'settings',
+  SETTINGS_01_SETTINGS: 'settings-home',
   SETTINGS_02_CHANGE_ADDRESS: 'change-address',
   SETTINGS_03_RESET_PASSWORD: 'reset-password',
   SETTINGS_04_DELETE_ACCOUNT: 'delete-account',

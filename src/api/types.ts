@@ -3,7 +3,7 @@ import { FirebaseError as FirebaseJSError } from 'firebase/app';
 export type FirebaseError = FirebaseJSError;
 
 export function isFirebaseError(error: unknown): error is FirebaseError {
-  return error && typeof error === 'object' && 'code' in error;
+  return Boolean(error && typeof error === 'object' && 'code' in error);
 }
 
 export interface UserData {

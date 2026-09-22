@@ -1,7 +1,6 @@
 import { NavigatorScreenParams } from '@react-navigation/native';
 
-import { Shop, UserBook } from 'api/app/types';
-import { BookResult } from 'api/google-books/search';
+import { Shop } from 'api/app/types';
 
 import { Routes } from './routes';
 
@@ -14,7 +13,7 @@ export type AuthNavigatorParamList = {
   [Routes.AUTH_01_WELCOME]: undefined;
   [Routes.AUTH_02_LOGIN]: undefined;
   [Routes.AUTH_03_REGISTER]: undefined;
-  [Routes.AUTH_04_SET_PROFILE]: { email: string; password: string };
+  [Routes.AUTH_04_SET_PROFILE]: undefined;
   [Routes.AUTH_05_FORGOT]: undefined;
 };
 
@@ -31,12 +30,10 @@ export type LibraryNavigatorParamList = {
 
 export type OrderNavigatorParamList = {
   [Routes.ORDER_00_ADD_BOOKS]: {
-    initialBook: BookResult;
+    bookId: string;
   };
   [Routes.ORDER_01_ORDER]: undefined;
-  [Routes.ORDER_02_ORDER_SHOP]: {
-    books: (UserBook & BookResult)[];
-  };
+  [Routes.ORDER_02_ORDER_SHOP]: undefined;
   [Routes.ORDER_03_ADDRESS_SCREEN]: undefined;
   [Routes.ORDER_04_BOOKSHOP]: {
     shop: Shop;

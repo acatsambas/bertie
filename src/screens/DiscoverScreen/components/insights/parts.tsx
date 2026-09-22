@@ -10,8 +10,8 @@ import {
   ViewStyle,
 } from 'react-native';
 
+import EmptyState from 'components/EmptyState';
 import Text from 'components/Text';
-
 import { translations } from 'locales/translations';
 
 import {
@@ -212,14 +212,13 @@ export const RankedSection = ({
   const renderBody = () => {
     if (!groups.length || !ranked.length) {
       return (
-        <Text
-          kind="description"
-          text={t(
+        <EmptyState
+          variant="section"
+          title={t(
             groups.length
               ? translations.discover.insights.noRatings
               : translations.discover.insights.noData,
           )}
-          color={theme.colors.grey2}
         />
       );
     }
@@ -330,10 +329,9 @@ export const FictionSection = ({
         text={t(translations.discover.insights.fictionSplit)}
       />
       {total === 0 ? (
-        <Text
-          kind="description"
-          text={t(translations.discover.insights.noData)}
-          color={theme.colors.grey2}
+        <EmptyState
+          variant="section"
+          title={t(translations.discover.insights.noData)}
         />
       ) : (
         <>

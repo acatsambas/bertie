@@ -1,34 +1,90 @@
 import { makeStyles, useTheme } from '@rneui/themed';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
   FlatList,
   LayoutChangeEvent,
-  Pressable,
   View,
 } from 'react-native';
 
 import BookTile, {
   TILE_COLUMN_GAP,
   TILE_ROW_GAP,
+  TILE_SHADOW_PAD,
   tileGrid,
 } from 'components/BookTile';
-import Icon from 'components/Icon';
+import { DESKTOP_PAGE_PADDING_TOP } from 'components/DesktopColumn';
+import EmptyState from 'components/EmptyState';
 import Text from 'components/Text';
-
 import { translations } from 'locales/translations';
 
 import { useLibrary } from '../hooks';
-import { LibraryBook } from '../hooks/utils';
-
-const CURRENT_TAB = 0;
-const PAST_TAB = 1;
+import { LibraryBook, LibraryFilter, LibraryListItem } from '../hooks/utils';
+import { AddBookButton } from './AddBookButton';
+import { LibraryShelfFilter } from './LibraryShelfFilter';
 
 const RowGap = () => <View style={{ height: TILE_ROW_GAP }} />;
 
+type GridRow =
+  | { type: 'section'; id: string; shelf: 'current' | 'past' }
+  | { type: 'books'; id: string; books: LibraryBook[] };
+
+const emptyCopy = (filter: LibraryFilter) => {
+  if (filter === 'current') {
+    return {
+      title: translations.library.emptyCurrentTitle,
+      description: translations.library.emptyCurrentDescription,
+    };
+  }
+  if (filter === 'past') {
+    return {
+      title: translations.library.emptyPastTitle,
+      description: translations.library.emptyPastDescription,
+    };
+  }
+  return {
+    title: translations.library.emptyBothTitle,
+    description: translations.library.emptyBothDescription,
+  };
+};
+
+const sectionLabel = (shelf: 'current' | 'past') =>
+  shelf === 'current'
+    ? translations.library.current
+    : translations.library.past;
+
+/** Pack list items into full-width section labels and tile rows. */
+const toGridRows = (items: LibraryListItem[], columns: number): GridRow[] => {
+  const rows: GridRow[] = [];
+  let pending: LibraryBook[] = [];
+  let rowIndex = 0;
+
+  const flush = () => {
+    while (pending.length > 0) {
+      const chunk = pending.splice(0, columns);
+      rows.push({
+        type: 'books',
+        id: `row-${rowIndex++}-${chunk[0]?.id ?? 'empty'}`,
+        books: chunk,
+      });
+    }
+  };
+
+  for (const item of items) {
+    if (item.type === 'section') {
+      flush();
+      rows.push({ type: 'section', id: item.id, shelf: item.shelf });
+      continue;
+    }
+    pending.push(item.book);
+  }
+  flush();
+  return rows;
+};
+
 /**
- * My list on desktop: the same library, tabs and actions as the mobile
+ * My list on desktop: the same library, filter and actions as the mobile
  * screen, laid out as a grid of covers. The avatar that heads the mobile
  * screen lives in the side rail instead.
  */
@@ -36,9 +92,10 @@ export const DesktopLibrary = () => {
   const styles = useStyles();
   const { theme } = useTheme();
   const { t } = useTranslation();
-  const [tab, setTab] = useState(CURRENT_TAB);
+  const [filter, setFilter] = useState<LibraryFilter>('both');
   const [gridWidth, setGridWidth] = useState(0);
   const {
+    items,
     currentBooks,
     pastBooks,
     handleOnPressBook,
@@ -47,29 +104,43 @@ export const DesktopLibrary = () => {
     fetchMoreBooks,
     hasNextPage,
     loading,
-  } = useLibrary(tab === CURRENT_TAB ? 'current' : 'past');
+  } = useLibrary(filter);
 
-  const isCurrent = tab === CURRENT_TAB;
-  const books = isCurrent ? currentBooks : pastBooks;
+  const { columns, tileWidth } = tileGrid(
+    Math.max(0, gridWidth - TILE_SHADOW_PAD * 2),
+  );
+  const rows = useMemo(
+    () => (columns > 0 ? toGridRows(items, columns) : []),
+    [items, columns],
+  );
 
-  const { columns, tileWidth } = tileGrid(gridWidth);
-
-  // Only once this tab has fully loaded — mid-paging it would undercount.
-  const count = books.length;
-  const showCount = !hasNextPage && count > 0;
-  const countText = isCurrent
-    ? t(
+  // Only once the visible shelf/shelves have fully loaded — mid-paging it
+  // would undercount.
+  const showCount = !hasNextPage && items.some(item => item.type === 'book');
+  const countText = (() => {
+    if (filter === 'current') {
+      const count = currentBooks.length;
+      return t(
         count === 1
           ? translations.library.currentCountOne
           : translations.library.currentCountOther,
         { count },
-      )
-    : t(
+      );
+    }
+    if (filter === 'past') {
+      const count = pastBooks.length;
+      return t(
         count === 1
           ? translations.library.pastCountOne
           : translations.library.pastCountOther,
         { count },
       );
+    }
+    return t(translations.library.bothCount, {
+      current: currentBooks.length,
+      past: pastBooks.length,
+    });
+  })();
 
   const handleGridLayout = (event: LayoutChangeEvent) =>
     setGridWidth(event.nativeEvent.layout.width);
@@ -77,15 +148,13 @@ export const DesktopLibrary = () => {
   const renderEmpty = () => {
     if (loading) return null;
 
+    const copy = emptyCopy(filter);
     return (
-      <Text
-        kind="paragraph"
-        text={t(
-          isCurrent
-            ? translations.library.emptyCurrent
-            : translations.library.emptyPast,
-        )}
-        style={styles.empty}
+      <EmptyState
+        variant="list"
+        title={t(copy.title)}
+        description={t(copy.description)}
+        icon="myList"
       />
     );
   };
@@ -94,94 +163,62 @@ export const DesktopLibrary = () => {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text kind="bigHeader" text={t(translations.library.title)} />
-        <View style={styles.segmented} accessibilityRole="tablist">
-          {[CURRENT_TAB, PAST_TAB].map(value => {
-            const selected = value === tab;
-
-            return (
-              <Pressable
-                key={value}
-                accessibilityRole="tab"
-                accessibilityState={{ selected }}
-                onPress={() => setTab(value)}
-                style={[styles.segment, selected && styles.segmentSelected]}
-              >
-                <Text
-                  kind="description"
-                  text={t(
-                    value === CURRENT_TAB
-                      ? translations.library.current
-                      : translations.library.past,
-                  )}
-                  color={selected ? theme.colors.secondary : theme.colors.grey2}
-                />
-              </Pressable>
-            );
-          })}
+        <View style={styles.headerActions}>
+          <AddBookButton onPress={handleAddBook} />
+          <LibraryShelfFilter value={filter} onChange={setFilter} />
         </View>
       </View>
       <View style={styles.toolbar}>
-        <View>
-          {showCount && (
-            <Text
-              kind="description"
-              text={countText}
-              color={theme.colors.grey2}
-            />
-          )}
-        </View>
-        {/* Like the mobile "Search for a book" row, this only heads the
-            Current tab: a book you add starts out unread. */}
-        {isCurrent && (
-          <Pressable
-            accessibilityRole="button"
-            onPress={handleAddBook}
-            style={state => [
-              styles.addButton,
-              (state as { hovered?: boolean }).hovered &&
-                styles.addButtonHovered,
-            ]}
-          >
-            <Icon icon="plus" color={theme.colors.white} size={18} />
-            <Text
-              kind="description"
-              text={t(translations.library.addBook)}
-              color={theme.colors.white}
-              style={styles.addButtonLabel}
-            />
-          </Pressable>
+        {showCount && (
+          <Text kind="littleText" text={countText} color={theme.colors.grey2} />
         )}
       </View>
       <View style={styles.grid} onLayout={handleGridLayout}>
         {gridWidth > 0 && (
           <FlatList
-            // FlatList can't change numColumns in place, so remount when the
-            // window resizes across a column boundary.
-            key={columns}
-            data={books}
-            numColumns={columns}
-            keyExtractor={(item: LibraryBook) => item.id}
-            renderItem={({ item }) => (
-              <BookTile
-                bookId={item.id}
-                title={item.volumeInfo?.title}
-                author={item.volumeInfo?.authors?.join?.(', ')}
-                width={tileWidth}
-                onPress={() => handleOnPressBook(item)}
-                toggle={{
-                  checked: !!item.isRead,
-                  icon: item.isRead
-                    ? 'checkbox-marked'
-                    : 'checkbox-blank-outline',
-                  color: item.isRead
-                    ? theme.colors.primary
-                    : theme.colors.secondary,
-                  label: item.volumeInfo?.title ?? '',
-                  onPress: () => handleOnRead(item.id, item.isRead),
-                }}
-              />
-            )}
-            columnWrapperStyle={styles.row}
+            data={rows}
+            keyExtractor={(row: GridRow) => row.id}
+            removeClippedSubviews={false}
+            style={styles.list}
+            renderItem={({ item: row }) => {
+              if (row.type === 'section') {
+                return (
+                  <Text
+                    kind="description"
+                    text={t(sectionLabel(row.shelf))}
+                    color={theme.colors.grey2}
+                    style={styles.section}
+                  />
+                );
+              }
+
+              return (
+                <View style={styles.row}>
+                  {row.books.map(book => (
+                    <BookTile
+                      key={book.id}
+                      bookId={book.id}
+                      title={book.volumeInfo?.title}
+                      author={book.volumeInfo?.authors?.join?.(', ')}
+                      width={tileWidth}
+                      muted={!!book.isRead}
+                      onPress={() => handleOnPressBook(book)}
+                      toggle={{
+                        checked: !!book.isRead,
+                        icon: book.isRead
+                          ? 'checkbox-marked'
+                          : 'checkbox-blank-outline',
+                        color: book.isRead
+                          ? theme.colors.primary
+                          : theme.colors.secondary,
+                        label: book.volumeInfo?.title ?? '',
+                        onPress: () => handleOnRead(book.id, !!book.isRead),
+                      }}
+                    />
+                  ))}
+                </View>
+              );
+            }}
             ItemSeparatorComponent={RowGap}
             contentContainerStyle={styles.gridContent}
             showsVerticalScrollIndicator={false}
@@ -201,8 +238,9 @@ export const DesktopLibrary = () => {
 const useStyles = makeStyles(theme => ({
   container: {
     flex: 1,
-    paddingTop: 36,
+    paddingTop: DESKTOP_PAGE_PADDING_TOP,
     backgroundColor: theme.colors.white,
+    overflow: 'visible',
   },
   header: {
     flexDirection: 'row',
@@ -210,48 +248,34 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'space-between',
     gap: 24,
   },
-  segmented: {
+  headerActions: {
     flexDirection: 'row',
-    padding: 3,
-    borderRadius: 8,
-    backgroundColor: theme.colors.grey0,
-  },
-  segment: {
-    paddingHorizontal: 16,
-    paddingVertical: 7,
-    borderRadius: 6,
-  },
-  segmentSelected: {
-    backgroundColor: '#FFFFFF',
-    boxShadow: '0 1px 2px rgba(0, 0, 0, 0.08)',
+    alignItems: 'center',
+    gap: 8,
   },
   toolbar: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    minHeight: 40,
-    marginTop: 16,
-    marginBottom: 24,
+    marginTop: 8,
+    marginBottom: 16,
   },
-  addButton: {
+  grid: { flex: 1, overflow: 'visible' },
+  list: { overflow: 'visible' },
+  gridContent: {
+    paddingBottom: 40,
+    paddingHorizontal: TILE_SHADOW_PAD,
+    overflow: 'visible',
+  },
+  row: {
     flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    paddingHorizontal: 14,
-    paddingVertical: 9,
-    borderRadius: 8,
-    backgroundColor: theme.colors.primary,
+    gap: TILE_COLUMN_GAP,
+    overflow: 'visible',
   },
-  addButtonHovered: { opacity: 0.9 },
-  addButtonLabel: { fontFamily: 'Commissioner_600SemiBold' },
-  grid: { flex: 1 },
-  gridContent: { paddingBottom: 40 },
-  row: { gap: TILE_COLUMN_GAP },
+  section: {
+    fontFamily: 'Commissioner_600SemiBold',
+    paddingBottom: 4,
+  },
   loading: { paddingTop: 20 },
-  empty: {
-    paddingTop: 40,
-    textAlign: 'center',
-  },
 }));
 
 export default DesktopLibrary;

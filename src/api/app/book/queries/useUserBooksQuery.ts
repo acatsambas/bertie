@@ -4,9 +4,9 @@ import { collection, getDoc, getDocs } from 'firebase/firestore';
 import { byListDateDesc, toMillis } from 'api/app/book/userBookOrder';
 import { UserBook } from 'api/app/types';
 import { auth, db } from 'api/firebase';
+import { BookResult } from 'api/google-books/search';
 import { useGuest } from 'api/guest/GuestProvider';
 import { readGuestData } from 'api/guest/guestStore';
-import { BookResult } from 'api/google-books/search';
 
 const PAGE_LENGTH = 30;
 
@@ -46,11 +46,11 @@ export const useUserBooksQuery = ({
         const { books } = await readGuestData();
         const guestBooks = Object.entries(books).map(
           ([id, { book, isRead, addedAt, readAt }]) => ({
+            ...book,
             id,
             isRead,
             addedAt,
             readAt,
-            ...book,
           }),
         ) as QueryResult['books'];
 

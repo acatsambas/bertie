@@ -1,34 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
-import {
-  collection,
-  documentId,
-  getDocs,
-  query,
-  where,
-} from 'firebase/firestore';
 
-import { db } from 'api/firebase';
+import { fetchStoredBooks } from 'api/app/book/fetchStoredBooks';
 import { BookResult } from 'api/google-books/search';
 
 export const useBooksQuery = ({ ids }: { ids: string[] } = { ids: [] }) => {
   return useQuery<BookResult[]>({
     queryKey: ['books', ids],
-    queryFn: async () => {
-      if (!ids.length) return [];
-
-      const q = query(collection(db, 'books'), where(documentId(), 'in', ids));
-      const snapshot = await getDocs(q);
-
-      return snapshot.docs.map(
-        doc =>
-          ({
-            id: doc.id,
-            ...doc.data(),
-          }) as BookResult,
-      );
-    },
+    queryFn: () => fetchStoredBooks(ids),
     enabled: ids.length > 0,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 30 * 60 * 1000, // 30 minutes
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
   });
 };

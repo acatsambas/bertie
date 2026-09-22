@@ -2,10 +2,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { translations } from 'locales/translations';
 import { APP_ROUTES } from 'navigation/routes';
 import type { AppNavigatorParamList } from 'navigation/types';
-
-import { translations } from 'locales/translations';
 
 import { HomeNavigator } from './HomeNavigator';
 import { SettingsNavigator } from './SettingsNavigator';

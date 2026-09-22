@@ -1,43 +1,53 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { makeStyles } from '@rneui/themed';
 import { useQueryClient } from '@tanstack/react-query';
-import { useIsDesktop } from 'hooks/useIsDesktop';
+import Constants from 'expo-constants';
+import { isDesktopPlatform, useIsDesktop } from 'hooks/useIsDesktop';
 import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Linking, Platform, View } from 'react-native';
-import DeviceInfo from 'react-native-device-info';
-import { SafeAreaView } from 'react-native-safe-area-context';
-
-import Button from 'components/Button';
-import Icon from 'components/Icon';
-import Text from 'components/Text';
+import { Linking } from 'react-native';
 
 import { AuthContext } from 'api/auth/AuthProvider';
 import { useGuest } from 'api/guest/GuestProvider';
-
+import Button from 'components/Button';
+import { translations } from 'locales/translations';
+import { goBackOrFallback } from 'navigation/goBackOrFallback';
 import { Routes } from 'navigation/routes';
 import type { NavigationType } from 'navigation/types';
 
-import { translations } from 'locales/translations';
+import { SettingsPageShell } from './SettingsPageShell';
+import { SettingsProfileHeader } from './SettingsProfileHeader';
+import { SettingsRow, SettingsSection } from './SettingsRow';
 
-export interface SettingsPageProps
-  extends StackNavigationProp<
-    NavigationType,
-    typeof Routes.SETTINGS_01_SETTINGS
-  > { }
+export interface SettingsPageProps extends StackNavigationProp<
+  NavigationType,
+  typeof Routes.SETTINGS_01_SETTINGS
+> {}
 
-const SettingsScreen = ({ navigation }) => {
+const SettingsScreen = ({ navigation }: { navigation: SettingsPageProps }) => {
   const { navigate } = useNavigation<SettingsPageProps>();
   const { t } = useTranslation();
-  const styles = useStyles();
 
   const { logout, user } = useContext(AuthContext);
   const { isGuest, exitGuestMode } = useGuest();
   const queryClient = useQueryClient();
   const isDesktop = useIsDesktop();
+
+  const providerIds = user?.providerData.map(p => p.providerId) ?? [];
+  const hasPassword = providerIds.includes('password');
+
+  const showGoodreads = isDesktopPlatform() && !isGuest;
+  const showPassword = hasPassword;
+  const showDelete = !isGuest;
+
+  const accountRows = [
+    showGoodreads ? 'goodreads' : null,
+    'address',
+    showPassword ? 'password' : null,
+    showDelete ? 'delete' : null,
+  ].filter(Boolean) as Array<'goodreads' | 'address' | 'password' | 'delete'>;
+
   const handleLogout = async () => {
-    // A guest has no session to sign out of, just the local flag.
     if (isGuest) {
       await exitGuestMode();
     } else {
@@ -46,109 +56,96 @@ const SettingsScreen = ({ navigation }) => {
     queryClient.clear();
   };
 
-  const handleChangeAddress = () => {
-    navigate(Routes.SETTINGS_02_CHANGE_ADDRESS);
-  };
-
-  const handlePassword = () => {
-    navigate(Routes.SETTINGS_03_RESET_PASSWORD);
-  };
-
-  const handleDelete = () => {
-    navigate(Routes.SETTINGS_04_DELETE_ACCOUNT);
-  };
-
-  const handleImportGoodreads = () => {
-    navigate(Routes.SETTINGS_05_IMPORT_GOODREADS);
-  };
-
   const handleExit = () => {
-    navigation.goBack();
+    goBackOrFallback(navigation, Routes.SETTINGS_01_SETTINGS);
   };
+
+  const version = Constants.expoConfig?.version ?? '';
 
   return (
-    <SafeAreaView style={styles.safeAreaView}>
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Icon icon="back" onPress={handleExit} />
-          <Text kind="bigHeader" text={t(translations.settings.title)} />
-        </View>
-        <Button
-          kind="secondary"
-          text={t(translations.settings.contactAddress)}
-          icon="email"
-          onPress={() =>
-            Linking.openURL(`mailto:${t(translations.settings.contactAddress)}`)
-          }
-        />
-        <View style={styles.buttonsArea}>
-          {/* Desktop only for now: it needs a CSV from the Goodreads site. */}
-          {isDesktop && !isGuest && (
-            <Button
-              kind="secondary"
-              onPress={handleImportGoodreads}
-              text={t(translations.settings.importGoodreads)}
-              icon="import"
-            />
-          )}
-          <Button
-            kind="secondary"
-            onPress={handleChangeAddress}
-            text={t(translations.settings.changeAddress)}
-            icon="address"
-          />
-          {user?.providerData?.[0]?.providerId === 'password' && (
-            <Button
-              kind="secondary"
-              onPress={handlePassword}
-              text={t(translations.settings.reset)}
-              icon="password"
-            />
-          )}
-          {!isGuest && (
-            <Button
-              kind="secondary"
-              onPress={handleDelete}
-              text={t(translations.settings.delete)}
-              icon="delete"
-            />
-          )}
-        </View>
-      </View>
-      <View style={styles.bottomArea}>
+    <SettingsPageShell
+      title={t(translations.settings.title)}
+      onBack={isDesktop ? undefined : handleExit}
+      footer={
         <Button
           kind="primary"
           text={t(translations.settings.signout)}
           onPress={handleLogout}
         />
-        {Platform.OS !== 'web' && (
-          <Text
-            kind="paragraph"
-            text={t(translations.settings.version, {
-              version: `${DeviceInfo.getVersion()} (${DeviceInfo.getBuildNumber()})`,
-            })}
-          />
-        )}
-      </View>
-    </SafeAreaView>
+      }
+    >
+      <SettingsProfileHeader />
+
+      {accountRows.length > 0 ? (
+        <SettingsSection title={t(translations.settings.sections.account)}>
+          {accountRows.map((row, index) => {
+            const isLast = index === accountRows.length - 1;
+            switch (row) {
+              case 'goodreads':
+                return (
+                  <SettingsRow
+                    key={row}
+                    icon="import"
+                    title={t(translations.settings.importGoodreads)}
+                    isLast={isLast}
+                    onPress={() =>
+                      navigate(Routes.SETTINGS_05_IMPORT_GOODREADS)
+                    }
+                  />
+                );
+              case 'address':
+                return (
+                  <SettingsRow
+                    key={row}
+                    icon="address"
+                    title={t(translations.settings.changeAddress)}
+                    isLast={isLast}
+                    onPress={() => navigate(Routes.SETTINGS_02_CHANGE_ADDRESS)}
+                  />
+                );
+              case 'password':
+                return (
+                  <SettingsRow
+                    key={row}
+                    icon="password"
+                    title={t(translations.settings.reset)}
+                    isLast={isLast}
+                    onPress={() => navigate(Routes.SETTINGS_03_RESET_PASSWORD)}
+                  />
+                );
+              case 'delete':
+                return (
+                  <SettingsRow
+                    key={row}
+                    icon="delete"
+                    title={t(translations.settings.delete)}
+                    isLast={isLast}
+                    onPress={() => navigate(Routes.SETTINGS_04_DELETE_ACCOUNT)}
+                  />
+                );
+            }
+          })}
+        </SettingsSection>
+      ) : null}
+
+      <SettingsSection title={t(translations.settings.sections.support)}>
+        <SettingsRow
+          icon="email"
+          title={t(translations.settings.contactAddress)}
+          isLast={false}
+          onPress={() =>
+            Linking.openURL(`mailto:${t(translations.settings.contactAddress)}`)
+          }
+        />
+        <SettingsRow
+          icon="info"
+          title={t(translations.settings.versionLabel)}
+          description={version}
+          isLast
+        />
+      </SettingsSection>
+    </SettingsPageShell>
   );
 };
-
-const useStyles = makeStyles(theme => ({
-  safeAreaView: {
-    flex: 1,
-    gap: 20,
-    paddingHorizontal: 20,
-    backgroundColor: theme.colors.white,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  container: { paddingTop: 20, gap: 20 },
-  buttonsArea: { gap: 10, marginTop: 20 },
-  bottomArea: { flex: 1, justifyContent: 'flex-end', gap: 20 },
-}));
 
 export default SettingsScreen;

@@ -1,94 +1,113 @@
-import { makeStyles } from '@rneui/themed';
-import React, { useState } from 'react';
+import { useRoute } from '@react-navigation/native';
+import type { NavigationProp, ParamListBase } from '@react-navigation/native';
+import React, { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { AuthContext } from 'api/auth/AuthProvider';
+import { isFirebaseError } from 'api/types';
 import Button from 'components/Button';
 import Input from 'components/Input';
 import Text from 'components/Text';
-
 import { translations } from 'locales/translations';
+import { goBackOrFallback } from 'navigation/goBackOrFallback';
+import {
+  SettingsFormError,
+  SettingsFormFields,
+  SettingsFormIntro,
+} from 'screens/SettingsScreen/SettingsForm';
+import { SettingsPageShell } from 'screens/SettingsScreen/SettingsPageShell';
 
-//TODO: Reset password doesn't work
+const resetErrorKey = (code: string) => {
+  switch (code) {
+    case 'auth/wrong-password':
+    case 'auth/invalid-credential':
+    case 'auth/invalid-login-credentials':
+      return translations.reset.errors.wrongPassword;
+    case 'auth/weak-password':
+      return translations.reset.errors.weakPassword;
+    case 'auth/too-many-requests':
+      return translations.reset.errors.tooManyRequests;
+    case 'auth/network-request-failed':
+      return translations.reset.errors.network;
+    default:
+      return translations.reset.errors.generic;
+  }
+};
 
-const ResetScreen = () => {
+const ResetScreen = ({
+  navigation,
+}: {
+  navigation: NavigationProp<ParamListBase>;
+}) => {
   const [isReseted, setIsReseted] = useState(false);
   const [password, setPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [newPassword2, setNewPassword2] = useState('');
-  const [error, setError] = useState('');
+  const [errorKey, setErrorKey] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
 
-  const styles = useStyles();
   const { t } = useTranslation();
+  const route = useRoute();
+  const { changePassword } = useContext(AuthContext);
 
   const handlePassword = (value: string) => {
     setPassword(value);
+    setErrorKey(null);
   };
 
   const handleNewPassword = (value: string) => {
     setNewPassword(value);
+    setErrorKey(null);
   };
 
   const handleNewPassword2 = (value: string) => {
     setNewPassword2(value);
+    setErrorKey(null);
   };
 
-  const handleSave = () => {
-    if (newPassword === newPassword2) {
+  const handleSave = async () => {
+    setErrorKey(null);
+
+    if (newPassword !== newPassword2) {
+      setErrorKey(translations.reset.errors.mismatch);
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      setErrorKey(translations.reset.errors.weakPassword);
+      return;
+    }
+
+    setSaving(true);
+    try {
+      await changePassword(password, newPassword);
       setIsReseted(true);
-    } else {
-      setError('Passwords do not match!');
+    } catch (error) {
+      if (isFirebaseError(error)) {
+        setErrorKey(resetErrorKey(error.code));
+        return;
+      }
+      setErrorKey(translations.reset.errors.generic);
+    } finally {
+      setSaving(false);
     }
   };
 
-  const handleDone = () => { };
+  const handleDone = () => {
+    goBackOrFallback(navigation, route.name);
+  };
+
   return (
-    <SafeAreaView style={styles.safeAreaView}>
-      <View style={styles.container}>
-        <Text text={t(translations.reset.title)} kind="header" />
-        {!isReseted ? (
-          <>
-            <Text text={t(translations.reset.enterPassword)} kind="paragraph" />
-            <Input
-              placeholder={t(translations.reset.placeholder1)}
-              kind="password"
-              onChangeText={handlePassword}
-              value={password}
-            />
-            <Text text={t(translations.reset.newPassword)} kind="paragraph" />
-            <Input
-              placeholder={t(translations.reset.placeholder2)}
-              kind="password"
-              onChangeText={handleNewPassword}
-              value={newPassword}
-            />
-            <Text
-              text={t(translations.reset.confirmPassword)}
-              kind="paragraph"
-            />
-            <Input
-              placeholder={t(translations.reset.placeholder2)}
-              kind="password"
-              onChangeText={handleNewPassword2}
-              value={newPassword2}
-            />
-            {error && (
-              <View style={styles.error}>
-                <Text text={error} kind="paragraph" />
-              </View>
-            )}
-          </>
-        ) : (
-          <Text text={t(translations.reset.allDone)} kind="paragraph" />
-        )}
-      </View>
-      <View style={styles.bottomArea}>
-        {!isReseted ? (
+    <SettingsPageShell
+      title={t(translations.reset.title)}
+      onBack={() => goBackOrFallback(navigation, route.name)}
+      footer={
+        !isReseted ? (
           <Button
             text={t(translations.reset.button)}
             kind="primary"
             onPress={handleSave}
+            disabled={saving}
           />
         ) : (
           <Button
@@ -96,29 +115,53 @@ const ResetScreen = () => {
             kind="primary"
             onPress={handleDone}
           />
-        )}
-      </View>
-    </SafeAreaView>
+        )
+      }
+    >
+      {!isReseted ? (
+        <>
+          <SettingsFormIntro text={t(translations.reset.description)} />
+          <SettingsFormFields label={t(translations.reset.sectionCurrent)}>
+            <Input
+              marginTop={0}
+              placeholder={t(translations.reset.currentPassword)}
+              kind="password"
+              icon="password"
+              onChangeText={handlePassword}
+              value={password}
+              textContentType="password"
+              autoComplete="password"
+            />
+          </SettingsFormFields>
+          <SettingsFormFields label={t(translations.reset.sectionNew)}>
+            <Input
+              marginTop={0}
+              placeholder={t(translations.reset.newPassword)}
+              kind="password"
+              icon="password"
+              onChangeText={handleNewPassword}
+              value={newPassword}
+              textContentType="newPassword"
+              autoComplete="password-new"
+            />
+            <Input
+              marginTop={0}
+              placeholder={t(translations.reset.confirmPassword)}
+              kind="password"
+              icon="password"
+              onChangeText={handleNewPassword2}
+              value={newPassword2}
+              textContentType="newPassword"
+              autoComplete="password-new"
+            />
+          </SettingsFormFields>
+          {errorKey ? <SettingsFormError text={t(errorKey)} /> : null}
+        </>
+      ) : (
+        <Text kind="paragraph" text={t(translations.reset.allDone)} />
+      )}
+    </SettingsPageShell>
   );
 };
-
-const useStyles = makeStyles(theme => ({
-  safeAreaView: {
-    flex: 1,
-    paddingHorizontal: 20,
-    backgroundColor: theme.colors.white,
-  },
-  container: { paddingTop: 20, gap: 20 },
-  error: {
-    backgroundColor: '#FDEDED',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-  },
-  bottomArea: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    marginBottom: 20,
-  },
-}));
 
 export default ResetScreen;

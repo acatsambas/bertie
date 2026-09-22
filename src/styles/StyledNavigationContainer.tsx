@@ -1,12 +1,12 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { useTheme } from '@rneui/themed';
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, { type ReactNode } from 'react';
 
 import { linking } from 'navigation/linking';
 import { navigationRef } from 'navigation/navigationRef';
 
-const StyledNavigationContainer = ({ children }) => {
+const StyledNavigationContainer = ({ children }: { children: ReactNode }) => {
   const { theme } = useTheme();
 
   return (

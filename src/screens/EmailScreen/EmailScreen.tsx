@@ -1,19 +1,24 @@
+import type { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { makeStyles } from '@rneui/themed';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { useUpdateContactEmailMutation, useUserQuery } from 'api/app/user';
+import { BackTitleHeader } from 'components/BackTitleHeader';
 import Button from 'components/Button';
-import Icon from 'components/Icon';
 import Input from 'components/Input';
 import Text from 'components/Text';
-
-import { useUpdateContactEmailMutation, useUserQuery } from 'api/app/user';
-
 import { translations } from 'locales/translations';
+import { goBackOrFallback } from 'navigation/goBackOrFallback';
+import { Routes } from 'navigation/routes';
 
-export const EmailScreen = ({ navigation }) => {
+export const EmailScreen = ({
+  navigation,
+}: {
+  navigation: NavigationProp<ParamListBase>;
+}) => {
   const styles = useStyles();
   const { t } = useTranslation();
   const { data: user } = useUserQuery();
@@ -32,7 +37,7 @@ export const EmailScreen = ({ navigation }) => {
   };
 
   const handleSave = async () => {
-    const validRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
+    const validRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g;
     if (email === checkEmail && email.match(validRegex) && user) {
       await updateContactEmail.mutateAsync({ contactEmail: email });
 
@@ -44,11 +49,13 @@ export const EmailScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <View style={styles.backHeader}>
-        <Icon icon="back" onPress={() => navigation.goBack()} />
-      </View>
       <View style={styles.container}>
-        <Text text={t(translations.order.emailTitle)} kind="header" />
+        <BackTitleHeader
+          title={t(translations.order.emailTitle)}
+          onBack={() =>
+            goBackOrFallback(navigation, Routes.ORDER_05_EMAIL_SCREEN)
+          }
+        />
         <Text text={t(translations.order.email)} kind="paragraph" />
         <View>
           <Input
@@ -87,13 +94,7 @@ const useStyles = makeStyles(theme => ({
     paddingHorizontal: 20,
     backgroundColor: theme.colors.white,
   },
-  container: { gap: 20 },
-  backHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingTop: 10,
-    paddingBottom: 5,
-  },
+  container: { paddingTop: 20, gap: 20 },
   error: {
     backgroundColor: '#FDEDED',
     paddingHorizontal: 20,

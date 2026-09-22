@@ -1,5 +1,6 @@
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { makeStyles, useTheme } from '@rneui/themed';
+import { useAuthGate } from 'hooks/useAuthGate';
 import { useIsDesktop } from 'hooks/useIsDesktop';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -7,19 +8,13 @@ import {
   ActivityIndicator,
   Modal,
   Platform,
+  Pressable,
   ScrollView,
   TouchableOpacity,
   View,
 } from 'react-native';
 import RenderHtml from 'react-native-render-html';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
-import Button from 'components/Button';
-import DesktopColumn from 'components/DesktopColumn';
-import Icon from 'components/Icon';
-import Text from 'components/Text';
-import AuthGateModal from 'components/AuthGateModal';
-import RatingBottomSheet from 'components/RatingBottomSheet';
 
 import {
   useAddBookToLibraryMutation,
@@ -32,14 +27,18 @@ import {
 import { RatingValue } from 'api/app/book/mutations/useRateBookMutation';
 import { AuthContext } from 'api/auth/AuthProvider';
 import { useBookQuery } from 'api/google-books/useBookQuery';
-
-import { useAuthGate } from 'hooks/useAuthGate';
-
+import AuthGateModal from 'components/AuthGateModal';
+import Button from 'components/Button';
+import DesktopColumn from 'components/DesktopColumn';
+import EmptyState from 'components/EmptyState';
+import Icon from 'components/Icon';
+import RatingBottomSheet from 'components/RatingBottomSheet';
+import Text from 'components/Text';
+import { translations } from 'locales/translations';
+import { goBackOrFallback } from 'navigation/goBackOrFallback';
 import BottomMenu from 'navigation/navigators/components/BottomMenu';
 import SideRail from 'navigation/navigators/components/SideRail';
 import { Routes } from 'navigation/routes';
-
-import { translations } from 'locales/translations';
 
 const computeMedian = (values: RatingValue[]): RatingValue | null => {
   if (values.length === 0) return null;
@@ -77,7 +76,15 @@ export const BookScreen = () => {
   const { mutate: rateBook } = useRateBookMutation();
   const { data: ratings = [] } = useBookRatingsQuery(params.bookId);
   const { data: userRating = null } = useUserBookRatingQuery(params.bookId);
-  const { isGuest, isLoggedOut, requireAuth, gateVisible, gateMessage, dismissGate, confirmGate } = useAuthGate();
+  const {
+    isGuest,
+    isLoggedOut,
+    requireAuth,
+    gateVisible,
+    gateMessage,
+    dismissGate,
+    confirmGate,
+  } = useAuthGate();
   const [ratingSheetVisible, setRatingSheetVisible] = useState(false);
   const [menuVisible, setMenuVisible] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ top: 0, right: 0 });
@@ -138,7 +145,7 @@ export const BookScreen = () => {
         screen: Routes.HOME_03_ORDER,
         params: {
           screen: Routes.ORDER_00_ADD_BOOKS,
-          params: { initialBook: book },
+          params: { bookId: book.id },
         },
       },
     });
@@ -177,14 +184,7 @@ export const BookScreen = () => {
     );
 
   const handleBack = () => {
-    if (canGoBack) {
-      navigation.goBack();
-      return;
-    }
-    navigation.navigate(Routes.ROOT_02_APP, {
-      screen: Routes.APP_01_HOME,
-      params: { screen: Routes.HOME_01_LIBRARY },
-    });
+    goBackOrFallback(navigation, Routes.ROOT_06_BOOK);
   };
 
   const openMenu = () => {
@@ -229,36 +229,47 @@ export const BookScreen = () => {
           {showBack && <Icon icon="back" onPress={handleBack} />}
         </View>
         <View style={styles.loadingContainer}>
-          <Text
-            kind="paragraph"
-            text={t(translations.library.loadError)}
-            style={styles.loadErrorText}
-          />
-          <Button
-            kind="primary"
-            text={t(translations.library.tryAgain)}
-            onPress={() => void refetchBook()}
+          <EmptyState
+            variant="page"
+            icon="book"
+            title={t(translations.library.loadErrorTitle)}
+            description={t(translations.library.loadError)}
+            action={{
+              label: t(translations.library.tryAgain),
+              onPress: () => void refetchBook(),
+            }}
           />
         </View>
       </SafeAreaView>,
     );
   }
 
+  const bookTitle = book.volumeInfo?.title ?? '';
+
   return withDesktopChrome(
     <SafeAreaView style={styles.safeAreaView}>
-      <View style={styles.backHeader}>
-        {showBack && <Icon icon="back" onPress={handleBack} />}
-      </View>
       <ScrollView
         contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.titleRow}>
           <View style={styles.titleText}>
-            <Text kind="bigHeader" text={book.volumeInfo?.title} />
+            {showBack ? (
+              <Pressable
+                onPress={handleBack}
+                style={styles.titleBack}
+                accessibilityRole="button"
+                accessibilityLabel={bookTitle}
+              >
+                <Icon icon="back" />
+                <Text kind="bigHeader" text={bookTitle} style={styles.title} />
+              </Pressable>
+            ) : (
+              <Text kind="bigHeader" text={bookTitle} />
+            )}
             <Text
               kind="paragraph"
-              text={book.volumeInfo?.authors?.join?.(', ')}
+              text={book.volumeInfo?.authors?.join?.(', ') ?? ''}
             />
             {medianRating != null && (
               <Text
@@ -323,13 +334,27 @@ export const BookScreen = () => {
           activeOpacity={1}
           onPress={() => setMenuVisible(false)}
         >
-          <View style={[styles.menuCard, { top: menuPosition.top, right: menuPosition.right }]}>
+          <View
+            style={[
+              styles.menuCard,
+              { top: menuPosition.top, right: menuPosition.right },
+            ]}
+          >
             {!isBookInLibrary ? (
-              <TouchableOpacity style={styles.menuItem} onPress={handleMenuRate}>
-                <Text kind="paragraph" text={t(translations.library.rating.rate)} />
+              <TouchableOpacity
+                style={styles.menuItem}
+                onPress={handleMenuRate}
+              >
+                <Text
+                  kind="paragraph"
+                  text={t(translations.library.rating.rate)}
+                />
               </TouchableOpacity>
             ) : (
-              <TouchableOpacity style={styles.menuItem} onPress={handleMenuRemove}>
+              <TouchableOpacity
+                style={styles.menuItem}
+                onPress={handleMenuRemove}
+              >
                 <Text kind="paragraph" text={t(translations.library.remove)} />
               </TouchableOpacity>
             )}
@@ -375,25 +400,30 @@ const useStyles = makeStyles(theme => ({
     paddingTop: 10,
     paddingBottom: 5,
   },
-  container: { paddingTop: 10, gap: 20 },
+  container: { paddingTop: 20, gap: 20 },
   loadingContainer: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: 'stretch',
+    paddingTop: 20,
     gap: 20,
-  },
-  loadErrorText: {
-    maxWidth: 360,
-    textAlign: 'center',
   },
   titleRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
   },
   titleText: {
     flex: 1,
     marginRight: 12,
+  },
+  titleBack: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    alignSelf: 'flex-start',
+  },
+  title: {
+    flexShrink: 1,
   },
   medianRating: {
     fontStyle: 'italic',
@@ -413,11 +443,7 @@ const useStyles = makeStyles(theme => ({
     borderRadius: 12,
     paddingVertical: 4,
     paddingHorizontal: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    elevation: 5,
+    boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.15)',
     minWidth: 180,
   },
   menuItem: {
@@ -426,4 +452,3 @@ const useStyles = makeStyles(theme => ({
     borderRadius: 8,
   },
 }));
-

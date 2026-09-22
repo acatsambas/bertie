@@ -1,0 +1,13 @@
+{
+  "email": "aris@bertieapp.local",
+  "password": "bertie",
+  "givenName": "Aris",
+  "familyName": "Catsambas",
+  "address": {
+    "firstLine": "27 Bedford Square",
+    "secondLine": "Bloomsbury",
+    "city": "London",
+    "postcode": "WC1B 3ES",
+    "country": "GB"
+  }
+}

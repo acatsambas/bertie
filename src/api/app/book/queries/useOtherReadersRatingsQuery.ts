@@ -4,7 +4,6 @@ import { collection, getDocs, query, where } from 'firebase/firestore';
 import { RatingValue } from 'api/app/book/mutations/useRateBookMutation';
 import { auth, db } from 'api/firebase';
 import { useGuest } from 'api/guest/GuestProvider';
-
 import { chunk } from 'utils/chunk';
 
 // Firestore caps an `in` filter at 30 values.

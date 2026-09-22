@@ -17,7 +17,6 @@ import {
 } from 'api/google-books/fetchBookInsightsMeta';
 import { useGuest } from 'api/guest/GuestProvider';
 import { readGuestData } from 'api/guest/guestStore';
-
 import { chunk } from 'utils/chunk';
 
 /** A book the reader has finished, with what Insights groups it by. */

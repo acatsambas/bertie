@@ -4,6 +4,9 @@ import { Platform, useWindowDimensions } from 'react-native';
 /** Narrowest window that gets the desktop layout. */
 export const DESKTOP_MIN_WIDTH = 1024;
 
+const MOBILE_UA =
+  /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
+
 // Width alone can't pick out a desktop browser: a landscape tablet or an
 // installed PWA window can be just as wide, and both must keep the mobile
 // layout. So also require a mouse, and rule out the installed PWA outright.
@@ -14,6 +17,20 @@ const isMouseBrowserTab = () =>
   window.matchMedia(MOUSE_POINTER).matches &&
   !window.matchMedia(INSTALLED_PWA).matches &&
   (window.navigator as any).standalone !== true;
+
+/**
+ * True on a real desktop/laptop computer in the browser — not phones,
+ * tablets, or native apps. Ignores window width (unlike {@link useIsDesktop}).
+ * iPadOS 13+ reports as Mac, so touch points are used to catch that case.
+ */
+export const isDesktopPlatform = () => {
+  if (Platform.OS !== 'web' || typeof navigator === 'undefined') return false;
+  if (MOBILE_UA.test(navigator.userAgent)) return false;
+  if (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) {
+    return false;
+  }
+  return true;
+};
 
 /**
  * Whether to render the desktop layout. Only ever true on web, in a regular

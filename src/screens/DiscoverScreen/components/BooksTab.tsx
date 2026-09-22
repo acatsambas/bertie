@@ -2,14 +2,13 @@ import { makeStyles } from '@rneui/themed';
 import { useIsDesktop } from 'hooks/useIsDesktop';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, View } from 'react-native';
+import { ScrollView } from 'react-native';
 
+import { useEssentialBooksQuery } from 'api/app/book';
+import EmptyState from 'components/EmptyState';
 import LoadingState from 'components/LoadingState/LoadingState';
 import SearchBooks from 'components/SearchBooks';
 import Text from 'components/Text';
-
-import { useEssentialBooksQuery } from 'api/app/book';
-
 import { translations } from 'locales/translations';
 
 import { DesktopBooksTab } from './DesktopBooksTab';
@@ -22,6 +21,7 @@ const MobileBooksTab = () => {
   const styles = useStyles();
   const { t } = useTranslation();
   const { data: books = [], isLoading, isError } = useEssentialBooksQuery();
+  const hasBooks = books.length > 0;
 
   return (
     <ScrollView
@@ -29,22 +29,28 @@ const MobileBooksTab = () => {
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
-      <Text kind="paragraph" text={t(translations.discover.booksHeader)} />
       {isLoading ? (
         <LoadingState />
-      ) : books.length > 0 ? (
-        <SearchBooks books={books} />
+      ) : hasBooks ? (
+        <>
+          <Text kind="paragraph" text={t(translations.discover.booksHeader)} />
+          <SearchBooks books={books} />
+        </>
       ) : (
-        <View style={styles.emptyState}>
-          <Text
-            kind="description"
-            text={t(
-              isError
-                ? translations.discover.booksError
-                : translations.discover.noBooksYet,
-            )}
-          />
-        </View>
+        <EmptyState
+          variant="list"
+          icon="book"
+          title={t(
+            isError
+              ? translations.discover.booksErrorTitle
+              : translations.discover.noBooksYetTitle,
+          )}
+          description={t(
+            isError
+              ? translations.discover.booksErrorDescription
+              : translations.discover.noBooksYetDescription,
+          )}
+        />
       )}
     </ScrollView>
   );
@@ -53,14 +59,11 @@ const MobileBooksTab = () => {
 const useStyles = makeStyles(() => ({
   container: {
     flex: 1,
-    paddingHorizontal: 20,
   },
   content: {
-    paddingVertical: 20,
-    gap: 20,
-  },
-  emptyState: {
-    alignItems: 'center',
+    paddingHorizontal: 20,
     paddingTop: 20,
+    paddingBottom: 20,
+    gap: 20,
   },
 }));

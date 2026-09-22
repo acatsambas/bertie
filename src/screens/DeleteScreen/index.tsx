@@ -1,36 +1,52 @@
-import { makeStyles } from '@rneui/themed';
+import { useRoute } from '@react-navigation/native';
+import type { NavigationProp, ParamListBase } from '@react-navigation/native';
+import { makeStyles, useTheme } from '@rneui/themed';
 import React, { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-
-import Button from 'components/Button';
-import Input from 'components/Input';
-import Text from 'components/Text';
 
 import { AuthContext } from 'api/auth/AuthProvider';
-
+import Button from 'components/Button';
+import Text from 'components/Text';
 import { translations } from 'locales/translations';
+import { goBackOrFallback } from 'navigation/goBackOrFallback';
+import {
+  SettingsFormError,
+  SettingsFormIntro,
+} from 'screens/SettingsScreen/SettingsForm';
+import { SettingsPageShell } from 'screens/SettingsScreen/SettingsPageShell';
 
-const DeleteScreen = () => {
+import { BegoneConfirm } from './BegoneConfirm';
+
+const DeleteScreen = ({
+  navigation,
+}: {
+  navigation: NavigationProp<ParamListBase>;
+}) => {
   const [isDeleted, setIsDeleted] = useState(false);
   const [inputValue, setInputValue] = useState('');
-  const [error, setError] = useState('');
+  const [errorKey, setErrorKey] = useState<string | null>(null);
 
   const styles = useStyles();
   const { t } = useTranslation();
+  const { theme } = useTheme();
   const { user } = useContext(AuthContext);
+  const route = useRoute();
+
+  const phrase = t(translations.delete.begone);
+  const matched = inputValue === phrase;
 
   const handleInput = (value: string) => {
     setInputValue(value);
+    setErrorKey(null);
   };
 
   const handleDelete = () => {
-    if (inputValue === 'begone!') {
-      setIsDeleted(true);
-    } else {
-      setError("You didn't write well the word 'begone!'");
+    if (!matched) {
+      setErrorKey(translations.delete.errors.mismatch);
+      return;
     }
+    setIsDeleted(true);
   };
 
   const handleDone = () => {
@@ -38,36 +54,14 @@ const DeleteScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.safeAreaView}>
-      <View style={styles.container}>
-        <Text text={t(translations.delete.title)} kind="header" />
-        {!isDeleted ? (
-          <>
-            <Text text={t(translations.delete.paragraph1)} kind="paragraph" />
-            <Text text={t(translations.delete.paragraph2)} kind="paragraph" />
-            <Input
-              autoCapitalize="none"
-              autoComplete="off"
-              autoCorrect={false}
-              onChangeText={handleInput}
-              placeholder="begone!"
-              value={inputValue}
-            />
-            {error && (
-              <View style={styles.error}>
-                <Text text={error} kind="paragraph" />
-              </View>
-            )}
-          </>
-        ) : (
-          <Text text={t(translations.delete.finalMessage)} kind="paragraph" />
-        )}
-      </View>
-      <View style={styles.bottomArea}>
-        {!isDeleted ? (
+    <SettingsPageShell
+      title={t(translations.delete.title)}
+      onBack={() => goBackOrFallback(navigation, route.name)}
+      footer={
+        !isDeleted ? (
           <Button
             text={t(translations.delete.button)}
-            kind="primary"
+            kind={matched ? 'primary' : 'tertiary'}
             onPress={handleDelete}
           />
         ) : (
@@ -76,29 +70,49 @@ const DeleteScreen = () => {
             kind="primary"
             onPress={handleDone}
           />
-        )}
-      </View>
-    </SafeAreaView>
+        )
+      }
+    >
+      {!isDeleted ? (
+        <>
+          <SettingsFormIntro text={t(translations.delete.paragraph1)} />
+          <Text
+            kind="description"
+            text={t(translations.delete.consequence)}
+            color={theme.colors.grey2}
+          />
+          <BegoneConfirm
+            phrase={phrase}
+            value={inputValue}
+            placeholder={t(translations.delete.confirmHint)}
+            matched={matched}
+            onChangeText={handleInput}
+          />
+          {errorKey ? <SettingsFormError text={t(errorKey)} /> : null}
+        </>
+      ) : (
+        <View style={styles.farewell}>
+          <Text
+            kind="header"
+            text={t(translations.delete.farewellTitle)}
+            color={theme.colors.secondary}
+          />
+          <Text
+            kind="paragraph"
+            text={t(translations.delete.finalMessage)}
+            color={theme.colors.grey2}
+          />
+        </View>
+      )}
+    </SettingsPageShell>
   );
 };
 
-const useStyles = makeStyles(theme => ({
-  safeAreaView: {
-    flex: 1,
-    paddingHorizontal: 20,
-    backgroundColor: theme.colors.white,
+const useStyles = makeStyles({
+  farewell: {
+    gap: 12,
+    paddingTop: 8,
   },
-  container: { paddingTop: 20, gap: 20 },
-  error: {
-    backgroundColor: '#FDEDED',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-  },
-  bottomArea: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    marginBottom: 20,
-  },
-}));
+});
 
 export default DeleteScreen;

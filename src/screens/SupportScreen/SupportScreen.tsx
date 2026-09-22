@@ -38,7 +38,7 @@ export const SupportScreen = () => {
 
             <Text
               kind="paragraph"
-              text="To add books to your list, go to My list, and tap at the bar at the top of the page (the one that says + Search for a book). You can add books to your list by tapping the plus button next to the results, or by opening a book and then tapping Add to list."
+              text="To add books to your list, go to My list and tap the search field at the top of the page. You can add books to your list by tapping the plus button next to the results, or by opening a book and then tapping Add to list."
             />
 
             <Text

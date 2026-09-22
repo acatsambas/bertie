@@ -1,45 +1,53 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { makeStyles } from '@rneui/themed';
+import { makeStyles, useTheme } from '@rneui/themed';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { BackTitleHeader } from 'components/BackTitleHeader';
 import Button from 'components/Button';
-import Icon from 'components/Icon';
 import OrderBookshopList from 'components/OrderBookshopList';
 import Text from 'components/Text';
-
+import { translations } from 'locales/translations';
+import { goBackOrFallback } from 'navigation/goBackOrFallback';
 import { Routes } from 'navigation/routes';
 import { NavigationType } from 'navigation/types';
 
-import { translations } from 'locales/translations';
-
 import { useOrderShopScreen } from './hooks/useOrderShopScreen';
 
-export interface OrderShopScreenProps
-  extends StackNavigationProp<
-    NavigationType,
-    typeof Routes.ORDER_02_ORDER_SHOP
-  > { }
+export interface OrderShopScreenProps extends StackNavigationProp<
+  NavigationType,
+  typeof Routes.ORDER_02_ORDER_SHOP
+> {}
 
 export const OrderShopScreen = () => {
   const { t } = useTranslation();
-  const { bookshops, placeOrder, canPlaceOrder } = useOrderShopScreen();
+  const { theme } = useTheme();
+  const { bookshops, placeOrder, isPlaceDisabled } = useOrderShopScreen();
   const styles = useStyles();
-  const { navigate, goBack } = useNavigation<OrderShopScreenProps>();
+  const navigation = useNavigation<OrderShopScreenProps>();
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <View style={styles.backHeader}>
-        <Icon icon="back" onPress={() => goBack()} />
-      </View>
       <ScrollView
         contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}
       >
-        <Text text={t(translations.order.title)} kind="bigHeader" />
-        <Text text={t(translations.order.where)} kind="paragraph" />
+        <BackTitleHeader
+          title={t(translations.order.title)}
+          onBack={() =>
+            goBackOrFallback(navigation, Routes.ORDER_02_ORDER_SHOP)
+          }
+        />
+        <View style={styles.intro}>
+          <Text text={t(translations.order.where)} kind="paragraph" />
+          <Text
+            text={t(translations.order.whereHint)}
+            kind="description"
+            color={theme.colors.grey2}
+          />
+        </View>
         <OrderBookshopList kind="favourites" shops={bookshops.favourites} />
         <OrderBookshopList shops={bookshops.rest} kind="more" />
       </ScrollView>
@@ -49,7 +57,7 @@ export const OrderShopScreen = () => {
           kind="primary"
           text={t(translations.order.place)}
           onPress={placeOrder}
-          disabled={canPlaceOrder}
+          disabled={isPlaceDisabled}
         />
       </View>
     </SafeAreaView>
@@ -63,13 +71,8 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.colors.white,
     position: 'relative',
   },
-  container: { paddingTop: 10, gap: 20, paddingBottom: 150 },
-  backHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingTop: 10,
-    paddingBottom: 5,
-  },
+  container: { paddingTop: 20, gap: 24, paddingBottom: 150 },
+  intro: { gap: 6 },
   bottomArea: {
     backgroundColor: theme.colors.white,
     flex: 1,

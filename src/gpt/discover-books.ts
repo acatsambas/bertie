@@ -27,7 +27,7 @@ async function getRecommendation() {
     const response = await client.chat.completions.create({
       model: 'gpt-4o-mini',
       messages: messageHistory,
-      max_tokens: 1000,
+      max_completion_tokens: 1000,
     });
 
     const botMessage = response.choices[0]?.message?.content;

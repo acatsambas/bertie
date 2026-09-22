@@ -4,10 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 
 import Text from 'components/Text';
-
 import { translations } from 'locales/translations';
 
-import { OthersStatus, RatingsSection } from './RatingsSection';
 import {
   InsightGroup,
   Ranking,
@@ -22,6 +20,7 @@ import {
   RankedSection,
   formatRating,
 } from './parts';
+import { OthersStatus, RatingsSection } from './RatingsSection';
 import { useInsightsSummary } from './useInsightsSummary';
 
 const COLUMN_MAX_HEIGHT = 140;

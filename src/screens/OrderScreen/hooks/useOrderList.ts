@@ -1,9 +1,10 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import { useUserBooksQuery } from 'api/app/book';
+import { useDraftOrder } from 'contexts/DraftOrderContext';
 
 export const useOrderList = () => {
-  const [orderList, setOrderList] = useState<string[]>([]);
+  const { bookIds: orderList, toggleBook: toggleOrder } = useDraftOrder();
   const { data, fetchNextPage, hasNextPage, isFetching, refetch } =
     useUserBooksQuery({
       withRefs: true,
@@ -21,15 +22,6 @@ export const useOrderList = () => {
   const selectedBooks = useMemo(() => {
     return unreadBooks.filter(book => orderList.includes(book.id));
   }, [unreadBooks, orderList]);
-
-  const toggleOrder = useCallback((bookId: string) => {
-    setOrderList(prev => {
-      if (prev.includes(bookId)) {
-        return prev.filter(id => id !== bookId);
-      }
-      return [...prev, bookId];
-    });
-  }, []);
 
   const fetchMoreBooks = useCallback(() => {
     if (hasNextPage && !isFetching) {

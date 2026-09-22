@@ -1,17 +1,21 @@
+import type { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { makeStyles } from '@rneui/themed';
 import { useTranslation } from 'react-i18next';
 import { Platform, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import AppleSigninButton from 'components/AuthButtons/Apple';
 import GoogleButton from 'components/AuthButtons/GoogleButton';
+import AuthPageShell from 'components/AuthPageShell';
+import { BackTitleHeader } from 'components/BackTitleHeader';
 import Button from 'components/Button';
-import Icon from 'components/Icon';
 import Text from 'components/Text';
-
 import { translations } from 'locales/translations';
 
-const NoAccountScreen = ({ navigation }) => {
+const NoAccountScreen = ({
+  navigation,
+}: {
+  navigation: NavigationProp<ParamListBase>;
+}) => {
   const styles = useStyles();
   const { t } = useTranslation();
 
@@ -19,19 +23,20 @@ const NoAccountScreen = ({ navigation }) => {
     navigation.goBack();
   };
 
-  const handleLogin = () => { };
+  const handleLogin = () => {};
 
   return (
-    <SafeAreaView style={styles.safeAreaView}>
+    <AuthPageShell>
       <View style={styles.container}>
-        <View style={styles.top}>
-          <Icon icon="back" onPress={handleBack} />
-          <Text kind="bigHeader" text={t(translations.noAccount.title)} />
-        </View>
+        <BackTitleHeader
+          title={t(translations.noAccount.title)}
+          onBack={handleBack}
+        />
         <Text kind="paragraph" text={t(translations.noAccount.paragraph)} />
         <View style={styles.buttons}>
           <Button
             kind="primary"
+            icon="email"
             text={t(translations.welcome.email)}
             onPress={handleLogin}
           />
@@ -39,25 +44,14 @@ const NoAccountScreen = ({ navigation }) => {
           {Platform.OS === 'ios' && <AppleSigninButton />}
         </View>
       </View>
-    </SafeAreaView>
+    </AuthPageShell>
   );
 };
 
-const useStyles = makeStyles(theme => ({
-  safeAreaView: {
-    flex: 1,
-    gap: 20,
-    paddingHorizontal: 20,
-    backgroundColor: theme.colors.white,
-  },
+const useStyles = makeStyles(() => ({
   container: { paddingTop: 20, gap: 20 },
-  top: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
   buttons: {
-    gap: 20,
+    gap: 12,
   },
 }));
 

@@ -1,0 +1,27 @@
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { GoogleAuthProvider, User, signInWithCredential } from 'firebase/auth';
+
+import { auth } from '../firebase';
+
+GoogleSignin.configure({
+  offlineAccess: true,
+  webClientId: process.env.EXPO_PUBLIC_GOOGLE_OAUTH_WEB_CLIENT_ID,
+});
+
+export const signInWithGoogle = async (): Promise<User> => {
+  await GoogleSignin.hasPlayServices({
+    showPlayServicesUpdateDialog: true,
+  });
+
+  const response = await GoogleSignin.signIn();
+
+  if (response.type !== 'success' || !response.data.idToken) {
+    throw new Error('Google Sign-In failed - no ID token returned');
+  }
+
+  const { idToken } = response.data;
+
+  const googleCredential = GoogleAuthProvider.credential(idToken);
+  const userCredential = await signInWithCredential(auth, googleCredential);
+  return userCredential.user;
+};

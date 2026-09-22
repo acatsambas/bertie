@@ -13,13 +13,24 @@ const Avatar = ({ onPress, size = 44 }: AvatarProps) => {
   const { user } = useContext(AuthContext);
   const { data: userData } = useUserQuery();
 
+  const photoURL = user?.photoURL;
+  const initials = [userData?.givenName?.[0], userData?.familyName?.[0]]
+    .filter(Boolean)
+    .join('');
+
+  const showPhoto = Boolean(photoURL);
+  const showInitials = !showPhoto && initials.length > 0;
+  const showPlaceholder = !showPhoto && !showInitials;
+
   return (
     <RNEAvatar
-      title={
-        !user?.photoURL &&
-        `${userData?.givenName?.charAt(0) || ''}${userData?.familyName?.charAt(0) || ''}`
+      title={showInitials ? initials : undefined}
+      icon={
+        showPlaceholder
+          ? { name: 'account', type: 'material-design', color: '#fff' }
+          : undefined
       }
-      source={user?.photoURL ? { uri: user.photoURL } : undefined}
+      source={showPhoto && photoURL ? { uri: photoURL } : undefined}
       rounded
       size={size}
       containerStyle={{ backgroundColor: '#6E78D7' }}

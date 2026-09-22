@@ -8,8 +8,6 @@ import { useContext } from 'react';
 import { AuthContext } from 'api/auth/AuthProvider';
 import { isFirebaseError } from 'api/types';
 
-/* https://github.com/chelseafarley/expo-google-signin/blob/main/App.js */
-
 const GoogleButton = () => {
   const { googleLogin } = useContext(AuthContext);
   const styles = useStyles();
@@ -21,16 +19,26 @@ const GoogleButton = () => {
       if (isFirebaseError(error)) {
         switch (error.code) {
           case statusCodes.IN_PROGRESS:
-            // operation (eg. sign in) already in progress
-            break;
           case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
-            // Android only, play services not available or outdated
             break;
           default:
-            // some other error happened
             console.error(error);
         }
+        return;
       }
+
+      if (
+        error &&
+        typeof error === 'object' &&
+        'code' in error &&
+        (error.code === statusCodes.SIGN_IN_CANCELLED ||
+          error.code === statusCodes.IN_PROGRESS ||
+          error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE)
+      ) {
+        return;
+      }
+
+      console.error(error);
     }
   };
 
@@ -39,13 +47,13 @@ const GoogleButton = () => {
       size={GoogleSigninButton.Size.Wide}
       color={GoogleSigninButton.Color.Light}
       onPress={handleLogin}
-      style={styles.appleButton}
+      style={styles.googleButton}
     />
   );
 };
 
 const useStyles = makeStyles(() => ({
-  appleButton: {
+  googleButton: {
     width: '100%',
     height: 54,
   },

@@ -1,19 +1,21 @@
 import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import { makeStyles } from '@rneui/themed';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
-
-import Book from 'components/Book';
-import Text from 'components/Text';
 
 import {
   useAddBookToLibraryMutation,
   useBooksQuery,
   useUserBooksIdsQuery,
 } from 'api/app/book';
-
+import { BookResult } from 'api/google-books/search';
+import Book from 'components/Book';
+import EmptyState from 'components/EmptyState';
 import { translations } from 'locales/translations';
+import { Routes } from 'navigation/routes';
+import { NavigationType } from 'navigation/types';
 
 const DISCOVER_RECOMMENDED_IDS = [
   'MSurBex2xcUC',
@@ -37,7 +39,7 @@ interface OrderEmptyProps {
 export const OrderEmpty = ({ kind = 'order' }: OrderEmptyProps) => {
   const { t } = useTranslation();
   const styles = useStyles();
-  const { navigate } = useNavigation<any>();
+  const { navigate } = useNavigation<StackNavigationProp<NavigationType>>();
   const { data: userBooksIds = [] } = useUserBooksIdsQuery();
   const { mutate: addBook } = useAddBookToLibraryMutation();
 
@@ -49,21 +51,22 @@ export const OrderEmpty = ({ kind = 'order' }: OrderEmptyProps) => {
     ids: recommendedIds,
   });
 
-  const navigateToBook = book =>
-    navigate('LibraryNavigator', {
-      screen: 'Book',
-      params: { book },
-    });
+  const navigateToBook = (book: BookResult) =>
+    navigate(Routes.ROOT_06_BOOK, { bookId: book.id });
 
-  const handleAddBook = async book => {
+  const handleAddBook = async (book: BookResult) => {
     const isUserBook = userBooksIds.some(({ id }) => id === book.id);
     addBook({ book, isUserBook });
   };
 
   return (
-    <View style={styles.container}>
-      <Text text={t(translations.order.headerNoBooks)} kind="header" />
-      <Text text={t(translations.order.suggestions)} kind="paragraph" />
+    <EmptyState
+      variant="list"
+      icon="myList"
+      title={t(translations.order.headerNoBooks)}
+      description={t(translations.order.suggestions)}
+      style={styles.container}
+    >
       <View>
         {recommendedBooks.map(book => (
           <Book
@@ -77,15 +80,12 @@ export const OrderEmpty = ({ kind = 'order' }: OrderEmptyProps) => {
           />
         ))}
       </View>
-    </View>
+    </EmptyState>
   );
 };
 
 const useStyles = makeStyles(() => ({
   container: {
-    paddingTop: 20,
     paddingBottom: 120,
-    gap: 20,
-    position: 'relative',
   },
 }));

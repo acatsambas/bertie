@@ -6,24 +6,24 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Pressable, PressableStateCallbackType, View } from 'react-native';
 
+import { useUserQuery } from 'api/app/user';
 import Avatar from 'components/Avatar';
 import Icon from 'components/Icon';
+import { useSoftCardStyles } from 'components/SoftCard';
 import Text from 'components/Text';
-
-import { useUserQuery } from 'api/app/user';
-
+import { useDraftOrder } from 'contexts/DraftOrderContext';
+import { translations } from 'locales/translations';
 import { Routes } from 'navigation/routes';
 import type { NavigationType } from 'navigation/types';
 
-import { translations } from 'locales/translations';
-
-import { menuItems } from '../BottomMenu/data';
+import { menuItems, homeTabNavigateParams } from '../BottomMenu/data';
+import type { HomeTabScreen } from '../BottomMenu/data';
 
 // react-native-web adds `hovered` to Pressable's state; React Native's own
 // types don't know about it.
 type WebPressableState = PressableStateCallbackType & { hovered?: boolean };
 
-type HomeTab = (typeof menuItems)[number]['screen'];
+type HomeTab = HomeTabScreen;
 
 /**
  * The Home tab navigator's state and navigation, when the rail is its tab
@@ -39,9 +39,11 @@ type SideRailProps = Partial<Pick<BottomTabBarProps, 'state' | 'navigation'>>;
 const SideRail = ({ state, navigation: tabNavigation }: SideRailProps) => {
   const { navigate } = useNavigation<StackNavigationProp<NavigationType>>();
   const { data: userData } = useUserQuery();
+  const { count: draftOrderCount } = useDraftOrder();
   const { t } = useTranslation();
   const { theme } = useTheme();
   const styles = useStyles();
+  const softCard = useSoftCardStyles();
 
   const activeScreen = state?.routes[state.index]?.name;
   const name = [userData?.givenName, userData?.familyName]
@@ -55,7 +57,7 @@ const SideRail = ({ state, navigation: tabNavigation }: SideRailProps) => {
       // Outside the tabs, address the tab from the root, as BottomMenu does.
       navigate(Routes.ROOT_02_APP, {
         screen: Routes.APP_01_HOME,
-        params: { screen },
+        params: homeTabNavigateParams(screen),
       });
       return;
     }
@@ -84,12 +86,22 @@ const SideRail = ({ state, navigation: tabNavigation }: SideRailProps) => {
         {menuItems.map(menu => {
           const active = menu.screen === activeScreen;
           const color = active ? theme.colors.white : theme.colors.secondary;
+          const isOrder = menu.screen === Routes.HOME_03_ORDER;
+          const badgeCount = isOrder ? draftOrderCount : 0;
+          const showBadge = badgeCount > 0;
+          const badgeLabel =
+            badgeCount === 1
+              ? t(translations.order.menuBadgeOne)
+              : t(translations.order.menuBadge, { count: badgeCount });
 
           return (
             <Pressable
               key={menu.title}
               accessibilityRole="link"
               accessibilityState={{ selected: active }}
+              accessibilityLabel={
+                showBadge ? `${menu.title}, ${badgeLabel}` : menu.title
+              }
               style={pressState => [
                 styles.item,
                 (pressState as WebPressableState).hovered && styles.itemHovered,
@@ -97,7 +109,22 @@ const SideRail = ({ state, navigation: tabNavigation }: SideRailProps) => {
               ]}
               onPress={() => handlePress(menu.screen)}
             >
-              <Icon icon={menu.icon} color={color} size={20} />
+              <View style={styles.iconWrap}>
+                <Icon icon={menu.icon} color={color} size={20} />
+                {showBadge && (
+                  <View
+                    style={[styles.badge, active && styles.badgeOnActive]}
+                    accessibilityElementsHidden
+                  >
+                    <Text
+                      kind="littleText"
+                      text={badgeCount > 99 ? '99+' : String(badgeCount)}
+                      color={active ? theme.colors.primary : theme.colors.white}
+                      style={styles.badgeText}
+                    />
+                  </View>
+                )}
+              </View>
               <Text kind="paragraph" text={menu.title} color={color} />
             </Pressable>
           );
@@ -106,10 +133,15 @@ const SideRail = ({ state, navigation: tabNavigation }: SideRailProps) => {
       <Pressable
         accessibilityRole="link"
         style={pressState => [
+          softCard.card,
           styles.account,
           (pressState as WebPressableState).hovered && styles.itemHovered,
         ]}
-        onPress={() => navigate(Routes.APP_02_SETTINGS)}
+        onPress={() =>
+          navigate(Routes.APP_02_SETTINGS, {
+            screen: Routes.SETTINGS_01_SETTINGS,
+          })
+        }
       >
         <Avatar size={36} />
         <View style={styles.accountText}>
@@ -148,6 +180,32 @@ const useStyles = makeStyles(theme => ({
     paddingVertical: 10,
     borderRadius: 8,
   },
+  iconWrap: {
+    position: 'relative',
+  },
+  badge: {
+    position: 'absolute',
+    top: -6,
+    right: -10,
+    minWidth: 18,
+    height: 18,
+    paddingHorizontal: 4,
+    borderRadius: 9,
+    backgroundColor: theme.colors.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: theme.colors.grey0,
+  },
+  badgeOnActive: {
+    backgroundColor: theme.colors.white,
+    borderColor: theme.colors.primary,
+  },
+  badgeText: {
+    fontFamily: 'Commissioner_700Bold',
+    fontSize: 10,
+    lineHeight: 12,
+  },
   itemHovered: { backgroundColor: 'rgba(34, 34, 34, 0.05)' },
   itemActive: { backgroundColor: theme.colors.primary },
   account: {
@@ -156,7 +214,6 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     gap: 12,
     padding: 12,
-    borderRadius: 8,
   },
   accountText: { flex: 1, gap: 2 },
 }));

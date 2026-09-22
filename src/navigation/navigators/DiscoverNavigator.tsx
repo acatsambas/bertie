@@ -3,10 +3,8 @@ import React from 'react';
 
 import { DISCOVER_ROUTES } from 'navigation/routes';
 import type { DiscoverNavigatorParamList } from 'navigation/types';
-
 import AddressScreen from 'screens/AddressScreen';
 import BookshopScreen from 'screens/BookshopScreen';
-
 import DiscoverScreen from 'screens/DiscoverScreen';
 
 export const DiscoverStack =
@@ -29,6 +27,5 @@ export const DiscoverNavigator = () => (
       name={DISCOVER_ROUTES.DISCOVER_03_BOOKSHOP}
       component={BookshopScreen}
     />
-
   </DiscoverStack.Navigator>
 );

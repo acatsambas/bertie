@@ -1,29 +1,30 @@
+import { useNavigation } from '@react-navigation/native';
 import { makeStyles } from '@rneui/themed';
 import { useIsDesktop } from 'hooks/useIsDesktop';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import LoadingState from 'components/LoadingState/LoadingState';
-import Text from 'components/Text';
-
 import {
   useOtherReadersRatingsQuery,
   useReadingInsightsQuery,
 } from 'api/app/book';
 import { useGuest } from 'api/guest/GuestProvider';
-
+import EmptyState from 'components/EmptyState';
+import LoadingState from 'components/LoadingState/LoadingState';
 import { translations } from 'locales/translations';
+import { Routes } from 'navigation/routes';
 
+import { compareRatings, computeInsights } from './computeInsights';
 import { DesktopInsights } from './DesktopInsights';
 import { MobileInsights } from './MobileInsights';
 import { OthersStatus } from './RatingsSection';
-import { compareRatings, computeInsights } from './computeInsights';
 
 /** What the reader's finished and rated books say about their reading. */
 export const InsightsTab = () => {
   const styles = useStyles();
   const { t } = useTranslation();
+  const { navigate } = useNavigation<any>();
   const isDesktop = useIsDesktop();
   const { isGuest } = useGuest();
   const {
@@ -59,16 +60,32 @@ export const InsightsTab = () => {
   if (isLoading) return <LoadingState />;
 
   if (!insights || insights.readCount === 0) {
+    // Same gutter as Books: 20 all around on mobile; on desktop DesktopColumn
+    // already supplies the horizontal inset, so don't double it.
     return (
-      <View style={styles.empty}>
-        <Text
-          kind="paragraph"
-          text={t(
+      <View style={[styles.empty, isDesktop && styles.emptyDesktop]}>
+        <EmptyState
+          variant="list"
+          icon="insights"
+          title={t(
             isError
-              ? translations.discover.insights.error
-              : translations.discover.insights.empty,
+              ? translations.discover.insights.errorTitle
+              : translations.discover.insights.emptyTitle,
           )}
-          style={styles.emptyText}
+          description={t(
+            isError
+              ? translations.discover.insights.errorDescription
+              : translations.discover.insights.emptyDescription,
+          )}
+          action={
+            isError
+              ? undefined
+              : {
+                  label: t(translations.discover.insights.emptyAction),
+                  onPress: () => navigate(Routes.HOME_01_LIBRARY),
+                  kind: 'secondary',
+                }
+          }
         />
       </View>
     );
@@ -91,13 +108,12 @@ export const InsightsTab = () => {
 
 const useStyles = makeStyles(() => ({
   empty: {
-    alignItems: 'center',
-    paddingTop: 40,
     paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 20,
   },
-  emptyText: {
-    maxWidth: 420,
-    textAlign: 'center',
+  emptyDesktop: {
+    paddingHorizontal: 0,
   },
 }));
 

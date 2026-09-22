@@ -1,17 +1,18 @@
+import 'locales/i18n';
+
 import { ThemeProvider, createTheme } from '@rneui/themed';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { PWAProvider } from 'contexts/PWAContext';
 import { useEffect, useState } from 'react';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { AuthProvider } from 'api/auth/AuthProvider';
-import { GuestProvider } from 'api/guest/GuestProvider';
 import { initFirebase } from 'api/firebase';
-
+import { GuestProvider } from 'api/guest/GuestProvider';
+import { DraftOrderProvider } from 'contexts/DraftOrderContext';
+import { PWAProvider } from 'contexts/PWAContext';
+import { ToastProvider } from 'contexts/ToastContext';
 import RootNavigator from 'navigation/RootNavigator';
-
 import { FontsProvider } from 'styles/FontsProvider';
-
-import 'locales/i18n';
 
 const theme = createTheme({
   lightColors: {
@@ -21,6 +22,11 @@ const theme = createTheme({
     white: '#FDF9F6',
   },
   mode: 'light',
+  components: {
+    Tab: {
+      variant: 'default',
+    },
+  },
 });
 
 const queryClient = new QueryClient();
@@ -40,19 +46,25 @@ const App = () => {
   }
 
   return (
-    <ThemeProvider theme={theme}>
-      <AuthProvider>
-        <PWAProvider>
-          <FontsProvider>
-            <QueryClientProvider client={queryClient}>
-              <GuestProvider>
-                <RootNavigator />
-              </GuestProvider>
-            </QueryClientProvider>
-          </FontsProvider>
-        </PWAProvider>
-      </AuthProvider>
-    </ThemeProvider>
+    <SafeAreaProvider>
+      <ThemeProvider theme={theme}>
+        <AuthProvider>
+          <PWAProvider>
+            <FontsProvider>
+              <QueryClientProvider client={queryClient}>
+                <GuestProvider>
+                  <DraftOrderProvider>
+                    <ToastProvider>
+                      <RootNavigator />
+                    </ToastProvider>
+                  </DraftOrderProvider>
+                </GuestProvider>
+              </QueryClientProvider>
+            </FontsProvider>
+          </PWAProvider>
+        </AuthProvider>
+      </ThemeProvider>
+    </SafeAreaProvider>
   );
 };
 

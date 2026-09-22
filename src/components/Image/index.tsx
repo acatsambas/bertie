@@ -5,7 +5,7 @@ import DefaultImage from './assets/default.png';
 
 //TODO: Adapt to data coming from API
 
-const Image = ({ imgSource }) => {
+const Image = ({ imgSource }: { imgSource?: string | null }) => {
   return (
     <RNEImage
       defaultSource={DefaultImage}

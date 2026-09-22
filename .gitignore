@@ -2,19 +2,12 @@
 
 # dependencies
 node_modules/
+.pnpm-store/
 
 # Expo
 .expo/
 dist/
 web-build/
-
-# Native
-*.orig.*
-*.jks
-*.p8
-*.p12
-*.key
-*.mobileprovision
 
 # Metro
 .metro-health-check*
@@ -24,6 +17,12 @@ npm-debug.*
 yarn-debug.*
 yarn-error.*
 
+# Firebase
+firebase-debug.log*
+firestore-debug.log*
+ui-debug.log*
+.firebase/
+
 # macOS
 .DS_Store
 *.pem
@@ -31,31 +30,14 @@ yarn-error.*
 # local env files
 .env*.local
 
+# local one-off exports / scratch (addresses, etc.)
+.local/
+
 # typescript
 *.tsbuildinfo
-
-# Firebase
-GoogleService-Info.plist
-google-services.json
-release.keystore
 
 # env
 .env
 
 # Development
 .idea/
-
-# Fastlane
-**/fastlane/report.xml
-**/fastlane/Preview.html
-**/fastlane/screenshots
-**/fastlane/test_output
-builds/*
-*.xcarchive
-bertie-434108-5fd4928195d9.json
-bertie-74d8c-e01b7dfc401f.json
-
-# iOS Build
-.local_derived_data
-*.ipa
-*.app.dSYM.zip

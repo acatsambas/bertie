@@ -3,7 +3,6 @@ import { useIsDesktop } from 'hooks/useIsDesktop';
 import React from 'react';
 
 import DesktopColumn from 'components/DesktopColumn';
-
 import { DiscoverNavigator } from 'navigation/navigators/DiscoverNavigator';
 import { LibraryNavigator } from 'navigation/navigators/LibraryNavigator';
 import { OrderNavigator } from 'navigation/navigators/OrderNavigator';

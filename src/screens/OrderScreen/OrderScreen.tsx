@@ -1,11 +1,12 @@
 import { Tab, makeStyles } from '@rneui/themed';
+import { useIsDesktop } from 'hooks/useIsDesktop';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { DESKTOP_PAGE_PADDING_TOP } from 'components/DesktopColumn';
 import Text from 'components/Text';
-
 import { translations } from 'locales/translations';
 
 import { NewOrderTab, PastOrdersTab } from './components';
@@ -13,12 +14,13 @@ import { NewOrderTab, PastOrdersTab } from './components';
 export const OrderScreen = () => {
   const styles = useStyles();
   const { t } = useTranslation();
+  const isDesktop = useIsDesktop();
   const [index, setIndex] = useState(0);
 
   return (
     <SafeAreaView edges={['left', 'right', 'top']} style={styles.safeAreaView}>
       <View style={styles.container}>
-        <View style={styles.header}>
+        <View style={[styles.header, isDesktop && styles.headerDesktop]}>
           <Text text={t(translations.order.title)} kind="bigHeader" />
         </View>
         <Tab
@@ -50,5 +52,9 @@ const useStyles = makeStyles(theme => ({
     paddingHorizontal: 20,
     paddingTop: 20,
     paddingBottom: 10,
+  },
+  headerDesktop: {
+    paddingHorizontal: 0,
+    paddingTop: DESKTOP_PAGE_PADDING_TOP,
   },
 }));

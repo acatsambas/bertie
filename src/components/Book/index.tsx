@@ -1,25 +1,33 @@
 import { CheckBox, makeStyles } from '@rneui/themed';
 import { useEffect, useState } from 'react';
-import { TouchableOpacity, TouchableOpacityProps, View } from 'react-native';
+import {
+  Pressable,
+  TouchableOpacity,
+  TouchableOpacityProps,
+  View,
+} from 'react-native';
 
 import Icon from '../Icon';
 import Text from '../Text';
 
 interface BookProps extends TouchableOpacityProps {
-  author: string;
-  title: string;
+  author?: string;
+  title?: string;
   kind?: 'library' | 'search' | 'order';
-  id?: string;
   isChecked?: boolean;
   defaultValue?: boolean;
   onChange?: (value: boolean) => void;
 }
 
+const truncateTitle = (title: string | undefined, max = 58) => {
+  if (!title) return '';
+  return title.length > max ? `${title.slice(0, max)}...` : title;
+};
+
 const Book = ({
-  author,
+  author = '',
   title,
   kind,
-  id,
   isChecked,
   defaultValue = false,
   onPress,
@@ -43,6 +51,9 @@ const Book = ({
     props.onChange?.(newValue);
   };
 
+  const displayTitle = truncateTitle(title);
+  const muted = checked && kind === 'library' ? 'grey' : undefined;
+
   return (
     <View>
       {kind !== 'order' ? (
@@ -50,9 +61,9 @@ const Book = ({
           <CheckBox
             disabled={props.disabled}
             containerStyle={{ backgroundColor: 'transparent' }}
-            checked={checked}
+            checked={!!checked}
             onPress={handlePressCheck}
-            iconType="material-community"
+            iconType="material-design"
             checkedIcon={
               kind === 'library' ? 'checkbox-outline' : 'plus-circle-outline'
             }
@@ -62,7 +73,7 @@ const Book = ({
                 : 'plus-circle-outline'
             }
             checkedColor={kind === 'library' ? 'gray' : '#38AD59'}
-            uncheckedColor={kind === 'search' && 'black'}
+            uncheckedColor={kind === 'search' ? 'black' : undefined}
             {...props}
           />
           <TouchableOpacity
@@ -71,42 +82,35 @@ const Book = ({
             disabled={props.disabled}
           >
             <View style={{ width: '90%', gap: 5 }}>
-              <Text
-                text={title?.length > 58 ? `${title.slice(0, 58)}...` : title}
-                kind="paragraph"
-                color={checked && kind === 'library' && 'grey'}
-              />
-              <Text
-                text={author}
-                kind="littleText"
-                color={checked && kind === 'library' && 'grey'}
-              />
+              <Text text={displayTitle} kind="paragraph" color={muted} />
+              <Text text={author} kind="littleText" color={muted} />
             </View>
-            <Icon
-              icon="right"
-              color={checked && kind === 'library' && 'grey'}
-            />
+            <Icon icon="right" color={muted} />
           </TouchableOpacity>
         </View>
       ) : (
-        <View style={styles.removeBookContainer}>
+        <Pressable
+          style={styles.removeBookContainer}
+          onPress={handlePressCheck}
+          disabled={props.disabled}
+          accessibilityRole="checkbox"
+          accessibilityState={{ checked: Boolean(checked) }}
+        >
           <View style={{ width: '80%' }}>
-            <Text
-              text={title?.length > 58 ? `${title.slice(0, 58)}...` : title}
-              kind="paragraph"
-            />
+            <Text text={displayTitle} kind="paragraph" />
             <Text text={author} kind="littleText" />
           </View>
-          <CheckBox
-            onPress={handlePressCheck}
-            iconType="material-community"
-            checkedIcon="checkbox-outline"
-            uncheckedIcon="checkbox-blank-outline"
-            checkedColor="#38AD59"
-            containerStyle={{ backgroundColor: 'transparent' }}
-            checked={checked}
-          />
-        </View>
+          <View pointerEvents="none">
+            <CheckBox
+              iconType="material-design"
+              checkedIcon="checkbox-outline"
+              uncheckedIcon="checkbox-blank-outline"
+              checkedColor="#38AD59"
+              containerStyle={{ backgroundColor: 'transparent' }}
+              checked={!!checked}
+            />
+          </View>
+        </Pressable>
       )}
     </View>
   );

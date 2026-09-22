@@ -1,15 +1,13 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { usePWA } from 'contexts/PWAContext';
 import { useContext, useEffect, useRef } from 'react';
 
 import { AuthContext } from 'api/auth/AuthProvider';
 import { useGuest } from 'api/guest/GuestProvider';
-
+import { usePWA } from 'contexts/PWAContext';
 import BookScreen from 'screens/BookScreen';
 import DataRequestScreen from 'screens/DataRequestScreen';
 import PrivacyPolicyScreen from 'screens/PrivacyPolicyScreen';
 import SupportScreen from 'screens/SupportScreen';
-
 import StyledNavigationContainer from 'styles/StyledNavigationContainer';
 
 import AppNavigator from './navigators/AppNavigator';

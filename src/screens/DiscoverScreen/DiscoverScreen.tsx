@@ -7,23 +7,20 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import Avatar from 'components/Avatar';
-import Text from 'components/Text';
-
 import { useUserQuery } from 'api/app/user';
-
+import Avatar from 'components/Avatar';
+import { DESKTOP_PAGE_PADDING_TOP } from 'components/DesktopColumn';
+import Text from 'components/Text';
+import { translations } from 'locales/translations';
 import { Routes } from 'navigation/routes';
 import { NavigationType } from 'navigation/types';
 
-import { translations } from 'locales/translations';
-
 import { BooksTab, BookshopTab, InsightsTab } from './components';
 
-export interface DiscoverScreenProps
-  extends StackNavigationProp<
-    NavigationType,
-    typeof Routes.DISCOVER_01_DISCOVER
-  > { }
+export interface DiscoverScreenProps extends StackNavigationProp<
+  NavigationType,
+  typeof Routes.DISCOVER_01_DISCOVER
+> {}
 
 export const DiscoverScreen = () => {
   const styles = useStyles();
@@ -34,21 +31,28 @@ export const DiscoverScreen = () => {
 
   const [index, setIndex] = useState(0);
 
-  const handleAvatarClick = () => navigate(Routes.APP_02_SETTINGS);
+  const handleAvatarClick = () =>
+    navigate(Routes.APP_02_SETTINGS, {
+      screen: Routes.SETTINGS_01_SETTINGS,
+    });
 
   const renderTab = () => {
     switch (index) {
-      case 0: return <BooksTab />;
-      case 1: return <BookshopTab user={user} />;
-      case 2: return <InsightsTab />;
-      default: return <BooksTab />;
+      case 0:
+        return <BooksTab />;
+      case 1:
+        return <BookshopTab user={user} />;
+      case 2:
+        return <InsightsTab />;
+      default:
+        return <BooksTab />;
     }
   };
 
   return (
     <SafeAreaView edges={['left', 'right', 'top']} style={styles.safeAreaView}>
       <View style={styles.container}>
-        <View style={styles.header}>
+        <View style={[styles.header, isDesktop && styles.headerDesktop]}>
           <Text text={t(translations.discover.title)} kind="bigHeader" />
           {/* On desktop the side rail carries the link to settings. */}
           {!isDesktop && <Avatar onPress={handleAvatarClick} />}
@@ -84,5 +88,8 @@ const useStyles = makeStyles(theme => ({
     paddingTop: 20,
     paddingBottom: 10,
   },
+  headerDesktop: {
+    paddingHorizontal: 0,
+    paddingTop: DESKTOP_PAGE_PADDING_TOP,
+  },
 }));
-

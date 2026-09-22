@@ -3,12 +3,12 @@ import { StyleProp, TextStyle } from 'react-native';
 
 interface TextProps {
   kind:
-  | 'bigHeader'
-  | 'header'
-  | 'paragraph'
-  | 'description'
-  | 'littleText'
-  | 'button';
+    | 'bigHeader'
+    | 'header'
+    | 'paragraph'
+    | 'description'
+    | 'littleText'
+    | 'button';
   text: string;
   onPress?(): void;
   color?: string;
@@ -30,8 +30,8 @@ const Text = ({
     <RNEText
       style={[
         {
-          fontFamily: kind in textKind && textKind[kind].fontFamily,
-          fontSize: kind in textKind && textKind[kind].size,
+          fontFamily: textKind[kind].fontFamily,
+          fontSize: textKind[kind].size,
           color: color
             ? color
             : kind === 'button'
@@ -58,4 +58,3 @@ const textKind = {
 };
 
 export default Text;
-

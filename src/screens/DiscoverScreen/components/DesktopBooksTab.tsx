@@ -6,26 +6,25 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LayoutChangeEvent, ScrollView, View } from 'react-native';
 
-import AuthGateModal from 'components/AuthGateModal';
-import BookTile, {
-  TILE_COLUMN_GAP,
-  TILE_ROW_GAP,
-  tileGrid,
-} from 'components/BookTile';
-import LoadingState from 'components/LoadingState/LoadingState';
-import Text from 'components/Text';
-
 import {
   useAddBookToLibraryMutation,
   useEssentialBooksQuery,
   useUserBooksIdsQuery,
 } from 'api/app/book';
 import { BookResult } from 'api/google-books/search';
-
+import AuthGateModal from 'components/AuthGateModal';
+import BookTile, {
+  TILE_COLUMN_GAP,
+  TILE_ROW_GAP,
+  TILE_SHADOW_PAD,
+  tileGrid,
+} from 'components/BookTile';
+import EmptyState from 'components/EmptyState';
+import LoadingState from 'components/LoadingState/LoadingState';
+import Text from 'components/Text';
+import { translations } from 'locales/translations';
 import { Routes } from 'navigation/routes';
 import { NavigationType } from 'navigation/types';
-
-import { translations } from 'locales/translations';
 
 // The tick colour the mobile list uses for books already on your list.
 const IN_LIST_COLOR = '#38AD59';
@@ -52,7 +51,7 @@ export const DesktopBooksTab = () => {
     confirmGate,
   } = useAuthGate();
 
-  const { tileWidth } = tileGrid(gridWidth);
+  const { tileWidth } = tileGrid(Math.max(0, gridWidth - TILE_SHADOW_PAD * 2));
 
   // The same rules SearchBooks applies to this list on mobile.
   const handleToggle = (book: BookResult, inList: boolean) => {
@@ -71,46 +70,57 @@ export const DesktopBooksTab = () => {
 
     if (books.length === 0) {
       return (
-        <View style={styles.emptyState}>
-          <Text
-            kind="description"
-            text={t(
-              isError
-                ? translations.discover.booksError
-                : translations.discover.noBooksYet,
-            )}
-          />
-        </View>
+        <EmptyState
+          variant="list"
+          icon="book"
+          title={t(
+            isError
+              ? translations.discover.booksErrorTitle
+              : translations.discover.noBooksYetTitle,
+          )}
+          description={t(
+            isError
+              ? translations.discover.booksErrorDescription
+              : translations.discover.noBooksYetDescription,
+          )}
+        />
       );
     }
 
     return (
-      <View style={styles.grid} onLayout={handleGridLayout}>
-        {gridWidth > 0 &&
-          books.map(book => {
-            const inList = userBooksIds.some(({ id }) => id === book.id);
+      <>
+        <Text
+          kind="paragraph"
+          text={t(translations.discover.booksHeader)}
+          style={styles.intro}
+        />
+        <View style={styles.grid} onLayout={handleGridLayout}>
+          {gridWidth > 0 &&
+            books.map(book => {
+              const inList = userBooksIds.some(({ id }) => id === book.id);
 
-            return (
-              <BookTile
-                key={book.id}
-                bookId={book.id}
-                title={book.volumeInfo?.title}
-                author={book.volumeInfo?.authors?.join?.(', ')}
-                width={tileWidth}
-                onPress={() =>
-                  navigate(Routes.ROOT_06_BOOK, { bookId: book.id })
-                }
-                toggle={{
-                  checked: inList,
-                  icon: inList ? 'check-circle' : 'plus-circle-outline',
-                  color: inList ? IN_LIST_COLOR : theme.colors.secondary,
-                  label: t(translations.library.add),
-                  onPress: () => handleToggle(book, inList),
-                }}
-              />
-            );
-          })}
-      </View>
+              return (
+                <BookTile
+                  key={book.id}
+                  bookId={book.id}
+                  title={book.volumeInfo?.title}
+                  author={book.volumeInfo?.authors?.join?.(', ')}
+                  width={tileWidth}
+                  onPress={() =>
+                    navigate(Routes.ROOT_06_BOOK, { bookId: book.id })
+                  }
+                  toggle={{
+                    checked: inList,
+                    icon: inList ? 'check-circle' : 'plus-circle-outline',
+                    color: inList ? IN_LIST_COLOR : theme.colors.secondary,
+                    label: t(translations.library.add),
+                    onPress: () => handleToggle(book, inList),
+                  }}
+                />
+              );
+            })}
+        </View>
+      </>
     );
   };
 
@@ -120,11 +130,6 @@ export const DesktopBooksTab = () => {
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
-      <Text
-        kind="paragraph"
-        text={t(translations.discover.booksHeader)}
-        style={styles.intro}
-      />
       {renderBooks()}
       <AuthGateModal
         visible={gateVisible}
@@ -145,7 +150,7 @@ const useStyles = makeStyles(() => ({
   // phone layout never had to say it.
   container: { flex: 1, minHeight: 0 },
   content: {
-    paddingTop: 24,
+    paddingTop: 20,
     paddingBottom: 64,
     gap: 24,
   },
@@ -155,10 +160,8 @@ const useStyles = makeStyles(() => ({
     flexWrap: 'wrap',
     columnGap: TILE_COLUMN_GAP,
     rowGap: TILE_ROW_GAP,
-  },
-  emptyState: {
-    alignItems: 'center',
-    paddingTop: 20,
+    paddingHorizontal: TILE_SHADOW_PAD,
+    overflow: 'visible',
   },
 }));
 

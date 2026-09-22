@@ -14,7 +14,6 @@ import {
 import { writeRatingWithStats } from 'api/app/book/ratingStats';
 import { db } from 'api/firebase';
 import { insightsMetaFromVolume } from 'api/google-books/fetchBookInsightsMeta';
-
 import { mapWithLimit } from 'utils/mapWithLimit';
 
 import { Volume, findGoogleVolume, toBookResult } from './findGoogleBook';
