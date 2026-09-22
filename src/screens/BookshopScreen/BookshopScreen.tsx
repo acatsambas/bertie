@@ -3,7 +3,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { makeStyles } from '@rneui/themed';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import RenderHtml from 'react-native-render-html';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -58,7 +58,10 @@ export const BookshopScreen = ({
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <View style={styles.container}>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        showsVerticalScrollIndicator={false}
+      >
         <View>
           <BackTitleHeader title={name} onBack={handleBack} />
           <Text kind="paragraph" text={`${address}, ${city} ${zipcode}`} />
@@ -67,6 +70,8 @@ export const BookshopScreen = ({
         <View>
           <RenderHtml source={{ html: description }} contentWidth={0} />
         </View>
+      </ScrollView>
+      <View style={styles.buttonContainer}>
         <Button
           kind="primary"
           text={
@@ -88,4 +93,9 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.colors.white,
   },
   container: { paddingTop: 20, gap: 20 },
+  buttonContainer: {
+    padding: 20,
+    gap: 12,
+    flexDirection: 'column',
+  },
 }));
