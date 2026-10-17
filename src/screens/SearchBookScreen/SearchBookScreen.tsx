@@ -2,7 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { makeStyles, useTheme } from '@rneui/themed';
 import debounce from 'lodash.debounce';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Platform, Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -81,6 +81,7 @@ export const SearchBookScreen = () => {
   // debounce, so without this an empty list reads as "nothing found" before
   // the request has even gone out.
   const [settledQuery, setSettledQuery] = useState('');
+  const latestRequest = useRef(0);
   const { data: user } = useUserQuery();
   const updateFirstSearchFlag = useUpdateFirstSearchFlagMutation();
   const styles = useStyles();
@@ -93,10 +94,14 @@ export const SearchBookScreen = () => {
   const searchDebounce = useCallback(
     debounce(async value => {
       const searchValue = value.trim();
+      const request = ++latestRequest.current;
       if (searchValue.length) {
         setIsLoading(true);
         try {
           const results = await searchBooks(searchValue, searchField);
+          // A newer search went out while this one was retrying; its
+          // results, not these, belong on screen.
+          if (request !== latestRequest.current) return;
           setSearchResults(results);
           setSearchFailed(false);
           setSettledQuery(`${searchField}:${searchValue}`);
@@ -105,6 +110,7 @@ export const SearchBookScreen = () => {
             await updateFirstSearchFlag.mutateAsync({ isFirstSearch: false });
           }
         } catch (error) {
+          if (request !== latestRequest.current) return;
           console.error('Search error:', error);
           // Say so, rather than leaving the last results — or nothing —
           // standing as if that were the answer.
@@ -112,7 +118,7 @@ export const SearchBookScreen = () => {
           setSearchFailed(true);
           setSettledQuery(`${searchField}:${searchValue}`);
         } finally {
-          setIsLoading(false);
+          if (request === latestRequest.current) setIsLoading(false);
         }
         return;
       }
